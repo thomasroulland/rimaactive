@@ -1,61 +1,61 @@
-import { Link } from 'react-router-dom'
-import Tuile from '../components/Tuile.jsx'
-import Photo from '../components/Photo.jsx'
+import { HerosPage, Photo, TitreSection, Tuile } from '../components/Blocs.jsx'
+import { RESEAUX } from '../components/liens.js'
 import useTitre from '../components/useTitre.js'
+
+const ETAPES = ["danse, gym, karaté jusqu'à la ceinture marron", "le sport imposé à l'école, détesté", 'six ans de salariat']
 
 export default function APropos() {
   useTitre('À propos')
+  const instagram = RESEAUX.find((r) => r.label === 'Instagram')
   return (
     <>
-      <section className="section section--lin">
-        <div className="conteneur rangee" style={{ gap: 48 }}>
-          <div className="pile" style={{ flex: '1 1 440px', gap: 24 }}>
-            <h1 className="titre-page">à propos</h1>
-            <p className="texte" style={{ maxWidth: 580 }}>
-              [Texte provisoire · message principal : le sport qu'on choisit n'a rien à voir avec le sport qu'on
-              subit.]
-            </p>
+      <HerosPage fil="À propos" ligne="Marie, coach sportive" titre="à propos">
+        <p className="texte texte--grand provisoire">
+          [Texte provisoire · message principal : le sport qu'on choisit n'a rien à voir avec le sport qu'on subit.]
+        </p>
+      </HerosPage>
+
+      <section className="section section--filet" aria-labelledby="histoire-titre">
+        <div className="conteneur deux-colonnes">
+          <Photo label="Portrait de Marie" />
+          <div>
+            <TitreSection id="histoire-titre" ligne="mon parcours" titre="[mon histoire · titre à rédiger]" />
+            <p className="texte provisoire" style={{ marginTop: 32 }}>[Texte provisoire à rédiger, à partir de ces étapes :]</p>
+            <ol className="liste">
+              {ETAPES.map((etape, i) => (
+                <li key={etape}>
+                  <span className="mention" style={{ paddingTop: 5 }}>0{i + 1}</span>
+                  {etape}
+                </li>
+              ))}
+            </ol>
           </div>
-          <Photo label="portrait de Marie" legende="Portrait de Marie" />
         </div>
       </section>
 
-      <section className="section section--lin200">
-        <div className="conteneur conteneur--etroit pile pile--etire" style={{ gap: 24 }}>
-          <h2 className="titre-section">[mon histoire · titre à rédiger]</h2>
-          <p className="texte">[Texte provisoire à rédiger, à partir de ces étapes :]</p>
-          <ul className="texte" style={{ paddingLeft: 24, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <li>danse, gym, karaté jusqu'à la ceinture marron</li>
-            <li>le sport imposé à l'école, détesté</li>
-            <li>six ans de salariat</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="section section--lin">
-        <div className="conteneur pile pile--etire" style={{ gap: 32 }}>
-          <h2 className="titre-section">[ce que je défends · titre à rédiger]</h2>
+      <section className="section" aria-labelledby="valeurs-titre">
+        <div className="conteneur">
+          <div className="entete-section">
+            <TitreSection id="valeurs-titre" ligne="mes valeurs" titre="[ce que je défends · titre à rédiger]" />
+          </div>
           <div className="tuiles">
-            <Tuile titre="honnêteté" />
-            <Tuile titre="pas de promesse" />
-            <Tuile titre="autonomie" />
+            <Tuile numero="01" titre="honnêteté" />
+            <Tuile numero="02" titre="pas de promesse" />
+            <Tuile numero="03" titre="autonomie" />
           </div>
         </div>
       </section>
 
-      <section className="section section--lin200">
-        <div className="conteneur rangee" style={{ gap: 48 }}>
-          <Photo label="Marie à l'entraînement" legende="Photo de Marie à l'entraînement" />
-          <div className="pile" style={{ flex: '1 1 440px', gap: 24 }}>
-            <h2 className="titre-section">[comment je m'entraîne · titre à rédiger]</h2>
-            <p className="texte" style={{ maxWidth: 580 }}>[Texte provisoire à rédiger]</p>
-            <div className="rangee" style={{ gap: '16px 32px' }}>
-              <Link to="/contact" className="bouton">Me contacter</Link>
-              <a href="#" className="gras" style={{ display: 'inline-flex', alignItems: 'center', minHeight: 44 }}>
-                Mon journal sur Instagram
-              </a>
+      <section className="section section--filet" aria-labelledby="entrainement-titre">
+        <div className="conteneur deux-colonnes">
+          <div>
+            <TitreSection id="entrainement-titre" ligne="de mon côté" titre="[comment je m'entraîne · titre à rédiger]" />
+            <p className="texte provisoire" style={{ marginTop: 32 }}>[Texte provisoire à rédiger]</p>
+            <div className="actions">
+              <a href={instagram.href} className="bouton bouton--secondaire">Mon journal sur Instagram</a>
             </div>
           </div>
+          <Photo label="Photo de Marie à l'entraînement" />
         </div>
       </section>
     </>

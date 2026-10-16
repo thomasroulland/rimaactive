@@ -1,4 +1,4 @@
-import Photo from './Photo.jsx'
+import { Photo } from './Blocs.jsx'
 
 // Un bout de la barre : manchon, butée et deux disques corail
 function Bout() {
@@ -21,7 +21,7 @@ export default function BarreAnimee() {
   return (
     <div className="barre-scene">
       <div className="barre-ombre" aria-hidden="true" />
-      <Photo className="barre-photo" label="Marie en séance" legende="Photo de Marie en séance" enBas />
+      <Photo className="barre-photo" label="Photo de Marie en séance" sombre />
       <svg className="barre" aria-hidden="true" viewBox="0 0 640 132">
         <Bout />
         <rect x="154" y="61" width="332" height="10" fill="#161514" />

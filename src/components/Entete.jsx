@@ -1,7 +1,9 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { PAGES } from './liens.js'
+
+const PAGES_MENU = PAGES.filter((page) => page.to !== '/contact')
 
 // Trait sous le lien actif, qui glisse d'un lien à l'autre
 function useTrait(navRef) {
@@ -16,7 +18,7 @@ function useTrait(navRef) {
       const actif = nav.querySelector('a[aria-current="page"]')
       // Pas de glissement au tout premier affichage : le trait apparaît directement sous la page courante
       setTrait((avant) =>
-        actif
+        actif && actif.offsetWidth
           ? {
               left: actif.offsetLeft,
               top: actif.offsetTop + actif.offsetHeight - 2,
@@ -40,33 +42,75 @@ function useTrait(navRef) {
 export default function Entete() {
   const navRef = useRef(null)
   const trait = useTrait(navRef)
+  const { pathname } = useLocation()
+  const [ouvert, setOuvert] = useState(false)
+
+  // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
+  useEffect(() => setOuvert(false), [pathname])
+  useEffect(() => {
+    if (!ouvert) return
+    const fermer = (e) => e.key === 'Escape' && setOuvert(false)
+    window.addEventListener('keydown', fermer)
+    return () => window.removeEventListener('keydown', fermer)
+  }, [ouvert])
 
   return (
     <header className="entete">
-      <Link to="/" className="entete__logo" aria-label="Rimaactive, accueil">
-        <img src={logo} alt="rimaactive" />
-      </Link>
-      <nav className="nav" aria-label="Menu principal" ref={navRef}>
-        {PAGES.map((page) => (
+      <div className="entete__barre">
+        <Link to="/" className="entete__logo" aria-label="Rimaactive, accueil">
+          <img src={logo} alt="rimaactive" width="157" height="32" />
+        </Link>
+        <div className="entete__droite">
+          <nav className="nav" aria-label="Menu principal" ref={navRef}>
+            {PAGES_MENU.map((page) => (
+              <NavLink key={page.to} to={page.to} end={page.to === '/'}>
+                {page.label}
+              </NavLink>
+            ))}
+            <span
+              className="nav__trait"
+              aria-hidden="true"
+              style={
+                trait
+                  ? {
+                      transform: `translate(${trait.left}px, ${trait.top}px)`,
+                      width: trait.width,
+                      transition: trait.anime ? undefined : 'none',
+                    }
+                  : { opacity: 0 }
+              }
+            />
+          </nav>
+          <Link to="/contact" className="bouton bouton--principal bouton--compact">Me contacter</Link>
+          <button
+            type="button"
+            className="menu-bouton"
+            aria-expanded={ouvert}
+            aria-controls="menu-mobile"
+            onClick={() => setOuvert((o) => !o)}
+          >
+            {ouvert ? 'Fermer' : 'Menu'}
+            <span className="menu-bouton__icone" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+      <nav id="menu-mobile" className={`menu-mobile ${ouvert ? 'ouvert' : ''}`} aria-label="Menu mobile">
+        {PAGES_MENU.map((page) => (
           <NavLink key={page.to} to={page.to} end={page.to === '/'}>
             {page.label}
+            <Fleche />
           </NavLink>
         ))}
-        <span
-          className="nav__trait"
-          aria-hidden="true"
-          style={
-            trait
-              ? {
-                  transform: `translate(${trait.left}px, ${trait.top}px)`,
-                  width: trait.width,
-                  transition: trait.anime ? undefined : 'none',
-                }
-              : { opacity: 0 }
-          }
-        />
+        <Link to="/contact" className="bouton bouton--principal">Me contacter</Link>
       </nav>
-      <Link to="/contact" className="bouton bouton--petit">Me contacter</Link>
     </header>
+  )
+}
+
+export function Fleche({ taille = 20 }) {
+  return (
+    <svg aria-hidden="true" width={taille} height={taille} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square">
+      <path d="M4 12h15M13 6l6 6-6 6" />
+    </svg>
   )
 }

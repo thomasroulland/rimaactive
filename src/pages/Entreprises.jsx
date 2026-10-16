@@ -1,48 +1,49 @@
-import { Link } from 'react-router-dom'
-import Tuile from '../components/Tuile.jsx'
-import Fiches from '../components/Fiches.jsx'
+import { BoutonLien, Faits, HerosPage, TitreSection, Tuile } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 
 export default function Entreprises() {
   useTitre('Entreprises')
   return (
     <>
-      <section className="section section--lin">
-        <div className="conteneur pile" style={{ gap: 24 }}>
-          <h1 className="titre-page">entreprises</h1>
-          <p className="texte texte--moyen">
-            [Texte provisoire · message principal : des séances qui s'adaptent à vos locaux et à vos horaires, sans
-            matériel à acheter.]
-          </p>
-        </div>
-      </section>
+      <HerosPage fil="Entreprises" ligne="pour vos équipes" titre="entreprises">
+        <p className="texte texte--grand provisoire">
+          [Texte provisoire · message principal : des séances qui s'adaptent à vos locaux et à vos horaires, sans
+          matériel à acheter.]
+        </p>
+      </HerosPage>
 
-      <section className="section section--lin200">
-        <div className="conteneur pile pile--etire" style={{ gap: 32 }}>
-          <div className="pile" style={{ gap: 16 }}>
-            <h2 className="titre-section">ce que vous proposez à vos équipes</h2>
-            <p className="texte texte--moyen">[Texte provisoire à rédiger]</p>
+      <section className="section section--filet" aria-labelledby="formats-titre">
+        <div className="conteneur">
+          <div className="entete-section entete-section--deux">
+            <TitreSection id="formats-titre" ligne="deux formats" titre="ce que vous proposez à vos équipes" />
+            <p className="texte provisoire">[Texte provisoire à rédiger]</p>
           </div>
           <div className="tuiles">
-            <Tuile titre="séances régulières" large />
-            <Tuile titre="séminaire ponctuel" large />
+            <Tuile numero="01" titre="séances régulières" />
+            <Tuile numero="02" titre="séminaire ponctuel" />
           </div>
         </div>
       </section>
 
-      <section className="section section--lin">
-        <div className="conteneur pile" style={{ gap: 32 }}>
-          <h2 className="titre-section">organisation pratique</h2>
-          <Fiches items={['Lieu', 'Espace', 'Durée', 'Nombre de personnes']} />
-          <p className="gras">[Ligne « sur devis » à rédiger]</p>
+      <section className="section" aria-labelledby="orga-titre">
+        <div className="conteneur">
+          <div className="entete-section">
+            <TitreSection id="orga-titre" ligne="en pratique" titre="organisation" />
+          </div>
+          <Faits items={[['Lieu'], ['Espace'], ['Durée'], ['Nombre de personnes']]} />
+          <p className="texte provisoire" style={{ marginTop: 24 }}>[Ligne « sur devis » à rédiger]</p>
         </div>
       </section>
 
-      <section className="section section--lin200">
-        <div className="conteneur pile" style={{ gap: 24 }}>
-          <h2 className="titre-section">qui je suis</h2>
-          <p className="texte texte--moyen">[Texte provisoire · qui je suis en deux phrases]</p>
-          <Link to="/contact" className="bouton">Demander un devis</Link>
+      <section className="section section--filet" aria-labelledby="qui-titre">
+        <div className="conteneur entete-section entete-section--deux" style={{ marginBottom: 0 }}>
+          <TitreSection id="qui-titre" ligne="votre intervenante" titre="qui je suis" />
+          <div>
+            <p className="texte provisoire">[Texte provisoire · qui je suis en deux phrases]</p>
+            <div className="actions">
+              <BoutonLien to="/a-propos" variante="secondaire">En savoir plus</BoutonLien>
+            </div>
+          </div>
         </div>
       </section>
     </>
