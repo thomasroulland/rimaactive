@@ -1,16 +1,8 @@
 import { useEffect, useRef } from 'react'
+import { cran } from './cran.js'
 
 const PAS = 34 // écart entre deux gestes sur la roue, en degrés
 const BANDES = ['var(--corail)', 'var(--neon)', 'var(--blanc)'] // la bande centrale change de couleur à chaque geste
-
-// Avance « à crans » : la roue marque une pause sur chaque geste, puis tourne jusqu'au suivant.
-// `pause` est la part du cran où elle reste immobile.
-function cran(p, pause) {
-  const i = Math.floor(p)
-  const f = p - i
-  const t = Math.min(1, Math.max(0, (f - pause / 2) / (1 - pause)))
-  return i + t * t * (3 - 2 * t)
-}
 
 // Rubrique des gestes : elle reste à l'écran pendant que la roue tourne au fil du défilement
 export default function RoueGestes({ gestes }) {

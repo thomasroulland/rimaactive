@@ -451,6 +451,62 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .gestes li:nth-child(5) { --penche: -2deg; }
 .gestes li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
+/* ---------- Roue des offres : disque de fonte à gauche, qui tourne au défilement ---------- */
+/* Sans animation : en-tête puis rangée de tuiles, comme une rubrique ordinaire */
+.roue-offres__ecran {
+  max-width: calc(var(--largeur) + 2 * var(--gouttiere));
+  margin: 0 auto;
+  padding: clamp(64px, 9vw, 128px) var(--gouttiere);
+}
+.roue-offres__texte { display: grid; gap: 24px; margin-bottom: clamp(32px, 4vw, 56px); }
+
+.roue-offres--animee { height: 260vh; }
+.roue-offres--animee .roue-offres__ecran {
+  position: sticky;
+  top: var(--hauteur-entete);
+  height: calc(100svh - var(--hauteur-entete));
+  max-width: none;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.roue-offres--animee .roue-offres__texte {
+  margin: 0;
+  padding: 32px var(--gouttiere) 8px;
+}
+@media (min-width: 900px) {
+  .roue-offres--animee .roue-offres__ecran {
+    grid-template-rows: none;
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+  }
+  .roue-offres--animee .roue-offres__texte { order: 1; padding: 0 var(--gouttiere) 0 clamp(24px, 3vw, 48px); max-width: 500px; }
+}
+.roue-offres--animee .roue-offres__zone {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+/* Le disque : un disque de fonte corail, comme ceux de la barre du logo */
+.roue-offres--animee .roue-offres__disque {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side,
+    var(--lin) 0 5%, var(--encre) 5% 16%, var(--corail) 16% 84%,
+    var(--corail-profond) 84% 85.5%, var(--corail) 85.5% 100%, transparent 100%);
+}
+.roue-offres--animee .roue-offres__disque > .tuile {
+  position: absolute;
+  margin: 0; /* pas de décalage « hors de l'alignement » ici : il fausserait la rotation */
+  width: min(340px, 78vw);
+  min-height: 0;
+  box-shadow: 0 0 0 2px var(--encre);
+}
+/* Sur le disque corail, la tuile du milieu passe en néon pour ne pas s'y fondre */
+.roue-offres--animee .roue-offres__disque > .tuile:nth-child(3n + 2) { background: var(--neon); }
+
 /* ---------- Roue des gestes : rubrique fixée à l'écran, la roue tourne au défilement ----------
    Sans JavaScript ou avec « réduire les animations », on garde les pastilles des gestes. */
 main > section.roue-section.sur-encre { background: var(--encre); color: var(--lin); }

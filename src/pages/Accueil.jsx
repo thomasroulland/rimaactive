@@ -1,5 +1,6 @@
 import BarreAnimee from '../components/BarreAnimee.jsx'
 import RoueGestes from '../components/RoueGestes.jsx'
+import RoueOffres from '../components/RoueOffres.jsx'
 import { BoutonLien, Faits, Photo, TitreSection, Tuile } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 
@@ -56,21 +57,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section id="offres" className="section" aria-labelledby="offres-titre">
-        <div className="conteneur">
-          <div className="entete-section entete-section--deux">
-            <TitreSection id="offres-titre" titre="mes offres" />
-            <p className="texte">Choisissez votre cas : chaque page détaille le format, le lieu et l'organisation.</p>
-          </div>
-          <div className="tuiles">
-            {OFFRES.map((offre) => (
-              <Tuile key={offre.to} titre={offre.titre} to={offre.to}>
-                <p className="texte">{offre.texte}</p>
-              </Tuile>
-            ))}
-          </div>
-        </div>
-      </section>
+      <RoueOffres offres={OFFRES} />
 
       <section className="section" aria-labelledby="approche-titre">
         <div className="conteneur deux-colonnes">
