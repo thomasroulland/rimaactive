@@ -118,7 +118,8 @@ a:hover { color: var(--encre); }
 
 /* ---------- Mise en page ---------- */
 .section { padding: clamp(64px, 9vw, 128px) var(--gouttiere); }
-.section--filet { border-top: 1px solid var(--filet); }
+/* Une rubrique sur deux passe en lin 200 (« fond alterné » de la charte) : le haut de page reste lin */
+main > section:nth-of-type(even):not(.appel) { background: var(--lin-200); }
 .section--serree { padding-block: clamp(48px, 6vw, 80px); }
 .conteneur { max-width: var(--largeur); margin: 0 auto; }
 .conteneur--etroit { max-width: 860px; }
@@ -364,7 +365,7 @@ a:hover { color: var(--encre); }
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
-  background: var(--lin-200);
+  background: #d6cfc5; /* reste visible sur lin comme sur lin 200 */
   display: flex;
   align-items: flex-end;
   padding: 20px;

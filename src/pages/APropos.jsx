@@ -15,7 +15,7 @@ export default function APropos() {
         </p>
       </HerosPage>
 
-      <section className="section section--filet" aria-labelledby="histoire-titre">
+      <section className="section" aria-labelledby="histoire-titre">
         <div className="conteneur deux-colonnes">
           <Photo label="Portrait de Marie" />
           <div>
@@ -46,7 +46,7 @@ export default function APropos() {
         </div>
       </section>
 
-      <section className="section section--filet" aria-labelledby="entrainement-titre">
+      <section className="section" aria-labelledby="entrainement-titre">
         <div className="conteneur deux-colonnes">
           <div>
             <TitreSection id="entrainement-titre" ligne="de mon côté" titre="[comment je m'entraîne · titre à rédiger]" />

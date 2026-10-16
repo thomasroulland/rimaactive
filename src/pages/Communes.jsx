@@ -12,7 +12,7 @@ export default function Communes() {
         </p>
       </HerosPage>
 
-      <section className="section section--filet" aria-labelledby="apport-titre">
+      <section className="section" aria-labelledby="apport-titre">
         <div className="conteneur entete-section entete-section--deux" style={{ marginBottom: 0 }}>
           <TitreSection id="apport-titre" ligne="pourquoi" titre="ce que ça apporte à la commune" />
           <p className="texte provisoire">[Texte provisoire à rédiger]</p>
@@ -32,7 +32,7 @@ export default function Communes() {
         </div>
       </section>
 
-      <section className="section section--filet" aria-labelledby="public-titre">
+      <section className="section" aria-labelledby="public-titre">
         <div className="conteneur entete-section entete-section--deux" style={{ marginBottom: 0 }}>
           <TitreSection id="public-titre" ligne="pour qui" titre="qui peut y participer" />
           <p className="texte provisoire">[Texte provisoire à rédiger]</p>

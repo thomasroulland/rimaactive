@@ -12,7 +12,7 @@ export default function Particuliers() {
         </p>
       </HerosPage>
 
-      <section className="section section--filet" aria-labelledby="vecu-titre">
+      <section className="section" aria-labelledby="vecu-titre">
         <div className="conteneur">
           <div className="entete-section">
             <TitreSection id="vecu-titre" ligne="tu te reconnais ?" titre="ce que tu vis peut-être" />
@@ -37,7 +37,7 @@ export default function Particuliers() {
         </div>
       </section>
 
-      <section className="section section--filet" aria-labelledby="formules-titre">
+      <section className="section" aria-labelledby="formules-titre">
         <div className="conteneur">
           <div className="entete-section">
             <TitreSection id="formules-titre" ligne="les formules" titre="[titre des formules à rédiger]" />

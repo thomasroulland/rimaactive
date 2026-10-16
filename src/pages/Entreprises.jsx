@@ -12,7 +12,7 @@ export default function Entreprises() {
         </p>
       </HerosPage>
 
-      <section className="section section--filet" aria-labelledby="formats-titre">
+      <section className="section" aria-labelledby="formats-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">
             <TitreSection id="formats-titre" ligne="deux formats" titre="ce que vous proposez à vos équipes" />
@@ -35,7 +35,7 @@ export default function Entreprises() {
         </div>
       </section>
 
-      <section className="section section--filet" aria-labelledby="qui-titre">
+      <section className="section" aria-labelledby="qui-titre">
         <div className="conteneur entete-section entete-section--deux" style={{ marginBottom: 0 }}>
           <TitreSection id="qui-titre" ligne="votre intervenante" titre="qui je suis" />
           <div>

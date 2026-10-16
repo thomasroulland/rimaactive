@@ -55,7 +55,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section id="offres" className="section section--filet" aria-labelledby="offres-titre">
+      <section id="offres" className="section" aria-labelledby="offres-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">
             <TitreSection id="offres-titre" ligne="trois façons de s'entraîner" titre="mes offres" />
@@ -98,7 +98,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section className="section section--filet" aria-labelledby="zone-titre">
+      <section className="section" aria-labelledby="zone-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">
             <TitreSection id="zone-titre" ligne="ma zone d'intervention" titre="je viens à votre rencontre" />
