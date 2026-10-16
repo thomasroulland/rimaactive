@@ -27,27 +27,20 @@ export default function RoueOffres({ offres }) {
     const section = sectionRef.current
     const zone = section.querySelector('.cadran')
     const disque = section.querySelector('.cadran__disque')
-    const rangee = section.querySelector('.cadran__rangee')
-    const noms = [...rangee.children]
+    const bras = [...section.querySelectorAll('.cadran__bras')]
     const fiches = section.querySelector('.cadran__fiches')
-    const dernier = noms.length - 1
+    const dernier = bras.length - 1
     const tactile = window.matchMedia('(pointer: coarse)').matches
     const inertie = tactile ? 0.3 : 0.12
     const pause = tactile ? 0.25 : 0.5
-    const tour = 60 // rotation du disque d'une offre à la suivante, en degrés
-    let echelleMin = 0.38 // taille des offres qui ne sont pas de face, par rapport à celle de face
+    let pas = 50 // écart entre deux offres sur le cadran, en degrés
+    let echelleMin = 0.36 // taille des offres qui ne sont pas de face, par rapport à celle de face
     let cible = 0
     let actuel = 0
     let image = null
     let debut = 0
     let course = 1
     let indexActif = -1
-
-    const echelles = (face) =>
-      noms.forEach((nom, i) => {
-        const proche = Math.max(0, 1 - Math.abs(i - face))
-        nom.style.setProperty('--echelle', (echelleMin + (1 - echelleMin) * proche).toFixed(3))
-      })
 
     // Géométrie, lue seulement au chargement et au redimensionnement
     const dimensionner = () => {
@@ -56,39 +49,23 @@ export default function RoueOffres({ offres }) {
       const largeur = zone.clientWidth
       const hauteur = zone.clientHeight
       const etroit = largeur < 700
-      let rayon, cx, cy, ancreX, ancreY
+      zone.classList.toggle('cadran--etroit', etroit)
+      let rayon, cx
       if (etroit) {
-        // Téléphone : le disque en haut, la ligne des offres dessous
-        echelleMin = 0.5
-        rayon = Math.min(120, hauteur * 0.3)
-        cx = 28 + rayon
-        // Disque + ligne centrés verticalement dans la place disponible
-        cy = Math.max(rayon + 12, (hauteur - (2 * rayon + 44 + 30)) / 2 + rayon)
-        ancreX = 28
-        ancreY = cy + rayon + 44
+        pas = 36
+        echelleMin = 0.55
+        rayon = Math.min(130, hauteur * 0.34)
+        cx = largeur - 16 - 240 - 28 - rayon // place pour le nom de face, le plus long fait ~240 px
       } else {
-        // Ordinateur : le disque à gauche, la ligne des offres à sa droite
-        echelleMin = 0.38
-        rayon = Math.min(hauteur * 0.42, 260)
-        cx = rayon + 24
-        cy = hauteur / 2
-        ancreX = cx + rayon + 48
-        ancreY = cy
+        pas = 45
+        echelleMin = 0.36
+        rayon = Math.min(hauteur * 0.4, largeur * 0.5)
+        cx = largeur - Math.min(largeur * 0.62, 760) - rayon
       }
+      const cy = hauteur / 2
       zone.style.setProperty('--cx', `${cx}px`)
       zone.style.setProperty('--cy', `${cy}px`)
       zone.style.setProperty('--rayon', `${rayon}px`)
-      zone.style.setProperty('--ancre-x', `${ancreX}px`)
-      zone.style.setProperty('--ancre-y', `${ancreY}px`)
-      // La ligne doit tenir dans la largeur quelle que soit l'offre en grand : on mesure le pire cas
-      zone.style.setProperty('--ajuste', '1')
-      let pire = 0
-      noms.forEach((_, i) => {
-        echelles(i)
-        pire = Math.max(pire, rangee.scrollWidth)
-      })
-      zone.style.setProperty('--ajuste', Math.min(1, (largeur - ancreX - 20) / pire).toFixed(3))
-      echelles(actuel)
     }
 
     const mesurer = () => {
@@ -100,11 +77,16 @@ export default function RoueOffres({ offres }) {
       actuel += (cible - actuel) * inertie
       if (Math.abs(cible - actuel) < 0.001) actuel = cible
       // Angle qui diminue quand on descend : sens inverse des aiguilles d'une montre
-      disque.style.transform = `rotate(${-actuel * tour}deg)`
-      // L'offre de face est en grand ; les autres restent sur la ligne, en petit, et grossissent en arrivant
-      echelles(actuel)
-      noms.forEach((nom, i) => {
-        nom.style.opacity = (0.55 + 0.45 * Math.max(0, 1 - Math.abs(i - actuel))).toFixed(3)
+      disque.style.transform = `rotate(${-actuel * pas}deg)`
+      bras.forEach((b, i) => {
+        const ecart = i - actuel
+        b.style.transform = `rotate(${ecart * pas}deg)`
+        // Le nom reste droit pendant que son bras tourne, pour rester lisible
+        b.style.setProperty('--redresse', `${-ecart * pas}deg`)
+        // Toutes les offres restent visibles ; celle de face est en grand, les autres en petit
+        const face = Math.max(0, 1 - Math.abs(ecart))
+        b.style.setProperty('--echelle', (echelleMin + (1 - echelleMin) * face).toFixed(3))
+        b.style.opacity = (0.6 + 0.4 * face).toFixed(3)
       })
       // La description suit l'offre de face ; elle s'efface pendant que le cadran tourne
       const proche = Math.round(actuel)
@@ -127,7 +109,7 @@ export default function RoueOffres({ offres }) {
 
     // Au clavier : une offre qui reçoit le focus est amenée en face
     const auFocus = (e) => {
-      const i = noms.findIndex((nom) => nom.contains(e.target))
+      const i = bras.findIndex((b) => b.contains(e.target))
       if (i < 0 || Math.round(actuel) === i) return
       window.scrollTo({ top: debut + (course * i) / (dernier + 0.6) })
     }
@@ -192,9 +174,10 @@ export default function RoueOffres({ offres }) {
             <circle r="22" className="disque__manchon" />
             <circle r="12" className="disque__trou" />
           </svg>
-          <ul className="cadran__rangee">
+          <ul className="cadran__offres">
             {offres.map((offre, i) => (
-              <li key={offre.to} className={i === actif ? 'cadran__offre--active' : ''}>
+              <li key={offre.to} className={`cadran__bras ${i === actif ? 'cadran__bras--actif' : ''}`}>
+                <span className="cadran__repere" aria-hidden="true" />
                 <Link to={offre.to} className="cadran__nom titre">{offre.titre}</Link>
               </li>
             ))}
