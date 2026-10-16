@@ -479,7 +479,8 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   min-height: 0;
   overflow: hidden;
 }
-/* Le disque tracé au trait : deux cercles, des graduations, un moyeu corail */
+/* Le disque de fonte, aux couleurs des disques de la barre du logo.
+   Les évidements prennent la couleur du fond de la rubrique (lin 200) pour paraître creux. */
 .cadran__disque {
   position: absolute;
   left: calc(var(--cx) - var(--rayon));
@@ -488,11 +489,23 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   height: calc(2 * var(--rayon));
   overflow: visible;
 }
-.cadran__cercle { fill: none; stroke: var(--encre); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.cadran__cercle--fin { stroke-opacity: 0.2; }
-.cadran__trait { stroke: var(--encre); stroke-opacity: 0.3; stroke-width: 1; vector-effect: non-scaling-stroke; }
-.cadran__trait--fort { stroke-opacity: 0.8; stroke-width: 2; }
-.cadran__moyeu { fill: var(--corail); }
+.disque__rebord { fill: var(--corail-profond); }
+.disque__face { fill: var(--corail); }
+.disque__lisere { fill: none; stroke: var(--corail-profond); stroke-width: 2; }
+.disque__poignee { fill: none; stroke: var(--lin-200); stroke-width: 17; stroke-linecap: round; }
+.disque__inscription {
+  fill: var(--encre);
+  fill-opacity: 0.55;
+  font-family: var(--font-sans);
+  font-weight: 900;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  dominant-baseline: central;
+}
+.disque__inscription--poids { font-size: 11.5px; fill-opacity: 0.7; }
+.disque__moyeu { fill: var(--corail-profond); }
+.disque__manchon { fill: var(--encre); }
+.disque__trou { fill: var(--lin-200); }
 
 /* Chaque offre est un « bras » accroché au centre du cadran : il tourne, le nom suit le bord */
 .cadran__offres { margin: 0; padding: 0; list-style: none; }
@@ -514,7 +527,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   background: var(--encre);
   transition: background-color var(--duree) ease, transform var(--duree) ease;
 }
-.cadran__bras--actif .cadran__repere { background: var(--corail); transform: scale(1.5); }
+.cadran__bras--actif .cadran__repere { transform: scale(1.5); box-shadow: 0 0 0 3px var(--lin-200); }
 .cadran__nom {
   position: absolute;
   left: calc(var(--rayon) + 28px);
