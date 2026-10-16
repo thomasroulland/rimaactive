@@ -15,12 +15,12 @@ export default function Particuliers() {
       <section className="section" aria-labelledby="vecu-titre">
         <div className="conteneur">
           <div className="entete-section">
-            <TitreSection id="vecu-titre" ligne="tu te reconnais ?" titre="ce que tu vis peut-être" />
+            <TitreSection id="vecu-titre" titre="ce que tu vis peut-être" />
           </div>
           <div className="tuiles">
-            <Tuile numero="01" titre="manque de temps" compacte />
-            <Tuile numero="02" titre="ne pas savoir par où commencer" compacte />
-            <Tuile numero="03" titre="l'idée qu'il faut se priver" compacte />
+            <Tuile titre="manque de temps" compacte />
+            <Tuile titre="ne pas savoir par où commencer" compacte />
+            <Tuile titre="l'idée qu'il faut se priver" compacte />
           </div>
         </div>
       </section>
@@ -29,7 +29,7 @@ export default function Particuliers() {
         <div className="conteneur deux-colonnes">
           <Photo label="Photo de Marie en séance avec un particulier" />
           <div>
-            <TitreSection id="seance-titre" ligne="concrètement" titre="comment se passe une séance" />
+            <TitreSection id="seance-titre" titre="comment se passe une séance" />
             <div style={{ marginTop: 32 }}>
               <Faits items={[['Durée'], ['Lieu'], ['Matériel apporté'], ['Déroulé']]} />
             </div>
@@ -40,12 +40,12 @@ export default function Particuliers() {
       <section className="section" aria-labelledby="formules-titre">
         <div className="conteneur">
           <div className="entete-section">
-            <TitreSection id="formules-titre" ligne="les formules" titre="[titre des formules à rédiger]" />
+            <TitreSection id="formules-titre" titre="[titre des formules à rédiger]" />
           </div>
           <div className="tuiles">
-            <Tuile numero="01" titre="individuel" />
-            <Tuile numero="02" titre="small group" />
-            <Tuile numero="03" surtitre="en complément" titre="à distance" />
+            <Tuile titre="individuel" />
+            <Tuile titre="small group" />
+            <Tuile surtitre="en complément" titre="à distance" />
           </div>
           <p className="texte provisoire" style={{ marginTop: 24 }}>
             [Ligne tarifs à rédiger · selon le lieu et la formule, on en parle]
@@ -55,7 +55,7 @@ export default function Particuliers() {
 
       <section className="section" aria-labelledby="faq-titre">
         <div className="conteneur deux-colonnes" style={{ alignItems: 'start' }}>
-          <TitreSection id="faq-titre" ligne="vos questions" titre="questions fréquentes" />
+          <TitreSection id="faq-titre" titre="questions fréquentes" />
           <div className="faq">
             {[1, 2, 3, 4].map((n) => (
               <details key={n}>

@@ -45,12 +45,12 @@ export default function Accueil() {
             <BarreAnimee />
           </div>
         </div>
-        <div className="conteneur" style={{ marginTop: 'clamp(48px, 6vw, 88px)' }}>
+        <div className="conteneur" style={{ marginTop: 'clamp(40px, 5vw, 72px)' }}>
           <ul className="reperes">
-            <li><span className="mention">zone</span><strong>Houdan + 20 km</strong></li>
-            <li><span className="mention">durée</span><strong>30 min à 1 h</strong></li>
-            <li><span className="mention">matériel</span><strong>fourni</strong></li>
-            <li><span className="mention">pour</span><strong>tous les niveaux</strong></li>
+            <li>Houdan et 20 km autour</li>
+            <li>Séances de 30 min à 1 h</li>
+            <li>Matériel fourni</li>
+            <li>Tous les niveaux</li>
           </ul>
         </div>
       </section>
@@ -58,12 +58,12 @@ export default function Accueil() {
       <section id="offres" className="section" aria-labelledby="offres-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">
-            <TitreSection id="offres-titre" ligne="trois façons de s'entraîner" titre="mes offres" />
+            <TitreSection id="offres-titre" titre="mes offres" />
             <p className="texte">Choisissez votre cas : chaque page détaille le format, le lieu et l'organisation.</p>
           </div>
           <div className="tuiles">
-            {OFFRES.map((offre, i) => (
-              <Tuile key={offre.to} numero={`0${i + 1}`} titre={offre.titre} to={offre.to}>
+            {OFFRES.map((offre) => (
+              <Tuile key={offre.to} titre={offre.titre} to={offre.to}>
                 <p className="texte">{offre.texte}</p>
               </Tuile>
             ))}
@@ -75,18 +75,15 @@ export default function Accueil() {
         <div className="conteneur deux-colonnes">
           <Photo label="Photo de Marie" />
           <div>
-            <TitreSection id="approche-titre" ligne="mon approche" titre="une pratique progressive, accessible et concrète" />
+            <TitreSection id="approche-titre" titre="une pratique progressive, accessible et concrète" />
             <p className="texte" style={{ marginTop: 32 }}>
               Les séances développent les capacités dont nous avons réellement besoin au quotidien :
             </p>
-            <ol className="gestes">
-              {GESTES.map((geste, i) => (
-                <li key={geste}>
-                  <span className="mention">0{i + 1}</span>
-                  <strong>{geste}</strong>
-                </li>
+            <ul className="gestes">
+              {GESTES.map((geste) => (
+                <li key={geste}>{geste}</li>
               ))}
-            </ol>
+            </ul>
             <p className="texte" style={{ marginTop: 32 }}>
               Elles fonctionnent comme des challenges : un temps donné, un nombre de tours, un travail en duo. Chacun
               avance à son niveau et cherche à faire un peu mieux que la fois précédente.
@@ -101,7 +98,7 @@ export default function Accueil() {
       <section className="section" aria-labelledby="zone-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">
-            <TitreSection id="zone-titre" ligne="ma zone d'intervention" titre="je viens à votre rencontre" />
+            <TitreSection id="zone-titre" titre="je viens à votre rencontre" />
             <p className="texte">
               J'interviens à Houdan et dans les communes voisines. Je me déplace avec mon matériel afin d'adapter les
               séances au lieu et au niveau des participants.

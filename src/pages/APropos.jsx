@@ -19,7 +19,7 @@ export default function APropos() {
         <div className="conteneur deux-colonnes">
           <Photo label="Portrait de Marie" />
           <div>
-            <TitreSection id="histoire-titre" ligne="mon parcours" titre="[mon histoire · titre à rédiger]" />
+            <TitreSection id="histoire-titre" titre="[mon histoire · titre à rédiger]" />
             <p className="texte provisoire" style={{ marginTop: 32 }}>[Texte provisoire à rédiger, à partir de ces étapes :]</p>
             <ol className="liste">
               {ETAPES.map((etape, i) => (
@@ -36,12 +36,12 @@ export default function APropos() {
       <section className="section" aria-labelledby="valeurs-titre">
         <div className="conteneur">
           <div className="entete-section">
-            <TitreSection id="valeurs-titre" ligne="mes valeurs" titre="[ce que je défends · titre à rédiger]" />
+            <TitreSection id="valeurs-titre" titre="[ce que je défends · titre à rédiger]" />
           </div>
           <div className="tuiles">
-            <Tuile numero="01" titre="honnêteté" />
-            <Tuile numero="02" titre="pas de promesse" />
-            <Tuile numero="03" titre="autonomie" />
+            <Tuile titre="honnêteté" />
+            <Tuile titre="pas de promesse" />
+            <Tuile titre="autonomie" />
           </div>
         </div>
       </section>
@@ -49,7 +49,7 @@ export default function APropos() {
       <section className="section" aria-labelledby="entrainement-titre">
         <div className="conteneur deux-colonnes">
           <div>
-            <TitreSection id="entrainement-titre" ligne="de mon côté" titre="[comment je m'entraîne · titre à rédiger]" />
+            <TitreSection id="entrainement-titre" titre="[comment je m'entraîne · titre à rédiger]" />
             <p className="texte provisoire" style={{ marginTop: 32 }}>[Texte provisoire à rédiger]</p>
             <div className="actions">
               <a href={instagram.href} className="bouton bouton--secondaire">Mon journal sur Instagram</a>

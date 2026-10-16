@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Fleche } from './Entete.jsx'
 
-// Titre de section : ligne fine italique au-dessus, titre en minuscules dessous
+// Titre de section en minuscules, avec une ligne fine italique au-dessus si besoin
 export function TitreSection({ ligne, titre, id, as: Balise = 'h2', className = '' }) {
   return (
     <div>
@@ -34,16 +33,16 @@ export function HerosPage({ fil, ligne, titre, children }) {
   )
 }
 
-// Tuile blanche, néon au survol, numérotée
-export function Tuile({ numero, titre, surtitre, to, compacte = false, children }) {
+// Tuile arrondie ; sa couleur dépend de sa place dans la rangée (voir styles.css)
+export function Tuile({ titre, surtitre, to, compacte = false, children }) {
   const contenu = (
     <>
-      <p className="mention">{numero}{surtitre && ` · ${surtitre}`}</p>
+      {surtitre && <p className="mention">{surtitre}</p>}
       <div className="tuile__corps">
         <h3 className="titre titre--tuile">{titre}</h3>
         {children ?? <p className="texte provisoire">[Texte provisoire à rédiger]</p>}
         {to && (
-          <span className="lien-fleche">Découvrir <Fleche taille={18} /></span>
+          <span className="lien-fleche">Découvrir</span>
         )}
       </div>
     </>

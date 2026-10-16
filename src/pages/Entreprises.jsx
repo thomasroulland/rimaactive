@@ -15,12 +15,12 @@ export default function Entreprises() {
       <section className="section" aria-labelledby="formats-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">
-            <TitreSection id="formats-titre" ligne="deux formats" titre="ce que vous proposez à vos équipes" />
+            <TitreSection id="formats-titre" titre="ce que vous proposez à vos équipes" />
             <p className="texte provisoire">[Texte provisoire à rédiger]</p>
           </div>
           <div className="tuiles">
-            <Tuile numero="01" titre="séances régulières" />
-            <Tuile numero="02" titre="séminaire ponctuel" />
+            <Tuile titre="séances régulières" />
+            <Tuile titre="séminaire ponctuel" />
           </div>
         </div>
       </section>
@@ -28,7 +28,7 @@ export default function Entreprises() {
       <section className="section" aria-labelledby="orga-titre">
         <div className="conteneur">
           <div className="entete-section">
-            <TitreSection id="orga-titre" ligne="en pratique" titre="organisation" />
+            <TitreSection id="orga-titre" titre="organisation" />
           </div>
           <Faits items={[['Lieu'], ['Espace'], ['Durée'], ['Nombre de personnes']]} />
           <p className="texte provisoire" style={{ marginTop: 24 }}>[Ligne « sur devis » à rédiger]</p>
@@ -37,7 +37,7 @@ export default function Entreprises() {
 
       <section className="section" aria-labelledby="qui-titre">
         <div className="conteneur entete-section entete-section--deux" style={{ marginBottom: 0 }}>
-          <TitreSection id="qui-titre" ligne="votre intervenante" titre="qui je suis" />
+          <TitreSection id="qui-titre" titre="qui je suis" />
           <div>
             <p className="texte provisoire">[Texte provisoire · qui je suis en deux phrases]</p>
             <div className="actions">
