@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { Photo } from './Blocs.jsx'
 
 // Un bout de la barre : manchon, butée et deux disques corail
@@ -17,22 +17,45 @@ function Bout() {
   )
 }
 
-// Arrivée sur le site : la barre se soulève et dévoile la photo
+// La barre se soulève et dévoile la photo, au moment où la photo arrive à l'écran
+// (sur téléphone, elle est sous le texte : lancée au chargement, l'animation passerait inaperçue)
 export default function BarreAnimee() {
   const sceneRef = useRef(null)
 
-  // En descendant dans la page, la barre continue de monter et penche légèrement
+  // Animation en attente (figée sur sa première image) jusqu'à ce que la moitié de la photo soit visible.
+  // Posé avant le premier affichage pour qu'on ne voie jamais la photo déjà dévoilée.
+  useLayoutEffect(() => {
+    const scene = sceneRef.current
+    if (!scene || !('IntersectionObserver' in window)) return
+    scene.classList.add('barre-scene--attente')
+    const observateur = new IntersectionObserver(
+      ([entree]) => {
+        if (!entree.isIntersecting) return
+        scene.classList.remove('barre-scene--attente')
+        observateur.disconnect()
+      },
+      { threshold: 0.5 },
+    )
+    observateur.observe(scene)
+    return () => observateur.disconnect()
+  }, [])
+
+  // En descendant, la barre continue de monter et penche légèrement
   useEffect(() => {
     const scene = sceneRef.current
     if (!scene || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     let image = null
     const suivre = () => {
       image = null
-      const avance = Math.min(1, window.scrollY / 500)
+      // Point de départ : le haut de la page, ou plus bas si la photo n'atteint le milieu de l'écran qu'en défilant
+      const haut = scene.getBoundingClientRect().top + window.scrollY
+      const depart = Math.max(0, haut - window.innerHeight * 0.5)
+      const avance = Math.min(1, Math.max(0, (window.scrollY - depart) / 500))
       scene.style.setProperty('--levee', `${avance * 70}px`)
       scene.style.setProperty('--bascule', `${Math.sin(avance * Math.PI) * -3}deg`)
     }
     const auDefilement = () => { if (!image) image = requestAnimationFrame(suivre) }
+    suivre()
     window.addEventListener('scroll', auDefilement, { passive: true })
     return () => {
       window.removeEventListener('scroll', auDefilement)

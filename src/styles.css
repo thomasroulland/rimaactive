@@ -843,6 +843,11 @@ textarea.champ { resize: vertical; min-height: 140px; }
   transform-origin: 100% 50%;
   animation: plie 1.7s cubic-bezier(.55, 0, .25, 1) .15s both;
 }
+/* Tant que la photo n'est pas à l'écran, l'animation reste figée sur sa première image (voir BarreAnimee.jsx) */
+.barre-scene--attente .barre,
+.barre-scene--attente .barre-photo,
+.barre-scene--attente .barre__bout,
+.barre-scene--attente .barre-ombre { animation-play-state: paused; }
 @keyframes leve {
   0% { top: 100%; } 18% { top: 97%; } 64% { top: -6%; } 76% { top: 2%; } 88% { top: -1%; } 100% { top: 0%; }
 }
