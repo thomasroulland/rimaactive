@@ -5,13 +5,6 @@ import { cran } from './cran.js'
 
 // Les trois poignées évidées du disque, centrées sur ces angles (en degrés)
 const POIGNEES = [-90, 30, 150]
-// Inscriptions gravées : en haut, à droite, en bas, à gauche (position le long du cercle de gravure)
-const GRAVURES = [
-  ['20 kg', '12.5%', 'disque__inscription--poids'],
-  ['rimaactive', '37.5%', ''],
-  ['20 kg', '62.5%', 'disque__inscription--poids'],
-  ['rimaactive', '87.5%', ''],
-]
 
 // Arc de cercle de rayon r, de a1 à a2 degrés (sens des aiguilles d'une montre, 0° à droite)
 function arc(r, a1, a2) {
@@ -155,22 +148,13 @@ export default function RoueOffres({ offres }) {
       <div className="roue-offres__ecran">
         {entete}
         <div className="cadran">
-          {/* Disque de fonte : rebord, face, poignées évidées, inscription gravée, manchon */}
+          {/* Disque de fonte : rebord, face, poignées évidées, manchon */}
           <svg className="cadran__disque" viewBox="-100 -100 200 200" aria-hidden="true">
-            <defs>
-              {/* Cercle de gravure qui commence en haut à gauche, pour qu'aucun mot ne tombe sur la jointure */}
-              <path id="disque-inscription" d={`${arc(85, 225, 405)} ${arc(85, 45, 225).replace('M', 'L')}`} />
-            </defs>
             <circle r="99" className="disque__rebord" />
             <circle r="94" className="disque__face" />
             <circle r="79" className="disque__lisere" />
             {POIGNEES.map((a) => (
               <path key={a} d={arc(61, a - 24, a + 24)} className="disque__poignee" />
-            ))}
-            {GRAVURES.map(([texte, position, classe]) => (
-              <text key={position} className={`disque__inscription ${classe}`} textAnchor="middle">
-                <textPath href="#disque-inscription" startOffset={position}>{texte}</textPath>
-              </text>
             ))}
             <circle r="31" className="disque__moyeu" />
             <circle r="22" className="disque__manchon" />
