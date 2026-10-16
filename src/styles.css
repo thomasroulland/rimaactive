@@ -414,7 +414,59 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .gestes li:nth-child(5) { --penche: -2deg; }
 .gestes li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
-/* ---------- Liste à puces sobre ---------- */
+/* ---------- Roue des gestes : tourne avec le défilement ----------
+   Sans JavaScript ou avec « réduire les animations », on garde les pastilles ci-dessus. */
+.roue--animee {
+  position: relative;
+  height: 300px;
+  margin-top: 28px;
+  perspective: 900px;
+  overflow: hidden;
+  border-radius: var(--arrondi);
+  background: var(--blanc);
+}
+/* Bande neon au centre : la fenêtre du sélecteur */
+.roue--animee::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 50%;
+  height: 64px;
+  margin-top: -32px;
+  border-radius: 999px;
+  background: var(--neon);
+}
+.roue--animee .roue__liste {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: block;
+  transform-style: preserve-3d;
+  -webkit-mask-image: linear-gradient(transparent 4%, #000 30%, #000 70%, transparent 96%);
+  mask-image: linear-gradient(transparent 4%, #000 30%, #000 70%, transparent 96%);
+}
+.roue--animee .roue__liste li {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 64px;
+  margin-top: -32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  color: var(--encre-700);
+  font-size: clamp(30px, 3.6vw, 46px);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  transition: color var(--duree) ease;
+}
+.roue--animee .roue__liste li.roue__geste--actif { color: var(--encre); }
+
+
 .liste {
   margin: 24px 0 0;
   padding: 0;

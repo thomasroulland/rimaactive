@@ -1,4 +1,5 @@
 import BarreAnimee from '../components/BarreAnimee.jsx'
+import RoueGestes from '../components/RoueGestes.jsx'
 import { BoutonLien, Faits, Photo, TitreSection, Tuile } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 
@@ -79,11 +80,7 @@ export default function Accueil() {
             <p className="texte" style={{ marginTop: 32 }}>
               Les séances développent les capacités dont nous avons réellement besoin au quotidien :
             </p>
-            <ul className="gestes">
-              {GESTES.map((geste) => (
-                <li key={geste}>{geste}</li>
-              ))}
-            </ul>
+            <RoueGestes gestes={GESTES} />
             <p className="texte" style={{ marginTop: 32 }}>
               Elles fonctionnent comme des challenges : un temps donné, un nombre de tours, un travail en duo. Chacun
               avance à son niveau et cherche à faire un peu mieux que la fois précédente.
