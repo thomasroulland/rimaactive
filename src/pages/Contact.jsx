@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { HerosPage } from '../components/Blocs.jsx'
 import { CONTACT } from '../components/liens.js'
 import useTitre from '../components/useTitre.js'
@@ -87,6 +88,11 @@ export default function Contact() {
               <div className="pleine">
                 <button type="submit" className="bouton bouton--principal">Envoyer</button>
               </div>
+              <p className="info-rgpd pleine">
+                Ces informations servent uniquement à répondre à votre demande. Elles sont lues par Marie Sillas seule
+                et conservées 3 ans au plus sans suite de votre part. Vous pouvez les consulter ou les faire supprimer
+                à tout moment : voir la <Link to="/confidentialite">politique de confidentialité</Link>.
+              </p>
             </form>
           )}
         </div>

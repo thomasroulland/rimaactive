@@ -7,6 +7,8 @@ import Communes from './pages/Communes.jsx'
 import Particuliers from './pages/Particuliers.jsx'
 import APropos from './pages/APropos.jsx'
 import Contact from './pages/Contact.jsx'
+import MentionsLegales from './pages/MentionsLegales.jsx'
+import Confidentialite from './pages/Confidentialite.jsx'
 
 function RemonterEnHaut() {
   const { pathname } = useLocation()
@@ -28,6 +30,8 @@ export default function App() {
           <Route path="particuliers" element={<Particuliers />} />
           <Route path="a-propos" element={<APropos />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="mentions-legales" element={<MentionsLegales />} />
+          <Route path="confidentialite" element={<Confidentialite />} />
           <Route path="*" element={<Accueil />} />
         </Route>
       </Routes>
