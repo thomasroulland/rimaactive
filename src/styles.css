@@ -418,11 +418,15 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   .deux-colonnes:has(> .photo) > div:not(.photo) { display: contents; }
   .deux-colonnes:has(> .photo) > div:not(.photo) > * { order: 2; }
   .deux-colonnes:has(> .photo) > div:not(.photo) > :first-child { order: 0; }
+  /* Le titre passe devant et sa dernière ligne mord sur le haut de la photo */
+  .deux-colonnes:has(> .photo) > div:not(.photo) > :first-child { position: relative; z-index: 1; }
   .deux-colonnes > .photo {
     order: 1;
     width: 78%;
-    margin: 36px 0 44px auto;
+    margin: -0.9em 0 44px auto;
+    font-size: clamp(40px, 5vw, 72px); /* même taille que le titre, pour que le chevauchement en suive la hauteur */
   }
+  .deux-colonnes > .photo .photo__etiquette { font-size: 14px; }
   .deux-colonnes > .photo:last-child { margin-inline: 14px auto; }
 }
 
