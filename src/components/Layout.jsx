@@ -23,8 +23,6 @@ export default function Layout() {
       { rootMargin: '0px 0px -15% 0px' },
     )
     rangees.forEach((rangee) => {
-      // Les offres de l'accueil tournent sur leur roue : elles ne se posent pas
-      if (rangee.closest('.roue-offres--animee')) return
       if (rangee.getBoundingClientRect().top < window.innerHeight * 0.85) return
       rangee.classList.add('tuiles--attente')
       observateur.observe(rangee)

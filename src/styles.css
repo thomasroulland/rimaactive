@@ -451,61 +451,91 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .gestes li:nth-child(5) { --penche: -2deg; }
 .gestes li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
-/* ---------- Roue des offres : disque de fonte à gauche, qui tourne au défilement ---------- */
-/* Sans animation : en-tête puis rangée de tuiles, comme une rubrique ordinaire */
+/* ---------- Roue des offres : cadran à gauche, qui tourne au défilement (voir RoueOffres.jsx) ---------- */
+.roue-offres { height: 230vh; }
 .roue-offres__ecran {
-  max-width: calc(var(--largeur) + 2 * var(--gouttiere));
-  margin: 0 auto;
-  padding: clamp(64px, 9vw, 128px) var(--gouttiere);
-}
-.roue-offres__texte { display: grid; gap: 24px; margin-bottom: clamp(32px, 4vw, 56px); }
-
-.roue-offres--animee { height: 260vh; }
-.roue-offres--animee .roue-offres__ecran {
   position: sticky;
   top: var(--hauteur-entete);
   height: calc(100svh - var(--hauteur-entete));
-  max-width: none;
-  padding: 0;
   display: grid;
   grid-template-rows: auto 1fr;
 }
-.roue-offres--animee .roue-offres__texte {
-  margin: 0;
-  padding: 32px var(--gouttiere) 8px;
+.roue-offres__texte { display: grid; gap: 16px; }
+.roue-offres .roue-offres__texte {
+  width: 100%;
+  max-width: calc(var(--largeur) + 2 * var(--gouttiere));
+  margin: 0 auto;
+  padding: clamp(32px, 5vw, 64px) var(--gouttiere) 0;
 }
-@media (min-width: 900px) {
-  .roue-offres--animee .roue-offres__ecran {
-    grid-template-rows: none;
-    grid-template-columns: 1.4fr 1fr;
-    align-items: center;
-  }
-  .roue-offres--animee .roue-offres__texte { order: 1; padding: 0 var(--gouttiere) 0 clamp(24px, 3vw, 48px); max-width: 500px; }
-}
-.roue-offres--animee .roue-offres__zone {
+.roue-offres__texte .texte { max-width: 44ch; }
+
+.cadran {
+  --taille-nom: clamp(32px, 8.4vw, 84px);
   position: relative;
-  height: 100%;
   min-height: 0;
   overflow: hidden;
 }
-/* Le disque : un disque de fonte corail, comme ceux de la barre du logo */
-.roue-offres--animee .roue-offres__disque {
+/* Le disque tracé au trait : deux cercles, des graduations, un moyeu corail */
+.cadran__disque {
   position: absolute;
-  display: block;
+  left: calc(var(--cx) - var(--rayon));
+  top: calc(var(--cy) - var(--rayon));
+  width: calc(2 * var(--rayon));
+  height: calc(2 * var(--rayon));
+  overflow: visible;
+}
+.cadran__cercle { fill: none; stroke: var(--encre); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.cadran__cercle--fin { stroke-opacity: 0.2; }
+.cadran__trait { stroke: var(--encre); stroke-opacity: 0.3; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.cadran__trait--fort { stroke-opacity: 0.8; stroke-width: 2; }
+.cadran__moyeu { fill: var(--corail); }
+
+/* Chaque offre est un « bras » accroché au centre du cadran : il tourne, le nom suit le bord */
+.cadran__offres { margin: 0; padding: 0; list-style: none; }
+.cadran__bras {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+.cadran__repere {
+  position: absolute;
+  left: calc(var(--rayon) - 7px);
+  top: -7px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: radial-gradient(circle closest-side,
-    var(--lin) 0 5%, var(--encre) 5% 16%, var(--corail) 16% 84%,
-    var(--corail-profond) 84% 85.5%, var(--corail) 85.5% 100%, transparent 100%);
+  background: var(--encre);
+  transition: background-color var(--duree) ease, transform var(--duree) ease;
 }
-.roue-offres--animee .roue-offres__disque > .tuile {
+.cadran__bras--actif .cadran__repere { background: var(--corail); transform: scale(1.5); }
+.cadran__nom {
   position: absolute;
-  margin: 0; /* pas de décalage « hors de l'alignement » ici : il fausserait la rotation */
-  width: min(340px, 78vw);
-  min-height: 0;
-  box-shadow: 0 0 0 2px var(--encre);
+  left: calc(var(--rayon) + 28px);
+  top: 0;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: var(--taille-nom);
+  color: var(--encre);
+  text-decoration: none;
+  transition: color var(--duree) ease;
 }
-/* Sur le disque corail, la tuile du milieu passe en néon pour ne pas s'y fondre */
-.roue-offres--animee .roue-offres__disque > .tuile:nth-child(3n + 2) { background: var(--neon); }
+.cadran__bras--actif .cadran__nom { color: var(--corail-profond); }
+.cadran__nom:hover { color: var(--corail-texte); }
+
+/* Description de l'offre de face, juste sous son nom */
+.cadran__fiches {
+  position: absolute;
+  left: calc(var(--cx) + var(--rayon) + 28px);
+  top: calc(var(--cy) + var(--taille-nom) * 0.55 + 16px);
+  width: var(--largeur-fiche);
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+}
+.cadran__fiches .texte { font-size: 17px; }
 
 /* ---------- Roue des gestes : rubrique fixée à l'écran, la roue tourne au défilement ----------
    Sans JavaScript ou avec « réduire les animations », on garde les pastilles des gestes. */
