@@ -454,7 +454,6 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   --hauteur-geste: clamp(72px, 9vw, 120px);
   position: relative;
   height: min(62vh, 520px);
-  perspective: 1000px;
 }
 @media (max-width: 899px) {
   .roue-section--animee .roue { height: min(44svh, 400px); }
@@ -477,9 +476,15 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   inset: 0;
   margin: 0;
   display: block;
-  transform-style: preserve-3d;
-  -webkit-mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent);
-  mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent);
+}
+/* Fondu en haut et en bas : un dégradé posé par-dessus, bien plus léger à afficher qu'un masque sur la 3D */
+.roue-section--animee .roue::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(var(--encre), transparent 28%, transparent 72%, var(--encre));
 }
 .roue-section--animee .roue__liste li {
   position: absolute;
@@ -497,8 +502,6 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   font-size: clamp(40px, 6.4vw, 92px);
   letter-spacing: -0.05em;
   white-space: nowrap;
-  backface-visibility: hidden;
-  will-change: transform, opacity;
 }
 .roue-section--animee .roue__liste li.roue__geste--actif { color: var(--encre); }
 
