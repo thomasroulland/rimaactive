@@ -78,10 +78,6 @@ export default function Accueil() {
           <div>
             <TitreSection id="approche-titre" titre="une pratique progressive, accessible et concrète" />
             <p className="texte" style={{ marginTop: 32 }}>
-              Les séances développent les capacités dont nous avons réellement besoin au quotidien :
-            </p>
-            <RoueGestes gestes={GESTES} />
-            <p className="texte" style={{ marginTop: 32 }}>
               Elles fonctionnent comme des challenges : un temps donné, un nombre de tours, un travail en duo. Chacun
               avance à son niveau et cherche à faire un peu mieux que la fois précédente.
             </p>
@@ -91,6 +87,8 @@ export default function Accueil() {
           </div>
         </div>
       </section>
+
+      <RoueGestes gestes={GESTES} />
 
       <section className="section" aria-labelledby="zone-titre">
         <div className="conteneur">

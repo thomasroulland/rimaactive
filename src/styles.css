@@ -19,6 +19,7 @@
   --largeur: 1240px;
   --duree: 160ms;
   --arrondi: 28px;
+  --hauteur-entete: 76px; /* en-tête collant, voir .entete */
   --arrondi-grand: 44px;
 }
 
@@ -274,6 +275,7 @@ main > section:nth-of-type(even):not(.appel) {
 .menu-mobile .bouton { margin-top: 24px; width: 100%; }
 
 @media (max-width: 960px) {
+  :root { --hauteur-entete: 68px; }
   .nav, .entete__droite > .bouton { display: none; }
   .menu-bouton { display: inline-flex; }
   .menu-mobile.ouvert { display: block; animation: fondu var(--duree) ease both; }
@@ -351,6 +353,14 @@ main > section:nth-of-type(even):not(.appel) {
 @media (min-width: 900px) {
   .tuiles > .tuile:nth-child(3n + 2) { margin-top: 48px; }
 }
+/* Les tuiles se posent comme des cartes quand la rangée arrive à l'écran (voir Layout.jsx) */
+.tuiles--attente > .tuile { opacity: 0; transform: translateY(80px) rotate(var(--pose, -4deg)); }
+.tuiles--posees > .tuile {
+  transition: opacity 0.5s ease, transform 0.8s cubic-bezier(.2, 1.4, .4, 1), background-color var(--duree) ease;
+}
+.tuiles > .tuile:nth-child(3n + 2) { --pose: 5deg; transition-delay: 0.12s; }
+.tuiles > .tuile:nth-child(3n + 3) { --pose: -2deg; transition-delay: 0.24s; }
+.tuiles--posees > .tuile:hover { transition-delay: 0s; }
 a.tuile:hover { background-color: var(--neon); color: var(--encre); }
 a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .tuile__corps { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
@@ -414,59 +424,85 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .gestes li:nth-child(5) { --penche: -2deg; }
 .gestes li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
-/* ---------- Roue des gestes : tourne avec le défilement ----------
-   Sans JavaScript ou avec « réduire les animations », on garde les pastilles ci-dessus. */
-.roue--animee {
-  position: relative;
-  height: 300px;
-  margin-top: 28px;
-  perspective: 900px;
-  overflow: hidden;
-  border-radius: var(--arrondi);
-  background: var(--blanc);
+/* ---------- Roue des gestes : rubrique fixée à l'écran, la roue tourne au défilement ----------
+   Sans JavaScript ou avec « réduire les animations », on garde les pastilles des gestes. */
+main > section.roue-section.sur-encre { background: var(--encre); color: var(--lin); }
+.roue-section__ecran { padding: clamp(64px, 9vw, 128px) var(--gouttiere); }
+.roue-section .titre { color: var(--lin); }
+.roue-section .texte { color: rgba(255, 255, 255, 0.78); }
+/* Pastilles de secours sur fond encre : la pastille encre passe en néon */
+.roue-section:not(.roue-section--animee) .gestes li { color: var(--encre); }
+.roue-section:not(.roue-section--animee) .gestes li:nth-child(4) { background: var(--neon); }
+.roue-section__grille { display: grid; gap: 32px 64px; align-items: center; }
+@media (min-width: 900px) {
+  .roue-section__grille { grid-template-columns: 1fr 1.2fr; }
 }
-/* Bande neon au centre : la fenêtre du sélecteur */
-.roue--animee::before {
+
+/* Environ un demi-écran de défilement par geste : c'est le temps pendant lequel la roue tourne */
+.roue-section--animee { height: 340vh; }
+.roue-section--animee .roue-section__ecran {
+  position: sticky;
+  top: var(--hauteur-entete);
+  height: calc(100svh - var(--hauteur-entete));
+  display: flex;
+  align-items: center;
+  padding-block: 24px;
+}
+.roue-section--animee .roue-section__grille { width: 100%; }
+.roue-section--animee .roue {
+  --bande: var(--corail);
+  --hauteur-geste: clamp(72px, 9vw, 120px);
+  position: relative;
+  height: min(62vh, 520px);
+  perspective: 1000px;
+}
+@media (max-width: 899px) {
+  .roue-section--animee .roue { height: min(44svh, 400px); }
+}
+/* La bande au centre : la fenêtre du sélecteur, qui change de couleur à chaque geste */
+.roue-section--animee .roue::before {
   content: "";
   position: absolute;
-  left: 12px;
-  right: 12px;
+  left: 0;
+  right: 0;
   top: 50%;
-  height: 64px;
-  margin-top: -32px;
+  height: var(--hauteur-geste);
+  transform: translateY(-50%);
   border-radius: 999px;
-  background: var(--neon);
+  background: var(--bande);
+  transition: background-color 0.35s ease;
 }
-.roue--animee .roue__liste {
+.roue-section--animee .roue__liste {
   position: absolute;
   inset: 0;
   margin: 0;
   display: block;
   transform-style: preserve-3d;
-  -webkit-mask-image: linear-gradient(transparent 4%, #000 30%, #000 70%, transparent 96%);
-  mask-image: linear-gradient(transparent 4%, #000 30%, #000 70%, transparent 96%);
+  -webkit-mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent);
+  mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent);
 }
-.roue--animee .roue__liste li {
+.roue-section--animee .roue__liste li {
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
-  height: 64px;
-  margin-top: -32px;
+  height: var(--hauteur-geste);
+  margin-top: calc(var(--hauteur-geste) / -2);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   background: none;
-  color: var(--encre-700);
-  font-size: clamp(30px, 3.6vw, 46px);
+  color: var(--lin);
+  font-size: clamp(40px, 6.4vw, 92px);
+  letter-spacing: -0.05em;
+  white-space: nowrap;
   backface-visibility: hidden;
   will-change: transform, opacity;
-  transition: color var(--duree) ease;
 }
-.roue--animee .roue__liste li.roue__geste--actif { color: var(--encre); }
+.roue-section--animee .roue__liste li.roue__geste--actif { color: var(--encre); }
 
-
+/* ---------- Liste à puces sobre ---------- */
 .liste {
   margin: 24px 0 0;
   padding: 0;
@@ -634,7 +670,8 @@ textarea.champ { resize: vertical; min-height: 140px; }
   height: auto;
   display: block;
   overflow: visible;
-  transform: translateY(-50%);
+  /* --levee : la barre monte encore un peu quand on fait défiler (voir BarreAnimee.jsx) */
+  transform: translateY(calc(-50% - var(--levee, 0px))) rotate(var(--bascule, 0deg));
   animation: leve 1.7s cubic-bezier(.55, 0, .25, 1) .15s both;
 }
 .barre__bout {

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Photo } from './Blocs.jsx'
 
 // Un bout de la barre : manchon, butée et deux disques corail
@@ -18,8 +19,29 @@ function Bout() {
 
 // Arrivée sur le site : la barre se soulève et dévoile la photo
 export default function BarreAnimee() {
+  const sceneRef = useRef(null)
+
+  // En descendant dans la page, la barre continue de monter et penche légèrement
+  useEffect(() => {
+    const scene = sceneRef.current
+    if (!scene || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let image = null
+    const suivre = () => {
+      image = null
+      const avance = Math.min(1, window.scrollY / 500)
+      scene.style.setProperty('--levee', `${avance * 70}px`)
+      scene.style.setProperty('--bascule', `${Math.sin(avance * Math.PI) * -3}deg`)
+    }
+    const auDefilement = () => { if (!image) image = requestAnimationFrame(suivre) }
+    window.addEventListener('scroll', auDefilement, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', auDefilement)
+      if (image) cancelAnimationFrame(image)
+    }
+  }, [])
+
   return (
-    <div className="barre-scene">
+    <div className="barre-scene" ref={sceneRef}>
       <div className="barre-ombre" aria-hidden="true" />
       <Photo className="barre-photo" label="Photo de Marie en séance" sombre />
       <svg className="barre" aria-hidden="true" viewBox="0 0 640 132">
