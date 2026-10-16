@@ -195,7 +195,17 @@ main > section:nth-of-type(even):not(.appel) {
   gap: 24px;
 }
 .entete__logo { display: flex; flex-shrink: 0; }
-.entete__logo img { height: 32px; width: auto; }
+.entete__logo img {
+  height: 32px;
+  width: auto;
+  transition: clip-path 0.45s cubic-bezier(.55, 0, .25, 1), transform 0.45s cubic-bezier(.55, 0, .25, 1);
+}
+/* En descendant : « rim » et « ctive » s'effacent, le symbole du milieu glisse à gauche.
+   Dans logo.png, le symbole occupe de 31,6 % à 54,5 % de la largeur. */
+.entete--compacte .entete__logo img {
+  clip-path: inset(0 45.5% 0 31.6%);
+  transform: translateX(-31.6%);
+}
 .entete__droite { display: flex; align-items: center; gap: 32px; }
 
 .nav {

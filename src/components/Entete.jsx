@@ -44,6 +44,15 @@ export default function Entete() {
   const trait = useTrait(navRef)
   const { pathname } = useLocation()
   const [ouvert, setOuvert] = useState(false)
+  // Dès qu'on descend un peu, le logo se réduit à son symbole
+  const [compact, setCompact] = useState(false)
+
+  useEffect(() => {
+    const suivre = () => setCompact(window.scrollY > 40)
+    suivre()
+    window.addEventListener('scroll', suivre, { passive: true })
+    return () => window.removeEventListener('scroll', suivre)
+  }, [])
 
   // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
   useEffect(() => setOuvert(false), [pathname])
@@ -55,7 +64,7 @@ export default function Entete() {
   }, [ouvert])
 
   return (
-    <header className="entete">
+    <header className={`entete ${compact ? 'entete--compacte' : ''}`}>
       <div className="entete__barre">
         <Link to="/" className="entete__logo" aria-label="Rimaactive, accueil">
           <img src={logo} alt="rimaactive" width="157" height="32" />
