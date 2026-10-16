@@ -399,6 +399,33 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .photo--sombre { background: #2a2725; color: rgba(255, 255, 255, 0.72); }
 .photo__etiquette { display: flex; align-items: center; gap: 8px; margin-inline: auto; }
 
+/* Photos des rubriques « habillées » : un aplat de couleur décalé derrière, une légère inclinaison,
+   et un glissement au défilement (--glisse et --tourne, voir Layout.jsx). La photo du héros n'est pas concernée. */
+.deux-colonnes > .photo {
+  --penche-photo: -1.5deg;
+  box-shadow: 14px 14px 0 var(--corail);
+  transform: translateY(var(--glisse, 0px)) rotate(calc(var(--penche-photo) + var(--tourne, 0deg)));
+}
+/* Photo à droite du texte : l'aplat passe de l'autre côté, en néon */
+.deux-colonnes > .photo:last-child {
+  --penche-photo: 1.5deg;
+  box-shadow: -14px 14px 0 var(--neon);
+}
+
+/* Sur téléphone : le titre d'abord, la photo juste dessous, décalée sur un côté, puis le texte */
+@media (max-width: 899px) {
+  .deux-colonnes:has(> .photo) { gap: 0; }
+  .deux-colonnes:has(> .photo) > div:not(.photo) { display: contents; }
+  .deux-colonnes:has(> .photo) > div:not(.photo) > * { order: 2; }
+  .deux-colonnes:has(> .photo) > div:not(.photo) > :first-child { order: 0; }
+  .deux-colonnes > .photo {
+    order: 1;
+    width: 78%;
+    margin: 36px 0 44px auto;
+  }
+  .deux-colonnes > .photo:last-child { margin-inline: 14px auto; }
+}
+
 /* ---------- Liste de gestes ---------- */
 .gestes {
   margin: 28px 0 0;

@@ -30,6 +30,36 @@ export default function Layout() {
     return () => observateur.disconnect()
   }, [pathname])
 
+  // Les photos des rubriques glissent et se redressent un peu pendant le défilement
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const photos = [...document.querySelectorAll('.deux-colonnes > .photo')]
+    if (!photos.length) return
+    let image = null
+    const suivre = () => {
+      image = null
+      const h = window.innerHeight
+      // Toutes les lectures d'abord, puis toutes les écritures : pas de mise en page forcée
+      const positions = photos.map((photo) => {
+        const { top, height } = photo.getBoundingClientRect()
+        return Math.max(-1, Math.min(1, (top + height / 2 - h / 2) / h))
+      })
+      photos.forEach((photo, i) => {
+        photo.style.setProperty('--glisse', `${(positions[i] * -40).toFixed(1)}px`)
+        photo.style.setProperty('--tourne', `${(positions[i] * 1.5).toFixed(2)}deg`)
+      })
+    }
+    const auDefilement = () => { if (!image) image = requestAnimationFrame(suivre) }
+    suivre()
+    window.addEventListener('scroll', auDefilement, { passive: true })
+    window.addEventListener('resize', auDefilement)
+    return () => {
+      window.removeEventListener('scroll', auDefilement)
+      window.removeEventListener('resize', auDefilement)
+      if (image) cancelAnimationFrame(image)
+    }
+  }, [pathname])
+
   return (
     <>
       <a className="lien-evitement" href="#contenu">Aller au contenu</a>
