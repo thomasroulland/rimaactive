@@ -28,12 +28,13 @@ export default function RoueOffres({ offres }) {
     const zone = section.querySelector('.cadran')
     const disque = section.querySelector('.cadran__disque')
     const bras = [...section.querySelectorAll('.cadran__bras')]
-    const fiche = section.querySelector('.cadran__fiches')
+    const fiches = section.querySelector('.cadran__fiches')
     const dernier = bras.length - 1
     const tactile = window.matchMedia('(pointer: coarse)').matches
     const inertie = tactile ? 0.3 : 0.12
     const pause = tactile ? 0.25 : 0.5
-    const pas = 68 // écart entre deux offres sur le cadran, en degrés : assez pour que la suivante ne passe pas sur la description
+    let pas = 50 // écart entre deux offres sur le cadran, en degrés
+    let echelleMin = 0.36 // taille des offres qui ne sont pas de face, par rapport à celle de face
     let cible = 0
     let actuel = 0
     let image = null
@@ -48,15 +49,23 @@ export default function RoueOffres({ offres }) {
       const largeur = zone.clientWidth
       const hauteur = zone.clientHeight
       const etroit = largeur < 700
-      const rayon = Math.min(hauteur * 0.44, largeur * 0.5)
-      // Place laissée à droite du cadran pour le nom de l'offre et sa description
-      const reserve = etroit ? largeur * 0.74 : Math.min(largeur * 0.62, 760)
-      const cx = largeur - reserve - rayon
+      zone.classList.toggle('cadran--etroit', etroit)
+      let rayon, cx
+      if (etroit) {
+        pas = 36
+        echelleMin = 0.55
+        rayon = Math.min(130, hauteur * 0.34)
+        cx = largeur - 16 - 240 - 28 - rayon // place pour le nom de face, le plus long fait ~240 px
+      } else {
+        pas = 45
+        echelleMin = 0.36
+        rayon = Math.min(hauteur * 0.4, largeur * 0.5)
+        cx = largeur - Math.min(largeur * 0.62, 760) - rayon
+      }
       const cy = hauteur / 2
       zone.style.setProperty('--cx', `${cx}px`)
       zone.style.setProperty('--cy', `${cy}px`)
       zone.style.setProperty('--rayon', `${rayon}px`)
-      zone.style.setProperty('--largeur-fiche', `${Math.min(440, largeur - (cx + rayon + 24) - 16)}px`)
     }
 
     const mesurer = () => {
@@ -72,12 +81,16 @@ export default function RoueOffres({ offres }) {
       bras.forEach((b, i) => {
         const ecart = i - actuel
         b.style.transform = `rotate(${ecart * pas}deg)`
-        // Les voisines n'apparaissent que pendant que le cadran tourne
-        b.style.opacity = Math.max(0, 1 - Math.abs(ecart) * 1.1)
+        // Le nom reste droit pendant que son bras tourne, pour rester lisible
+        b.style.setProperty('--redresse', `${-ecart * pas}deg`)
+        // Toutes les offres restent visibles ; celle de face est en grand, les autres en petit
+        const face = Math.max(0, 1 - Math.abs(ecart))
+        b.style.setProperty('--echelle', (echelleMin + (1 - echelleMin) * face).toFixed(3))
+        b.style.opacity = (0.6 + 0.4 * face).toFixed(3)
       })
       // La description suit l'offre de face ; elle s'efface pendant que le cadran tourne
       const proche = Math.round(actuel)
-      fiche.style.opacity = Math.max(0, 1 - Math.abs(actuel - proche) * 4)
+      fiches.style.opacity = Math.max(0, 1 - Math.abs(actuel - proche) * 4)
       if (proche !== indexActif) {
         indexActif = proche
         setActif(proche)
@@ -110,6 +123,7 @@ export default function RoueOffres({ offres }) {
     zone.addEventListener('focusin', auFocus)
     const observateur = new ResizeObserver(auRedimensionnement)
     observateur.observe(document.body)
+    observateur.observe(zone)
     return () => {
       observateur.disconnect()
       window.removeEventListener('scroll', auDefilement)
@@ -168,10 +182,16 @@ export default function RoueOffres({ offres }) {
               </li>
             ))}
           </ul>
-          <div className="cadran__fiches" aria-live="polite">
-            <p className="texte">{offres[actif].texte}</p>
-            <Link to={offres[actif].to} className="bouton bouton--secondaire">Découvrir l'offre</Link>
-          </div>
+        </div>
+        {/* Description de l'offre de face. Toutes sont posées au même endroit, une seule est visible :
+            la place réservée est celle de la plus longue, rien ne bouge quand on change d'offre. */}
+        <div className="cadran__fiches">
+          {offres.map((offre, i) => (
+            <div key={offre.to} className={`cadran__fiche ${i === actif ? 'cadran__fiche--active' : ''}`}>
+              <p className="texte">{offre.texte}</p>
+              <Link to={offre.to} className="bouton bouton--secondaire">Découvrir l'offre</Link>
+            </div>
+          ))}
         </div>
       </div>
     </section>
