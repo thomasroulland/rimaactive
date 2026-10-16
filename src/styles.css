@@ -18,9 +18,9 @@
   --gouttiere: clamp(16px, 5vw, 80px);
   --largeur: 1240px;
   --duree: 160ms;
-  --arrondi: 28px;
+  --arrondi: 10px;
   --hauteur-entete: 76px; /* en-tête collant, voir .entete */
-  --arrondi-grand: 44px;
+  --arrondi-grand: 16px;
 }
 
 @font-face {
@@ -299,7 +299,7 @@ main > section:nth-of-type(even):not(.appel) {
 }
 .reperes li {
   padding: 12px 22px;
-  border-radius: 999px;
+  border-radius: 6px;
   background: var(--blanc);
   font-weight: 700;
   font-size: 17px;
@@ -387,7 +387,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
-  border-radius: 999px 999px var(--arrondi) var(--arrondi);
+  border-radius: var(--arrondi);
   overflow: hidden;
   background: #d6cfc5; /* reste visible sur lin comme sur lin 200 */
   display: flex;
@@ -410,7 +410,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 }
 .gestes li {
   padding: 10px 22px 12px;
-  border-radius: 999px;
+  border-radius: 6px;
   background: var(--blanc);
   font-weight: 900;
   font-size: clamp(20px, 2vw, 26px);
@@ -468,7 +468,7 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   top: 50%;
   height: var(--hauteur-geste);
   transform: translateY(-50%);
-  border-radius: 999px;
+  border-radius: var(--arrondi);
   background: var(--bande);
   transition: background-color 0.35s ease;
 }
@@ -617,7 +617,7 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   min-height: 52px;
   padding: 12px 16px;
   border: 1.5px solid var(--encre);
-  border-radius: 14px;
+  border-radius: 6px;
   background: var(--blanc);
   font: inherit;
   color: var(--encre);
