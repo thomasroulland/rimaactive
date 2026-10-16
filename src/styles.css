@@ -195,17 +195,22 @@ main > section:nth-of-type(even):not(.appel) {
   gap: 24px;
 }
 .entete__logo { display: flex; flex-shrink: 0; }
-.entete__logo img {
-  height: 32px;
-  width: auto;
-  transition: clip-path 0.45s cubic-bezier(.55, 0, .25, 1), transform 0.45s cubic-bezier(.55, 0, .25, 1);
+/* Logo en morceaux (voir LogoCompactable dans Entete.jsx) : à l'arrêt, ils reforment exactement le logo ;
+   le JavaScript les tasse en accordéon contre le symbole quand l'en-tête devient compact */
+.logo { position: relative; display: block; }
+.logo__morceau {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  transform-origin: 0 50%;
+  will-change: transform;
 }
-/* En descendant : « rim » et « ctive » s'effacent, le symbole du milieu glisse à gauche.
-   Dans logo.png, le symbole occupe de 31,6 % à 54,5 % de la largeur. */
-.entete--compacte .entete__logo img {
-  clip-path: inset(0 45.5% 0 31.6%);
-  transform: translateX(-31.6%);
-}
+.logo__morceau--symbole { z-index: 1; }
+.logo__entier { display: block; height: 100%; width: auto; visibility: hidden; }
+.logo--entier .logo__entier { visibility: visible; }
+.logo--entier .logo__morceau { visibility: hidden; }
 .entete__droite { display: flex; align-items: center; gap: 32px; }
 
 .nav {
@@ -857,7 +862,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 @keyframes fondu { from { opacity: 0; } to { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition-duration: 0s !important; }
+  *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; }
   .page-entree, .menu-mobile.ouvert { animation: none; }
   .barre, .barre-photo, .barre__bout { animation: none; }
   .barre-ombre { display: none; }
