@@ -12,21 +12,30 @@
     <title>Rimaactive · Accueil</title>
     <script>
       // Mise à l'échelle : au-delà d'une fenêtre de référence (1400 × 630), tout le site grandit
-      // proportionnellement, pour que la composition soit la même sur tous les ordinateurs.
+      // proportionnellement, pour que la composition soit la même sur tous les ordinateurs à 100 %.
       // En dessous (petits portables, tablettes, téléphones), rien ne change.
+      // Le zoom du navigateur (Ctrl + / Ctrl −) reste libre : il s'ajoute par-dessus.
       ;(function () {
         var racine = document.documentElement
+        function zoomNavigateur() {
+          // la fenêtre (outerWidth) ne change pas quand on zoome, la page (innerWidth) si : leur rapport donne le zoom
+          if (!window.outerWidth || !window.innerWidth) return 1
+          var z = window.outerWidth / window.innerWidth
+          z = Math.round(z * 20) / 20 // arrondi aux paliers de zoom usuels (90 %, 110 %…)
+          return z > 0.2 && z < 5 ? z : 1
+        }
         function ajuster() {
-          var echelle = Math.max(1, Math.min(window.innerWidth / 1400, window.innerHeight / 630))
+          var z = zoomNavigateur()
+          // taille qu'aurait la fenêtre à 100 % : c'est elle qui décide de l'agrandissement de base
+          var echelle = Math.max(1, Math.min((window.innerWidth * z) / 1400, (window.innerHeight * z) / 630))
           racine.style.zoom = echelle
           // le zoom agrandit aussi la hauteur d'écran : on la ramène à la vraie hauteur visible
           racine.style.setProperty('--ecran', 'calc(100svh / ' + echelle + ')')
           // idem pour la largeur : les tailles « en % d'écran » se calculent sur la mise en page agrandie
-          racine.style.setProperty('--vw', window.innerWidth / echelle / 100 + 'px')
-          // le contenu occupe toute la largeur disponible, avec la même marge que l'en-tête de chaque côté
           var largeur = window.innerWidth / echelle
+          racine.style.setProperty('--vw', largeur / 100 + 'px')
+          // le contenu occupe toute la largeur disponible, avec la même marge que l'en-tête de chaque côté
           racine.style.setProperty('--largeur', Math.max(1240, largeur - 2 * Math.min(80, largeur * 0.05)) + 'px')
-
         }
         ajuster()
         window.addEventListener('resize', ajuster)

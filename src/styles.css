@@ -318,23 +318,19 @@ main > section:nth-of-type(even):not(.appel) {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(24px, calc(3 * var(--vw)), 48px) var(--gouttiere);
+  padding: 24px var(--gouttiere);
   overflow-x: clip;
 }
 .heros > .conteneur { width: 100%; }
 .heros .actions { margin-top: clamp(20px, calc(2.4 * var(--vw)), 32px); } /* même espace qu'entre le titre et la ligne fine */
-/* Le bloc texte réserve en bas la même place que les points sous les photos :
-   ainsi l'espace au-dessus du titre et sous les encarts est le même par rapport au cadre photo */
-.heros__grille > :first-child { margin-bottom: 32px; }
 .heros__grille { display: grid; gap: clamp(48px, calc(5 * var(--vw)), 80px); align-items: center; }
 @media (min-width: 960px) {
   .heros__grille { grid-template-columns: 1.6fr 1fr; }
 }
 /* Les photos suivent la hauteur de l'écran : titre, photos et encarts tiennent ensemble à l'arrivée */
 .heros__visuel {
-  /* les photos (4:5) prennent presque toute la hauteur sous l'en-tête (marges et points de défilement déduits),
-     jusqu'à 425 px de large : environ 0,63 fois la largeur du titre */
-  --photo: min(100%, clamp(240px, (var(--ecran) - var(--hauteur-entete) - 96px) / 1.25, 425px));
+  /* les photos (4:5) prennent presque toute la hauteur sous l'en-tête, marges du haut de page déduites */
+  --photo: min(100%, clamp(240px, (var(--ecran) - var(--hauteur-entete) - 56px) / 1.25, 460px));
   display: flex;
   justify-content: center;
 }
@@ -344,13 +340,20 @@ main > section:nth-of-type(even):not(.appel) {
 }
 
 /* Fondu entre les trois décors de la charte : salle, maison, quotidien (voir VisuelFondu.jsx) */
-.fondu-scene { position: relative; width: var(--photo); aspect-ratio: 4 / 5; margin-bottom: 32px; } /* place pour les points */
-.fondu-scene .fondu-photo { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+.fondu-scene { position: relative; width: var(--photo); aspect-ratio: 4 / 5; }
+.fondu-scene .fondu-photo { position: absolute; inset: 0; aspect-ratio: auto; height: auto; opacity: 0; transition: opacity .9s ease; }
 .fondu-scene .fondu-photo--active { opacity: 1; }
+/* Grand écran : le cadre prend toute la hauteur disponible et s'élargit (jusqu'au carré)
+   pour se rapprocher des textes, sans jamais dépasser le bas de l'écran */
+@media (min-width: 960px) {
+  .heros__visuel { --photo-h: clamp(300px, calc(var(--ecran) - var(--hauteur-entete) - 56px), 575px); }
+  .fondu-scene { height: var(--photo-h); width: clamp(calc(var(--photo-h) * 0.8), 100%, var(--photo-h)); aspect-ratio: auto; }
+}
 .fondu-photo--clair { background: var(--lin-200); }
 .fondu-photo--moyen { background: #c9bfb2; }
-.fondu-points { position: absolute; left: 0; right: 0; bottom: -24px; display: flex; justify-content: center; gap: 8px; }
-.fondu-points span { width: 8px; height: 8px; border-radius: 50%; background: var(--encre); opacity: .2; transition: opacity var(--duree) ease; }
+/* les points de défilement sont posés dans le bas de la photo */
+.fondu-points { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; gap: 8px; }
+.fondu-points span { width: 8px; height: 8px; border-radius: 50%; background: var(--blanc); opacity: .45; transition: opacity var(--duree) ease; }
 .fondu-points span.actif { opacity: 1; }
 
 .reperes {
