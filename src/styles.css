@@ -206,15 +206,17 @@ main > section:nth-of-type(even):not(.appel) {
   justify-content: space-between;
   gap: 24px;
 }
-.entete__logo { display: flex; align-items: baseline; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
-.entete__logo img { height: 30px; width: auto; align-self: auto; } /* le bas des « aa » repose sur la ligne d'écriture du texte */
+.entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
+.entete__logo img { height: 30px; width: auto; }
 .entete__signature {
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(19px, 1.8vw, 24px);
+  font-size: clamp(17px, 1.45vw, 20px);
   line-height: 1.1;
   white-space: nowrap;
+  /* l'italique descend : on le remonte pour que ses minuscules soient sur l'axe du « aa » et du menu */
+  transform: translateY(-2px);
 }
 .entete__droite { display: flex; align-items: center; gap: 32px; }
 
