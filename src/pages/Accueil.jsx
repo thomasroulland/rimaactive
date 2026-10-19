@@ -38,8 +38,8 @@ export default function Accueil() {
             <p className="ligne-fine ligne-fine--sous-titre">
               {/* Coupures choisies : une ligne par span sur grand écran, texte continu sur téléphone */}
               <span className="ligne">Je vous accompagne avec des séances adaptées à votre niveau </span>
-              <span className="ligne">et à vos objectifs. Dans vos locaux, en extérieur </span>
-              <span className="ligne">ou à domicile, je me déplace selon vos besoins.</span>
+              <span className="ligne">et à vos objectifs. Dans vos locaux, en extérieur ou à domicile, </span>
+              <span className="ligne">je me déplace selon vos besoins.</span>
             </p>
             <div className="actions">
               <BoutonLien to="/contact">M'écrire</BoutonLien>
