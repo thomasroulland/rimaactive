@@ -315,19 +315,23 @@ main > section:nth-of-type(even):not(.appel) {
 @media (min-width: 960px) {
   .heros__grille { grid-template-columns: 1.6fr 1fr; }
 }
-/* La photo suit la hauteur de l'écran : titre, photo et encarts tiennent ensemble à l'arrivée */
+/* Les photos suivent la hauteur de l'écran : titre, photos et encarts tiennent ensemble à l'arrivée */
 .heros__visuel {
-  /* hauteur de la photo ≈ écran − en-tête − marges − dépassement de la barre */
-  --photo: min(100%, clamp(260px, (100svh - var(--hauteur-entete) - 110px) / 1.4, 460px));
+  /* hauteur des photos (4:5) ≈ écran − en-tête − marges − points de défilement */
+  --photo: min(100%, clamp(240px, (100svh - var(--hauteur-entete) - 130px) / 1.25, 480px));
   display: flex;
   justify-content: center;
-  /* la barre dépasse au-dessus de la photo d'environ 15 % de sa largeur, et de 20 % sur les côtés */
-  padding: calc(var(--photo) * 0.15) 0 0;
 }
-@media (max-width: 959px) {
-  .heros__visuel { padding-inline: clamp(20px, 6vw, 56px); }
-}
-.heros__visuel .barre-scene { width: var(--photo); }
+
+/* Fondu entre les trois décors de la charte : salle, maison, quotidien (voir VisuelFondu.jsx) */
+.fondu-scene { position: relative; width: var(--photo); aspect-ratio: 4 / 5; margin-bottom: 32px; } /* place pour les points */
+.fondu-scene .fondu-photo { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+.fondu-scene .fondu-photo--active { opacity: 1; }
+.fondu-photo--clair { background: var(--lin-200); }
+.fondu-photo--moyen { background: #c9bfb2; }
+.fondu-points { position: absolute; left: 0; right: 0; bottom: -24px; display: flex; justify-content: center; gap: 8px; }
+.fondu-points span { width: 8px; height: 8px; border-radius: 50%; background: var(--encre); opacity: .2; transition: opacity var(--duree) ease; }
+.fondu-points span.actif { opacity: 1; }
 
 .reperes {
   margin: clamp(28px, 3.2vw, 44px) 0 0;
@@ -833,58 +837,6 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .choix input:focus-visible + span { outline: 3px solid var(--corail); outline-offset: 2px; }
 .confirmation { border-radius: var(--arrondi); background: var(--fond-carte); padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; gap: 12px; }
 
-/* ---------- Animation de la barre (accueil) ---------- */
-.barre-scene { position: relative; width: min(100%, 460px); aspect-ratio: 4 / 5; }
-.barre-scene .photo { position: absolute; inset: 0; }
-.barre-ombre {
-  position: absolute;
-  left: -30%;
-  right: -30%;
-  bottom: -10px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--lin-200);
-  transform-origin: 50% 50%;
-  animation: ombre 0.7s ease-out 0.4s both;
-}
-.barre-photo { animation: revele 1.7s cubic-bezier(.55, 0, .25, 1) .15s both; }
-.barre {
-  position: absolute;
-  left: 50%;
-  width: 140%;
-  margin-left: -70%;
-  top: 0%;
-  height: auto;
-  display: block;
-  overflow: visible;
-  /* --levee : la barre monte encore un peu quand on fait défiler (voir BarreAnimee.jsx) */
-  transform: translateY(calc(-50% - var(--levee, 0px))) rotate(var(--bascule, 0deg));
-  animation: leve 1.7s cubic-bezier(.55, 0, .25, 1) .15s both;
-}
-.barre__bout {
-  transform-box: fill-box;
-  transform-origin: 100% 50%;
-  animation: plie 1.7s cubic-bezier(.55, 0, .25, 1) .15s both;
-}
-/* Tant que la photo n'est pas à l'écran, l'animation reste figée sur sa première image (voir BarreAnimee.jsx) */
-.barre-scene--attente .barre,
-.barre-scene--attente .barre-photo,
-.barre-scene--attente .barre__bout,
-.barre-scene--attente .barre-ombre { animation-play-state: paused; }
-@keyframes leve {
-  0% { top: 100%; } 18% { top: 97%; } 64% { top: -6%; } 76% { top: 2%; } 88% { top: -1%; } 100% { top: 0%; }
-}
-@keyframes revele {
-  0% { clip-path: inset(100% 0 0 0); } 18% { clip-path: inset(97% 0 0 0); } 64%, 100% { clip-path: inset(0 0 0 0); }
-}
-@keyframes plie {
-  0% { transform: none; } 18% { transform: rotate(-5deg); } 50% { transform: rotate(-2.5deg); }
-  66% { transform: rotate(4.5deg); } 80% { transform: rotate(-1.5deg); } 92% { transform: rotate(.5deg); } 100% { transform: none; }
-}
-@keyframes ombre {
-  0% { transform: scaleX(1); opacity: .9; } 100% { transform: scaleX(.4); opacity: 0; }
-}
-
 /* ---------- Changement de page : fondu simple ---------- */
 .page-entree { animation: fondu 0.3s ease both; }
 @keyframes fondu { from { opacity: 0; } to { opacity: 1; } }
@@ -892,8 +844,6 @@ textarea.champ { resize: vertical; min-height: 140px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; }
   .page-entree, .menu-mobile.ouvert { animation: none; }
-  .barre, .barre-photo, .barre__bout { animation: none; }
-  .barre-ombre { display: none; }
 }
 
 /* ---------- Pages juridiques ---------- */

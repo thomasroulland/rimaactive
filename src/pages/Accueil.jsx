@@ -1,4 +1,4 @@
-import BarreAnimee from '../components/BarreAnimee.jsx'
+import VisuelFondu from '../components/VisuelFondu.jsx'
 import RoueGestes from '../components/RoueGestes.jsx'
 import RoueOffres from '../components/RoueOffres.jsx'
 import { BoutonLien, Faits, Photo, TitreSection, Tuile } from '../components/Blocs.jsx'
@@ -48,7 +48,7 @@ export default function Accueil() {
             </ul>
           </div>
           <div className="heros__visuel">
-            <BarreAnimee />
+            <VisuelFondu />
           </div>
         </div>
       </section>
