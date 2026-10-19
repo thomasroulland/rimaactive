@@ -213,12 +213,7 @@ main > section:nth-of-type(even):not(.appel) {
   font-size: clamp(19px, 1.8vw, 24px);
   line-height: 1.1;
   white-space: nowrap;
-  overflow: hidden;
-  max-width: 320px;
-  transition: max-width 0.4s ease, opacity var(--duree) ease;
 }
-/* En-tête compact (on a descendu la page) : il ne reste que l'icône */
-.entete--compacte .entete__signature { max-width: 0; opacity: 0; }
 .entete__droite { display: flex; align-items: center; gap: 32px; }
 
 .nav {

@@ -44,16 +44,6 @@ export default function Entete() {
   const trait = useTrait(navRef)
   const { pathname } = useLocation()
   const [ouvert, setOuvert] = useState(false)
-  // Dès qu'on descend un peu, seule l'icône « aa » reste : la signature s'efface
-  const [compact, setCompact] = useState(false)
-
-  useEffect(() => {
-    const suivre = () => setCompact(window.scrollY > 40)
-    suivre()
-    window.addEventListener('scroll', suivre, { passive: true })
-    return () => window.removeEventListener('scroll', suivre)
-  }, [])
-
   // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
   useEffect(() => setOuvert(false), [pathname])
   useEffect(() => {
@@ -64,7 +54,7 @@ export default function Entete() {
   }, [ouvert])
 
   return (
-    <header className={`entete ${compact ? 'entete--compacte' : ''}`}>
+    <header className="entete">
       <div className="entete__barre">
         <Link to="/" className="entete__logo" aria-label="Marie Sillas, coach sportive · accueil">
           <img src={icone} alt="" width="44" height="40" />
