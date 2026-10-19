@@ -211,7 +211,7 @@ main > section:nth-of-type(even):not(.appel) {
   gap: 24px;
 }
 .entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
-.entete__logo img { height: 22px; width: auto; transform: translateY(-2.5px); } /* centré sur la hauteur des majuscules du prénom */
+.entete__logo img { height: 22px; width: auto; transform: translateY(-4.5px); } /* légèrement au-dessus du centre du prénom */
 .entete__signature {
   font-family: var(--font-serif);
   font-style: italic;
