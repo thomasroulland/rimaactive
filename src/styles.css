@@ -206,8 +206,8 @@ main > section:nth-of-type(even):not(.appel) {
   justify-content: space-between;
   gap: 24px;
 }
-.entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
-.entete__logo img { height: 30px; width: auto; transform: translateY(-2px); } /* recentre les « aa » sur les minuscules du texte */
+.entete__logo { display: flex; align-items: baseline; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
+.entete__logo img { height: 30px; width: auto; align-self: auto; } /* le bas des « aa » repose sur la ligne d'écriture du texte */
 .entete__signature {
   font-family: var(--font-serif);
   font-style: italic;
