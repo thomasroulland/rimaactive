@@ -66,16 +66,19 @@ export function Faits({ items }) {
 }
 
 // Emplacement photo, à remplacer par une vraie image (portrait 4:5)
-export function Photo({ label, sombre = false, className = '' }) {
+// sansEtiquette : la légende n'est pas affichée (elle reste lue par les lecteurs d'écran)
+export function Photo({ label, sombre = false, sansEtiquette = false, className = '' }) {
   return (
     <div role="img" aria-label={`Emplacement photo : ${label}`} className={`photo ${sombre ? 'photo--sombre' : ''} ${className}`}>
-      <span className="photo__etiquette">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-          <rect x="3" y="5" width="18" height="14" />
-          <circle cx="12" cy="12" r="3.5" />
-        </svg>
-        {label}
-      </span>
+      {!sansEtiquette && (
+        <span className="photo__etiquette">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <rect x="3" y="5" width="18" height="14" />
+            <circle cx="12" cy="12" r="3.5" />
+          </svg>
+          {label}
+        </span>
+      )}
     </div>
   )
 }

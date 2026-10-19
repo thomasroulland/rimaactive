@@ -24,6 +24,7 @@ export default function VisuelFondu() {
           key={decor.label}
           label={decor.label}
           sombre={decor.ton === 'sombre'}
+          sansEtiquette
           className={`fondu-photo fondu-photo--${decor.ton} ${i === actif ? 'fondu-photo--active' : ''}`}
         />
       ))}
