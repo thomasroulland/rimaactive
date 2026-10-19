@@ -1,4 +1,7 @@
+import { useSearchParams } from 'react-router-dom'
 import BarreAnimee from '../components/BarreAnimee.jsx'
+import VisuelFondu from '../components/VisuelFondu.jsx'
+import VisuelKettlebell from '../components/VisuelKettlebell.jsx'
 import RoueGestes from '../components/RoueGestes.jsx'
 import RoueOffres from '../components/RoueOffres.jsx'
 import { BoutonLien, Faits, Photo, TitreSection, Tuile } from '../components/Blocs.jsx'
@@ -26,9 +29,12 @@ const GESTES = ["s'accroupir", 'porter', 'pousser', 'tirer', 'se pencher', 'se r
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Essai : ?visuel=kettlebell, ?visuel=bord ou ?visuel=fondu (sinon la barre)
+  const [parametres] = useSearchParams()
+  const visuel = parametres.get('visuel')
   return (
     <>
-      <section className="heros">
+      <section className={`heros ${visuel === 'bord' ? 'heros--bord' : ''}`}>
         <div className="conteneur heros__grille">
           <div>
             <h1 className="titre titre--accueil">un corps fort et mobile grâce à une pratique fonctionnelle</h1>
@@ -47,8 +53,16 @@ export default function Accueil() {
               <li>Tous niveaux</li>
             </ul>
           </div>
-          <div className="heros__visuel">
-            <BarreAnimee />
+          <div className={`heros__visuel ${visuel === 'kettlebell' || visuel === 'fondu' ? 'heros__visuel--libre' : ''}`}>
+            {visuel === 'kettlebell' ? (
+              <VisuelKettlebell />
+            ) : visuel === 'fondu' ? (
+              <VisuelFondu />
+            ) : visuel === 'bord' ? (
+              <Photo label="Photo de Marie en séance" sombre />
+            ) : (
+              <BarreAnimee />
+            )}
           </div>
         </div>
       </section>

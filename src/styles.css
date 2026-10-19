@@ -943,3 +943,56 @@ textarea.champ { resize: vertical; min-height: 140px; }
 
 /* Mention d'information sous le formulaire */
 .info-rgpd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--encre-700); max-width: 70ch; }
+
+/* ---------- Essais de visuels pour le haut de l'accueil (?visuel=…) ---------- */
+/* Kettlebell : elle tombe, se pose et le sol se dessine */
+/* Sans barre au-dessus, pas de place à réserver en haut : le visuel suit la hauteur de l'écran */
+.heros__visuel--libre {
+  --photo: min(100%, clamp(240px, (100svh - var(--hauteur-entete) - 130px) / 1.25, 480px));
+  padding-top: 0;
+}
+.kb-scene { width: min(100%, calc(var(--photo) * 1.05)); }
+.kb-choc { display: flex; flex-direction: column; align-items: center; animation: kb-choc .28s ease-out 1.15s both; }
+.kb { width: 100%; transform-origin: 50% 100%; animation: kb-pose 1.6s .1s both; }
+.kb svg { width: 100%; height: auto; display: block; overflow: visible; }
+.kb-sol { width: 118%; height: 8px; background: var(--encre); transform-origin: 50% 50%; animation: kb-sol .7s cubic-bezier(.2, .8, .2, 1) .2s both; }
+@keyframes kb-pose {
+  0% { transform: translate(55%, -75%) rotate(-48deg); animation-timing-function: cubic-bezier(.3, 0, .6, .4); }
+  38% { transform: translate(22%, -22%) rotate(16deg); animation-timing-function: cubic-bezier(.5, 0, .9, .5); }
+  66% { transform: translate(0, 0) rotate(0deg); animation-timing-function: ease-out; }
+  73% { transform: translate(0, -1.5%) rotate(-2deg); }
+  82% { transform: translate(0, 0) rotate(.8deg); }
+  90% { transform: rotate(-.3deg); }
+  100% { transform: none; }
+}
+@keyframes kb-choc { 0%, 100% { transform: none; } 25% { transform: translateY(4px); } 55% { transform: translateY(-1px); } }
+@keyframes kb-sol { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Fondu entre trois photos */
+.fondu-scene { position: relative; width: var(--photo); aspect-ratio: 4 / 5; }
+.fondu-scene .fondu-photo { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+.fondu-scene .fondu-photo--active { opacity: 1; }
+.fondu-photo--clair { background: var(--lin-200); }
+.fondu-photo--moyen { background: #c9bfb2; }
+.fondu-points { position: absolute; left: 0; right: 0; bottom: -24px; display: flex; justify-content: center; gap: 8px; }
+.fondu-points span { width: 8px; height: 8px; border-radius: 50%; background: var(--encre); opacity: .2; transition: opacity var(--duree) ease; }
+.fondu-points span.actif { opacity: 1; }
+
+/* Photo bord à bord : elle occupe toute la droite du haut de page, jusqu'au bord de l'écran */
+@media (min-width: 960px) {
+  .heros--bord { position: relative; }
+  .heros--bord .heros__visuel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(38vw, 640px);
+    padding: 0;
+  }
+  .heros--bord .heros__visuel .photo { width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; }
+}
+.heros--bord .heros__visuel .photo { animation: fondu .9s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kb, .kb-choc, .kb-sol { animation: none; }
+}
