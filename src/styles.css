@@ -124,10 +124,12 @@ a:hover { color: var(--encre); }
 .section { padding: clamp(64px, 9vw, 128px) var(--gouttiere); }
 /* Une rubrique sur deux passe en lin 200 (« fond alterné » de la charte) : le haut de page reste lin */
 main > section:nth-of-type(even):not(.appel) {
-  background: var(--lin-200);
-  margin-inline: clamp(8px, 1.5vw, 20px);
-  border-radius: var(--arrondi-grand);
+  --fond-rubrique: var(--lin-200);
+  background: var(--fond-rubrique);
 }
+/* Essai : « mes offres » sur fond blanc, séparation nette et carrée */
+main > section#offres { --fond-rubrique: var(--blanc); }
+#offres .tuile:not(:hover) { background: var(--lin); }
 .section--serree { padding-block: clamp(48px, 6vw, 80px); }
 .conteneur { max-width: var(--largeur); margin: 0 auto; }
 .conteneur--etroit { max-width: 860px; }
@@ -299,7 +301,16 @@ main > section:nth-of-type(even):not(.appel) {
 }
 
 /* ---------- Héros de l'accueil ---------- */
-.heros { padding: clamp(24px, 3vw, 48px) var(--gouttiere) clamp(48px, 5vw, 72px); overflow-x: clip; }
+/* Le haut de page occupe exactement l'écran sous l'en-tête : la rubrique suivante n'apparaît qu'au défilement */
+.heros {
+  min-height: calc(100svh - var(--hauteur-entete));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(24px, 3vw, 48px) var(--gouttiere);
+  overflow-x: clip;
+}
+.heros > .conteneur { width: 100%; }
 .heros__grille { display: grid; gap: clamp(48px, 5vw, 80px); align-items: center; }
 @media (min-width: 960px) {
   .heros__grille { grid-template-columns: 1.6fr 1fr; }
@@ -541,10 +552,10 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .disque__rebord { fill: var(--corail-profond); }
 .disque__face { fill: var(--corail); }
 .disque__lisere { fill: none; stroke: var(--corail-profond); stroke-width: 2; }
-.disque__poignee { fill: none; stroke: var(--lin-200); stroke-width: 17; stroke-linecap: round; }
+.disque__poignee { fill: none; stroke: var(--fond-rubrique, var(--lin-200)); stroke-width: 17; stroke-linecap: round; }
 .disque__moyeu { fill: var(--corail-profond); }
 .disque__manchon { fill: var(--encre); }
-.disque__trou { fill: var(--lin-200); }
+.disque__trou { fill: var(--fond-rubrique, var(--lin-200)); }
 
 /* Chaque offre est un « bras » accroché au centre du cadran : il tourne, le nom suit le bord */
 .cadran__offres { margin: 0; padding: 0; list-style: none; }
@@ -566,7 +577,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   background: var(--encre);
   transition: background-color var(--duree) ease, transform var(--duree) ease;
 }
-.cadran__bras--actif .cadran__repere { transform: scale(1.5); box-shadow: 0 0 0 3px var(--lin-200); }
+.cadran__bras--actif .cadran__repere { transform: scale(1.5); box-shadow: 0 0 0 3px var(--fond-rubrique, var(--lin-200)); }
 .cadran__nom {
   position: absolute;
   left: calc(var(--rayon) + 28px);
@@ -724,8 +735,6 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 .appel {
   background: var(--encre);
   color: var(--blanc);
-  margin: 0 clamp(8px, 1.5vw, 20px);
-  border-radius: var(--arrondi-grand) var(--arrondi-grand) 0 0;
   padding: clamp(56px, 7vw, 96px) var(--gouttiere);
 }
 .appel__grille { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px 64px; }
