@@ -523,47 +523,36 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .gestes li:nth-child(5) { --penche: -2deg; }
 .gestes li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
-/* ---------- Roue des offres : cadran à gauche, qui tourne au défilement (voir RoueOffres.jsx) ---------- */
+/* ---------- Ma méthode : disque de fonte qui tourne au défilement (voir RoueOffres.jsx) ---------- */
 .roue-offres { height: 230vh; }
 .roue-offres__ecran {
   position: sticky;
   top: var(--hauteur-entete);
   height: calc(var(--ecran) - var(--hauteur-entete));
   display: grid;
-  /* Téléphone : en-tête, disque, puis description en bas */
-  grid-template-rows: auto 1fr auto;
+  /* Téléphone : titre et description en haut, disque dessous */
+  grid-template-rows: auto 1fr;
 }
-.roue-offres__ecran > .cadran__fiches { padding: 0 var(--gouttiere) 20px; }
-/* Ordinateur : la description en haut à droite, en face du titre ; le disque sur toute la largeur dessous */
+/* Ordinateur : même construction que le haut de page, le titre et sa ligne fine à gauche, centrés
+   dans la hauteur ; le disque à droite, ses noms calés sur le bord droit du contenu */
 @media (min-width: 900px) {
-  .roue-offres__ecran {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    max-width: calc(var(--largeur) + 2 * var(--gouttiere));
-    margin: 0 auto;
-    width: 100%;
-  }
-  .roue-offres__ecran > .roue-offres__texte { grid-column: 1; grid-row: 1; }
-  .roue-offres__ecran > .cadran__fiches {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: end;
-    padding: clamp(32px, calc(5 * var(--vw)), 64px) var(--gouttiere) 0;
-    max-width: 520px;
-  }
-  .roue-offres__ecran > .cadran { grid-column: 1 / -1; grid-row: 2; }
+  .roue-offres__ecran { grid-template-rows: 1fr; max-width: calc(var(--largeur) + 2 * var(--gouttiere)); margin: 0 auto; width: 100%; }
+  .roue-offres__ecran > .roue-offres__texte,
+  .roue-offres__ecran > .cadran { grid-area: 1 / 1; }
+  .roue-offres .roue-offres__ecran > .roue-offres__texte { align-self: center; padding-top: 0; position: relative; z-index: 1; pointer-events: none; }
 }
-.roue-offres__texte { display: grid; gap: 16px; }
+.roue-offres__texte { display: grid; }
 .roue-offres .roue-offres__texte {
   width: 100%;
   max-width: calc(var(--largeur) + 2 * var(--gouttiere));
   margin: 0 auto;
   padding: clamp(32px, calc(5 * var(--vw)), 64px) var(--gouttiere) 0;
 }
-.roue-offres__texte .texte { max-width: 44ch; }
+.roue-offres__texte .cadran__fiches { margin-top: clamp(20px, calc(2.4 * var(--vw)), 32px); }
 
 .cadran {
-  --taille-nom: clamp(32px, calc(7 * var(--vw)), 84px);
+  /* même taille que les titres de l'accueil */
+  --taille-nom: clamp(34px, calc(4.1 * var(--vw)), 58px);
   position: relative;
   min-height: 0;
   /* Coupé sur les côtés (le disque sort de l'écran), mais pas en haut ni en bas : les offres voisines restent entières */
@@ -636,7 +625,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   visibility: hidden;
 }
 .cadran__fiche--active { visibility: visible; }
-.cadran__fiche .texte { font-size: 17px; }
+.ligne-fine--fiche { margin: 0; max-width: 24em; text-wrap: balance; font-size: clamp(18px, calc(1.45 * var(--vw)), 21px); line-height: 1.3; }
 
 /* ---------- Roue des gestes : rubrique fixée à l'écran, la roue tourne au défilement ----------
    Sans JavaScript ou avec « réduire les animations », on garde les pastilles des gestes. */

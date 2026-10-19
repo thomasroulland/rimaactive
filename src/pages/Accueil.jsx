@@ -4,22 +4,10 @@ import RoueOffres from '../components/RoueOffres.jsx'
 import { BoutonLien, Faits, Photo, TitreSection, Tuile } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 
-const OFFRES = [
-  {
-    to: '/entreprises',
-    titre: 'en entreprise',
-    texte: "Préserver les capacités physiques de vos équipes face aux contraintes du travail. Chaque semaine ou le temps d'un séminaire, dans vos locaux ou en extérieur.",
-  },
-  {
-    to: '/communes',
-    titre: 'en commune',
-    texte: 'Des séances en petit groupe pour vos habitants, en extérieur ou en salle communale, quel que soit leur niveau de départ.',
-  },
-  {
-    to: '/particuliers',
-    titre: 'pour vous',
-    texte: 'Construire un corps plus fort, seul ou en petit groupe, avec un accompagnement adapté à votre profil, à domicile, en extérieur ou en salle.',
-  },
+const METHODE = [
+  { titre: 'plus de force', texte: 'Développer sa force qui sert dans la vie quotidienne et professionnelle.' },
+  { titre: 'plus de mobilité', texte: 'Retrouver plus de liberté dans ses mouvements.' },
+  { titre: "plus d'autonomie", texte: 'Comprendre les mouvements pour continuer à bouger durablement.' },
 ]
 
 const GESTES = ["s'accroupir", 'porter', 'pousser', 'tirer', 'se pencher', 'se relever']
@@ -43,7 +31,7 @@ export default function Accueil() {
             </p>
             <div className="actions">
               <BoutonLien to="/contact">M'écrire</BoutonLien>
-              <a href="#offres" className="bouton bouton--secondaire">Mes formules</a>
+              <a href="#methode" className="bouton bouton--secondaire">Mes formules</a>
             </div>
             <ul className="reperes">
               <li>Houdan (78) &amp; alentours</li>
@@ -57,7 +45,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <RoueOffres offres={OFFRES} />
+      <RoueOffres offres={METHODE} />
 
       <section className="section" aria-labelledby="approche-titre">
         <div className="conteneur deux-colonnes">

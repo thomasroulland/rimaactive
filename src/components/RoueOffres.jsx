@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { Tuile } from './Blocs.jsx'
 import { cran } from './cran.js'
 
@@ -12,9 +11,9 @@ function arc(r, a1, a2) {
   return `M ${point(a1)} A ${r} ${r} 0 0 1 ${point(a2)}`
 }
 
-// Rubrique des offres : un cadran à gauche, tracé au trait, avec le nom des offres sur son bord.
-// Au défilement, il tourne dans le sens inverse des aiguilles d'une montre et amène chaque offre
-// en face, bien droite, avec sa description dessous.
+// Rubrique « ma méthode » : un disque de fonte avec les trois piliers sur son bord.
+// Au défilement, il tourne dans le sens inverse des aiguilles d'une montre et amène chaque pilier
+// en face, bien droit, avec sa description au-dessus.
 // Sans JavaScript ou avec « réduire les animations » : une simple rangée de tuiles.
 export default function RoueOffres({ offres }) {
   const sectionRef = useRef(null)
@@ -29,7 +28,10 @@ export default function RoueOffres({ offres }) {
     const disque = section.querySelector('.cadran__disque')
     const bras = [...section.querySelectorAll('.cadran__bras')]
     const fiches = section.querySelector('.cadran__fiches')
+    const texte = section.querySelector('.roue-offres__texte')
+    const noms = [...section.querySelectorAll('.cadran__nom')]
     const dernier = bras.length - 1
+    const colonnes = window.matchMedia('(min-width: 900px)')
     const tactile = window.matchMedia('(pointer: coarse)').matches
     const inertie = tactile ? 0.3 : 0.12
     const pause = tactile ? 0.25 : 0.5
@@ -59,8 +61,16 @@ export default function RoueOffres({ offres }) {
       } else {
         pas = 45
         echelleMin = 0.36
-        rayon = Math.min(hauteur * 0.4, largeur * 0.5)
-        cx = largeur - Math.min(largeur * 0.62, 760) - rayon
+        if (colonnes.matches) {
+          // Comme en haut de page : texte à gauche, le disque et ses noms calés sur le bord droit du contenu
+          rayon = Math.min(hauteur * 0.36, 210)
+          const gouttiere = parseFloat(getComputedStyle(texte).paddingLeft)
+          const nomMax = Math.max(...noms.map((n) => n.offsetWidth))
+          cx = largeur - gouttiere - nomMax - 28 - rayon
+        } else {
+          rayon = Math.min(hauteur * 0.36, largeur * 0.5)
+          cx = largeur - Math.min(largeur * 0.62, 760) - rayon
+        }
       }
       const cy = hauteur / 2
       zone.style.setProperty('--cx', `${cx}px`)
@@ -107,12 +117,6 @@ export default function RoueOffres({ offres }) {
       auDefilement()
     }
 
-    // Au clavier : une offre qui reçoit le focus est amenée en face
-    const auFocus = (e) => {
-      const i = bras.findIndex((b) => b.contains(e.target))
-      if (i < 0 || Math.round(actuel) === i) return
-      window.scrollTo({ top: debut + (course * i) / (dernier + 0.6) })
-    }
 
     dimensionner()
     mesurer()
@@ -120,7 +124,6 @@ export default function RoueOffres({ offres }) {
     dessiner()
     window.addEventListener('scroll', auDefilement, { passive: true })
     window.addEventListener('resize', auRedimensionnement)
-    zone.addEventListener('focusin', auFocus)
     const observateur = new ResizeObserver(auRedimensionnement)
     observateur.observe(document.body)
     observateur.observe(zone)
@@ -128,27 +131,25 @@ export default function RoueOffres({ offres }) {
       observateur.disconnect()
       window.removeEventListener('scroll', auDefilement)
       window.removeEventListener('resize', auRedimensionnement)
-      zone.removeEventListener('focusin', auFocus)
       if (image) cancelAnimationFrame(image)
     }
   }, [anime, offres])
 
   const entete = (
     <div className="roue-offres__texte">
-      <h2 id="offres-titre" className="titre titre--section">mes offres</h2>
-      <p className="texte">Choisissez votre cas : chaque page détaille le format, le lieu et l'organisation.</p>
+      <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
     </div>
   )
 
   if (!anime) {
     return (
-      <section id="offres" className="section" aria-labelledby="offres-titre">
+      <section id="methode" className="section" aria-labelledby="methode-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">{entete}</div>
           <div className="tuiles">
             {offres.map((offre) => (
-              <Tuile key={offre.to} titre={offre.titre} to={offre.to}>
-                <p className="texte">{offre.texte}</p>
+              <Tuile key={offre.titre} titre={offre.titre}>
+                <p className="ligne-fine ligne-fine--fiche">{offre.texte}</p>
               </Tuile>
             ))}
           </div>
@@ -158,9 +159,20 @@ export default function RoueOffres({ offres }) {
   }
 
   return (
-    <section id="offres" className="roue-offres" ref={sectionRef} aria-labelledby="offres-titre">
+    <section id="methode" className="roue-offres" ref={sectionRef} aria-labelledby="methode-titre">
       <div className="roue-offres__ecran">
-        {entete}
+        <div className="roue-offres__texte">
+          <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
+          {/* Description du pilier de face. Toutes sont posées au même endroit, une seule est visible :
+              la place réservée est celle de la plus longue, rien ne bouge quand on change de pilier. */}
+          <div className="cadran__fiches">
+            {offres.map((offre, i) => (
+              <div key={offre.titre} className={`cadran__fiche ${i === actif ? 'cadran__fiche--active' : ''}`}>
+                <p className="ligne-fine ligne-fine--fiche">{offre.texte}</p>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="cadran">
           {/* Disque de fonte : rebord, face, poignées évidées, manchon */}
           <svg className="cadran__disque" viewBox="-100 -100 200 200" aria-hidden="true">
@@ -176,22 +188,12 @@ export default function RoueOffres({ offres }) {
           </svg>
           <ul className="cadran__offres">
             {offres.map((offre, i) => (
-              <li key={offre.to} className={`cadran__bras ${i === actif ? 'cadran__bras--actif' : ''}`}>
+              <li key={offre.titre} className={`cadran__bras ${i === actif ? 'cadran__bras--actif' : ''}`}>
                 <span className="cadran__repere" aria-hidden="true" />
-                <Link to={offre.to} className="cadran__nom titre">{offre.titre}</Link>
+                <span className="cadran__nom titre">{offre.titre}</span>
               </li>
             ))}
           </ul>
-        </div>
-        {/* Description de l'offre de face. Toutes sont posées au même endroit, une seule est visible :
-            la place réservée est celle de la plus longue, rien ne bouge quand on change d'offre. */}
-        <div className="cadran__fiches">
-          {offres.map((offre, i) => (
-            <div key={offre.to} className={`cadran__fiche ${i === actif ? 'cadran__fiche--active' : ''}`}>
-              <p className="texte">{offre.texte}</p>
-              <Link to={offre.to} className="bouton bouton--secondaire">Découvrir l'offre</Link>
-            </div>
-          ))}
         </div>
       </div>
     </section>
