@@ -1,5 +1,6 @@
 /* Rimaactive — d'après la charte graphique (octobre 2026), section 13 « site web » */
 :root {
+  --ecran: 100svh; /* hauteur de l'écran, corrigée sur grands écrans (voir zoom plus bas) */
   --fond-carte: var(--blanc); /* fond des cartes ; lin sur les rubriques blanches */
   --corail: #ff6447;
   --corail-profond: #d9452a;
@@ -56,6 +57,12 @@
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-padding-top: 96px; }
+/* Grands écrans (≥ 1500 px, ex. un écran 1920 px affiché à 125 %) : tout est agrandi de 10 %, comme un zoom navigateur à 110 % */
+@media (min-width: 1500px) {
+  html { zoom: 1.1; }
+  /* le zoom agrandit aussi la hauteur d'écran (svh) : on la ramène à la vraie hauteur visible */
+  :root { --ecran: calc(100svh / 1.1); }
+}
 body {
   margin: 0;
   background: var(--lin);
@@ -310,7 +317,7 @@ main > section:nth-of-type(even):not(.appel) {
 /* ---------- Héros de l'accueil ---------- */
 /* Le haut de page occupe exactement l'écran sous l'en-tête : la rubrique suivante n'apparaît qu'au défilement */
 .heros {
-  min-height: calc(100svh - var(--hauteur-entete));
+  min-height: calc(var(--ecran) - var(--hauteur-entete));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -329,7 +336,7 @@ main > section:nth-of-type(even):not(.appel) {
 /* Les photos suivent la hauteur de l'écran : titre, photos et encarts tiennent ensemble à l'arrivée */
 .heros__visuel {
   /* hauteur des photos (4:5) ≈ écran − en-tête − marges − points de défilement */
-  --photo: min(100%, clamp(240px, (100svh - var(--hauteur-entete) - 130px) / 1.25, 480px));
+  --photo: min(100%, clamp(240px, (var(--ecran) - var(--hauteur-entete) - 130px) / 1.25, 480px));
   display: flex;
   justify-content: center;
 }
@@ -516,7 +523,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .roue-offres__ecran {
   position: sticky;
   top: var(--hauteur-entete);
-  height: calc(100svh - var(--hauteur-entete));
+  height: calc(var(--ecran) - var(--hauteur-entete));
   display: grid;
   /* Téléphone : en-tête, disque, puis description en bas */
   grid-template-rows: auto 1fr auto;
@@ -645,7 +652,7 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 .roue-section--animee .roue-section__ecran {
   position: sticky;
   top: var(--hauteur-entete);
-  height: calc(100svh - var(--hauteur-entete));
+  height: calc(var(--ecran) - var(--hauteur-entete));
   display: flex;
   align-items: center;
   padding-block: 24px;
