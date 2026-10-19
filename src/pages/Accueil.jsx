@@ -42,7 +42,7 @@ export default function Accueil() {
             </div>
             <ul className="reperes">
               <li>Houdan (78) &amp; alentours</li>
-              <li>Sessions de 30 min à 1h</li>
+              <li>Sessions de 30 à 60 min</li>
               <li className="repere--neon">Matériel mis à disposition</li>
               <li>Tous niveaux</li>
             </ul>
