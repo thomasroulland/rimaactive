@@ -31,16 +31,14 @@ export default function Accueil() {
       <section className="heros">
         <div className="conteneur heros__grille">
           <div>
-            <p className="ligne-fine">Marie, coach sportive</p>
-            <h1 className="titre titre--xl">fort au quotidien</h1>
-            <p className="texte texte--grand" style={{ marginTop: 32 }}>
-              Un corps fort et mobile grâce à une pratique fonctionnelle. J'accompagne les entreprises, les communes et
-              les particuliers avec des séances de mobilité et de renforcement, pensées pour les gestes de tous les
-              jours. S'entraîner moins, mais mieux.
+            <h1 className="titre titre--accueil">un corps fort et mobile grâce à une pratique fonctionnelle</h1>
+            <p className="ligne-fine ligne-fine--sous-titre">
+              Je vous accompagne à travers des séances de mobilité et de renforcement fonctionnel, en extérieur, dans vos
+              locaux ou à domicile.
             </p>
             <div className="actions">
-              <BoutonLien to="/contact">Me contacter</BoutonLien>
-              <a href="#offres" className="bouton bouton--secondaire">Voir les offres</a>
+              <BoutonLien to="/contact">M'écrire</BoutonLien>
+              <a href="#offres" className="bouton bouton--secondaire">Mes formules</a>
             </div>
           </div>
           <div className="heros__visuel">
@@ -49,10 +47,10 @@ export default function Accueil() {
         </div>
         <div className="conteneur" style={{ marginTop: 'clamp(40px, 5vw, 72px)' }}>
           <ul className="reperes">
-            <li>Houdan et 20 km autour</li>
-            <li>Séances de 30 min à 1 h</li>
-            <li>Matériel fourni</li>
-            <li>Tous les niveaux</li>
+            <li>Houdan (78) &amp; alentours</li>
+            <li>Séances de 30 min à 1h</li>
+            <li className="repere--neon">Matériel mis à disposition</li>
+            <li>Tous niveaux</li>
           </ul>
         </div>
       </section>

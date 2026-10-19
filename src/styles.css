@@ -92,6 +92,9 @@ a:hover { color: var(--encre); }
   text-wrap: balance;
 }
 .titre--xl { font-size: clamp(64px, 10vw, 168px); color: var(--corail-profond); }
+/* Titre de l'accueil : encre sur lin, deux lignes dès la tablette */
+.titre--accueil { font-size: clamp(34px, 4.1vw, 58px); color: var(--encre); line-height: 0.92; }
+.heros .ligne-fine--sous-titre { margin: 24px 0 0; max-width: 34ch; }
 .titre--page { font-size: clamp(56px, 8.5vw, 136px); color: var(--corail-profond); }
 .titre--section { font-size: clamp(40px, 5vw, 72px); }
 .titre--tuile { font-size: clamp(26px, 2.4vw, 32px); letter-spacing: -0.035em; line-height: 0.95; }
@@ -159,7 +162,7 @@ main > section:nth-of-type(even):not(.appel) {
 }
 .bouton--principal { background: var(--corail); color: var(--encre); }
 .bouton--principal:hover { background: var(--encre); color: var(--lin); }
-.bouton--secondaire { background: transparent; color: var(--encre); border-color: var(--encre); }
+.bouton--secondaire { background: var(--lin); color: var(--encre); border-color: var(--encre); }
 .bouton--secondaire:hover { background: var(--encre); color: var(--lin); }
 .sur-encre .bouton--principal:hover { background: var(--lin); color: var(--encre); }
 .bouton--compact { min-height: 42px; padding: 12px 22px; font-size: 16px; }
@@ -194,23 +197,22 @@ main > section:nth-of-type(even):not(.appel) {
   justify-content: space-between;
   gap: 24px;
 }
-.entete__logo { display: flex; flex-shrink: 0; }
-/* Logo en morceaux (voir LogoCompactable dans Entete.jsx) : à l'arrêt, ils reforment exactement le logo ;
-   le JavaScript les tasse en accordéon contre le symbole quand l'en-tête devient compact */
-.logo { position: relative; display: block; }
-.logo__morceau {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-size: auto 100%;
-  transform-origin: 0 50%;
-  will-change: transform;
+.entete__logo { display: flex; align-items: center; gap: 12px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
+.entete__logo:hover { color: var(--encre); }
+.entete__logo img { height: 40px; width: auto; }
+.entete__signature {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(19px, 1.8vw, 24px);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 320px;
+  transition: max-width 0.4s ease, opacity var(--duree) ease;
 }
-.logo__morceau--symbole { z-index: 1; }
-.logo__entier { display: block; height: 100%; width: auto; visibility: hidden; }
-.logo--entier .logo__entier { visibility: visible; }
-.logo--entier .logo__morceau { visibility: hidden; }
+/* En-tête compact (on a descendu la page) : il ne reste que l'icône */
+.entete--compacte .entete__signature { max-width: 0; opacity: 0; }
 .entete__droite { display: flex; align-items: center; gap: 32px; }
 
 .nav {
@@ -300,7 +302,7 @@ main > section:nth-of-type(even):not(.appel) {
 .heros { padding: clamp(40px, 6vw, 96px) var(--gouttiere) clamp(64px, 8vw, 112px); }
 .heros__grille { display: grid; gap: clamp(48px, 5vw, 80px); align-items: center; }
 @media (min-width: 960px) {
-  .heros__grille { grid-template-columns: 1.15fr 1fr; }
+  .heros__grille { grid-template-columns: 1.6fr 1fr; }
 }
 .heros__visuel { display: flex; justify-content: center; padding: 64px clamp(48px, 6vw, 96px) 16px; }
 
@@ -319,7 +321,7 @@ main > section:nth-of-type(even):not(.appel) {
   font-weight: 700;
   font-size: 17px;
 }
-.reperes li:nth-child(2) { background: var(--neon); }
+.reperes .repere--neon { background: var(--neon); }
 
 /* ---------- Héros des pages ---------- */
 .heros-page { padding: clamp(48px, 7vw, 112px) var(--gouttiere) clamp(48px, 6vw, 88px); }
