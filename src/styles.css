@@ -211,7 +211,7 @@ main > section:nth-of-type(even):not(.appel) {
   gap: 24px;
 }
 .entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
-.entete__logo img { height: 30px; width: auto; transform: translateY(-4px); } /* un peu au-dessus du centre du prénom */
+.entete__logo img { height: 22px; width: auto; transform: translateY(-2.5px); } /* centré sur la hauteur des majuscules du prénom */
 .entete__signature {
   font-family: var(--font-serif);
   font-style: italic;
@@ -318,7 +318,7 @@ main > section:nth-of-type(even):not(.appel) {
   overflow-x: clip;
 }
 .heros > .conteneur { width: 100%; }
-.heros .actions { margin-top: clamp(32px, 3.2vw, 44px); }
+.heros .actions { margin-top: clamp(20px, 2.4vw, 32px); } /* même espace qu'entre le titre et la ligne fine */
 /* Le bloc texte réserve en bas la même place que les points sous les photos :
    ainsi l'espace au-dessus du titre et sous les encarts est le même par rapport au cadre photo */
 .heros__grille > :first-child { margin-bottom: 32px; }
