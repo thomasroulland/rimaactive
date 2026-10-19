@@ -94,7 +94,7 @@ a:hover { color: var(--encre); }
 .titre--xl { font-size: clamp(64px, 10vw, 168px); color: var(--corail-profond); }
 /* Titre de l'accueil : encre sur lin, deux lignes dès la tablette */
 .titre--accueil { font-size: clamp(34px, 4.1vw, 58px); color: var(--encre); line-height: 0.92; }
-.heros .ligne-fine--sous-titre { margin: 24px 0 0; max-width: 34ch; }
+.heros .ligne-fine--sous-titre { margin: 20px 0 0; max-width: 40ch; font-size: clamp(18px, 1.45vw, 21px); line-height: 1.3; }
 .titre--page { font-size: clamp(56px, 8.5vw, 136px); color: var(--corail-profond); }
 .titre--section { font-size: clamp(40px, 5vw, 72px); }
 .titre--tuile { font-size: clamp(26px, 2.4vw, 32px); letter-spacing: -0.035em; line-height: 0.95; }
@@ -197,9 +197,9 @@ main > section:nth-of-type(even):not(.appel) {
   justify-content: space-between;
   gap: 24px;
 }
-.entete__logo { display: flex; align-items: center; gap: 12px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
+.entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
 .entete__logo:hover { color: var(--encre); }
-.entete__logo img { height: 40px; width: auto; }
+.entete__logo img { height: 30px; width: auto; transform: translateY(-2px); } /* recentre les « aa » sur les minuscules du texte */
 .entete__signature {
   font-family: var(--font-serif);
   font-style: italic;
@@ -299,12 +299,20 @@ main > section:nth-of-type(even):not(.appel) {
 }
 
 /* ---------- Héros de l'accueil ---------- */
-.heros { padding: clamp(40px, 6vw, 96px) var(--gouttiere) clamp(64px, 8vw, 112px); }
+.heros { padding: clamp(24px, 3vw, 48px) var(--gouttiere) clamp(48px, 5vw, 72px); overflow-x: clip; }
 .heros__grille { display: grid; gap: clamp(48px, 5vw, 80px); align-items: center; }
 @media (min-width: 960px) {
   .heros__grille { grid-template-columns: 1.6fr 1fr; }
 }
-.heros__visuel { display: flex; justify-content: center; padding: 64px clamp(48px, 6vw, 96px) 16px; }
+/* La photo suit la hauteur de l'écran : titre, photo et encarts tiennent ensemble à l'arrivée */
+.heros__visuel {
+  --photo: min(100%, clamp(240px, (100svh - var(--hauteur-entete) - 260px) * 0.8, 400px));
+  display: flex;
+  justify-content: center;
+  /* la barre dépasse au-dessus de la photo d'environ 15 % de sa largeur */
+  padding: calc(var(--photo) * 0.15) clamp(20px, 3.5vw, 56px) 12px;
+}
+.heros__visuel .barre-scene { width: var(--photo); }
 
 .reperes {
   margin: 0;
@@ -315,11 +323,11 @@ main > section:nth-of-type(even):not(.appel) {
   gap: 10px;
 }
 .reperes li {
-  padding: 12px 22px;
+  padding: 9px 18px;
   border-radius: 6px;
   background: var(--blanc);
   font-weight: 700;
-  font-size: 17px;
+  font-size: 15px;
 }
 .reperes .repere--neon { background: var(--neon); }
 
