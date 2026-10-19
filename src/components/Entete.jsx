@@ -3,8 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import icone from '../assets/icone-aa.png'
 import { PAGES } from './liens.js'
 
-// « Contact » devient « M'écrire » dans le menu, comme le bouton de l'accueil
-const PAGES_MENU = PAGES.map((page) => (page.to === '/contact' ? { ...page, label: "M'écrire" } : page))
+const PAGES_MENU = PAGES
 
 // Trait sous le lien actif, qui glisse d'un lien à l'autre
 function useTrait(navRef) {

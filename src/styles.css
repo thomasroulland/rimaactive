@@ -1,5 +1,6 @@
 /* Rimaactive — d'après la charte graphique (octobre 2026), section 13 « site web » */
 :root {
+  --fond-carte: var(--blanc); /* fond des cartes ; lin sur les rubriques blanches */
   --corail: #ff6447;
   --corail-profond: #d9452a;
   --corail-texte: #b3341c;
@@ -94,7 +95,7 @@ a:hover { color: var(--encre); }
 .titre--xl { font-size: clamp(64px, 10vw, 168px); color: var(--corail-profond); }
 /* Titre de l'accueil : encre sur lin, deux lignes dès la tablette */
 .titre--accueil { font-size: clamp(34px, 4.1vw, 58px); color: var(--encre); line-height: 0.92; }
-.heros .ligne-fine--sous-titre { margin: 20px 0 0; max-width: 40ch; font-size: clamp(18px, 1.45vw, 21px); line-height: 1.3; }
+.heros .ligne-fine--sous-titre { margin: clamp(20px, 2.4vw, 32px) 0 0; max-width: 40ch; font-size: clamp(18px, 1.45vw, 21px); line-height: 1.3; }
 .titre--page { font-size: clamp(56px, 8.5vw, 136px); color: var(--corail-profond); }
 .titre--section { font-size: clamp(40px, 5vw, 72px); }
 .titre--tuile { font-size: clamp(26px, 2.4vw, 32px); letter-spacing: -0.035em; line-height: 0.95; }
@@ -123,13 +124,13 @@ a:hover { color: var(--encre); }
 /* ---------- Mise en page ---------- */
 .section { padding: clamp(64px, 9vw, 128px) var(--gouttiere); }
 /* Une rubrique sur deux passe en lin 200 (« fond alterné » de la charte) : le haut de page reste lin */
+/* Une rubrique sur deux passe en blanc, séparée nettement, sur toute la largeur.
+   Les cartes, blanches sur fond lin, passent en lin sur ces rubriques pour rester visibles. */
 main > section:nth-of-type(even):not(.appel) {
-  --fond-rubrique: var(--lin-200);
+  --fond-rubrique: var(--blanc);
+  --fond-carte: var(--lin);
   background: var(--fond-rubrique);
 }
-/* Essai : « mes offres » sur fond blanc, séparation nette et carrée */
-main > section#offres { --fond-rubrique: var(--blanc); }
-#offres .tuile:not(:hover) { background: var(--lin); }
 .section--serree { padding-block: clamp(48px, 6vw, 80px); }
 .conteneur { max-width: var(--largeur); margin: 0 auto; }
 .conteneur--etroit { max-width: 860px; }
@@ -191,6 +192,9 @@ main > section#offres { --fond-rubrique: var(--blanc); }
   background: var(--lin);
 }
 .entete__barre {
+  /* hauteur fixe : le haut de page de l'accueil se cale dessus pour remplir l'écran au pixel près */
+  box-sizing: border-box;
+  height: var(--hauteur-entete);
   max-width: calc(var(--largeur) + 2 * var(--gouttiere));
   margin: 0 auto;
   padding: 12px var(--gouttiere);
@@ -228,7 +232,7 @@ main > section#offres { --fond-rubrique: var(--blanc); }
   color: var(--encre);
   text-decoration: none;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
 }
 .nav a:hover { color: var(--corail-texte); }
 .nav__trait {
@@ -311,22 +315,27 @@ main > section#offres { --fond-rubrique: var(--blanc); }
   overflow-x: clip;
 }
 .heros > .conteneur { width: 100%; }
+.heros .actions { margin-top: clamp(32px, 3.2vw, 44px); }
 .heros__grille { display: grid; gap: clamp(48px, 5vw, 80px); align-items: center; }
 @media (min-width: 960px) {
   .heros__grille { grid-template-columns: 1.6fr 1fr; }
 }
 /* La photo suit la hauteur de l'écran : titre, photo et encarts tiennent ensemble à l'arrivée */
 .heros__visuel {
-  --photo: min(100%, clamp(240px, (100svh - var(--hauteur-entete) - 260px) * 0.8, 400px));
+  /* hauteur de la photo ≈ écran − en-tête − marges − dépassement de la barre */
+  --photo: min(100%, clamp(260px, (100svh - var(--hauteur-entete) - 110px) / 1.4, 460px));
   display: flex;
   justify-content: center;
-  /* la barre dépasse au-dessus de la photo d'environ 15 % de sa largeur */
-  padding: calc(var(--photo) * 0.15) clamp(20px, 3.5vw, 56px) 12px;
+  /* la barre dépasse au-dessus de la photo d'environ 15 % de sa largeur, et de 20 % sur les côtés */
+  padding: calc(var(--photo) * 0.15) 0 0;
+}
+@media (max-width: 959px) {
+  .heros__visuel { padding-inline: clamp(20px, 6vw, 56px); }
 }
 .heros__visuel .barre-scene { width: var(--photo); }
 
 .reperes {
-  margin: 28px 0 0;
+  margin: clamp(28px, 3.2vw, 44px) 0 0;
   padding: 0;
   list-style: none;
   display: flex;
@@ -371,7 +380,7 @@ main > section#offres { --fond-rubrique: var(--blanc); }
 .tuile {
   position: relative;
   min-height: 220px;
-  background: var(--blanc);
+  background: var(--fond-carte);
   border-radius: var(--arrondi);
   padding: 32px;
   display: flex;
@@ -411,7 +420,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   display: grid;
   gap: 28px 40px;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  background: var(--blanc);
+  background: var(--fond-carte);
   border-radius: var(--arrondi);
   padding: clamp(24px, 3vw, 40px);
 }
@@ -479,7 +488,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .gestes li {
   padding: 10px 22px 12px;
   border-radius: 6px;
-  background: var(--blanc);
+  background: var(--fond-carte);
   font-weight: 900;
   font-size: clamp(20px, 2vw, 26px);
   letter-spacing: -0.035em;
@@ -705,7 +714,7 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 
 /* ---------- FAQ ---------- */
 .faq { display: flex; flex-direction: column; gap: 8px; }
-.faq details { background: var(--blanc); border-radius: var(--arrondi); padding: 0 28px; }
+.faq details { background: var(--fond-carte); border-radius: var(--arrondi); padding: 0 28px; }
 .faq summary {
   display: flex;
   align-items: center;
@@ -744,7 +753,6 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 
 /* ---------- Pied de page ---------- */
 .pied {
-  margin: 0 clamp(8px, 1.5vw, 20px);
   background: var(--encre);
   color: var(--blanc);
   padding: 0 var(--gouttiere) 32px;
@@ -788,7 +796,7 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 .coordonnees .mention { color: var(--corail); margin-bottom: 8px; }
 .coordonnees p.texte { color: rgba(255, 255, 255, 0.78); }
 
-.formulaire { border-radius: var(--arrondi); background: var(--blanc); padding: clamp(28px, 4vw, 48px); display: grid; gap: 24px; }
+.formulaire { border-radius: var(--arrondi); background: var(--fond-carte); padding: clamp(28px, 4vw, 48px); display: grid; gap: 24px; }
 @media (min-width: 640px) {
   .formulaire { grid-template-columns: 1fr 1fr; }
   .formulaire .pleine { grid-column: 1 / -1; }
@@ -828,7 +836,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .choix input:hover + span { background: var(--lin); }
 .choix input:checked + span { background: var(--encre); color: var(--lin); }
 .choix input:focus-visible + span { outline: 3px solid var(--corail); outline-offset: 2px; }
-.confirmation { border-radius: var(--arrondi); background: var(--blanc); padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; gap: 12px; }
+.confirmation { border-radius: var(--arrondi); background: var(--fond-carte); padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; gap: 12px; }
 
 /* ---------- Animation de la barre (accueil) ---------- */
 .barre-scene { position: relative; width: min(100%, 460px); aspect-ratio: 4 / 5; }
