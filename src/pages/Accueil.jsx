@@ -40,18 +40,16 @@ export default function Accueil() {
               <BoutonLien to="/contact">M'écrire</BoutonLien>
               <a href="#offres" className="bouton bouton--secondaire">Mes formules</a>
             </div>
+            <ul className="reperes">
+              <li>Houdan (78) &amp; alentours</li>
+              <li>Sessions de 30 min à 1h</li>
+              <li className="repere--neon">Matériel mis à disposition</li>
+              <li>Tous niveaux</li>
+            </ul>
           </div>
           <div className="heros__visuel">
             <BarreAnimee />
           </div>
-        </div>
-        <div className="conteneur" style={{ marginTop: 'clamp(24px, 3vw, 40px)' }}>
-          <ul className="reperes">
-            <li>Houdan (78) &amp; alentours</li>
-            <li>Sessions de 30 min à 1h</li>
-            <li className="repere--neon">Matériel mis à disposition</li>
-            <li>Tous niveaux</li>
-          </ul>
         </div>
       </section>
 

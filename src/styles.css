@@ -233,8 +233,8 @@ main > section:nth-of-type(even):not(.appel) {
   position: absolute;
   left: 0;
   top: 0;
-  height: 3px;
-  border-radius: 3px;
+  height: 2px;
+  border-radius: 2px;
   background: var(--corail);
   pointer-events: none;
   transition: transform 0.4s cubic-bezier(.55, 0, .25, 1), width 0.4s cubic-bezier(.55, 0, .25, 1), opacity var(--duree) ease;
@@ -315,19 +315,20 @@ main > section:nth-of-type(even):not(.appel) {
 .heros__visuel .barre-scene { width: var(--photo); }
 
 .reperes {
-  margin: 0;
+  margin: 28px 0 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 .reperes li {
-  padding: 9px 18px;
+  padding: 8px 14px;
   border-radius: 6px;
   background: var(--blanc);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 .reperes .repere--neon { background: var(--neon); }
 

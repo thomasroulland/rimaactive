@@ -3,7 +3,8 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import icone from '../assets/icone-aa.png'
 import { PAGES } from './liens.js'
 
-const PAGES_MENU = PAGES.filter((page) => page.to !== '/contact')
+// « Contact » devient « M'écrire » dans le menu, comme le bouton de l'accueil
+const PAGES_MENU = PAGES.map((page) => (page.to === '/contact' ? { ...page, label: "M'écrire" } : page))
 
 // Trait sous le lien actif, qui glisse d'un lien à l'autre
 function useTrait(navRef) {
@@ -21,7 +22,7 @@ function useTrait(navRef) {
         actif && actif.offsetWidth
           ? {
               left: actif.offsetLeft,
-              top: actif.offsetTop + actif.offsetHeight - 2,
+              top: actif.offsetTop + actif.offsetHeight - 7,
               width: actif.offsetWidth,
               anime: avant !== null,
             }
@@ -91,7 +92,6 @@ export default function Entete() {
               }
             />
           </nav>
-          <Link to="/contact" className="bouton bouton--principal bouton--compact">Me contacter</Link>
           <button
             type="button"
             className="menu-bouton"
@@ -111,7 +111,6 @@ export default function Entete() {
             <Fleche />
           </NavLink>
         ))}
-        <Link to="/contact" className="bouton bouton--principal">Me contacter</Link>
       </nav>
     </header>
   )
