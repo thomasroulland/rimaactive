@@ -33,8 +33,10 @@ export default function Accueil() {
           <div>
             <h1 className="titre titre--accueil">un corps fort et mobile grâce à une pratique fonctionnelle</h1>
             <p className="ligne-fine ligne-fine--sous-titre">
-              Je vous accompagne avec des séances adaptées à votre niveau et à vos objectifs. Dans vos locaux, en
-              extérieur, en salle ou à domicile, je me déplace selon vos besoins.
+              {/* Coupures choisies : une ligne par span sur grand écran, texte continu sur téléphone */}
+              <span className="ligne">Je vous accompagne avec des séances adaptées à votre niveau </span>
+              <span className="ligne">et à vos objectifs. Dans vos locaux, en extérieur, en salle </span>
+              <span className="ligne">ou à domicile, je me déplace selon vos besoins.</span>
             </p>
             <div className="actions">
               <BoutonLien to="/contact">M'écrire</BoutonLien>
