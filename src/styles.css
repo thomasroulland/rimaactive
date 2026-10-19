@@ -94,6 +94,10 @@ a:hover { color: var(--encre); }
 }
 .titre--xl { font-size: clamp(64px, 10vw, 168px); color: var(--corail-profond); }
 /* Titre de l'accueil : encre sur lin, deux lignes dès la tablette */
+/* Guillemets du titre : l'ouvrant dépasse dans la marge pour que « un » reste aligné avec le reste du bloc */
+.guillemet { display: inline-block; }
+.guillemet--ouvrant { margin-left: -0.444em; margin-right: 0.02em; }
+.guillemet--fermant { margin-left: 0.02em; }
 .titre--accueil { font-size: clamp(34px, 4.1vw, 58px); color: var(--encre); line-height: 0.92; }
 @media (min-width: 768px) {
   .heros .ligne-fine--sous-titre .ligne { display: block; white-space: nowrap; }
@@ -207,7 +211,7 @@ main > section:nth-of-type(even):not(.appel) {
   gap: 24px;
 }
 .entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
-.entete__logo img { height: 30px; width: auto; }
+.entete__logo img { height: 30px; width: auto; transform: translateY(-2.5px); } /* centré sur le prénom, majuscules comprises */
 .entete__signature {
   font-family: var(--font-serif);
   font-style: italic;

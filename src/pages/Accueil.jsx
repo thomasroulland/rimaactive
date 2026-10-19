@@ -31,7 +31,10 @@ export default function Accueil() {
       <section className="heros">
         <div className="conteneur heros__grille">
           <div>
-            <h1 className="titre titre--accueil">un corps fort et mobile grâce à une pratique fonctionnelle</h1>
+            <h1 className="titre titre--accueil">
+              <span className="guillemet guillemet--ouvrant">“</span>un corps fort et mobile grâce à une pratique
+              fonctionnelle<span className="guillemet guillemet--fermant">”</span>
+            </h1>
             <p className="ligne-fine ligne-fine--sous-titre">
               {/* Coupures choisies : une ligne par span sur grand écran, texte continu sur téléphone */}
               <span className="ligne">Je vous accompagne avec des séances adaptées à votre niveau </span>
