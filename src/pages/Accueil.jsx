@@ -33,8 +33,8 @@ export default function Accueil() {
           <div>
             <h1 className="titre titre--accueil">un corps fort et mobile grâce à une pratique fonctionnelle</h1>
             <p className="ligne-fine ligne-fine--sous-titre">
-              Je vous accompagne à travers des séances de mobilité et de renforcement fonctionnel, en extérieur, dans vos
-              locaux ou à domicile.
+              Je vous accompagne avec des séances adaptées à votre niveau et à vos objectifs. Dans vos locaux, en
+              extérieur, en salle ou à domicile, je me déplace selon vos besoins.
             </p>
             <div className="actions">
               <BoutonLien to="/contact">M'écrire</BoutonLien>
@@ -44,7 +44,6 @@ export default function Accueil() {
               <li>Houdan (78) &amp; alentours</li>
               <li>Sessions de 30 à 60 min</li>
               <li className="repere--neon">Matériel mis à disposition</li>
-              <li>Tous niveaux</li>
             </ul>
           </div>
           <div className="heros__visuel">

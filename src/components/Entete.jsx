@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import icone from '../assets/icone-aa.png'
 import { PAGES } from './liens.js'
 
@@ -56,10 +56,11 @@ export default function Entete() {
   return (
     <header className="entete">
       <div className="entete__barre">
-        <Link to="/" className="entete__logo" aria-label="Marie Sillas, coach sportive · accueil">
+        {/* Simple signature, pas un lien : « Accueil » est dans le menu */}
+        <div className="entete__logo">
           <img src={icone} alt="" width="44" height="40" />
-          <span className="entete__signature" aria-hidden="true">Marie Sillas, coach sportive</span>
-        </Link>
+          <span className="entete__signature">Marie Sillas, coach sportive</span>
+        </div>
         <div className="entete__droite">
           <nav className="nav" aria-label="Menu principal" ref={navRef}>
             {PAGES_MENU.map((page) => (
