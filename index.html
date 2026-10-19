@@ -23,6 +23,10 @@
           racine.style.setProperty('--ecran', 'calc(100svh / ' + echelle + ')')
           // idem pour la largeur : les tailles « en % d'écran » se calculent sur la mise en page agrandie
           racine.style.setProperty('--vw', window.innerWidth / echelle / 100 + 'px')
+          // le contenu occupe toute la largeur disponible, avec la même marge que l'en-tête de chaque côté
+          var largeur = window.innerWidth / echelle
+          racine.style.setProperty('--largeur', Math.max(1240, largeur - 2 * Math.min(80, largeur * 0.05)) + 'px')
+
         }
         ajuster()
         window.addEventListener('resize', ajuster)

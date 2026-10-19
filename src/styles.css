@@ -332,10 +332,15 @@ main > section:nth-of-type(even):not(.appel) {
 }
 /* Les photos suivent la hauteur de l'écran : titre, photos et encarts tiennent ensemble à l'arrivée */
 .heros__visuel {
-  /* hauteur des photos (4:5) ≈ écran − en-tête − marges − points de défilement */
-  --photo: min(100%, clamp(240px, (var(--ecran) - var(--hauteur-entete) - 130px) / 1.25, 480px));
+  /* les photos (4:5) prennent presque toute la hauteur sous l'en-tête (marges et points de défilement déduits),
+     jusqu'à 425 px de large : environ 0,63 fois la largeur du titre */
+  --photo: min(100%, clamp(240px, (var(--ecran) - var(--hauteur-entete) - 96px) / 1.25, 425px));
   display: flex;
   justify-content: center;
+}
+@media (min-width: 960px) {
+  /* la photo se cale sur la marge de droite, à l'aplomb de « Contact » */
+  .heros__visuel { justify-content: flex-end; }
 }
 
 /* Fondu entre les trois décors de la charte : salle, maison, quotidien (voir VisuelFondu.jsx) */
