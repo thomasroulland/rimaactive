@@ -102,7 +102,7 @@ a:hover { color: var(--encre); }
 @media (min-width: 768px) {
   .heros .ligne-fine--sous-titre .ligne { display: block; white-space: nowrap; }
 }
-.heros .ligne-fine--sous-titre { margin: clamp(24px, 2.8vw, 40px) 0 0; max-width: none; font-size: clamp(18px, 1.45vw, 21px); line-height: 1.3; }
+.heros .ligne-fine--sous-titre { margin: clamp(20px, 2.4vw, 32px) 0 0; max-width: none; font-size: clamp(18px, 1.45vw, 21px); line-height: 1.3; }
 .titre--page { font-size: clamp(56px, 8.5vw, 136px); color: var(--corail-profond); }
 .titre--section { font-size: clamp(40px, 5vw, 72px); }
 .titre--tuile { font-size: clamp(26px, 2.4vw, 32px); letter-spacing: -0.035em; line-height: 0.95; }
@@ -318,7 +318,7 @@ main > section:nth-of-type(even):not(.appel) {
   overflow-x: clip;
 }
 .heros > .conteneur { width: 100%; }
-.heros .actions { margin-top: clamp(36px, 3.9vw, 56px); }
+.heros .actions { margin-top: clamp(32px, 3.2vw, 44px); }
 /* Le bloc texte réserve en bas la même place que les points sous les photos :
    ainsi l'espace au-dessus du titre et sous les encarts est le même par rapport au cadre photo */
 .heros__grille > :first-child { margin-bottom: 32px; }
@@ -345,7 +345,7 @@ main > section:nth-of-type(even):not(.appel) {
 .fondu-points span.actif { opacity: 1; }
 
 .reperes {
-  margin: clamp(36px, 3.9vw, 56px) 0 0;
+  margin: clamp(28px, 3.2vw, 44px) 0 0;
   padding: 0;
   list-style: none;
   display: flex;
