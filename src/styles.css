@@ -957,3 +957,39 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .dispo-3 .cadran__fiche { justify-items: center; }
 }
 .roue-offres { --taille-nom-ref: clamp(34px, calc(4.1 * var(--vw)), 58px); }
+
+.methode__numero, .methode__photos { display: none; }
+@media (min-width: 900px) {
+  /* 4 : fond encre */
+  main > section.roue-offres:has(.variante-4) { --fond-rubrique: var(--encre); background: var(--encre); }
+  .variante-4 .titre--accueil { color: var(--lin); }
+  .variante-4 .cadran__nom { color: var(--lin); }
+  .variante-4 .cadran__bras--actif .cadran__nom { color: var(--corail); }
+  .variante-4 .cadran__repere { background: var(--lin); }
+  .variante-4 .ligne-fine--fiche { color: rgba(255, 255, 255, 0.78); }
+  .variante-4 .disque__manchon { fill: var(--lin); }
+
+  /* 5 : demi-bande corail sous le disque, disque à l'encre */
+  .variante-5 > .cadran::before { content: ''; position: absolute; inset: 0 auto 0 calc(-1 * var(--gouttiere) - 50vw); width: calc(var(--centre-disque) + var(--gouttiere) + 50vw); background: var(--corail); }
+  .variante-5 .disque__rebord { fill: var(--encre); }
+  .variante-5 .disque__face { fill: #2a2725; }
+  .variante-5 .disque__lisere { stroke: rgba(255, 255, 255, 0.25); }
+  .variante-5 .disque__poignee { stroke: var(--lin); }
+  .variante-5 .disque__moyeu { fill: var(--encre); }
+  .variante-5 .disque__manchon { fill: var(--neon); }
+  .variante-5 .disque__trou { fill: var(--lin); }
+  .roue-offres:has(.variante-5) { overflow-x: clip; }
+
+  /* 6 : photo du pilier sous le titre, à gauche */
+  .variante-6 .methode__photos { display: grid; margin-top: clamp(20px, calc(2 * var(--vw)), 28px); width: min(30%, 340px); min-width: 260px; }
+  .variante-6 .methode__photos > .photo { grid-area: 1 / 1; height: calc(var(--ecran) - var(--hauteur-entete) - 2 * clamp(32px, calc(4 * var(--vw)), 56px) - var(--taille-nom-ref) - clamp(20px, calc(2 * var(--vw)), 28px)); aspect-ratio: auto; opacity: 0; transition: opacity .6s ease; }
+  .variante-6 .methode__photos > .methode__photo--active { opacity: 1; }
+  .roue-offres .variante-6 > .roue-offres__texte { align-content: start; }
+
+  /* 7 : grand numéro en fond, à droite */
+  .variante-7 .methode__numero {
+    display: block; grid-area: 1 / 1; align-self: center; justify-self: end; margin: 0; padding-right: var(--gouttiere);
+    font-weight: 900; font-size: calc((var(--ecran) - var(--hauteur-entete)) * 0.62); line-height: 0.8; letter-spacing: -0.06em;
+    color: var(--lin); pointer-events: none;
+  }
+}

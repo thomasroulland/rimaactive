@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Tuile } from './Blocs.jsx'
+import { Photo, Tuile } from './Blocs.jsx'
 import { cran } from './cran.js'
 
 // Les trois poignées évidées du disque, centrées sur ces angles (en degrés)
@@ -44,8 +44,10 @@ export default function RoueOffres({ offres }) {
     let course = 1
     let indexActif = -1
     let base = 0 // angle où se trouve le pilier de face (0 = à droite du disque)
-    const dispo = Number(new URLSearchParams(location.search).get('dispo') || 0)
-    section.querySelector('.roue-offres__ecran').classList.add(`dispo-${dispo}`)
+    const variante = Number(new URLSearchParams(location.search).get('dispo') || 0)
+    // 4, 5 et 7 reprennent la géométrie de la 1 ; 6 celle de la 2
+    const dispo = { 4: 1, 5: 1, 7: 1, 6: 2 }[variante] ?? variante
+    section.querySelector('.roue-offres__ecran').classList.add(`dispo-${dispo}`, `variante-${variante}`)
 
     // Géométrie, lue seulement au chargement et au redimensionnement
     const dimensionner = () => {
@@ -74,6 +76,7 @@ export default function RoueOffres({ offres }) {
           rayon = Math.min(hauteur * 0.47, 320)
           cx = gouttiere + rayon * 0.6
           section.style.setProperty('--debut-noms', `${cx + rayon + 28}px`)
+          section.style.setProperty('--centre-disque', `${cx}px`)
         } else if (colonnes.matches && dispo === 2) {
           base = 180
           zone.style.setProperty('--ax', '-100%')
@@ -81,6 +84,12 @@ export default function RoueOffres({ offres }) {
           rayon = Math.min(hauteur * 0.47, 320)
           cx = largeur - rayon * 0.6
           section.style.setProperty('--fin-noms', `${largeur - (cx - rayon - 28)}px`)
+          if (variante === 6) {
+            // le nom de face s'arrête avant la photo de gauche : disque un peu plus petit
+            rayon = Math.min(hauteur * 0.4, 260)
+            cx = largeur - rayon * 0.55
+            section.style.setProperty('--fin-noms', `${largeur - (cx - rayon - 28)}px`)
+          }
         } else if (colonnes.matches && dispo === 3) {
           base = -90
           pas = 32
@@ -189,8 +198,15 @@ export default function RoueOffres({ offres }) {
   return (
     <section id="methode" className="roue-offres" ref={sectionRef} aria-labelledby="methode-titre">
       <div className="roue-offres__ecran">
+        {/* Essais : grand numéro du pilier (7) et photo du pilier (6) */}
+        <p className="methode__numero" aria-hidden="true">{String(actif + 1).padStart(2, '0')}</p>
         <div className="roue-offres__texte">
           <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
+          <div className="methode__photos" aria-hidden="true">
+            {offres.map((offre, i) => (
+              <Photo key={offre.titre} label={`Photo · ${offre.titre}`} className={i === actif ? 'methode__photo--active' : ''} />
+            ))}
+          </div>
           {/* Description du pilier de face. Toutes sont posées au même endroit, une seule est visible :
               la place réservée est celle de la plus longue, rien ne bouge quand on change de pilier. */}
           <div className="cadran__fiches">
