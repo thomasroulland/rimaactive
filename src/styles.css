@@ -961,6 +961,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .methode__numero, .methode__photos { display: none; }
 @media (min-width: 900px) {
   /* 4 : fond encre */
+  main > section.roue-offres:has(.variante-9),
   main > section.roue-offres:has(.variante-4) { --fond-rubrique: var(--encre); background: var(--encre); }
   .variante-4 .titre--accueil { color: var(--lin); }
   .variante-4 .cadran__nom { color: var(--lin); }
@@ -1037,4 +1038,21 @@ textarea.champ { resize: vertical; min-height: 140px; }
     font-size: clamp(22px, calc(2.3 * var(--vw)), 34px); letter-spacing: -0.04em; color: var(--encre);
   }
   .selecteur--sombre .selecteur__actif { color: var(--lin); }
+}
+
+/* Essais 8 à 11 */
+@media (min-width: 900px) {
+  /* 9 : fond encre */
+  .variante-9 .titre--accueil, .variante-9 .cadran__nom, .variante-9 .selecteur__ligne { color: var(--lin); }
+  .variante-9 .cadran__bras--actif .cadran__nom { color: var(--corail); }
+  .variante-9 .cadran__repere { background: var(--lin); }
+  .variante-9 .disque__manchon { fill: var(--lin); }
+  .variante-9 .selecteur__roue li { color: var(--lin); }
+  .variante-9 .selecteur__roue li.selecteur__actif { color: var(--encre); }
+  /* 10 et 11 : disque noir */
+  .variante-10 .disque__rebord, .variante-11 .disque__rebord { fill: var(--encre); }
+  .variante-10 .disque__face, .variante-11 .disque__face { fill: #2a2725; }
+  .variante-10 .disque__lisere, .variante-11 .disque__lisere { stroke: rgba(255, 255, 255, 0.22); }
+  .variante-10 .disque__moyeu, .variante-11 .disque__moyeu { fill: var(--encre); }
+  .variante-10 .disque__manchon, .variante-11 .disque__manchon { fill: var(--corail); }
 }

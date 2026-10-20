@@ -33,7 +33,7 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
     // Sélecteur des bénéfices, à droite : il tourne avec le disque
     const selecteur = section.querySelector('.selecteur__roue')
     const benefices = [...section.querySelectorAll('.selecteur__roue li')]
-    const BANDES = ['var(--corail)', 'var(--neon)', 'var(--encre)']
+    const bandes = () => (variante === 9 ? ['var(--corail)', 'var(--neon)', 'var(--lin)'] : ['var(--corail)', 'var(--neon)', 'var(--encre)'])
     let rayonSelecteur = 0
     const dernier = bras.length - 1
     const colonnes = window.matchMedia('(min-width: 900px)')
@@ -51,7 +51,8 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
     let base = 0 // angle où se trouve le pilier de face (0 = à droite du disque)
     const variante = Number(new URLSearchParams(location.search).get('dispo') ?? varianteDefaut) || varianteDefaut
     // 4, 5 et 7 reprennent la géométrie de la 1 ; 6 celle de la 2
-    const dispo = { 4: 1, 5: 1, 7: 1, 6: 2 }[variante] ?? variante
+    const dispo = { 4: 1, 5: 1, 7: 1, 6: 2, 8: 1, 9: 1, 10: 1, 11: 1 }[variante] ?? variante
+    const moitie = variante === 8 || variante === 11 // disque coupé en deux par le bord de l'écran
     section.querySelector('.roue-offres__ecran').classList.add(`dispo-${dispo}`, `variante-${variante}`)
 
     // Géométrie, lue seulement au chargement et au redimensionnement
@@ -78,8 +79,8 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
         const nomMax = Math.max(...noms.map((n) => n.offsetWidth))
         if (colonnes.matches && dispo === 1) {
           pas = offres.length > 3 ? 26 : 30
-          rayon = Math.min(hauteur * 0.47, 320)
-          cx = gouttiere + rayon * (benefices.length ? 0.3 : 0.6)
+          rayon = Math.min(hauteur * (moitie ? 0.5 : 0.47), 340)
+          cx = moitie ? 0 : gouttiere + rayon * (benefices.length ? 0.3 : 0.6)
           section.style.setProperty('--debut-noms', `${cx + rayon + 28}px`)
           section.style.setProperty('--centre-disque', `${cx}px`)
         } else if (colonnes.matches && dispo === 2) {
@@ -155,8 +156,8 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
       if (proche !== indexActif) {
         benefices[indexActif]?.classList.remove('selecteur__actif')
         benefices[proche]?.classList.add('selecteur__actif')
-        selecteur?.style.setProperty('--bande', BANDES[proche % BANDES.length])
-        selecteur?.classList.toggle('selecteur--sombre', proche % BANDES.length === 2)
+        selecteur?.style.setProperty('--bande', bandes()[proche % 3])
+        selecteur?.classList.toggle('selecteur--sombre', variante !== 9 && proche % 3 === 2)
         indexActif = proche
         setActif(proche)
       }
