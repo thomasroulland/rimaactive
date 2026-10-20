@@ -43,6 +43,9 @@ export default function RoueOffres({ offres }) {
     let debut = 0
     let course = 1
     let indexActif = -1
+    let base = 0 // angle où se trouve le pilier de face (0 = à droite du disque)
+    const dispo = Number(new URLSearchParams(location.search).get('dispo') || 0)
+    section.querySelector('.roue-offres__ecran').classList.add(`dispo-${dispo}`)
 
     // Géométrie, lue seulement au chargement et au redimensionnement
     const dimensionner = () => {
@@ -61,7 +64,32 @@ export default function RoueOffres({ offres }) {
       } else {
         pas = 45
         echelleMin = 0.36
-        if (colonnes.matches) {
+        base = 0
+        zone.style.setProperty('--ax', '0px')
+        zone.style.setProperty('--ay', '-50%')
+        const gouttiere = parseFloat(getComputedStyle(texte).paddingRight)
+        const nomMax = Math.max(...noms.map((n) => n.offsetWidth))
+        if (colonnes.matches && dispo === 1) {
+          pas = 30
+          rayon = Math.min(hauteur * 0.47, 320)
+          cx = gouttiere + rayon * 0.6
+          section.style.setProperty('--debut-noms', `${cx + rayon + 28}px`)
+        } else if (colonnes.matches && dispo === 2) {
+          base = 180
+          zone.style.setProperty('--ax', '-100%')
+          pas = 30
+          rayon = Math.min(hauteur * 0.47, 320)
+          cx = largeur - rayon * 0.6
+          section.style.setProperty('--fin-noms', `${largeur - (cx - rayon - 28)}px`)
+        } else if (colonnes.matches && dispo === 3) {
+          base = -90
+          pas = 32
+          zone.style.setProperty('--ax', '-50%')
+          zone.style.setProperty('--ay', '-100%')
+          rayon = Math.min(largeur * 0.24, hauteur * 0.5)
+          cx = largeur / 2
+          zone.style.setProperty('--cy3', `${hauteur + rayon * 0.25}px`)
+        } else if (colonnes.matches) {
           // Comme en haut de page : texte à gauche, le disque et ses noms calés sur le bord droit du contenu
           rayon = Math.min(hauteur * 0.36, 210)
           const gouttiere = parseFloat(getComputedStyle(texte).paddingLeft)
@@ -72,7 +100,7 @@ export default function RoueOffres({ offres }) {
           cx = largeur - Math.min(largeur * 0.62, 760) - rayon
         }
       }
-      const cy = hauteur / 2
+      const cy = dispo === 3 && colonnes.matches ? parseFloat(zone.style.getPropertyValue('--cy3')) : hauteur / 2
       zone.style.setProperty('--cx', `${cx}px`)
       zone.style.setProperty('--cy', `${cy}px`)
       zone.style.setProperty('--rayon', `${rayon}px`)
@@ -90,9 +118,9 @@ export default function RoueOffres({ offres }) {
       disque.style.transform = `rotate(${-actuel * pas}deg)`
       bras.forEach((b, i) => {
         const ecart = i - actuel
-        b.style.transform = `rotate(${ecart * pas}deg)`
+        b.style.transform = `rotate(${base + ecart * pas}deg)`
         // Le nom reste droit pendant que son bras tourne, pour rester lisible
-        b.style.setProperty('--redresse', `${-ecart * pas}deg`)
+        b.style.setProperty('--redresse', `${-(base + ecart * pas)}deg`)
         // Toutes les offres restent visibles ; celle de face est en grand, les autres en petit
         const face = Math.max(0, 1 - Math.abs(ecart))
         b.style.setProperty('--echelle', (echelleMin + (1 - echelleMin) * face).toFixed(3))
