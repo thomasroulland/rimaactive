@@ -12,11 +12,12 @@ const METHODE = [
   { titre: "plus d'autonomie", texte: 'Comprendre les mouvements pour continuer à bouger durablement.' },
 ]
 
+// Bénéfices : propositions à valider
 const SPECIALITES = [
-  { titre: 'force & puissance', texte: '[Texte à rédiger : force & puissance]' },
-  { titre: 'explosivité & performance', texte: '[Texte à rédiger : explosivité & performance]' },
-  { titre: 'condition physique & endurance', texte: '[Texte à rédiger : condition physique & endurance]' },
-  { titre: 'mobilité & posture', texte: '[Texte à rédiger : mobilité & posture]' },
+  { titre: 'force & puissance', benefice: 'porter sans se blesser' },
+  { titre: 'explosivité & performance', benefice: 'réagir plus vite' },
+  { titre: 'condition physique & endurance', benefice: 'tenir toute la journée' },
+  { titre: 'mobilité & posture', benefice: 'bouger sans douleur' },
 ]
 
 const SERVICES = [

@@ -1007,3 +1007,34 @@ textarea.champ { resize: vertical; min-height: 140px; }
 @media (min-width: 900px) {
   #specialites .dispo-1 .cadran__fiches { top: calc(50% + 1.2 * var(--taille-nom-ref)); }
 }
+
+/* Essai : sélecteur des bénéfices à droite du disque, il tourne avec lui */
+.selecteur { display: none; }
+@media (min-width: 900px) {
+  .roue-offres__ecran > .selecteur {
+    display: grid; gap: 12px; grid-area: 1 / 1; align-self: center; justify-self: end;
+    width: min(34%, 440px); margin-right: var(--gouttiere); position: relative; z-index: 1;
+  }
+  .selecteur__ligne { margin: 0; font-size: clamp(18px, calc(1.45 * var(--vw)), 21px); text-align: center; }
+  .selecteur__roue {
+    --bande: var(--corail);
+    --hauteur-ligne: clamp(56px, calc(5.2 * var(--vw)), 80px);
+    position: relative;
+    height: calc((var(--ecran) - var(--hauteur-entete)) * 0.6);
+  }
+  .selecteur__roue::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 50%; height: var(--hauteur-ligne); transform: translateY(-50%);
+    border-radius: var(--arrondi); background: var(--bande); transition: background-color .35s ease;
+  }
+  .selecteur__roue::after {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(var(--fond-rubrique), transparent 30%, transparent 70%, var(--fond-rubrique));
+  }
+  .selecteur__roue ul { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+  .selecteur__roue li {
+    position: absolute; left: 0; right: 0; top: 50%; height: var(--hauteur-ligne); margin-top: calc(var(--hauteur-ligne) / -2);
+    display: flex; align-items: center; justify-content: center; white-space: nowrap;
+    font-size: clamp(22px, calc(2.3 * var(--vw)), 34px); letter-spacing: -0.04em; color: var(--encre);
+  }
+  .selecteur--sombre .selecteur__actif { color: var(--lin); }
+}

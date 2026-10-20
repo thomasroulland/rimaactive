@@ -30,6 +30,11 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
     const fiches = section.querySelector('.cadran__fiches')
     const texte = section.querySelector('.roue-offres__texte')
     const noms = [...section.querySelectorAll('.cadran__nom')]
+    // Sélecteur des bénéfices, à droite : il tourne avec le disque
+    const selecteur = section.querySelector('.selecteur__roue')
+    const benefices = [...section.querySelectorAll('.selecteur__roue li')]
+    const BANDES = ['var(--corail)', 'var(--neon)', 'var(--encre)']
+    let rayonSelecteur = 0
     const dernier = bras.length - 1
     const colonnes = window.matchMedia('(min-width: 900px)')
     const tactile = window.matchMedia('(pointer: coarse)').matches
@@ -74,7 +79,7 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
         if (colonnes.matches && dispo === 1) {
           pas = offres.length > 3 ? 26 : 30
           rayon = Math.min(hauteur * 0.47, 320)
-          cx = gouttiere + rayon * 0.6
+          cx = gouttiere + rayon * (benefices.length ? 0.3 : 0.6)
           section.style.setProperty('--debut-noms', `${cx + rayon + 28}px`)
           section.style.setProperty('--centre-disque', `${cx}px`)
         } else if (colonnes.matches && dispo === 2) {
@@ -109,6 +114,7 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
           cx = largeur - Math.min(largeur * 0.62, 760) - rayon
         }
       }
+      if (selecteur) rayonSelecteur = selecteur.offsetHeight * 0.36
       const cy = dispo === 3 && colonnes.matches ? parseFloat(zone.style.getPropertyValue('--cy3')) : hauteur / 2
       zone.style.setProperty('--cx', `${cx}px`)
       zone.style.setProperty('--cy', `${cy}px`)
@@ -137,10 +143,20 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
         const loin = Math.min(1, Math.max(0, Math.abs(ecart) - 1) * 2)
         b.style.opacity = ((0.6 + 0.4 * face) * (1 - loin)).toFixed(3)
       })
+      benefices.forEach((li, i) => {
+        const radians = ((i - actuel) * 34 * Math.PI) / 180
+        const proximite = Math.max(0, Math.cos(radians))
+        li.style.transform = `translateY(${Math.sin(radians) * rayonSelecteur}px) scaleY(${proximite.toFixed(3)})`
+        li.style.opacity = Math.abs(i - actuel) * 34 > 75 ? 0 : 0.2 + 0.8 * proximite ** 8
+      })
       // La description suit l'offre de face ; elle s'efface pendant que le cadran tourne
       const proche = Math.round(actuel)
       fiches.style.opacity = Math.max(0, 1 - Math.abs(actuel - proche) * 4)
       if (proche !== indexActif) {
+        benefices[indexActif]?.classList.remove('selecteur__actif')
+        benefices[proche]?.classList.add('selecteur__actif')
+        selecteur?.style.setProperty('--bande', BANDES[proche % BANDES.length])
+        selecteur?.classList.toggle('selecteur--sombre', proche % BANDES.length === 2)
         indexActif = proche
         setActif(proche)
       }
@@ -244,6 +260,18 @@ export default function RoueOffres({ offres, titre = 'ma méthode', id = 'method
             ))}
           </ul>
         </div>
+        {offres.some((offre) => offre.benefice) && (
+          <div className="selecteur">
+            <p className="ligne-fine selecteur__ligne">ce que vous y gagnez</p>
+            <div className="selecteur__roue">
+              <ul>
+                {offres.map((offre) => (
+                  <li key={offre.titre} className="titre">{offre.benefice}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )
