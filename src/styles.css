@@ -523,6 +523,42 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .gestes li:nth-child(5) { --penche: -2deg; }
 .gestes li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
+/* ---------- Avec qui je travaille : trois cartes photo, qui passent au néon au survol ---------- */
+/* Sur ordinateur, la rubrique tient dans un écran, comme le haut de page */
+@media (min-width: 900px) {
+  .section.services {
+    min-height: calc(var(--ecran) - var(--hauteur-entete));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 32px;
+  }
+  .services > .conteneur { width: 100%; }
+}
+.services .titre--accueil { margin-bottom: clamp(24px, calc(2.4 * var(--vw)), 40px); }
+.services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+@media (min-width: 900px) { .services__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+.services__liste > li { display: flex; }
+.service {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--fond-carte);
+  border-radius: var(--arrondi);
+  overflow: hidden;
+  color: var(--encre);
+  text-decoration: none;
+  transition: background-color var(--duree) ease;
+}
+.service:hover, .service:focus-visible { background: var(--neon); }
+.service .photo.service__photo { aspect-ratio: 16 / 10; border-radius: 0; }
+@media (min-width: 900px) { .service .photo.service__photo { aspect-ratio: auto; height: clamp(110px, calc(var(--ecran) * 0.22), 280px); } }
+.service__corps { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: clamp(20px, calc(1.8 * var(--vw)), 32px); }
+.service .texte { font-size: 16px; line-height: 1.5; color: var(--encre-700); }
+.service:hover .texte, .service:focus-visible .texte { color: var(--encre); }
+.service__lien { margin-top: auto; padding-top: 8px; }
+.service:hover .lien-fleche svg { transform: translateX(4px); }
+
 /* ---------- Ma méthode : disque de fonte qui tourne au défilement (voir RoueOffres.jsx) ---------- */
 .roue-offres { height: 230vh; }
 .roue-offres__ecran {

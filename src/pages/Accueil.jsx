@@ -1,13 +1,39 @@
 import VisuelFondu from '../components/VisuelFondu.jsx'
 import RoueGestes from '../components/RoueGestes.jsx'
 import RoueOffres from '../components/RoueOffres.jsx'
-import { BoutonLien, Faits, Photo, TitreSection, Tuile } from '../components/Blocs.jsx'
+import { Link } from 'react-router-dom'
+import { BoutonLien, Faits, Photo, TitreSection } from '../components/Blocs.jsx'
+import { Fleche } from '../components/Entete.jsx'
 import useTitre from '../components/useTitre.js'
 
 const METHODE = [
   { titre: 'plus de force', texte: 'Développer sa force qui sert dans la vie quotidienne et professionnelle.' },
   { titre: 'plus de mobilité', texte: 'Retrouver plus de liberté dans ses mouvements.' },
   { titre: "plus d'autonomie", texte: 'Comprendre les mouvements pour continuer à bouger durablement.' },
+]
+
+const SERVICES = [
+  {
+    to: '/entreprises',
+    titre: 'entreprises',
+    photo: 'Séance en groupe dans des locaux ou en extérieur',
+    texte: "Des séances de mobilité et de renforcement pour remettre en mouvement des équipes aux métiers et aux niveaux variés. Dans vos locaux ou en extérieur, chaque semaine ou le temps d'un séminaire.",
+    lien: 'Les séances en entreprise',
+  },
+  {
+    to: '/communes',
+    titre: 'communes',
+    photo: 'Petit groupe en extérieur',
+    texte: 'Des séances conviviales en small group, en extérieur ou en salle communale, ouvertes aux habitants quel que soit leur niveau de départ.',
+    lien: 'Les séances en commune',
+  },
+  {
+    to: '/particuliers',
+    titre: 'particuliers',
+    photo: 'Séance à domicile ou dans un jardin',
+    texte: 'Un coaching individuel ou en petit groupe, à domicile, en extérieur ou en salle, pour reprendre le sport à votre rythme.',
+    lien: 'Le coaching particulier',
+  },
 ]
 
 const GESTES = ["s'accroupir", 'porter', 'pousser', 'tirer', 'se pencher', 'se relever']
@@ -46,6 +72,27 @@ export default function Accueil() {
       </section>
 
       <RoueOffres offres={METHODE} />
+
+      <section className="section services" aria-labelledby="services-titre">
+        <div className="conteneur">
+          <h2 id="services-titre" className="titre titre--accueil">avec qui je travaille</h2>
+          {/* Toute la carte est un lien ; elle passe au néon au survol */}
+          <ul className="services__liste">
+            {SERVICES.map((service) => (
+              <li key={service.to}>
+                <Link to={service.to} className="service">
+                  <Photo label={service.photo} className="service__photo" />
+                  <div className="service__corps">
+                    <h3 className="titre titre--tuile">{service.titre}</h3>
+                    <p className="texte">{service.texte}</p>
+                    <span className="lien-fleche service__lien">{service.lien} <Fleche /></span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       <section className="section" aria-labelledby="approche-titre">
         <div className="conteneur deux-colonnes">
