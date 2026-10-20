@@ -956,7 +956,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .roue-offres .dispo-3 .cadran__fiches { margin-top: 16px; }
   .dispo-3 .cadran__fiche { justify-items: center; }
 }
-.roue-offres { --taille-nom-ref: clamp(34px, calc(4.1 * var(--vw)), 58px); }
+.roue-offres { --fond-rubrique: var(--lin); --taille-nom-ref: clamp(34px, calc(4.1 * var(--vw)), 58px); }
 
 .methode__numero, .methode__photos { display: none; }
 @media (min-width: 900px) {
@@ -992,4 +992,18 @@ textarea.champ { resize: vertical; min-height: 140px; }
     font-weight: 900; font-size: calc((var(--ecran) - var(--hauteur-entete)) * 0.62); line-height: 0.8; letter-spacing: -0.06em;
     color: var(--lin); pointer-events: none;
   }
+}
+
+/* Essai : « ma méthode » en trois encarts */
+.cadran__ligne { display: block; }
+.methode-trio { padding-block: clamp(48px, calc(6 * var(--vw)), 88px); }
+.methode-trio .titre--accueil { margin-bottom: clamp(24px, calc(2.4 * var(--vw)), 40px); }
+.methode-trio__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+@media (min-width: 900px) { .methode-trio__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+.methode-trio__liste > li { background: var(--fond-carte); border-radius: var(--arrondi); padding: clamp(24px, calc(2.2 * var(--vw)), 36px); display: grid; gap: 12px; align-content: start; }
+.methode-trio__numero { font-weight: 900; font-size: 15px; color: var(--corail-texte); }
+.methode-trio .titre--tuile { color: var(--corail-profond); }
+/* deux lignes par nom : la description descend d'autant */
+@media (min-width: 900px) {
+  #specialites .dispo-1 .cadran__fiches { top: calc(50% + 1.2 * var(--taille-nom-ref)); }
 }

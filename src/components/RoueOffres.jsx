@@ -15,7 +15,7 @@ function arc(r, a1, a2) {
 // Au défilement, il tourne dans le sens inverse des aiguilles d'une montre et amène chaque pilier
 // en face, bien droit, avec sa description au-dessus.
 // Sans JavaScript ou avec « réduire les animations » : une simple rangée de tuiles.
-export default function RoueOffres({ offres }) {
+export default function RoueOffres({ offres, titre = 'ma méthode', id = 'methode', variante: varianteDefaut = 0 }) {
   const sectionRef = useRef(null)
   // Site rendu uniquement dans le navigateur : on peut décider dès le premier rendu
   const [anime] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -44,7 +44,7 @@ export default function RoueOffres({ offres }) {
     let course = 1
     let indexActif = -1
     let base = 0 // angle où se trouve le pilier de face (0 = à droite du disque)
-    const variante = Number(new URLSearchParams(location.search).get('dispo') || 0)
+    const variante = Number(new URLSearchParams(location.search).get('dispo') ?? varianteDefaut) || varianteDefaut
     // 4, 5 et 7 reprennent la géométrie de la 1 ; 6 celle de la 2
     const dispo = { 4: 1, 5: 1, 7: 1, 6: 2 }[variante] ?? variante
     section.querySelector('.roue-offres__ecran').classList.add(`dispo-${dispo}`, `variante-${variante}`)
@@ -72,7 +72,7 @@ export default function RoueOffres({ offres }) {
         const gouttiere = parseFloat(getComputedStyle(texte).paddingRight)
         const nomMax = Math.max(...noms.map((n) => n.offsetWidth))
         if (colonnes.matches && dispo === 1) {
-          pas = 30
+          pas = offres.length > 3 ? 26 : 30
           rayon = Math.min(hauteur * 0.47, 320)
           cx = gouttiere + rayon * 0.6
           section.style.setProperty('--debut-noms', `${cx + rayon + 28}px`)
@@ -133,7 +133,9 @@ export default function RoueOffres({ offres }) {
         // Toutes les offres restent visibles ; celle de face est en grand, les autres en petit
         const face = Math.max(0, 1 - Math.abs(ecart))
         b.style.setProperty('--echelle', (echelleMin + (1 - echelleMin) * face).toFixed(3))
-        b.style.opacity = (0.6 + 0.4 * face).toFixed(3)
+        // au-delà des voisins directs, le nom s'efface (utile à partir de quatre)
+        const loin = Math.min(1, Math.max(0, Math.abs(ecart) - 1) * 2)
+        b.style.opacity = ((0.6 + 0.4 * face) * (1 - loin)).toFixed(3)
       })
       // La description suit l'offre de face ; elle s'efface pendant que le cadran tourne
       const proche = Math.round(actuel)
@@ -170,17 +172,17 @@ export default function RoueOffres({ offres }) {
       window.removeEventListener('resize', auRedimensionnement)
       if (image) cancelAnimationFrame(image)
     }
-  }, [anime, offres])
+  }, [anime, offres, varianteDefaut])
 
   const entete = (
     <div className="roue-offres__texte">
-      <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
+      <h2 id={`${id}-titre`} className="titre titre--accueil">{titre}</h2>
     </div>
   )
 
   if (!anime) {
     return (
-      <section id="methode" className="section" aria-labelledby="methode-titre">
+      <section id={id} className="section" aria-labelledby={`${id}-titre`}>
         <div className="conteneur">
           <div className="entete-section entete-section--deux">{entete}</div>
           <div className="tuiles">
@@ -196,12 +198,12 @@ export default function RoueOffres({ offres }) {
   }
 
   return (
-    <section id="methode" className="roue-offres" ref={sectionRef} aria-labelledby="methode-titre">
+    <section id={id} className="roue-offres" style={{ height: `${75 * offres.length + 5}vh` }} ref={sectionRef} aria-labelledby={`${id}-titre`}>
       <div className="roue-offres__ecran">
         {/* Essais : grand numéro du pilier (7) et photo du pilier (6) */}
         <p className="methode__numero" aria-hidden="true">{String(actif + 1).padStart(2, '0')}</p>
         <div className="roue-offres__texte">
-          <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
+          <h2 id={`${id}-titre`} className="titre titre--accueil">{titre}</h2>
           <div className="methode__photos" aria-hidden="true">
             {offres.map((offre, i) => (
               <Photo key={offre.titre} label={`Photo · ${offre.titre}`} className={i === actif ? 'methode__photo--active' : ''} />
@@ -234,7 +236,10 @@ export default function RoueOffres({ offres }) {
             {offres.map((offre, i) => (
               <li key={offre.titre} className={`cadran__bras ${i === actif ? 'cadran__bras--actif' : ''}`}>
                 <span className="cadran__repere" aria-hidden="true" />
-                <span className="cadran__nom titre">{offre.titre}</span>
+                <span className="cadran__nom titre">
+                  {/* « force & puissance » : le « & » passe à la ligne */}
+                  {offre.titre.split(' & ').map((morceau, j) => (j ? <span key={j} className="cadran__ligne">&amp; {morceau}</span> : <span key={j} className="cadran__ligne">{morceau}</span>))}
+                </span>
               </li>
             ))}
           </ul>

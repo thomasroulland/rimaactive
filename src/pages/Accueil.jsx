@@ -12,6 +12,13 @@ const METHODE = [
   { titre: "plus d'autonomie", texte: 'Comprendre les mouvements pour continuer à bouger durablement.' },
 ]
 
+const SPECIALITES = [
+  { titre: 'force & puissance', texte: '[Texte à rédiger : force & puissance]' },
+  { titre: 'explosivité & performance', texte: '[Texte à rédiger : explosivité & performance]' },
+  { titre: 'condition physique & endurance', texte: '[Texte à rédiger : condition physique & endurance]' },
+  { titre: 'mobilité & posture', texte: '[Texte à rédiger : mobilité & posture]' },
+]
+
 const SERVICES = [
   {
     to: '/entreprises',
@@ -71,7 +78,23 @@ export default function Accueil() {
         </div>
       </section>
 
-      <RoueOffres offres={METHODE} />
+      {/* Essai : « ma méthode » en trois encarts fixes, le disque porte les spécialités */}
+      <section className="section methode-trio" id="methode" aria-labelledby="methode-trio-titre">
+        <div className="conteneur">
+          <h2 id="methode-trio-titre" className="titre titre--accueil">ma méthode</h2>
+          <ol className="methode-trio__liste">
+            {METHODE.map((pilier, i) => (
+              <li key={pilier.titre}>
+                <span className="methode-trio__numero">{String(i + 1).padStart(2, '0')}</span>
+                <h3 className="titre titre--tuile">{pilier.titre}</h3>
+                <p className="ligne-fine ligne-fine--fiche">{pilier.texte}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <RoueOffres offres={SPECIALITES} titre="mes spécialités" id="specialites" variante={1} />
 
       <section className="section services" aria-labelledby="services-titre">
         <div className="conteneur">
