@@ -152,13 +152,15 @@ main > section:nth-of-type(even):not(.appel) {
     flex-direction: column;
     justify-content: center;
     padding-block: 32px;
+    /* la photo qui glisse au défilement ne déborde pas sur la rubrique voisine */
+    overflow: clip;
   }
   .ecran-plein > .conteneur { width: 100%; }
-  /* La photo de présentation prend la hauteur de l'écran (moins la marge et l'aplat décalé) */
+  /* La photo de présentation prend la hauteur de l'écran, moins la marge, l'aplat décalé et son glissement au défilement (40 px) */
   .ecran-plein .deux-colonnes > .photo {
     width: auto;
     max-width: 100%;
-    height: calc(var(--ecran) - var(--hauteur-entete) - 64px - 28px);
+    height: calc(var(--ecran) - var(--hauteur-entete) - 64px - 28px - 40px);
     justify-self: center;
   }
   html:has(.ecran-plein) { scroll-snap-type: y proximity; scroll-padding-top: var(--hauteur-entete); }
