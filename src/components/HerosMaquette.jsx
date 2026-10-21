@@ -1,20 +1,13 @@
-import { Link } from 'react-router-dom'
 import { BoutonLien, Photo } from './Blocs.jsx'
-import { Fleche } from './Entete.jsx'
+import photoBarre from '../assets/maquette-barre.jpg'
 import './maquettes.css'
 
-// Maquettes du haut de page (?heros=1 à 4), pour choisir une composition. Photos à venir : emplacements.
-const FORMULES = [
-  { to: '/entreprises', titre: 'entreprises', photo: 'Séance en entreprise' },
-  { to: '/communes', titre: 'communes', photo: 'Petit groupe en extérieur' },
-  { to: '/particuliers', titre: 'particuliers', photo: 'Séance à domicile' },
-]
-
-function Titre({ deuxTons = false }) {
+// Maquettes du haut de page (?heros=1, 2 et 4), pour choisir une composition. Photos à venir : emplacements.
+function Titre() {
   return (
     <h1 className="titre titre--accueil hv__titre">
       <span className="ligne">Marie Sillas,</span>{' '}
-      <span className={`ligne ${deuxTons ? 'hv__accent' : ''}`}>coach sportive</span>
+      <span className="ligne">coach sportive</span>
     </h1>
   )
 }
@@ -45,8 +38,7 @@ export default function HerosMaquette({ n }) {
   if (n === 1) {
     return (
       <section className="hv hv1">
-        <Photo label="Photo plein cadre : Marie en séance" sombre className="hv1__fond" />
-        <div className="hv1__voile" aria-hidden="true" />
+        <img className="hv1__photo" src={photoBarre} alt="" />
         <div className="hv1__texte">
           <Titre />
           <Ligne />
@@ -59,45 +51,17 @@ export default function HerosMaquette({ n }) {
       </section>
     )
   }
-  // 2 : grande photo à gauche, à droite le nom en deux tons, un portrait rond et le texte
+  // 2 : grande photo à gauche, à droite le nom et le texte, centrés
   if (n === 2) {
     return (
       <section className="hv hv2">
         <Photo label="Grande photo : séance en extérieur" className="hv2__photo" />
         <div className="hv2__texte">
-          <Titre deuxTons />
-          <Photo label="Portrait" className="hv2__portrait" />
+          <Titre />
           <Ligne />
           <Actions />
           <Reperes />
         </div>
-      </section>
-    )
-  }
-  // 3 : photo plein cadre avec le texte, colonne des formules à droite
-  if (n === 3) {
-    return (
-      <section className="hv hv3">
-        <div className="hv3__principal">
-          <Photo label="Photo plein cadre : Marie en séance" sombre className="hv3__fond" />
-          <div className="hv1__voile" aria-hidden="true" />
-          <div className="hv3__texte">
-            <Titre />
-            <Ligne />
-            <Actions sombre />
-            <Reperes />
-          </div>
-        </div>
-        <aside className="hv3__formules" aria-labelledby="hv3-formules">
-          <h2 id="hv3-formules" className="titre titre--tuile">mes formules</h2>
-          {FORMULES.map((f) => (
-            <Link key={f.to} to={f.to} className="hv3__formule">
-              <Photo label={f.photo} className="hv3__vignette" />
-              <span className="hv3__nom">{f.titre}</span>
-              <span className="lien-fleche">Découvrir <Fleche taille={16} /></span>
-            </Link>
-          ))}
-        </aside>
       </section>
     )
   }
