@@ -559,8 +559,8 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .service__lien { margin-top: auto; padding-top: 8px; }
 .service:hover .lien-fleche svg { transform: translateX(4px); }
 
-/* ---------- Ma méthode : demi-disque à gauche avec les trois phrases, sélecteur des spécialités à droite
-   (voir Methode.jsx). La rubrique reste à l'écran le temps que le sélecteur passe les spécialités. ---------- */
+/* ---------- Ma méthode : demi-disque à gauche avec les trois phrases, sélecteur des formats à droite
+   (voir Methode.jsx). La rubrique reste à l'écran le temps que le sélecteur passe les formats. ---------- */
 .methode {
   --fond-rubrique: var(--lin);
   /* rayon du disque : la moitié de la hauteur utile sur ordinateur */
@@ -634,7 +634,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   box-shadow: 0 0 0 3px var(--fond-rubrique);
 }
 
-/* Sélecteur des spécialités : la bande au centre change de couleur à chaque spécialité */
+/* Sélecteur des formats d'entraînement : la bande au centre change de couleur à chaque format */
 .selecteur {
   --bande: var(--corail);
   --hauteur-ligne: clamp(52px, calc(5 * var(--vw)), 76px);
@@ -644,8 +644,10 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   margin-inline: var(--gouttiere);
 }
 .selecteur ul { margin: 0; padding: 0; list-style: none; }
+/* les noms de formats gardent leurs majuscules (EMOM, AMRAP) */
+.selecteur .selecteur__format { text-transform: none; }
 .selecteur li { font-size: clamp(22px, calc(2.2 * var(--vw)), 32px); letter-spacing: -0.04em; color: var(--encre); white-space: nowrap; }
-/* Sans animation : la liste des spécialités, simplement */
+/* Sans animation : la liste des formats, simplement */
 .methode:not(.methode--animee) .selecteur { height: auto; }
 .methode:not(.methode--animee) .selecteur li { padding: 8px 0; }
 .methode--animee .selecteur::before {
@@ -687,7 +689,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
    un peu décalés vers le centre, à droite */
 @media (min-width: 900px) {
   .methode { --rayon: min(calc((var(--ecran) - var(--hauteur-entete) - 48px) * 0.5), 340px); }
-  .methode__ecran { display: grid; padding-block: 24px; }
+  .methode__ecran { display: grid; grid-template-columns: minmax(0, 1fr); padding-block: 24px; }
   .methode__disque-zone { grid-area: 1 / 1; height: auto; min-height: calc(2 * var(--rayon)); }
   .methode__droite {
     grid-area: 1 / 1;

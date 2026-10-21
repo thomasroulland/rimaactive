@@ -5,8 +5,8 @@ import { cran } from './cran.js'
 const POIGNEES = [-90, 30, 150]
 // Angles des trois phrases sur le bord du disque (0° = à droite du centre)
 const ANGLES = [-36, 0, 36]
-const PAS_SELECTEUR = 34 // écart entre deux spécialités sur le sélecteur, en degrés
-const BANDES = ['var(--corail)', 'var(--neon)', 'var(--encre)'] // la bande change de couleur à chaque spécialité
+const PAS_SELECTEUR = 34 // écart entre deux formats sur le sélecteur, en degrés
+const BANDES = ['var(--corail)', 'var(--neon)', 'var(--encre)'] // la bande change de couleur à chaque format
 
 // Arc de cercle de rayon r, de a1 à a2 degrés (sens des aiguilles d'une montre, 0° à droite)
 function arc(r, a1, a2) {
@@ -15,10 +15,10 @@ function arc(r, a1, a2) {
 }
 
 // Rubrique « ma méthode » : un demi-disque de fonte au bord gauche de l'écran, avec les trois phrases
-// de la méthode sur son bord, toutes visibles. À droite, le sélecteur des spécialités.
-// Au défilement, la rubrique reste à l'écran : le disque tourne et le sélecteur passe d'une spécialité à l'autre.
-// Avec « réduire les animations » : rien ne tourne, les spécialités sont listées.
-export default function Methode({ phrases, specialites }) {
+// de la méthode sur son bord, toutes visibles. À droite, le sélecteur des formats d'entraînement.
+// Au défilement, la rubrique reste à l'écran : le disque tourne et le sélecteur passe d'un format à l'autre.
+// Avec « réduire les animations » : rien ne tourne, les formats sont listés.
+export default function Methode({ phrases, formats }) {
   const sectionRef = useRef(null)
   // Site rendu uniquement dans le navigateur : on peut décider dès le premier rendu
   const [anime] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -59,7 +59,7 @@ export default function Methode({ phrases, specialites }) {
       if (Math.abs(cible - actuel) < 0.001) actuel = cible
       // Sens inverse des aiguilles d'une montre quand on descend
       disque.style.transform = `rotate(${-actuel * 45}deg)`
-      // Sélecteur imité en 2D : chaque spécialité glisse sur un cercle et s'aplatit vers les bords
+      // Sélecteur imité en 2D : chaque format glisse sur un cercle et s'aplatit vers les bords
       items.forEach((li, i) => {
         const radians = ((i - actuel) * PAS_SELECTEUR * Math.PI) / 180
         const proximite = Math.max(0, Math.cos(radians))
@@ -101,13 +101,13 @@ export default function Methode({ phrases, specialites }) {
       window.removeEventListener('resize', auRedimensionnement)
       if (image) cancelAnimationFrame(image)
     }
-  }, [anime, specialites])
+  }, [anime, formats])
 
   return (
     <section
       id="methode"
       className={`methode ${anime ? 'methode--animee' : ''}`}
-      style={anime ? { height: `${75 * specialites.length + 5}vh` } : undefined}
+      style={anime ? { height: `${60 * formats.length + 5}vh` } : undefined}
       ref={sectionRef}
       aria-labelledby="methode-titre"
     >
@@ -137,8 +137,8 @@ export default function Methode({ phrases, specialites }) {
           <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
           <div className="selecteur">
             <ul>
-              {specialites.map((specialite) => (
-                <li key={specialite} className="titre">{specialite}</li>
+              {formats.map((format) => (
+                <li key={format} className="titre selecteur__format">{format}</li>
               ))}
             </ul>
           </div>

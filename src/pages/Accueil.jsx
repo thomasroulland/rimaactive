@@ -12,7 +12,7 @@ const PHRASES = [
   'comprendre les mouvements pour continuer de bouger durablement',
 ]
 
-const SPECIALITES = ['force & puissance', 'explosivité & performance', 'condition physique & endurance', 'mobilité & posture']
+const FORMATS = ['Density Training', 'Circuit Training', 'EMOM', 'AMRAP', 'Complex', 'Balistique']
 
 const SERVICES = [
   {
@@ -73,7 +73,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <Methode phrases={PHRASES} specialites={SPECIALITES} />
+      <Methode phrases={PHRASES} formats={FORMATS} />
 
       <section className="section services" aria-labelledby="services-titre">
         <div className="conteneur">
