@@ -1,4 +1,5 @@
 import VisuelFondu from '../components/VisuelFondu.jsx'
+import HerosMaquette from '../components/HerosMaquette.jsx'
 import BoiteOutils from '../components/BoiteOutils.jsx'
 import CarteZone from '../components/CarteZone.jsx'
 import { Link } from 'react-router-dom'
@@ -35,8 +36,11 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Essai : ?heros=1 à 4 affiche une maquette du haut de page
+  const maquette = Number(new URLSearchParams(window.location.search).get('heros')) || 0
   return (
     <>
+      {maquette ? <HerosMaquette n={maquette} /> : (
       <section className="heros">
         <div className="conteneur heros__grille">
           <div>
@@ -59,6 +63,7 @@ export default function Accueil() {
           </div>
         </div>
       </section>
+      )}
 
       <section className="section ecran-plein" aria-labelledby="approche-titre">
         <div className="conteneur deux-colonnes">

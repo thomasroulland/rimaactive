@@ -1,0 +1,91 @@
+/* Maquettes du haut de page (voir HerosMaquette.jsx) */
+.hv {
+  position: relative;
+  min-height: calc(var(--ecran) - var(--hauteur-entete));
+  overflow: hidden;
+}
+.hv .titre--accueil, .heros .titre--accueil { text-transform: none; }
+.hv .ligne-fine--sous-titre { margin: clamp(16px, calc(1.8 * var(--vw)), 24px) 0 0; font-size: clamp(18px, calc(1.45 * var(--vw)), 21px); line-height: 1.3; }
+.hv .actions { margin-top: clamp(20px, calc(2.2 * var(--vw)), 32px); }
+.hv .reperes { margin-top: clamp(20px, calc(2.4 * var(--vw)), 36px); }
+.hv .titre--accueil .ligne { display: block; }
+.hv .photo { border-radius: 0; }
+
+/* 1 : photo plein cadre et bandeau */
+.hv1 { display: grid; grid-template-rows: 1fr auto; }
+.hv .hv1__fond { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; justify-content: flex-end; }
+.hv1__voile { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(22, 21, 20, 0.85), rgba(22, 21, 20, 0.25) 70%); pointer-events: none; }
+.hv1__texte { position: relative; align-self: center; width: 100%; margin: 0 auto; padding: 32px var(--gouttiere); box-sizing: border-box; max-width: calc(var(--largeur) + 2 * var(--gouttiere)); }
+.hv1 .hv__titre, .hv3 .hv__titre { color: var(--lin); }
+.hv1 .hv__ligne, .hv3 .hv__ligne { color: rgba(255, 255, 255, 0.82); }
+.hv__bouton-clair { background: transparent; color: var(--lin); border-color: var(--lin); }
+.hv1__bandeau {
+  position: relative;
+  margin: 0;
+  padding: 18px var(--gouttiere);
+  background: var(--corail);
+  color: var(--encre);
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(15px, calc(1.3 * var(--vw)), 19px);
+  letter-spacing: -0.01em;
+}
+.hv1__bandeau span { margin: 0 14px; }
+
+/* 2 : grande photo à gauche, texte et portrait rond à droite */
+.hv2 { display: grid; grid-template-columns: 1.3fr 1fr; }
+.hv .hv2__photo { height: 100%; aspect-ratio: auto; }
+.hv2__texte { align-self: center; padding: 24px var(--gouttiere) 24px clamp(32px, calc(4 * var(--vw)), 64px); }
+.hv__accent { color: var(--corail-profond); }
+.hv .hv2__portrait {
+  width: clamp(96px, calc(var(--ecran) * 0.2), 150px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin-top: clamp(16px, calc(1.8 * var(--vw)), 24px);
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  box-shadow: 8px 8px 0 var(--neon);
+}
+
+/* 3 : photo plein cadre et colonne des formules */
+.hv3 { display: grid; grid-template-columns: 1fr clamp(300px, calc(26 * var(--vw)), 400px); }
+.hv3__principal { position: relative; display: flex; align-items: center; }
+.hv .hv3__fond { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; justify-content: flex-end; }
+.hv3__texte { position: relative; padding: 32px clamp(32px, calc(4 * var(--vw)), 64px) 32px var(--gouttiere); }
+.hv3 .reperes li { background: var(--lin); }
+.hv3 .reperes li.repere--neon { background: var(--neon); }
+.hv3__formules { display: flex; flex-direction: column; gap: 10px; padding: 20px clamp(20px, calc(2 * var(--vw)), 32px); background: var(--blanc); justify-content: center; }
+.hv3__formules .titre--tuile { margin-bottom: 4px; }
+.hv3__formule {
+  display: grid;
+  grid-template-columns: clamp(84px, calc(8 * var(--vw)), 120px) 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 14px;
+  padding: 8px;
+  border-radius: var(--arrondi);
+  background: var(--lin);
+  color: var(--encre);
+  text-decoration: none;
+  transition: background-color var(--duree) ease;
+}
+.hv3__formule:hover { background: var(--neon); }
+.hv .hv3__vignette { grid-row: 1 / 3; aspect-ratio: 4 / 3; border-radius: 6px; padding: 0; font-size: 0; }
+.hv3__nom { font-weight: 900; font-size: 22px; letter-spacing: -0.04em; align-self: end; }
+.hv3__formule .lien-fleche { font-size: 14px; align-self: start; }
+
+/* 4 : deux photos, la ligne fine en grand au-dessus du nom */
+.hv4 { display: grid; grid-template-columns: 3fr 1fr; }
+.hv .hv4__photo { height: 100%; aspect-ratio: auto; background: #ddd5ca; }
+.hv .hv4__photo2 { height: 100%; aspect-ratio: auto; background: #c9bfb2; }
+.hv4__texte { position: absolute; inset: 0 auto 0 0; display: flex; flex-direction: column; justify-content: center; padding: 32px var(--gouttiere); max-width: 60%; }
+.hv4__accroche { margin: 0 0 12px; font-size: clamp(24px, calc(2.4 * var(--vw)), 36px); color: var(--encre); }
+
+@media (max-width: 899px) {
+  .hv2, .hv3, .hv4 { grid-template-columns: 1fr; }
+  .hv .hv2__photo, .hv .hv4__photo { height: 40svh; }
+  .hv .hv4__photo2 { display: none; }
+  .hv4__texte { position: relative; max-width: none; }
+}
