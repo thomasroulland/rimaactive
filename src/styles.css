@@ -874,3 +874,6 @@ textarea.champ { resize: vertical; min-height: 140px; }
 
 /* Mention d'information sous le formulaire */
 .info-rgpd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--encre-700); max-width: 70ch; }
+
+/* Maquette : le nom sur deux lignes */
+.titre--accueil .ligne { display: block; }

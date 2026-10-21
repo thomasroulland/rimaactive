@@ -41,15 +41,9 @@ export default function Accueil() {
         <div className="conteneur heros__grille">
           <div>
             <h1 className="titre titre--accueil">
-              <span className="guillemet guillemet--ouvrant">“</span>un corps fort et mobile grâce à une pratique
-              fonctionnelle<span className="guillemet guillemet--fermant">”</span>
+              <span className="ligne">Marie Sillas,</span> <span className="ligne">coach sportive</span>
             </h1>
-            <p className="ligne-fine ligne-fine--sous-titre">
-              {/* Coupures choisies : une ligne par span sur grand écran, texte continu sur téléphone */}
-              <span className="ligne">Je vous accompagne avec des séances adaptées à votre niveau </span>
-              <span className="ligne">et à vos objectifs. Dans vos locaux, en extérieur </span>
-              <span className="ligne">ou à domicile, je me déplace selon vos besoins.</span>
-            </p>
+            <p className="ligne-fine ligne-fine--sous-titre">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
             <div className="actions">
               <BoutonLien to="/contact">M'écrire</BoutonLien>
               <a href="#formules" className="bouton bouton--secondaire">Mes formules</a>
