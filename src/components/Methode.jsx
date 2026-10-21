@@ -99,7 +99,7 @@ export default function Methode({ formats, children }) {
       <div className="roue-section__ecran">
         <div className="conteneur roue-section__grille">
           <div>
-            <h2 id="methode-titre" className="titre titre--section">ma méthode</h2>
+            <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
             <div className="roue-section__texte">{children}</div>
           </div>
           <div className="roue">

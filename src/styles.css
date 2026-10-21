@@ -142,6 +142,28 @@ main > section:nth-of-type(even):not(.appel) {
   --fond-carte: var(--lin);
   background: var(--fond-rubrique);
 }
+/* Sur ordinateur, chaque rubrique de l'accueil occupe exactement un écran sous l'en-tête, contenu centré.
+   Le défilement s'aimante doucement sur le haut des rubriques, pour qu'on les voie entières. */
+@media (min-width: 900px) {
+  .section.ecran-plein {
+    box-sizing: border-box;
+    min-height: calc(var(--ecran) - var(--hauteur-entete));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 32px;
+  }
+  .ecran-plein > .conteneur { width: 100%; }
+  /* La photo de présentation prend la hauteur de l'écran (moins la marge et l'aplat décalé) */
+  .ecran-plein .deux-colonnes > .photo {
+    width: auto;
+    max-width: 100%;
+    height: calc(var(--ecran) - var(--hauteur-entete) - 64px - 28px);
+    justify-self: center;
+  }
+  html:has(.ecran-plein) { scroll-snap-type: y proximity; scroll-padding-top: var(--hauteur-entete); }
+  main > section { scroll-snap-align: start; }
+}
 .section--serree { padding-block: clamp(48px, calc(6 * var(--vw)), 80px); }
 .conteneur { max-width: var(--largeur); margin: 0 auto; }
 .conteneur--etroit { max-width: 860px; }
@@ -524,17 +546,6 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .formats li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
 /* ---------- Avec qui je travaille : trois cartes photo, qui passent au néon au survol ---------- */
-/* Sur ordinateur, la rubrique tient dans un écran, comme le haut de page */
-@media (min-width: 900px) {
-  .section.services {
-    min-height: calc(var(--ecran) - var(--hauteur-entete));
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-block: 32px;
-  }
-  .services > .conteneur { width: 100%; }
-}
 .services .titre--accueil { margin-bottom: clamp(24px, calc(2.4 * var(--vw)), 40px); }
 .services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
 @media (min-width: 900px) { .services__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }

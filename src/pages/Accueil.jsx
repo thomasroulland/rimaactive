@@ -1,7 +1,7 @@
 import VisuelFondu from '../components/VisuelFondu.jsx'
 import Methode from '../components/Methode.jsx'
 import { Link } from 'react-router-dom'
-import { BoutonLien, Faits, Photo, TitreSection } from '../components/Blocs.jsx'
+import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
 import useTitre from '../components/useTitre.js'
 
@@ -65,11 +65,11 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="approche-titre">
+      <section className="section ecran-plein" aria-labelledby="approche-titre">
         <div className="conteneur deux-colonnes">
           <Photo label="Photo de Marie" />
           <div>
-            <TitreSection id="approche-titre" titre="une pratique progressive, accessible et concrète" />
+            <h2 id="approche-titre" className="titre titre--accueil">une pratique progressive, accessible et concrète</h2>
             <p className="texte" style={{ marginTop: 32 }}>
               Elles fonctionnent comme des challenges : un temps donné, un nombre de tours, un travail en duo. Chacun
               avance à son niveau et cherche à faire un peu mieux que la fois précédente.
@@ -81,7 +81,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section className="section services" aria-labelledby="services-titre">
+      <section className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
           <h2 id="services-titre" className="titre titre--accueil">avec qui je travaille</h2>
           {/* Toute la carte est un lien ; elle passe au néon au survol */}
@@ -107,10 +107,10 @@ export default function Accueil() {
         <p className="texte"><mark className="a-completer">[Texte à venir]</mark></p>
       </Methode>
 
-      <section className="section" aria-labelledby="zone-titre">
+      <section className="section ecran-plein" aria-labelledby="zone-titre">
         <div className="conteneur">
           <div className="entete-section entete-section--deux">
-            <TitreSection id="zone-titre" titre="je viens à votre rencontre" />
+            <h2 id="zone-titre" className="titre titre--accueil">je viens à votre rencontre</h2>
             <p className="texte">
               J'interviens à Houdan et dans les communes voisines. Je me déplace avec mon matériel afin d'adapter les
               séances au lieu et au niveau des participants.
