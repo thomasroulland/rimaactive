@@ -65,10 +65,21 @@ export default function Accueil() {
         </div>
       </section>
 
-      <Methode formats={FORMATS}>
-        {/* Texte à venir : Marie l'envoie */}
-        <p className="texte"><mark className="a-completer">[Texte à venir]</mark></p>
-      </Methode>
+      <section className="section" aria-labelledby="approche-titre">
+        <div className="conteneur deux-colonnes">
+          <Photo label="Photo de Marie" />
+          <div>
+            <TitreSection id="approche-titre" titre="une pratique progressive, accessible et concrète" />
+            <p className="texte" style={{ marginTop: 32 }}>
+              Elles fonctionnent comme des challenges : un temps donné, un nombre de tours, un travail en duo. Chacun
+              avance à son niveau et cherche à faire un peu mieux que la fois précédente.
+            </p>
+            <div className="actions">
+              <BoutonLien to="/a-propos" variante="secondaire">Qui suis-je ?</BoutonLien>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="section services" aria-labelledby="services-titre">
         <div className="conteneur">
@@ -91,21 +102,10 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="approche-titre">
-        <div className="conteneur deux-colonnes">
-          <Photo label="Photo de Marie" />
-          <div>
-            <TitreSection id="approche-titre" titre="une pratique progressive, accessible et concrète" />
-            <p className="texte" style={{ marginTop: 32 }}>
-              Elles fonctionnent comme des challenges : un temps donné, un nombre de tours, un travail en duo. Chacun
-              avance à son niveau et cherche à faire un peu mieux que la fois précédente.
-            </p>
-            <div className="actions">
-              <BoutonLien to="/a-propos" variante="secondaire">Qui suis-je ?</BoutonLien>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Methode formats={FORMATS}>
+        {/* Texte à venir : Marie l'envoie */}
+        <p className="texte"><mark className="a-completer">[Texte à venir]</mark></p>
+      </Methode>
 
       <section className="section" aria-labelledby="zone-titre">
         <div className="conteneur">
