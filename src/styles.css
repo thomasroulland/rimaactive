@@ -498,8 +498,8 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   .deux-colonnes > .photo:last-child { margin-inline: 14px auto; }
 }
 
-/* ---------- Liste de gestes ---------- */
-.gestes {
+/* ---------- Pastilles des formats (sans animation) ---------- */
+.formats {
   margin: 28px 0 0;
   padding: 0;
   list-style: none;
@@ -507,7 +507,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   flex-wrap: wrap;
   gap: 10px 8px;
 }
-.gestes li {
+.formats li {
   padding: 10px 22px 12px;
   border-radius: 6px;
   background: var(--fond-carte);
@@ -516,12 +516,12 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   letter-spacing: -0.035em;
   transform: rotate(var(--penche, 0deg));
 }
-.gestes li:nth-child(1) { --penche: -3deg; background: var(--corail); }
-.gestes li:nth-child(2) { --penche: 2deg; }
-.gestes li:nth-child(3) { --penche: -1deg; background: var(--neon); }
-.gestes li:nth-child(4) { --penche: 3deg; background: var(--encre); color: var(--lin); }
-.gestes li:nth-child(5) { --penche: -2deg; }
-.gestes li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
+.formats li:nth-child(1) { --penche: -3deg; background: var(--corail); }
+.formats li:nth-child(2) { --penche: 2deg; }
+.formats li:nth-child(3) { --penche: -1deg; background: var(--neon); }
+.formats li:nth-child(4) { --penche: 3deg; background: var(--encre); color: var(--lin); }
+.formats li:nth-child(5) { --penche: -2deg; }
+.formats li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
 /* ---------- Avec qui je travaille : trois cartes photo, qui passent au néon au survol ---------- */
 /* Sur ordinateur, la rubrique tient dans un écran, comme le haut de page */
@@ -559,170 +559,22 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .service__lien { margin-top: auto; padding-top: 8px; }
 .service:hover .lien-fleche svg { transform: translateX(4px); }
 
-/* ---------- Ma méthode : demi-disque à gauche avec les trois phrases, sélecteur des formats à droite
-   (voir Methode.jsx). La rubrique reste à l'écran le temps que le sélecteur passe les formats. ---------- */
-.methode {
-  --fond-rubrique: var(--lin);
-  /* rayon du disque : la moitié de la hauteur utile sur ordinateur */
-  --rayon: 118px;
-}
-.methode__ecran {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: clamp(40px, calc(6 * var(--vw)), 64px) 0;
-  overflow-x: clip;
-}
-.methode--animee .methode__ecran {
-  position: sticky;
-  top: var(--hauteur-entete);
-  height: calc(var(--ecran) - var(--hauteur-entete));
-  box-sizing: border-box;
-  padding-block: 24px;
-  justify-content: center;
-}
-/* Téléphone : titre, demi-disque et phrases, puis sélecteur */
-.methode__droite { display: contents; }
-.methode__droite > .titre { order: -1; padding-inline: var(--gouttiere); }
-
-.methode__disque-zone { position: relative; height: calc(2 * var(--rayon) + 40px); flex: none; }
-/* Le disque est centré sur le bord gauche de l'écran : seule sa moitié droite se voit */
-.methode__disque {
-  position: absolute;
-  left: calc(-1 * var(--rayon));
-  top: calc(50% - var(--rayon));
-  width: calc(2 * var(--rayon));
-  height: calc(2 * var(--rayon));
-  overflow: visible;
-}
-.disque__rebord { fill: var(--corail-profond); }
-.disque__face { fill: var(--corail); }
-.disque__lisere { fill: none; stroke: var(--corail-profond); stroke-width: 2; }
-.disque__poignee { fill: none; stroke: var(--fond-rubrique, var(--lin)); stroke-width: 17; stroke-linecap: round; }
-.disque__moyeu { fill: var(--corail-profond); }
-.disque__manchon { fill: var(--encre); }
-.disque__trou { fill: var(--fond-rubrique, var(--lin)); }
-
-/* Les trois phrases, posées sur le bord du disque à -36°, 0° et 36°, toutes visibles */
-.methode__phrases { margin: 0; padding: 0; list-style: none; }
-.methode__phrases li {
-  --ecart: 22px;
-  position: absolute;
-  left: calc(cos(var(--a)) * var(--rayon));
-  top: calc(50% + sin(var(--a)) * var(--rayon));
-  transform: translate(-7px, -50%);
-  display: flex;
-  align-items: center;
-  gap: var(--ecart);
-  width: max-content;
-  max-width: min(15em, calc(100vw - cos(var(--a)) * var(--rayon) - var(--gouttiere) - 40px));
-  font-weight: 800;
-  font-size: clamp(16px, calc(1.75 * var(--vw)), 27px);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-  color: var(--encre);
-  text-wrap: balance;
-}
-/* le repère, posé sur le rebord du disque */
-.methode__phrases li::before {
-  content: "";
-  flex: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--encre);
-  box-shadow: 0 0 0 3px var(--fond-rubrique);
-}
-
-/* Sélecteur des formats d'entraînement : la bande au centre change de couleur à chaque format */
-.selecteur {
-  --bande: var(--corail);
-  --hauteur-ligne: clamp(52px, calc(5 * var(--vw)), 76px);
-  position: relative;
-  flex: none;
-  height: min(30svh, 240px);
-  margin-inline: var(--gouttiere);
-}
-.selecteur ul { margin: 0; padding: 0; list-style: none; }
-/* les noms de formats gardent leurs majuscules (EMOM, AMRAP) */
-.selecteur .selecteur__format { text-transform: none; }
-.selecteur li { font-size: clamp(22px, calc(2.2 * var(--vw)), 32px); letter-spacing: -0.04em; color: var(--encre); white-space: nowrap; }
-/* Sans animation : la liste des formats, simplement */
-.methode:not(.methode--animee) .selecteur { height: auto; }
-.methode:not(.methode--animee) .selecteur li { padding: 8px 0; }
-.methode--animee .selecteur::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: var(--hauteur-ligne);
-  transform: translateY(-50%);
-  border-radius: var(--arrondi);
-  background: var(--bande);
-  transition: background-color 0.35s ease;
-}
-/* Fondu en haut et en bas, posé par-dessus */
-.methode--animee .selecteur::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(var(--fond-rubrique), transparent 30%, transparent 70%, var(--fond-rubrique));
-}
-.methode--animee .selecteur ul { position: absolute; inset: 0; }
-.methode--animee .selecteur li {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: var(--hauteur-ligne);
-  margin-top: calc(var(--hauteur-ligne) / -2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.selecteur--sombre .selecteur__actif { color: var(--lin); }
-
-/* Ordinateur : le demi-disque occupe toute la hauteur à gauche ; le titre et le sélecteur,
-   un peu décalés vers le centre, à droite */
-@media (min-width: 900px) {
-  .methode { --rayon: min(calc((var(--ecran) - var(--hauteur-entete) - 48px) * 0.5), 340px); }
-  .methode__ecran { display: grid; grid-template-columns: minmax(0, 1fr); padding-block: 24px; }
-  .methode__disque-zone { grid-area: 1 / 1; height: auto; min-height: calc(2 * var(--rayon)); }
-  .methode__droite {
-    grid-area: 1 / 1;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(16px, calc(2 * var(--vw)), 28px);
-    justify-self: end;
-    align-self: center;
-    width: min(34%, 480px);
-    margin-right: calc(var(--gouttiere) + 10 * var(--vw));
-    position: relative;
-    z-index: 1;
-  }
-  .methode__droite > .titre { padding: 0; text-align: center; }
-  .selecteur { flex: none; margin: 0; height: calc((var(--ecran) - var(--hauteur-entete)) * 0.4); }
-  .methode:not(.methode--animee) .selecteur { height: auto; text-align: center; }
-}
-
-/* ---------- Roue des gestes : rubrique fixée à l'écran, la roue tourne au défilement ----------
-   Sans JavaScript ou avec « réduire les animations », on garde les pastilles des gestes. */
+/* ---------- Ma méthode : rubrique fixée à l'écran, la roue des formats tourne au défilement (voir Methode.jsx) ----------
+   Sans JavaScript ou avec « réduire les animations », on garde les pastilles des formats. */
 main > section.roue-section.sur-encre { background: var(--encre); color: var(--lin); }
 .roue-section__ecran { padding: clamp(64px, calc(9 * var(--vw)), 128px) var(--gouttiere); }
 .roue-section .titre { color: var(--lin); }
 .roue-section .texte { color: rgba(255, 255, 255, 0.78); }
+.roue-section__texte { margin-top: 24px; }
 /* Pastilles de secours sur fond encre : la pastille encre passe en néon */
-.roue-section:not(.roue-section--animee) .gestes li { color: var(--encre); }
-.roue-section:not(.roue-section--animee) .gestes li:nth-child(4) { background: var(--neon); }
+.roue-section:not(.roue-section--animee) .formats li { color: var(--encre); }
+.roue-section:not(.roue-section--animee) .formats li:nth-child(4) { background: var(--neon); }
 .roue-section__grille { display: grid; gap: 32px 64px; align-items: center; }
 @media (min-width: 900px) {
   .roue-section__grille { grid-template-columns: 1fr 1.2fr; }
 }
 
-/* Environ un demi-écran de défilement par geste : c'est le temps pendant lequel la roue tourne */
+/* Environ un demi-écran de défilement par format : c'est le temps pendant lequel la roue tourne */
 .roue-section--animee { height: 340vh; }
 .roue-section--animee .roue-section__ecran {
   position: sticky;
@@ -735,21 +587,21 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 .roue-section--animee .roue-section__grille { width: 100%; }
 .roue-section--animee .roue {
   --bande: var(--corail);
-  --hauteur-geste: clamp(72px, calc(9 * var(--vw)), 120px);
+  --hauteur-format: clamp(72px, calc(9 * var(--vw)), 120px);
   position: relative;
   height: min(62vh, 520px);
 }
 @media (max-width: 899px) {
   .roue-section--animee .roue { height: min(44svh, 400px); }
 }
-/* La bande au centre : la fenêtre du sélecteur, qui change de couleur à chaque geste */
+/* La bande au centre : la fenêtre du sélecteur, qui change de couleur à chaque format */
 .roue-section--animee .roue::before {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
-  height: var(--hauteur-geste);
+  height: var(--hauteur-format);
   transform: translateY(-50%);
   border-radius: var(--arrondi);
   background: var(--bande);
@@ -775,19 +627,19 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   left: 0;
   right: 0;
   top: 50%;
-  height: var(--hauteur-geste);
-  margin-top: calc(var(--hauteur-geste) / -2);
+  height: var(--hauteur-format);
+  margin-top: calc(var(--hauteur-format) / -2);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   background: none;
   color: var(--lin);
-  font-size: clamp(40px, calc(6.4 * var(--vw)), 92px);
+  font-size: clamp(32px, calc(4.6 * var(--vw)), 68px);
   letter-spacing: -0.05em;
   white-space: nowrap;
 }
-.roue-section--animee .roue__liste li.roue__geste--actif { color: var(--encre); }
+.roue-section--animee .roue__liste li.roue__format--actif { color: var(--encre); }
 
 /* ---------- Liste à puces sobre ---------- */
 .liste {

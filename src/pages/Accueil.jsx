@@ -1,16 +1,9 @@
 import VisuelFondu from '../components/VisuelFondu.jsx'
-import RoueGestes from '../components/RoueGestes.jsx'
 import Methode from '../components/Methode.jsx'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo, TitreSection } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
 import useTitre from '../components/useTitre.js'
-
-const PHRASES = [
-  'développer une force utile dans votre vie quotidienne et professionnelle',
-  'retrouver une totale liberté dans vos mouvements',
-  'comprendre les mouvements pour continuer de bouger durablement',
-]
 
 const FORMATS = ['Density Training', 'Circuit Training', 'EMOM', 'AMRAP', 'Complex', 'Balistique']
 
@@ -38,7 +31,6 @@ const SERVICES = [
   },
 ]
 
-const GESTES = ["s'accroupir", 'porter', 'pousser', 'tirer', 'se pencher', 'se relever']
 
 export default function Accueil() {
   useTitre('Accueil')
@@ -73,7 +65,10 @@ export default function Accueil() {
         </div>
       </section>
 
-      <Methode phrases={PHRASES} formats={FORMATS} />
+      <Methode formats={FORMATS}>
+        {/* Texte à venir : Marie l'envoie */}
+        <p className="texte"><mark className="a-completer">[Texte à venir]</mark></p>
+      </Methode>
 
       <section className="section services" aria-labelledby="services-titre">
         <div className="conteneur">
@@ -111,8 +106,6 @@ export default function Accueil() {
           </div>
         </div>
       </section>
-
-      <RoueGestes gestes={GESTES} />
 
       <section className="section" aria-labelledby="zone-titre">
         <div className="conteneur">
