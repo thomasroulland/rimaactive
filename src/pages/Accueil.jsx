@@ -1,6 +1,6 @@
-import VisuelFondu from '../components/VisuelFondu.jsx'
 import BoiteOutils from '../components/BoiteOutils.jsx'
 import CarteZone from '../components/CarteZone.jsx'
+import photoHeros from '../assets/heros-barre.jpg'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
@@ -38,32 +38,23 @@ export default function Accueil() {
   return (
     <>
       <section className="heros">
-        <div className="conteneur heros__grille">
-          <div>
-            <h1 className="titre titre--accueil">
-              <span className="guillemet guillemet--ouvrant">“</span>un corps fort et mobile grâce à une pratique
-              fonctionnelle<span className="guillemet guillemet--fermant">”</span>
-            </h1>
-            <p className="ligne-fine ligne-fine--sous-titre">
-              {/* Coupures choisies : une ligne par span sur grand écran, texte continu sur téléphone */}
-              <span className="ligne">Je vous accompagne avec des séances adaptées à votre niveau </span>
-              <span className="ligne">et à vos objectifs. Dans vos locaux, en extérieur </span>
-              <span className="ligne">ou à domicile, je me déplace selon vos besoins.</span>
-            </p>
-            <div className="actions">
-              <BoutonLien to="/contact">M'écrire</BoutonLien>
-              <a href="#formules" className="bouton bouton--secondaire">Mes formules</a>
-            </div>
-            <ul className="reperes">
-              <li>Houdan (78) &amp; alentours</li>
-              <li>Sessions de 30 à 60 min</li>
-              <li className="repere--neon">Matériel mis à disposition</li>
-            </ul>
-          </div>
-          <div className="heros__visuel">
-            <VisuelFondu />
+        {/* Photo de la charte, en transparence sur le fond noir : à remplacer par une photo de Marie en haute définition */}
+        <img className="heros__photo" src={photoHeros} alt="" />
+        <div className="heros__texte">
+          <h1 className="titre titre--accueil">
+            <span className="ligne">Marie Sillas,</span> <span className="ligne">coach sportive</span>
+          </h1>
+          <p className="ligne-fine heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
+          <div className="actions">
+            <BoutonLien to="/contact">M'écrire</BoutonLien>
+            <a href="#formules" className="bouton bouton--secondaire">Mes formules</a>
           </div>
         </div>
+        <ul className="heros__bandeau">
+          <li>Houdan (78) &amp; alentours</li>
+          <li>Sessions de 30 à 60 min</li>
+          <li>Matériel mis à disposition</li>
+        </ul>
       </section>
 
       <section className="section ecran-plein" aria-labelledby="approche-titre">

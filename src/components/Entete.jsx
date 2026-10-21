@@ -56,10 +56,9 @@ export default function Entete() {
   return (
     <header className="entete">
       <div className="entete__barre">
-        {/* Simple signature, pas un lien : « Accueil » est dans le menu */}
+        {/* Simple logo, pas un lien : « Accueil » est dans le menu */}
         <div className="entete__logo">
-          <img src={icone} alt="" width="44" height="40" />
-          <span className="entete__signature">Marie Sillas, coach sportive</span>
+          <img src={icone} alt="Rimaactive, Marie Sillas coach sportive" width="44" height="40" />
         </div>
         <div className="entete__droite">
           <nav className="nav" aria-label="Menu principal" ref={navRef}>
