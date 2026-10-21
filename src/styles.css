@@ -559,48 +559,38 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .service__lien { margin-top: auto; padding-top: 8px; }
 .service:hover .lien-fleche svg { transform: translateX(4px); }
 
-/* ---------- Ma méthode : disque de fonte qui tourne au défilement (voir RoueOffres.jsx) ---------- */
-.roue-offres { height: 230vh; }
-.roue-offres__ecran {
+/* ---------- Ma méthode : demi-disque à gauche avec les trois phrases, sélecteur des spécialités à droite
+   (voir Methode.jsx). La rubrique reste à l'écran le temps que le sélecteur passe les spécialités. ---------- */
+.methode {
+  --fond-rubrique: var(--lin);
+  /* rayon du disque : la moitié de la hauteur utile sur ordinateur */
+  --rayon: 118px;
+}
+.methode__ecran {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: clamp(40px, calc(6 * var(--vw)), 64px) 0;
+  overflow-x: clip;
+}
+.methode--animee .methode__ecran {
   position: sticky;
   top: var(--hauteur-entete);
   height: calc(var(--ecran) - var(--hauteur-entete));
-  display: grid;
-  /* Téléphone : titre et description en haut, disque dessous */
-  grid-template-rows: auto 1fr;
+  box-sizing: border-box;
+  padding-block: 24px;
+  justify-content: center;
 }
-/* Ordinateur : même construction que le haut de page, le titre et sa ligne fine à gauche, centrés
-   dans la hauteur ; le disque à droite, ses noms calés sur le bord droit du contenu */
-@media (min-width: 900px) {
-  .roue-offres__ecran { grid-template-rows: 1fr; max-width: calc(var(--largeur) + 2 * var(--gouttiere)); margin: 0 auto; width: 100%; }
-  .roue-offres__ecran > .roue-offres__texte,
-  .roue-offres__ecran > .cadran { grid-area: 1 / 1; }
-  .roue-offres .roue-offres__ecran > .roue-offres__texte { align-self: center; padding-top: 0; position: relative; z-index: 1; pointer-events: none; }
-}
-.roue-offres__texte { display: grid; }
-.roue-offres .roue-offres__texte {
-  width: 100%;
-  max-width: calc(var(--largeur) + 2 * var(--gouttiere));
-  margin: 0 auto;
-  padding: clamp(32px, calc(5 * var(--vw)), 64px) var(--gouttiere) 0;
-}
-.roue-offres__texte .cadran__fiches { margin-top: clamp(20px, calc(2.4 * var(--vw)), 32px); }
+/* Téléphone : titre, demi-disque et phrases, puis sélecteur */
+.methode__droite { display: contents; }
+.methode__droite > .titre { order: -1; padding-inline: var(--gouttiere); }
 
-.cadran {
-  /* même taille que les titres de l'accueil */
-  --taille-nom: clamp(34px, calc(4.1 * var(--vw)), 58px);
-  position: relative;
-  min-height: 0;
-  /* Coupé sur les côtés (le disque sort de l'écran), mais pas en haut ni en bas : les offres voisines restent entières */
-  overflow-x: clip;
-  overflow-y: visible;
-}
-/* Le disque de fonte, aux couleurs des disques de la barre du logo.
-   Les évidements prennent la couleur du fond de la rubrique (lin 200) pour paraître creux. */
-.cadran__disque {
+.methode__disque-zone { position: relative; height: calc(2 * var(--rayon) + 40px); flex: none; }
+/* Le disque est centré sur le bord gauche de l'écran : seule sa moitié droite se voit */
+.methode__disque {
   position: absolute;
-  left: calc(var(--cx) - var(--rayon));
-  top: calc(var(--cy) - var(--rayon));
+  left: calc(-1 * var(--rayon));
+  top: calc(50% - var(--rayon));
   width: calc(2 * var(--rayon));
   height: calc(2 * var(--rayon));
   overflow: visible;
@@ -608,60 +598,113 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .disque__rebord { fill: var(--corail-profond); }
 .disque__face { fill: var(--corail); }
 .disque__lisere { fill: none; stroke: var(--corail-profond); stroke-width: 2; }
-.disque__poignee { fill: none; stroke: var(--fond-rubrique, var(--lin-200)); stroke-width: 17; stroke-linecap: round; }
+.disque__poignee { fill: none; stroke: var(--fond-rubrique, var(--lin)); stroke-width: 17; stroke-linecap: round; }
 .disque__moyeu { fill: var(--corail-profond); }
 .disque__manchon { fill: var(--encre); }
-.disque__trou { fill: var(--fond-rubrique, var(--lin-200)); }
+.disque__trou { fill: var(--fond-rubrique, var(--lin)); }
 
-/* Chaque offre est un « bras » accroché au centre du cadran : il tourne, le nom suit le bord */
-.cadran__offres { margin: 0; padding: 0; list-style: none; }
-.cadran__bras {
+/* Les trois phrases, posées sur le bord du disque à -36°, 0° et 36°, toutes visibles */
+.methode__phrases { margin: 0; padding: 0; list-style: none; }
+.methode__phrases li {
+  --ecart: 22px;
   position: absolute;
-  left: var(--cx);
-  top: var(--cy);
-  width: 0;
-  height: 0;
-  transform-origin: 0 0;
+  left: calc(cos(var(--a)) * var(--rayon));
+  top: calc(50% + sin(var(--a)) * var(--rayon));
+  transform: translate(-7px, -50%);
+  display: flex;
+  align-items: center;
+  gap: var(--ecart);
+  width: max-content;
+  max-width: min(15em, calc(100vw - cos(var(--a)) * var(--rayon) - var(--gouttiere) - 40px));
+  font-weight: 800;
+  font-size: clamp(16px, calc(1.75 * var(--vw)), 27px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--encre);
+  text-wrap: balance;
 }
-.cadran__repere {
-  position: absolute;
-  left: calc(var(--rayon) - 7px);
-  top: -7px;
+/* le repère, posé sur le rebord du disque */
+.methode__phrases li::before {
+  content: "";
+  flex: none;
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: var(--encre);
-  transition: background-color var(--duree) ease, transform var(--duree) ease;
+  box-shadow: 0 0 0 3px var(--fond-rubrique);
 }
-.cadran__bras--actif .cadran__repere { transform: scale(1.5); box-shadow: 0 0 0 3px var(--fond-rubrique, var(--lin-200)); }
-.cadran__nom {
-  position: absolute;
-  left: calc(var(--rayon) + 28px);
-  top: 0;
-  transform: translateY(-50%) rotate(var(--redresse, 0deg)) scale(var(--echelle, 1));
-  transform-origin: 0 50%;
-  white-space: nowrap;
-  font-size: var(--taille-nom);
-  color: var(--encre);
-  text-decoration: none;
-  transition: color var(--duree) ease;
-}
-.cadran__bras--actif .cadran__nom { color: var(--corail-profond); }
-.cadran__nom:hover { color: var(--corail-texte); }
 
-/* Descriptions : empilées dans la même case, seule celle de l'offre de face est visible
-   (visibility retire aussi les autres du clavier et des lecteurs d'écran) */
-.cadran__fiches { display: grid; }
-.cadran__fiche {
-  grid-area: 1 / 1;
-  display: grid;
-  gap: 20px;
-  justify-items: start;
-  align-content: start;
-  visibility: hidden;
+/* Sélecteur des spécialités : la bande au centre change de couleur à chaque spécialité */
+.selecteur {
+  --bande: var(--corail);
+  --hauteur-ligne: clamp(52px, calc(5 * var(--vw)), 76px);
+  position: relative;
+  flex: none;
+  height: min(30svh, 240px);
+  margin-inline: var(--gouttiere);
 }
-.cadran__fiche--active { visibility: visible; }
-.ligne-fine--fiche { margin: 0; max-width: 24em; text-wrap: balance; font-size: clamp(18px, calc(1.45 * var(--vw)), 21px); line-height: 1.3; }
+.selecteur ul { margin: 0; padding: 0; list-style: none; }
+.selecteur li { font-size: clamp(22px, calc(2.2 * var(--vw)), 32px); letter-spacing: -0.04em; color: var(--encre); white-space: nowrap; }
+/* Sans animation : la liste des spécialités, simplement */
+.methode:not(.methode--animee) .selecteur { height: auto; }
+.methode:not(.methode--animee) .selecteur li { padding: 8px 0; }
+.methode--animee .selecteur::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: var(--hauteur-ligne);
+  transform: translateY(-50%);
+  border-radius: var(--arrondi);
+  background: var(--bande);
+  transition: background-color 0.35s ease;
+}
+/* Fondu en haut et en bas, posé par-dessus */
+.methode--animee .selecteur::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(var(--fond-rubrique), transparent 30%, transparent 70%, var(--fond-rubrique));
+}
+.methode--animee .selecteur ul { position: absolute; inset: 0; }
+.methode--animee .selecteur li {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: var(--hauteur-ligne);
+  margin-top: calc(var(--hauteur-ligne) / -2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.selecteur--sombre .selecteur__actif { color: var(--lin); }
+
+/* Ordinateur : le demi-disque occupe toute la hauteur à gauche ; le titre et le sélecteur,
+   un peu décalés vers le centre, à droite */
+@media (min-width: 900px) {
+  .methode { --rayon: min(calc((var(--ecran) - var(--hauteur-entete) - 48px) * 0.5), 340px); }
+  .methode__ecran { display: grid; padding-block: 24px; }
+  .methode__disque-zone { grid-area: 1 / 1; height: auto; min-height: calc(2 * var(--rayon)); }
+  .methode__droite {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, calc(2 * var(--vw)), 28px);
+    justify-self: end;
+    align-self: center;
+    width: min(34%, 480px);
+    margin-right: calc(var(--gouttiere) + 10 * var(--vw));
+    position: relative;
+    z-index: 1;
+  }
+  .methode__droite > .titre { padding: 0; text-align: center; }
+  .selecteur { flex: none; margin: 0; height: calc((var(--ecran) - var(--hauteur-entete)) * 0.4); }
+  .methode:not(.methode--animee) .selecteur { height: auto; text-align: center; }
+}
 
 /* ---------- Roue des gestes : rubrique fixée à l'écran, la roue tourne au défilement ----------
    Sans JavaScript ou avec « réduire les animations », on garde les pastilles des gestes. */

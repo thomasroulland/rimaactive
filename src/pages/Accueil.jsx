@@ -1,16 +1,18 @@
 import VisuelFondu from '../components/VisuelFondu.jsx'
 import RoueGestes from '../components/RoueGestes.jsx'
-import RoueOffres from '../components/RoueOffres.jsx'
+import Methode from '../components/Methode.jsx'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo, TitreSection } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
 import useTitre from '../components/useTitre.js'
 
-const METHODE = [
-  { titre: 'plus de force', texte: 'Développer sa force qui sert dans la vie quotidienne et professionnelle.' },
-  { titre: 'plus de mobilité', texte: 'Retrouver plus de liberté dans ses mouvements.' },
-  { titre: "plus d'autonomie", texte: 'Comprendre les mouvements pour continuer à bouger durablement.' },
+const PHRASES = [
+  'développer une force utile dans votre vie quotidienne et professionnelle',
+  'retrouver une totale liberté dans vos mouvements',
+  'comprendre les mouvements pour continuer de bouger durablement',
 ]
+
+const SPECIALITES = ['force & puissance', 'explosivité & performance', 'condition physique & endurance', 'mobilité & posture']
 
 const SERVICES = [
   {
@@ -71,7 +73,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <RoueOffres offres={METHODE} />
+      <Methode phrases={PHRASES} specialites={SPECIALITES} />
 
       <section className="section services" aria-labelledby="services-titre">
         <div className="conteneur">
