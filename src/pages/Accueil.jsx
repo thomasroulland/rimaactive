@@ -1,5 +1,6 @@
 import VisuelFondu from '../components/VisuelFondu.jsx'
-import Methode from '../components/Methode.jsx'
+import BoiteOutils from '../components/BoiteOutils.jsx'
+import carteZone from '../assets/carte-zone.webp'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
@@ -51,7 +52,7 @@ export default function Accueil() {
             </p>
             <div className="actions">
               <BoutonLien to="/contact">M'écrire</BoutonLien>
-              <a href="#methode" className="bouton bouton--secondaire">Mes formules</a>
+              <a href="#outils" className="bouton bouton--secondaire">Mes formules</a>
             </div>
             <ul className="reperes">
               <li>Houdan (78) &amp; alentours</li>
@@ -102,27 +103,36 @@ export default function Accueil() {
         </div>
       </section>
 
-      <Methode formats={FORMATS}>
+      <BoiteOutils formats={FORMATS}>
         {/* Texte à venir : Marie l'envoie */}
         <p className="texte"><mark className="a-completer">[Texte à venir]</mark></p>
-      </Methode>
+      </BoiteOutils>
 
       <section className="section ecran-plein" aria-labelledby="zone-titre">
-        <div className="conteneur">
-          <div className="entete-section entete-section--deux">
+        <div className="conteneur zone">
+          <div className="zone__texte">
             <h2 id="zone-titre" className="titre titre--accueil">je viens à votre rencontre</h2>
             <p className="texte">
               J'interviens à Houdan et dans les communes voisines. Je me déplace avec mon matériel afin d'adapter les
               séances au lieu et au niveau des participants.
             </p>
+            <Faits
+              items={[
+                ['Où', 'Houdan et les communes voisines, dans un rayon de 20\u00a0km'],
+                ['Lieux', 'En entreprise, en commune, en extérieur ou à domicile'],
+                ['Durée', 'De 30 minutes à 1 heure'],
+                ['Tarifs', 'Selon le lieu et la formule, après un premier échange'],
+              ]}
+            />
           </div>
-          <Faits
-            items={[
-              ['Où', 'Houdan et les communes voisines, dans un rayon de 20 km'],
-              ['Lieux', 'En entreprise, en commune, en extérieur ou à domicile'],
-              ['Durée', 'De 30 minutes à 1 heure'],
-              ['Tarifs', 'Selon le lieu et la formule, après un premier échange'],
-            ]}
+          {/* Carte OpenStreetMap : la mention des contributeurs est dans l'image, en bas à droite */}
+          <img
+            className="zone__carte"
+            src={carteZone}
+            width="1600"
+            height="1060"
+            loading="lazy"
+            alt="Carte de la zone d'intervention : un cercle autour de Houdan, de Mantes-la-Jolie au nord à Dreux à l'ouest et Rambouillet au sud-est"
           />
         </div>
       </section>

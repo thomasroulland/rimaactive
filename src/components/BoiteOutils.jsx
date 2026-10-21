@@ -4,9 +4,9 @@ import { cran } from './cran.js'
 const PAS = 34 // écart entre deux formats sur la roue, en degrés
 const BANDES = ['var(--corail)', 'var(--neon)', 'var(--blanc)'] // la bande centrale change de couleur à chaque format
 
-// Rubrique « ma méthode » : elle reste à l'écran pendant que la roue des formats d'entraînement
+// Rubrique « ma boîte à outils » : elle reste à l'écran pendant que la roue des formats d'entraînement
 // tourne au fil du défilement
-export default function Methode({ formats, children }) {
+export default function BoiteOutils({ formats, children }) {
   const sectionRef = useRef(null)
 
   useEffect(() => {
@@ -95,11 +95,11 @@ export default function Methode({ formats, children }) {
   }, [formats])
 
   return (
-    <section id="methode" className="roue-section sur-encre" ref={sectionRef} aria-labelledby="methode-titre">
+    <section id="outils" className="roue-section sur-encre" ref={sectionRef} aria-labelledby="outils-titre">
       <div className="roue-section__ecran">
         <div className="conteneur roue-section__grille">
           <div>
-            <h2 id="methode-titre" className="titre titre--accueil">ma méthode</h2>
+            <h2 id="outils-titre" className="titre titre--accueil">ma boîte à outils</h2>
             <div className="roue-section__texte">{children}</div>
           </div>
           <div className="roue">

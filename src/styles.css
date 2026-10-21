@@ -547,6 +547,19 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .formats li:nth-child(5) { --penche: -2deg; }
 .formats li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
+/* ---------- Je viens à votre rencontre : la carte à gauche, le texte et les faits pratiques à droite ---------- */
+.zone { display: grid; gap: 32px; }
+.zone__texte { display: grid; gap: 16px; align-content: center; }
+.zone__texte .faits { margin-top: 8px; }
+.zone__carte { display: block; width: 100%; height: auto; border-radius: var(--arrondi); }
+@media (min-width: 900px) {
+  .zone { grid-template-columns: 1.15fr 1fr; gap: clamp(32px, calc(4 * var(--vw)), 64px); align-items: center; }
+  /* jamais recadrée : le cercle et la mention OpenStreetMap restent entiers */
+  .zone__carte { order: -1; width: auto; max-width: 100%; max-height: calc(var(--ecran) - var(--hauteur-entete) - 64px); justify-self: center; }
+  .zone__texte .faits { grid-template-columns: 1fr 1fr; gap: 16px 28px; padding: clamp(18px, calc(1.8 * var(--vw)), 28px); }
+  .zone__texte .faits dd { margin-top: 6px; font-size: 16px; }
+}
+
 /* ---------- Avec qui je travaille : trois cartes photo, qui passent au néon au survol ---------- */
 .services .titre--accueil { margin-bottom: clamp(24px, calc(2.4 * var(--vw)), 40px); }
 .services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
@@ -572,7 +585,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .service__lien { margin-top: auto; padding-top: 8px; }
 .service:hover .lien-fleche svg { transform: translateX(4px); }
 
-/* ---------- Ma méthode : rubrique fixée à l'écran, la roue des formats tourne au défilement (voir Methode.jsx) ----------
+/* ---------- Ma boîte à outils : rubrique fixée à l'écran, la roue des formats tourne au défilement (voir BoiteOutils.jsx) ----------
    Sans JavaScript ou avec « réduire les animations », on garde les pastilles des formats. */
 main > section.roue-section.sur-encre { background: var(--encre); color: var(--lin); }
 .roue-section__ecran { padding: clamp(64px, calc(9 * var(--vw)), 128px) var(--gouttiere); }
