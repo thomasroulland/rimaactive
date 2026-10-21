@@ -551,16 +551,26 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .zone { display: grid; gap: 32px; }
 .zone__texte { display: grid; gap: 16px; align-content: center; }
 .zone__texte .faits { margin-top: 8px; }
-.zone__carte { display: block; width: 100%; height: auto; border-radius: var(--arrondi); }
+.zone__carte {
+  /* carte Leaflet : ses calques restent sous l'en-tête */
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--arrondi);
+  overflow: hidden;
+  background: var(--lin-200);
+  font-family: inherit;
+}
 @media (min-width: 900px) {
   .zone { grid-template-columns: 1.15fr 1fr; gap: clamp(32px, calc(4 * var(--vw)), 64px); align-items: center; }
-  /* jamais recadrée : le cercle et la mention OpenStreetMap restent entiers */
-  .zone__carte { order: -1; width: auto; max-width: 100%; max-height: calc(var(--ecran) - var(--hauteur-entete) - 64px); justify-self: center; }
+  .zone__carte { order: -1; aspect-ratio: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px); }
   .zone__texte .faits { grid-template-columns: 1fr 1fr; gap: 16px 28px; padding: clamp(18px, calc(1.8 * var(--vw)), 28px); }
   .zone__texte .faits dd { margin-top: 6px; font-size: 16px; }
 }
 
-/* ---------- Avec qui je travaille : trois cartes photo, qui passent au néon au survol ---------- */
+/* ---------- Mes formules : trois cartes photo, qui passent au néon au survol ---------- */
 .services .titre--accueil { margin-bottom: clamp(24px, calc(2.4 * var(--vw)), 40px); }
 .services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
 @media (min-width: 900px) { .services__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }

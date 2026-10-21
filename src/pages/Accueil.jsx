@@ -1,6 +1,6 @@
 import VisuelFondu from '../components/VisuelFondu.jsx'
 import BoiteOutils from '../components/BoiteOutils.jsx'
-import carteZone from '../assets/carte-zone.webp'
+import CarteZone from '../components/CarteZone.jsx'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
@@ -52,7 +52,7 @@ export default function Accueil() {
             </p>
             <div className="actions">
               <BoutonLien to="/contact">M'écrire</BoutonLien>
-              <a href="#outils" className="bouton bouton--secondaire">Mes formules</a>
+              <a href="#formules" className="bouton bouton--secondaire">Mes formules</a>
             </div>
             <ul className="reperes">
               <li>Houdan (78) &amp; alentours</li>
@@ -82,9 +82,9 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section className="section services ecran-plein" aria-labelledby="services-titre">
+      <section id="formules" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
-          <h2 id="services-titre" className="titre titre--accueil">avec qui je travaille</h2>
+          <h2 id="services-titre" className="titre titre--accueil">mes formules</h2>
           {/* Toute la carte est un lien ; elle passe au néon au survol */}
           <ul className="services__liste">
             {SERVICES.map((service) => (
@@ -125,15 +125,7 @@ export default function Accueil() {
               ]}
             />
           </div>
-          {/* Carte OpenStreetMap : la mention des contributeurs est dans l'image, en bas à droite */}
-          <img
-            className="zone__carte"
-            src={carteZone}
-            width="1600"
-            height="1060"
-            loading="lazy"
-            alt="Carte de la zone d'intervention : un cercle autour de Houdan, de Mantes-la-Jolie au nord à Dreux à l'ouest et Rambouillet au sud-est"
-          />
+          <CarteZone />
         </div>
       </section>
     </>
