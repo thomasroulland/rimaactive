@@ -42,7 +42,7 @@ export default function Accueil() {
         <img className="heros__photo" src={photoHeros} alt="" />
         <div className="heros__texte">
           <h1 className="titre titre--accueil">
-            <span className="ligne">Marie Sillas,</span> <span className="ligne">coach sportive</span>
+            <span className="ligne">Marie Sillas</span> <span className="ligne">Coach sportive</span>
           </h1>
           <p className="ligne-fine heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
