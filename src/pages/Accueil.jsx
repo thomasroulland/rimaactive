@@ -53,7 +53,7 @@ export default function Accueil() {
           </div>
         </div>
         <ul className="heros__bandeau">
-          <li>Houdan (78) &amp; alentours</li>
+          <li>Jusqu’à 20&nbsp;km autour de Houdan (78)</li>
           <li>Sessions de 30 à 60 min</li>
           <li>Matériel mis à disposition</li>
         </ul>

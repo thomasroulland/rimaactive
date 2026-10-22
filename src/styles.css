@@ -347,7 +347,7 @@ main > section:nth-of-type(even):not(.appel) {
   height: 100%;
   object-fit: cover;
   object-position: 50% 8%;
-  opacity: 0.6;
+  opacity: 0.42;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 32%);
   mask-image: linear-gradient(90deg, transparent, #000 32%);
 }
@@ -393,7 +393,7 @@ main > section:nth-of-type(even):not(.appel) {
 .heros__bandeau li + li::before { content: "·"; margin: 0 12px; }
 /* Téléphone : la photo couvre tout le fond, plus discrète ; le bandeau passe sur trois lignes */
 @media (max-width: 699px) {
-  .heros__photo { width: 100%; opacity: 0.35; -webkit-mask-image: linear-gradient(180deg, #000, transparent); mask-image: linear-gradient(180deg, #000, transparent); }
+  .heros__photo { width: 100%; opacity: 0.28; -webkit-mask-image: linear-gradient(180deg, #000, transparent); mask-image: linear-gradient(180deg, #000, transparent); }
   .heros__bandeau { flex-direction: column; align-items: center; }
   .heros__bandeau li + li::before { content: none; }
 }
