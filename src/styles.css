@@ -348,8 +348,20 @@ main > section:nth-of-type(even):not(.appel) {
   object-fit: cover;
   object-position: 50% 8%;
   opacity: 0.42;
+  /* la photo est agrandie au-delà de sa taille d'origine : un léger flou en adoucit les défauts */
+  filter: blur(1.5px);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 32%);
   mask-image: linear-gradient(90deg, transparent, #000 32%);
+}
+/* Grain fin, comme une pellicule, posé sur la photo : il camoufle la compression de l'image */
+.heros::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 .heros__texte {
   position: relative;
