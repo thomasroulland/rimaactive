@@ -1,6 +1,7 @@
 import BoiteOutils from '../components/BoiteOutils.jsx'
 import CarteZone from '../components/CarteZone.jsx'
-import photoHeros from '../assets/heros-barre.jpg'
+import photoSquat from '../assets/heros-squat.jpg'
+import photoBarreDos from '../assets/heros-barre-dos.jpg'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
@@ -35,10 +36,11 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  const photoHeros = new URLSearchParams(window.location.search).get('photo') === '2' ? photoBarreDos : photoSquat
   return (
     <>
       <section className="heros">
-        {/* Photo de la charte, en transparence sur le fond noir : à remplacer par une photo de Marie en haute définition */}
+        {/* Photo de Marie en transparence sur le fond noir (maquette : ?photo=2 pour la seconde) */}
         <img className="heros__photo" src={photoHeros} alt="" />
         <div className="heros__texte">
           <h1 className="titre titre--accueil">
