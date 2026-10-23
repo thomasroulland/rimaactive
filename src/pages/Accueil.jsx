@@ -8,7 +8,20 @@ import { Fleche } from '../components/Entete.jsx'
 import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 
-const FORMATS = ['Density Training', 'Circuit Training', 'EMOM', 'AMRAP', 'Complex', 'Balistique']
+// Textes à compléter par Marie pour les formats suivants
+const A_COMPLETER = { texte: '[Phrase d’explication à rédiger]', objectifs: ['[Objectif 1]', '[Objectif 2]'] }
+const FORMATS = [
+  {
+    nom: 'Density Training',
+    texte: 'Une séance à effectuer dans un temps donné en réduisant la durée ou en augmentant le volume au fil des semaines.',
+    objectifs: ['Prise de masse', 'Force fonctionnelle'],
+  },
+  { nom: 'Circuit Training', ...A_COMPLETER },
+  { nom: 'EMOM', ...A_COMPLETER },
+  { nom: 'AMRAP', ...A_COMPLETER },
+  { nom: 'Complex', ...A_COMPLETER },
+  { nom: 'Balistique', ...A_COMPLETER },
+]
 
 const SERVICES = [
   {
