@@ -395,7 +395,9 @@ main > section:nth-of-type(even):not(.appel) {
   font-size: 14px;
   line-height: 20px;
 }
-.heros__bandeau li { white-space: nowrap; }
+.heros__bandeau li { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+/* pictogrammes du bandeau : tous en picto-s (20 px), au trait, de la couleur du texte */
+.heros__bandeau .picto { flex: none; width: 20px; height: 20px; }
 .heros__bandeau li + li::before { content: "·"; margin: 0 17px; opacity: 0.8; }
 /* Téléphone : la photo couvre tout le fond, plus discrète ; le bandeau passe sur trois lignes */
 @media (max-width: 699px) {

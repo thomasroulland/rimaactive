@@ -4,6 +4,7 @@ import photoHeros from '../assets/heros-squat-nb.jpg'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
+import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 
 const FORMATS = ['Density Training', 'Circuit Training', 'EMOM', 'AMRAP', 'Complex', 'Balistique']
@@ -51,9 +52,9 @@ export default function Accueil() {
           </div>
         </div>
         <ul className="heros__bandeau">
-          <li>Jusqu’à 20&nbsp;km autour de Houdan (78)</li>
-          <li>Sessions de 30 à 60 min</li>
-          <li>Matériel mis à disposition</li>
+          <li><Picto nom="map-pin" taille={20} />Jusqu’à 20&nbsp;km autour de Houdan (78)</li>
+          <li><Picto nom="timer" taille={20} />Sessions de 30 à 60 min</li>
+          <li><Picto nom="kettlebell" taille={20} />Matériel mis à disposition</li>
         </ul>
       </section>
 
