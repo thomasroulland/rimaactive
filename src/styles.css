@@ -529,24 +529,6 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   .deux-colonnes > .photo:last-child { margin-inline: 14px auto; }
 }
 
-/* ---------- Pastilles des formats (sans animation) ---------- */
-.formats {
-  margin: 28px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 8px;
-}
-.formats li {
-  padding: 10px 22px 12px;
-  border-radius: var(--arrondi);
-  background: var(--fond-carte);
-  font-weight: 900;
-  font-size: 24px;
-  letter-spacing: -0.04em;
-}
-
 /* ---------- Je viens à votre rencontre : la carte à gauche, le texte et les faits pratiques à droite ---------- */
 .zone { display: grid; gap: 32px; }
 .zone__texte { display: grid; gap: 16px; align-content: center; }
@@ -610,86 +592,99 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .service__lien { margin-top: auto; padding-top: 8px; }
 .service:hover .lien-fleche svg { transform: translateX(4px); }
 
-/* ---------- Ma boîte à outils : rubrique fixée à l'écran, la roue des formats tourne au défilement (voir BoiteOutils.jsx) ----------
-   Sans JavaScript ou avec « réduire les animations », on garde les pastilles des formats. */
-main > section.roue-section.sur-encre { background: var(--encre); color: var(--craie); }
-.roue-section__ecran { padding: clamp(64px, calc(9 * var(--vw)), 128px) var(--gouttiere); }
-.roue-section .titre { color: var(--craie); }
-.roue-section .texte { color: rgba(244, 243, 239, 0.78); }
-.roue-section__texte { margin-top: 24px; }
-/* Pastilles de secours sur fond encre : la pastille encre passe en néon */
-.roue-section:not(.roue-section--animee) .formats li { background: var(--craie); color: var(--encre); }
-.roue-section__grille { display: grid; gap: 32px 64px; align-items: center; }
+/* ---------- Ma boîte à outils : carrousel horizontal en boucle (voir BoiteOutils.jsx) ---------- */
+main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background: var(--encre); color: var(--craie); }
+.outils {
+  --carte: min(520px, 74vw);
+  --pas: calc(var(--carte) + 32px);
+  padding: clamp(48px, calc(6 * var(--vw)), 80px) 0;
+  overflow: hidden;
+}
 @media (min-width: 900px) {
-  .roue-section__grille { grid-template-columns: 1fr 1.2fr; }
+  .outils { min-height: calc(var(--ecran) - var(--hauteur-entete)); box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding-block: 32px; }
 }
+.outils__entete, .outils__commandes { width: calc(100% - 2 * var(--gouttiere)); }
+.outils .titre--section { color: var(--craie); }
+.outils__texte { margin-top: 16px; }
+.outils__texte .texte { color: rgba(244, 243, 239, 0.78); }
 
-/* Environ un demi-écran de défilement par format : c'est le temps pendant lequel la roue tourne */
-.roue-section--animee { height: 340vh; }
-.roue-section--animee .roue-section__ecran {
-  position: sticky;
-  top: var(--hauteur-entete);
-  height: calc(var(--ecran) - var(--hauteur-entete));
-  display: flex;
-  align-items: center;
-  padding-block: 24px;
-}
-.roue-section--animee .roue-section__grille { width: 100%; }
-.roue-section--animee .roue {
-  --bande: var(--vermillon);
-  --hauteur-format: clamp(72px, calc(9 * var(--vw)), 120px);
+/* Les cartes sont posées les unes sur les autres au centre, puis décalées de --ecart pas */
+.outils__piste {
   position: relative;
-  height: min(62vh, 520px);
+  height: clamp(260px, calc(var(--ecran) * 0.42), 360px);
+  margin-top: clamp(24px, calc(3 * var(--vw)), 40px);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
 }
-@media (max-width: 899px) {
-  .roue-section--animee .roue { height: min(44svh, 400px); }
-}
-/* La bande au centre : la fenêtre du sélecteur, qui change de couleur à chaque format */
-.roue-section--animee .roue::before {
-  content: "";
+.outils__piste:active { cursor: grabbing; }
+.outils__piste:focus-visible { outline-offset: -2px; }
+.outil {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: var(--hauteur-format);
-  transform: translateY(-50%);
-  border-radius: var(--arrondi);
-  background: var(--bande);
-  transition: background-color 0.35s ease;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  box-sizing: border-box;
+  width: var(--carte);
+  margin-left: calc(var(--carte) / -2);
+  padding: clamp(24px, calc(2.4 * var(--vw)), 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-radius: var(--arrondi-grand);
+  background: var(--craie);
+  color: var(--encre);
+  transform: translateX(calc(var(--ecart) * var(--pas))) scale(0.88);
+  filter: blur(3px);
+  opacity: 0.45;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(.3, .7, .2, 1), filter 0.5s ease, opacity 0.5s ease;
 }
-.roue-section--animee .roue__liste {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  display: block;
-}
-/* Fondu en haut et en bas : un dégradé posé par-dessus, bien plus léger à afficher qu'un masque sur la 3D */
-.roue-section--animee .roue::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(var(--encre), transparent 28%, transparent 72%, var(--encre));
-}
-.roue-section--animee .roue__liste li {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: var(--hauteur-format);
-  margin-top: calc(var(--hauteur-format) / -2);
+.outil--actif { transform: translateX(0) scale(1); filter: none; opacity: 1; cursor: auto; z-index: 1; }
+.outil__numero { margin: 0; font-weight: 900; font-size: 15px; letter-spacing: 0.04em; color: var(--vermillon); }
+.outils .outil__nom { color: var(--encre); }
+.outil__texte { margin: 0; font-size: 17px; line-height: 27px; color: var(--gris-chaud); }
+.outil__objectifs { margin: auto 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.outil__objectifs li { padding: 8px 16px; border-radius: 999px; background: var(--jaune); color: var(--encre); font-weight: 700; font-size: 15px; }
+
+/* Commandes : flèches et curseur */
+.outils__commandes {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  background: none;
-  color: var(--craie);
-  font-size: clamp(32px, calc(4.6 * var(--vw)), 68px);
-  letter-spacing: -0.045em;
-  white-space: nowrap;
+  gap: 20px;
+  margin-top: clamp(20px, calc(2.4 * var(--vw)), 28px);
 }
-.roue-section--animee .roue__liste li.roue__format--actif { color: var(--encre); }
+.outils__fleche {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--craie);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--craie);
+  cursor: pointer;
+  transition: background-color var(--duree) ease, color var(--duree) ease;
+}
+.outils__fleche:hover { background: var(--craie); color: var(--encre); }
+.outils__fleche--precedent svg { transform: scaleX(-1); }
+.outils__curseur {
+  -webkit-appearance: none;
+  appearance: none;
+  width: min(360px, 50vw);
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--jaune) var(--progression), rgba(244, 243, 239, 0.25) var(--progression));
+  cursor: pointer;
+}
+.outils__curseur::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--jaune); border: 0; }
+.outils__curseur::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--jaune); border: 0; }
+.visuellement-cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .outil { transition: none; } }
+/* Téléphone : les cartes voisines dépassent un peu sur les côtés */
+@media (max-width: 699px) { .outils { --pas: calc(var(--carte) * 0.9 + 8px); } }
 
 /* ---------- Liste à puces sobre ---------- */
 .liste {
