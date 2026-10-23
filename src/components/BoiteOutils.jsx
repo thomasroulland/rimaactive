@@ -1,9 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
-import { Fleche } from './Entete.jsx'
 
 // Rubrique « ma boîte à outils » : un carrousel horizontal en boucle. La carte du milieu est nette,
 // ses voisines dépassent sur les côtés, floutées. On change de carte avec les flèches, le curseur du bas,
 // le clavier (← →) ou en faisant glisser au doigt et à la souris.
+// Essai : ?forme=1 flèche fine (Phosphor Light), 2 chevron, 3 flèche épaisse
+const FORME = Number(new URLSearchParams(window.location.search).get('forme')) || 1
+function FlecheOutils() {
+  if (FORME === 2) {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M96 48l80 80-80 80" />
+      </svg>
+    )
+  }
+  if (FORME === 3) {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M40 128h176M144 56l72 72-72 72" />
+      </svg>
+    )
+  }
+  return (
+    <svg aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M40 128h176M144 56l72 72-72 72" />
+    </svg>
+  )
+}
+
 export default function BoiteOutils({ formats }) {
   const [actif, setActif] = useState(0)
   const glisse = useRef(null)
@@ -40,7 +63,7 @@ export default function BoiteOutils({ formats }) {
   }
 
   return (
-    <section id="outils" className={`outils sur-encre outils--fleches-${new URLSearchParams(window.location.search).get('fleches') || 'a'}`} aria-labelledby="outils-titre">
+    <section id="outils" style={{ '--taille-fleche': (new URLSearchParams(window.location.search).get('taille') || 40) + 'px' }} className={`outils sur-encre outils--fleches-${new URLSearchParams(window.location.search).get('fleches') || 'a'}`} aria-labelledby="outils-titre">
       <div className="conteneur outils__entete">
         <h2 id="outils-titre" className="titre titre--section">Ma boîte à outils</h2>
       </div>
@@ -80,7 +103,7 @@ export default function BoiteOutils({ formats }) {
 
       <div className="conteneur outils__commandes">
         <button type="button" className="outils__fleche outils__fleche--precedent" onClick={() => aller(actif - 1)} aria-label="Format précédent">
-          <Fleche />
+          <FlecheOutils />
         </button>
         {/* Essai : ?curseur=1 ronds, 2 noms des formats, 3 compteur et barre segmentée ; sans paramètre : curseur */}
         {curseur === 1 && (
@@ -124,7 +147,7 @@ export default function BoiteOutils({ formats }) {
         />
         )}
         <button type="button" className="outils__fleche" onClick={() => aller(actif + 1)} aria-label="Format suivant">
-          <Fleche />
+          <FlecheOutils />
         </button>
       </div>
       <p className="visuellement-cache" aria-live="polite">{`${formats[actif].nom}, ${actif + 1} sur ${n}`}</p>
