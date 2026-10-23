@@ -73,10 +73,11 @@ export default function Accueil() {
         <div className="conteneur deux-colonnes">
           <Photo label="Marie Sillas, coach sportive" src={portraitMarie} />
           <div>
-            <h2 id="approche-titre" className="titre titre--section">Une pratique progressive, accessible et concrète</h2>
+            <h2 id="approche-titre" className="titre titre--section">Mon approche</h2>
             <p className="texte" style={{ marginTop: 32 }}>
-              Elles fonctionnent comme des challenges : un temps donné, un nombre de tours, un travail en duo. Chacun
-              avance à son niveau et cherche à faire un peu mieux que la fois précédente.
+              Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
+              partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie. Au fil des séances,
+              vous prenez confiance et le plaisir de bouger s’installe.
             </p>
             <div className="actions">
               <BoutonLien to="/a-propos" variante="secondaire">Qui suis-je ?</BoutonLien>

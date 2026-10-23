@@ -556,10 +556,12 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 }
 /* Ordinateur : la rubrique tient dans un écran ; la carte, carrée, prend la hauteur disponible */
 @media (min-width: 900px) {
-  .zone { grid-template-columns: auto 1fr; gap: clamp(32px, calc(4 * var(--vw)), 64px); align-items: center; }
+  /* plus d'air entre la carte et le texte, qui se centre dans l'espace restant */
+  .zone { grid-template-columns: auto 1fr; gap: clamp(48px, calc(6 * var(--vw)), 112px); align-items: center; }
+  .zone__texte { justify-self: center; }
   .zone__carte { order: -1; width: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px); }
   /* le bloc de texte prend la largeur de sa plus longue ligne : les filets s'arrêtent au bout du titre et de la phrase */
-  .zone__texte { gap: 12px; width: max-content; max-width: 100%; justify-self: start; }
+  .zone__texte { gap: 12px; width: max-content; max-width: 100%; }
   .zone__texte .texte { max-width: none; }
   .zone__texte .texte .ligne { display: block; }
   .zone__texte .faits > div { padding: 9px 0; }
