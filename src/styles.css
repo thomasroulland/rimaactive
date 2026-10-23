@@ -653,61 +653,35 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   gap: 20px;
   margin-top: clamp(20px, calc(2.4 * var(--vw)), 28px);
 }
+.outils { position: relative; }
+/* Flèches au trait fin, posées entre la carte du milieu et ses voisines floutées */
 .outils__fleche {
-  flex: none;
+  position: absolute;
+  z-index: 2;
+  top: calc(50% + 40px);
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
-  border: 2px solid var(--craie);
-  border-radius: 999px;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 0;
   background: transparent;
   color: var(--craie);
   cursor: pointer;
-  transition: background-color var(--duree) ease, color var(--duree) ease;
+  transition: color var(--duree) ease;
 }
-.outils__fleche:hover { background: var(--craie); color: var(--encre); }
+.outils__fleche svg { width: 48px; height: 48px; }
+.outils__fleche:hover { color: var(--jaune); }
 .outils__fleche--precedent svg { transform: scaleX(-1); }
-.outils__curseur {
-  -webkit-appearance: none;
-  appearance: none;
-  width: min(360px, 50vw);
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--jaune) var(--progression), rgba(244, 243, 239, 0.25) var(--progression));
-  cursor: pointer;
+.outils__fleche--precedent { left: calc(50% - var(--carte) / 2 - 100px); }
+.outils__fleche:not(.outils__fleche--precedent) { right: calc(50% - var(--carte) / 2 - 100px); }
+@media (max-width: 699px) {
+  .outils__fleche { position: static; width: 48px; height: 48px; }
+  .outils__fleche svg { width: 32px; height: 32px; }
 }
-.outils__curseur::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--jaune); border: 0; }
-.outils__curseur::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--jaune); border: 0; }
-/* Essais de commandes */
 .outils__ronds { display: flex; gap: 14px; }
 .outils__ronds button { width: 18px; height: 18px; padding: 0; border-radius: 50%; border: 3px solid var(--craie); background: transparent; cursor: pointer; }
 .outils__ronds button.rma-actif { background: var(--jaune); border-color: var(--jaune); }
-.outils__noms { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 760px; }
-.outils__noms button { padding: 8px 16px; border-radius: 999px; border: 1.5px solid rgba(244, 243, 239, 0.4); background: transparent; color: var(--craie); font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; transition: background-color var(--duree) ease, color var(--duree) ease; }
-.outils__noms button:hover { border-color: var(--craie); }
-.outils__noms button.rma-actif { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
-.outils__compteur { display: flex; align-items: center; gap: 20px; width: min(420px, 55vw); }
-.outils__numero { flex: none; font-weight: 600; font-size: 16px; color: rgba(244, 243, 239, 0.6); font-variant-numeric: tabular-nums; }
-.outils__numero b { font-weight: 900; font-size: 22px; color: var(--craie); }
-.outils__segments { flex: 1; display: flex; gap: 6px; }
-.outils__segments button { flex: 1; height: 4px; padding: 0; border: 0; border-radius: 999px; background: rgba(244, 243, 239, 0.25); cursor: pointer; transition: background-color 0.3s ease; }
-.outils__segments button.rma-actif { background: var(--jaune); }
-/* Essais de flèches : a simples, b sur les côtés, c aucune */
-.outils--fleches-a .outils__fleche, .outils--fleches-b .outils__fleche { border: 0; width: 40px; height: 40px; }
-.outils--fleches-a .outils__fleche:hover { background: transparent; color: var(--jaune); }
-.outils--fleches-a .outils__fleche svg { width: 26px; height: 26px; }
-.outils--fleches-b { position: relative; }
-.outils--fleches-b .outils__fleche {
-  position: absolute; z-index: 2; top: calc(50% + 40px); width: 56px; height: 56px;
-  background: transparent; color: var(--craie);
-}
-.outils--fleches-b .outils__fleche:hover { background: transparent; color: var(--jaune); }
-.outils--fleches-b .outils__fleche svg { width: var(--taille-fleche, 40px); height: var(--taille-fleche, 40px); }
-.outils--fleches-b .outils__fleche { width: calc(var(--taille-fleche, 40px) + 16px); height: calc(var(--taille-fleche, 40px) + 16px); }
-.outils--fleches-b .outils__fleche--precedent { left: calc(50% - var(--carte) / 2 - 92px); }
-.outils--fleches-b .outils__fleche:not(.outils__fleche--precedent) { right: calc(50% - var(--carte) / 2 - 92px); }
-.outils--fleches-c .outils__fleche { display: none; }
 .visuellement-cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .outil { transition: none; } }
 /* Téléphone : les cartes voisines dépassent un peu sur les côtés */
