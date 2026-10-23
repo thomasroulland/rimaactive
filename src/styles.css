@@ -569,7 +569,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 }
 
 /* ---------- Mes formules : trois cartes photo, qui passent au néon au survol ---------- */
-.services .titre--section { margin-bottom: 35px; }
+.services .titre--section { margin-bottom: 22px; }
 .services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
 @media (min-width: 900px) { .services__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
 .services__liste > li { display: flex; }
@@ -587,9 +587,24 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 @media (hover: hover) { .service:hover { background: var(--jaune); } }
 .service:focus-visible { background: var(--jaune); }
 .service .photo.service__photo { aspect-ratio: 16 / 10; border-radius: 0; background: var(--craie-fonce); }
-@media (min-width: 900px) { .service .photo.service__photo { aspect-ratio: auto; height: clamp(110px, calc(var(--ecran) * 0.22), 280px); } }
+/* Ordinateur : toutes les cartes ont la même hauteur ; la photo prend la place que le texte (3 lignes au plus) laisse */
+@media (min-width: 900px) {
+  .services__liste > li { height: calc(var(--ecran) * 0.22 + 275px); }
+  .service .photo.service__photo { aspect-ratio: auto; height: auto; flex: 1 1 0; min-height: 110px; }
+  .service__corps { flex: none; }
+}
 .service__corps { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 26px; }
-.service .texte { font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
+.service__lien { margin-top: 0; }
+.service .texte {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--gris-chaud);
+  /* jamais plus de 3 lignes */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 @media (hover: hover) { .service:hover .texte { color: var(--encre); } }
 .service:focus-visible .texte { color: var(--encre); }
 .service__lien { margin-top: auto; padding-top: 8px; }

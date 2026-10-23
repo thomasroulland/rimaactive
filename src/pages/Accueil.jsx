@@ -15,22 +15,19 @@ const SERVICES = [
     to: '/entreprises',
     titre: 'Entreprises',
     photo: 'Séance en groupe dans des locaux ou en extérieur',
-    texte: "Des séances de mobilité et de renforcement pour remettre en mouvement des équipes aux métiers et aux niveaux variés. Dans vos locaux ou en extérieur, chaque semaine ou le temps d'un séminaire.",
-    lien: 'Les séances en entreprise',
+    texte: 'Des séances de mobilité et de renforcement pour remettre vos équipes en mouvement, dans vos locaux ou dehors.',
   },
   {
     to: '/communes',
     titre: 'Communes',
     photo: 'Petit groupe en extérieur',
-    texte: 'Des séances conviviales en small group, en extérieur ou en salle communale, ouvertes aux habitants quel que soit leur niveau de départ.',
-    lien: 'Les séances en commune',
+    texte: 'Des séances conviviales en small group, en extérieur ou en salle communale, ouvertes à tous les niveaux.',
   },
   {
     to: '/particuliers',
     titre: 'Particuliers',
     photo: 'Séance à domicile ou dans un jardin',
     texte: 'Un coaching individuel ou en petit groupe, à domicile, en extérieur ou en salle, pour reprendre le sport à votre rythme.',
-    lien: 'Le coaching particulier',
   },
 ]
 
@@ -83,11 +80,11 @@ export default function Accueil() {
             {SERVICES.map((service) => (
               <li key={service.to}>
                 <Link to={service.to} className="service">
-                  <Photo label={service.photo} className="service__photo" />
+                  <Photo label={service.photo} sansEtiquette className="service__photo" />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
                     <p className="texte">{service.texte}</p>
-                    <span className="lien-fleche service__lien">{service.lien} <Fleche /></span>
+                    <span className="lien-fleche service__lien">En savoir plus <Fleche /></span>
                   </div>
                 </Link>
               </li>
