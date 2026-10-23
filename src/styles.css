@@ -346,21 +346,24 @@ main > section:nth-of-type(even):not(.appel) {
   overflow: hidden;
 }
 .heros__photo {
+  /* toute la hauteur de la photo, calée à droite : le disque n'est jamais coupé */
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: 0;
+  right: 0;
   height: 100%;
-  object-fit: cover;
-  object-position: 70% 30%;
+  width: auto;
+  max-width: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%);
+  mask-image: linear-gradient(90deg, transparent, #000 30%);
 }
-/* Voile encre, plus dense à gauche sous le texte */
+/* Léger voile encre sous le texte : la ligne lumineuse du sol ne gêne pas la lecture */
 .heros::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(90deg, var(--voile-encre) 0 38%, rgba(22, 21, 20, 0.45) 70%, rgba(22, 21, 20, 0.35));
+  background: linear-gradient(90deg, var(--voile-encre) 0 44%, rgba(22, 21, 20, 0.4) 58%, transparent 72%);
 }
 .heros__texte {
   position: relative;
@@ -402,7 +405,7 @@ main > section:nth-of-type(even):not(.appel) {
 /* Téléphone : la photo couvre tout le fond, plus discrète ; le bandeau passe sur trois lignes */
 @media (max-width: 699px) {
   .heros::before { background: linear-gradient(180deg, rgba(22, 21, 20, 0.45), var(--voile-encre) 55%); }
-  .heros__photo { object-position: 42% 20%; }
+  .heros__photo { width: 100%; object-fit: cover; object-position: 42% 20%; -webkit-mask-image: none; mask-image: none; }
   .heros__bandeau { flex-direction: column; align-items: center; }
 }
 
@@ -487,6 +490,8 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   font-size: 14px;
 }
 .photo--sombre { background: #2a2725; color: rgba(255, 255, 255, 0.72); }
+.photo--image { padding: 0; }
+.photo--image img { width: 100%; height: 100%; object-fit: cover; }
 .photo__etiquette { display: flex; align-items: center; gap: 8px; margin-inline: auto; }
 
 /* Photos de section : cadre légèrement incliné, posé sur un aplat jaune signal décalé
@@ -518,7 +523,9 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
     margin: -0.9em 0 44px auto;
     font-size: 36px; /* même taille que le titre, pour que le chevauchement en suive la hauteur */
   }
-  .deux-colonnes > .photo .photo__etiquette { font-size: 14px; }
+  .deux-colonnes > .photo .photo--image { padding: 0; }
+.photo--image img { width: 100%; height: 100%; object-fit: cover; }
+.photo__etiquette { font-size: 14px; }
   .deux-colonnes > .photo:last-child { margin-inline: 14px auto; }
 }
 

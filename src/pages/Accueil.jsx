@@ -39,7 +39,7 @@ export default function Accueil() {
   return (
     <>
       <section className="heros">
-        {/* Photo de Marie en squat, en noir et blanc, sous un voile encre plus dense à gauche */}
+        {/* Photo de Marie en squat, en noir et blanc, calée à droite sans être coupée, fondue vers la gauche */}
         <img className="heros__photo" src={photoHeros} alt="" />
         <div className="heros__texte">
           <h1 className="titre titre--accueil">
