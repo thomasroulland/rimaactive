@@ -47,8 +47,8 @@ export default function Accueil() {
           </h1>
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
+            <a href="#accompagnement" className="bouton bouton--clair">Mon accompagnement</a>
             <BoutonLien to="/contact">M'écrire</BoutonLien>
-            <a href="#formules" className="bouton bouton--clair">Mes formules</a>
           </div>
         </div>
         <ul className="heros__bandeau">
@@ -74,9 +74,9 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section id="formules" className="section services ecran-plein" aria-labelledby="services-titre">
+      <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
-          <h2 id="services-titre" className="titre titre--section">Mes formules</h2>
+          <h2 id="services-titre" className="titre titre--section">Mon accompagnement</h2>
           {/* Toute la carte est un lien ; elle passe au néon au survol */}
           <ul className="services__liste">
             {SERVICES.map((service) => (
