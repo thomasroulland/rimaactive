@@ -34,7 +34,7 @@ const SERVICES = [
     to: '/communes',
     titre: 'Groupes',
     photo: 'Petit groupe en extérieur',
-    texte: 'Retrouvez-moi en extérieur, près de chez vous, pour bouger dans un esprit d’entraide et progresser ensemble.',
+    texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
   },
   {
     to: '/particuliers',
