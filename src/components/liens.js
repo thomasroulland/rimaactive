@@ -7,15 +7,13 @@ export const PAGES = [
   { to: '/contact', label: 'Contact' },
 ]
 
+// Pas de numéro de téléphone sur le site, à la demande de Marie
 export const CONTACT = {
-  email: 'marie.sillas@coaching.com',
-  telephone: '06 61 68 16 03',
-  telephoneLien: 'tel:+33661681603',
+  email: 'marie.sillas.coaching@outlook.com',
 }
 
 // Liens des réseaux sociaux à renseigner
 export const RESEAUX = [
   { label: 'Instagram', href: '#' },
   { label: 'TikTok', href: '#' },
-  { label: 'Facebook', href: '#' },
 ]

@@ -529,25 +529,37 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   .deux-colonnes > .photo:last-child { margin-inline: 14px auto; }
 }
 
-/* ---------- Je viens à votre rencontre : la carte à gauche, le texte et les faits pratiques à droite ---------- */
+/* ---------- Ma zone d'intervention : la carte à gauche, le texte et les infos pratiques à droite ---------- */
 .zone { display: grid; gap: 32px; }
 .zone__texte { display: grid; gap: 16px; align-content: center; }
-.zone__texte .faits { margin-top: 8px; }
+.zone__texte .faits { margin-top: 4px; }
 .zone__carte {
-  /* carte Leaflet : ses calques restent sous l'en-tête */
   position: relative;
-  z-index: 0;
-  isolation: isolate;
+  margin: 0;
   width: 100%;
   aspect-ratio: 1;
   border-radius: var(--arrondi-grand);
   overflow: hidden;
   background: var(--craie-fonce);
-  font-family: inherit;
 }
+.zone__carte img { width: 100%; height: 100%; object-fit: cover; }
+.zone__carte figcaption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 2px 8px;
+  border-top-left-radius: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--encre);
+}
+/* Ordinateur : la rubrique tient dans un écran ; la carte, carrée, prend la hauteur disponible */
 @media (min-width: 900px) {
-  .zone { grid-template-columns: 1.15fr 1fr; gap: clamp(32px, calc(4 * var(--vw)), 64px); align-items: center; }
-  .zone__carte { order: -1; aspect-ratio: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px); }
+  .zone { grid-template-columns: auto 1fr; gap: clamp(32px, calc(4 * var(--vw)), 64px); align-items: center; }
+  .zone__carte { order: -1; width: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px); }
+  .zone__texte { gap: 12px; }
+  .zone__texte .faits > div { padding: 9px 0; }
 }
 
 /* ---------- Mes formules : trois cartes photo, qui passent au néon au survol ---------- */
@@ -736,10 +748,9 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   color: var(--craie);
   padding: clamp(56px, calc(7 * var(--vw)), 96px) var(--gouttiere);
 }
-.appel__grille { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px 64px; }
+.appel__ligne { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 64px; }
 .appel .surtitre { color: var(--jaune); }
 .appel .titre { color: var(--craie); }
-.appel .texte { color: rgba(244, 243, 239, 0.78); margin-top: 20px; }
 
 /* ---------- Pied de page ---------- */
 .pied {

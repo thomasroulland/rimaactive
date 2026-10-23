@@ -21,7 +21,6 @@ export default function Pied() {
           <div className="pied__colonne">
             <p className="mention">Contact</p>
             <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-            <a href={CONTACT.telephoneLien}>{CONTACT.telephone}</a>
             <span style={{ padding: '6px 0', color: 'rgba(244, 243, 239, 0.72)' }}>Houdan et 20 km autour</span>
           </div>
           <div className="pied__colonne">

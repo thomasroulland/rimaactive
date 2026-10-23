@@ -23,8 +23,6 @@ const SECTIONS = [
           </dd>
           <dt>E-mail</dt>
           <dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd>
-          <dt>Téléphone</dt>
-          <dd><a href={CONTACT.telephoneLien}>{CONTACT.telephone}</a></dd>
         </dl>
         <p>Directrice de la publication : Marie Sillas.</p>
       </>

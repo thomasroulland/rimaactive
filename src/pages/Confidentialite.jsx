@@ -117,7 +117,7 @@ const SECTIONS = [
         </p>
         <p>
           Les polices de caractères sont hébergées sur le site lui-même : aucune requête n'est envoyée à Google ou à un
-          autre service tiers pendant votre visite. Les liens vers Instagram, TikTok et Facebook sont de simples liens :
+          autre service tiers pendant votre visite. Les liens vers Instagram et TikTok sont de simples liens :
           ces services ne reçoivent rien tant que vous ne cliquez pas.
         </p>
       </>

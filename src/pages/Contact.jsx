@@ -31,10 +31,6 @@ export default function Contact() {
               <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
             </div>
             <div>
-              <p className="mention">Téléphone</p>
-              <a href={CONTACT.telephoneLien}>{CONTACT.telephone}</a>
-            </div>
-            <div>
               <p className="mention">Zone</p>
               <p className="texte">Houdan et les communes voisines, dans un rayon de 20 km.</p>
             </div>

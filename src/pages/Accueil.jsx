@@ -111,17 +111,17 @@ export default function Accueil() {
       <section className="section ecran-plein" aria-labelledby="zone-titre">
         <div className="conteneur zone">
           <div className="zone__texte">
-            <h2 id="zone-titre" className="titre titre--section">Je viens à votre rencontre</h2>
+            <h2 id="zone-titre" className="titre titre--section">Ma zone d’intervention</h2>
             <p className="texte">
-              J'interviens à Houdan et dans les communes voisines. Je me déplace avec mon matériel afin d'adapter les
-              séances au lieu et au niveau des participants.
+              J’interviens avec mon matériel afin d’adapter chaque session au lieu, au niveau et aux objectifs des
+              pratiquants.
             </p>
             <Faits
               items={[
                 ['Où', 'Houdan et les communes voisines, dans un rayon de 20\u00a0km', 'map-pin'],
-                ['Lieux', 'En entreprise, en commune, en extérieur ou à domicile', 'buildings'],
+                ['Lieux', 'Dans vos locaux, en extérieur ou à domicile', 'buildings'],
                 ['Durée', 'De 30 minutes à 1 heure', 'clock'],
-                ['Tarifs', 'Selon le lieu et la formule, après un premier échange', 'check-square'],
+                ['Tarifs', 'Définis à l’issue d’un premier échange, selon le lieu et la formule choisie', 'check-square'],
               ]}
             />
           </div>
