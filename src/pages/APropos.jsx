@@ -9,7 +9,7 @@ export default function APropos() {
   const instagram = RESEAUX.find((r) => r.label === 'Instagram')
   return (
     <>
-      <HerosPage fil="À propos" ligne="Marie, coach sportive" titre="à propos">
+      <HerosPage fil="À propos" ligne="Marie, coach sportive" titre="À propos">
         <p className="texte texte--grand provisoire">
           [Texte provisoire · message principal : le sport qu'on choisit n'a rien à voir avec le sport qu'on subit.]
         </p>
@@ -19,7 +19,7 @@ export default function APropos() {
         <div className="conteneur deux-colonnes">
           <Photo label="Portrait de Marie" />
           <div>
-            <TitreSection id="histoire-titre" titre="[mon histoire · titre à rédiger]" />
+            <TitreSection id="histoire-titre" titre="[Mon histoire · titre à rédiger]" />
             <p className="texte provisoire" style={{ marginTop: 32 }}>[Texte provisoire à rédiger, à partir de ces étapes :]</p>
             <ol className="liste">
               {ETAPES.map((etape, i) => (
@@ -36,12 +36,12 @@ export default function APropos() {
       <section className="section" aria-labelledby="valeurs-titre">
         <div className="conteneur">
           <div className="entete-section">
-            <TitreSection id="valeurs-titre" titre="[ce que je défends · titre à rédiger]" />
+            <TitreSection id="valeurs-titre" titre="[Ce que je défends · titre à rédiger]" />
           </div>
           <div className="tuiles">
-            <Tuile titre="honnêteté" />
-            <Tuile titre="pas de promesse" />
-            <Tuile titre="autonomie" />
+            <Tuile titre="Honnêteté" />
+            <Tuile titre="Pas de promesse" />
+            <Tuile titre="Autonomie" />
           </div>
         </div>
       </section>
@@ -49,7 +49,7 @@ export default function APropos() {
       <section className="section" aria-labelledby="entrainement-titre">
         <div className="conteneur deux-colonnes">
           <div>
-            <TitreSection id="entrainement-titre" titre="[comment je m'entraîne · titre à rédiger]" />
+            <TitreSection id="entrainement-titre" titre="[Comment je m’entraîne · titre à rédiger]" />
             <p className="texte provisoire" style={{ marginTop: 32 }}>[Texte provisoire à rédiger]</p>
             <div className="actions">
               <a href={instagram.href} className="bouton bouton--secondaire">Mon journal sur Instagram</a>

@@ -30,12 +30,12 @@ export default function CarteZone() {
       }).addTo(carte)
       L.circle(CENTRE, {
         radius: RAYON,
-        color: '#ff6447',
+        color: '#ff4a1c',
         weight: 2,
-        fillColor: '#ff6447',
+        fillColor: '#ff4a1c',
         fillOpacity: 0.12,
       }).addTo(carte)
-      L.circleMarker(CENTRE, { radius: 6, color: '#161514', weight: 3, fillColor: '#ff6447', fillOpacity: 1 }).addTo(carte)
+      L.circleMarker(CENTRE, { radius: 6, color: '#161514', weight: 3, fillColor: '#ff4a1c', fillOpacity: 1 }).addTo(carte)
     })
     return () => {
       annule = true

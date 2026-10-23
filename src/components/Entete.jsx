@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import icone from '../assets/icone-aa.png'
+import symbole from '../assets/rimaactive-symbole-vermillon.svg'
 import { PAGES } from './liens.js'
 
 const PAGES_MENU = PAGES
@@ -58,7 +58,7 @@ export default function Entete() {
       <div className="entete__barre">
         {/* Simple logo, pas un lien : « Accueil » est dans le menu */}
         <div className="entete__logo">
-          <img src={icone} alt="Rimaactive, Marie Sillas coach sportive" width="44" height="40" />
+          <img src={symbole} alt="Rimaactive, Marie Sillas coach sportive" width="32" height="29" />
         </div>
         <div className="entete__droite">
           <nav className="nav" aria-label="Menu principal" ref={navRef}>

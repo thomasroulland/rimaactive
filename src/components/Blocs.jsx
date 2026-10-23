@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
+import Picto from './Picto.jsx'
 
 // Titre de section en minuscules, avec une ligne fine italique au-dessus si besoin
 export function TitreSection({ ligne, titre, id, as: Balise = 'h2', className = '' }) {
   return (
     <div>
-      {ligne && <p className="ligne-fine">{ligne}</p>}
+      {ligne && <p className="surtitre">{ligne}</p>}
       <Balise id={id} className={`titre titre--section ${className}`}>{titre}</Balise>
     </div>
   )
@@ -23,7 +24,7 @@ export function HerosPage({ fil, ligne, titre, children }) {
         </nav>
         <div className="heros-page__grille">
           <div>
-            {ligne && <p className="ligne-fine">{ligne}</p>}
+            {ligne && <p className="surtitre">{ligne}</p>}
             <h1 className="titre titre--page">{titre}</h1>
           </div>
           <div className="heros-page__intro">{children}</div>
@@ -51,14 +52,17 @@ export function Tuile({ titre, surtitre, to, compacte = false, children }) {
   return to ? <Link to={to} className={classes}>{contenu}</Link> : <div className={classes}>{contenu}</div>
 }
 
-// Faits pratiques sous forme de liste de définitions
+// Informations pratiques : une ligne par information, avec un pictogramme si on en donne un
 export function Faits({ items }) {
   return (
     <dl className="faits">
-      {items.map(([terme, valeur]) => (
+      {items.map(([terme, valeur, picto]) => (
         <div key={terme}>
-          <dt>{terme}</dt>
-          <dd className={valeur ? '' : 'provisoire'}>{valeur ?? '[À compléter]'}</dd>
+          {picto && <Picto nom={picto} />}
+          <div>
+            <dt>{terme}</dt>
+            <dd className={valeur ? '' : 'provisoire'}>{valeur ?? '[À compléter]'}</dd>
+          </div>
         </div>
       ))}
     </dl>

@@ -1,56 +1,44 @@
 /* Rimaactive — d'après la charte graphique (octobre 2026), section 13 « site web » */
+/* Rimaactive — d'après le design system Rimaactive (version 3.1, octobre 2026) */
 :root {
   --vw: 1vw; /* 1 % de la largeur de l'écran, corrigé par la mise à l'échelle (index.html) */
   --ecran: 100svh; /* hauteur de l'écran, corrigée sur grands écrans (voir zoom plus bas) */
-  --fond-carte: var(--blanc); /* fond des cartes ; lin sur les rubriques blanches */
-  --corail: #ff6447;
-  --corail-profond: #d9452a;
-  --corail-texte: #b3341c;
-  --neon: #c8f560;
+  --fond-carte: var(--blanc); /* cartes blanches sur craie ; craie-fonce sur les rubriques blanches */
+  --craie: #f4f3ef;
   --blanc: #ffffff;
-  --lin: #f3eee7;
-  --lin-200: #e6ded3;
-  --encre-700: #4b4641;
+  --craie-fonce: #e8e5de;
   --encre: #161514;
-  --filet: rgba(22, 21, 20, 0.14); /* filets fins encre à 14 % */
-  --filet-clair: rgba(255, 255, 255, 0.16);
+  --vermillon: #ff4a1c; /* signature : logo, menu, bandeau d'infos, grands numéros */
+  --jaune: #f2c230; /* action : bouton principal, carte au survol */
+  --gris-chaud: #57534e; /* texte secondaire */
+  --filet: #dcd9d2;
+  --gris-controle: #88837b; /* bordure des champs */
+  --voile-encre: rgba(22, 21, 20, 0.82);
+  --filet-clair: rgba(244, 243, 239, 0.16);
 
-  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
-  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
 
-  --gouttiere: clamp(16px, calc(5 * var(--vw)), 80px);
+  --gouttiere: clamp(20px, calc(5 * var(--vw)), 80px);
   --largeur: 1240px;
   --duree: 160ms;
-  --arrondi: 10px;
+  --arrondi: 8px; /* rayon-s : cartes, cadre photo, champs */
+  --arrondi-grand: 16px; /* rayon-m : photos et carte */
   --hauteur-entete: 76px; /* en-tête collant, voir .entete */
-  --arrondi-grand: 16px;
 }
 
 @font-face {
   font-family: "Hanken Grotesk";
-  src: url("/fonts/HankenGrotesk-Medium.ttf") format("truetype");
-  font-weight: 500;
+  src: url("/fonts/HankenGrotesk-Variable.woff2") format("woff2");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
+/* Fraunces italique, réglage « Soft » : réservée à l'accroche sous le titre d'accueil */
 @font-face {
-  font-family: "Hanken Grotesk";
-  src: url("/fonts/HankenGrotesk-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Hanken Grotesk";
-  src: url("/fonts/HankenGrotesk-Black.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Instrument Serif";
-  src: url("/fonts/InstrumentSerif-Italic.ttf") format("truetype");
-  font-weight: 400;
+  font-family: "Fraunces";
+  src: url("/fonts/Fraunces-Soft-Italic-Variable.woff2") format("woff2");
+  font-weight: 100 900;
   font-style: italic;
   font-display: swap;
 }
@@ -62,19 +50,20 @@ html { scroll-padding-top: 96px; }
    (zoom et --ecran posés par le script « mise à l'échelle » de index.html) */
 body {
   margin: 0;
-  background: var(--lin);
+  background: var(--craie);
   color: var(--encre);
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 18px;
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 img { max-width: 100%; display: block; }
-a { color: var(--corail-texte); transition: color var(--duree) ease; }
-a:hover { color: var(--encre); }
-:focus-visible { outline: 3px solid var(--encre); outline-offset: 3px; }
-.sur-encre :focus-visible { outline-color: var(--neon); }
+a { color: var(--encre); text-underline-offset: 3px; transition: color var(--duree) ease; }
+a:hover { color: var(--gris-chaud); }
+/* anneau de focus : 2 px plein, décalé de 2 px */
+:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.sur-encre :focus-visible { outline-color: var(--craie); }
 
 .lien-evitement {
   position: absolute;
@@ -88,49 +77,62 @@ a:hover { color: var(--encre); }
 .lien-evitement:focus { top: 16px; color: var(--blanc); }
 
 /* ---------- Typographie ---------- */
+/* Titres du site : Hanken Grotesk Black, une majuscule au début (écrite dans le texte) */
 .titre {
   margin: 0;
   font-weight: 900;
-  text-transform: lowercase;
-  letter-spacing: -0.055em;
-  line-height: 0.88;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
   text-wrap: balance;
 }
-.titre--xl { font-size: clamp(64px, calc(10 * var(--vw)), 168px); color: var(--corail-profond); }
-.titre--accueil { font-size: clamp(34px, calc(4.1 * var(--vw)), 58px); color: var(--encre); line-height: 0.92; }
-.titre--page { font-size: clamp(56px, calc(8.5 * var(--vw)), 136px); color: var(--corail-profond); }
-.titre--section { font-size: clamp(40px, calc(5 * var(--vw)), 72px); }
-.titre--tuile { font-size: clamp(26px, calc(2.4 * var(--vw)), 32px); letter-spacing: -0.035em; line-height: 0.95; }
+.titre--xl { font-size: clamp(64px, calc(10 * var(--vw)), 168px); color: var(--vermillon); }
+/* site-accueil : 52 / 54 */
+.titre--accueil { font-size: 52px; line-height: 54px; letter-spacing: -0.035em; color: var(--encre); }
+/* site-titre : 55 / 54, titres de section et des pages */
+.titre--section, .titre--page { font-size: 55px; line-height: 54px; letter-spacing: -0.045em; }
+/* site-carte : 32 / 32 */
+.titre--tuile { font-size: 32px; line-height: 32px; letter-spacing: -0.04em; }
+@media (max-width: 600px) {
+  .titre--accueil, .titre--section, .titre--page { font-size: 36px; line-height: 38px; }
+}
 
-.ligne-fine {
-  margin: 0 0 12px;
+/* site-accroche : Fraunces italique, seulement sous le titre d'accueil */
+.accroche {
+  margin: 0;
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(22px, calc(2.2 * var(--vw)), 32px);
-  line-height: 1.1;
-  color: var(--encre-700);
+  font-size: 22px;
+  line-height: 30px;
+  letter-spacing: -0.01em;
 }
-.mention {
-  margin: 0;
+/* surtitre : petites capitales espacées (seul texte en capitales) */
+.surtitre, .mention {
+  margin: 0 0 12px;
   font-weight: 700;
-  font-size: 15px;
-  line-height: 1.2;
-  color: var(--corail-texte);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gris-chaud);
 }
-.texte { margin: 0; max-width: 65ch; color: var(--encre-700); }
-.texte--grand { font-size: clamp(18px, calc(1.6 * var(--vw)), 21px); }
+.mention { margin: 0; }
+/* site-texte : 18 / 29, texte secondaire */
+.texte { margin: 0; max-width: 65ch; font-size: 18px; line-height: 29px; color: var(--gris-chaud); }
+.texte--grand { font-size: 18px; line-height: 28px; }
 .texte + .texte { margin-top: 16px; }
-.provisoire { color: var(--encre-700); font-style: normal; }
+.provisoire { color: var(--gris-chaud); font-style: normal; }
+@media (max-width: 600px) {
+  .texte { font-size: 16px; line-height: 26px; }
+}
 
 /* ---------- Mise en page ---------- */
 .section { padding: clamp(64px, calc(9 * var(--vw)), 128px) var(--gouttiere); }
-/* Une rubrique sur deux passe en lin 200 (« fond alterné » de la charte) : le haut de page reste lin */
 /* Une rubrique sur deux passe en blanc, séparée nettement, sur toute la largeur.
-   Les cartes, blanches sur fond lin, passent en lin sur ces rubriques pour rester visibles. */
+   Les cartes, blanches sur fond craie, passent en craie sur ces rubriques pour rester visibles. */
 main > section:nth-of-type(even):not(.appel) {
   --fond-rubrique: var(--blanc);
-  --fond-carte: var(--lin);
+  --fond-carte: var(--craie);
   background: var(--fond-rubrique);
 }
 /* Sur ordinateur, chaque rubrique de l'accueil occupe exactement un écran sous l'en-tête, contenu centré.
@@ -171,40 +173,45 @@ main > section:nth-of-type(even):not(.appel) {
 }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 32px; }
 
-/* ---------- Boutons : pilule, capitales ---------- */
+/* ---------- Boutons : pilule ---------- */
 .bouton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   min-height: 48px;
-  padding: 15px 28px;
-  border: 1.5px solid transparent;
+  padding: 12px 26px;
+  border: 2px solid transparent;
   border-radius: 999px;
   font: inherit;
-  font-weight: 700;
-  font-size: 17px;
-  line-height: 1;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
   text-decoration: none;
   cursor: pointer;
   transition: background-color var(--duree) ease, color var(--duree) ease, border-color var(--duree) ease;
 }
-.bouton--principal { background: var(--corail); color: var(--encre); }
-.bouton--principal:hover { background: var(--encre); color: var(--lin); }
-.bouton--secondaire { background: var(--lin); color: var(--encre); border-color: var(--encre); }
-.bouton--secondaire:hover { background: var(--encre); color: var(--lin); }
-.sur-encre .bouton--principal:hover { background: var(--lin); color: var(--encre); }
-.bouton--compact { min-height: 42px; padding: 12px 22px; font-size: 16px; }
+/* principal : jaune signal, texte encre ; un seul par écran */
+.bouton--principal { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
+.bouton--principal:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
+/* secondaire : contour et texte encre */
+.bouton--secondaire { background: var(--craie); color: var(--encre); border-color: var(--encre); font-weight: 700; }
+.bouton--secondaire:hover { background: var(--encre); color: var(--craie); }
+/* clair : craie, sur une photo ou un fond encre */
+.bouton--clair { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+.bouton--clair:hover { background: transparent; color: var(--craie); }
+.sur-encre .bouton--principal:hover, .heros .bouton--principal:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+.bouton--compact { min-height: 42px; padding: 10px 22px; font-size: 15px; }
 
 .lien-fleche {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 16px;
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
+  text-underline-offset: 4px;
   color: var(--encre);
 }
 .lien-fleche svg { transition: transform var(--duree) ease; }
@@ -215,7 +222,7 @@ main > section:nth-of-type(even):not(.appel) {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--lin);
+  background: var(--craie);
 }
 .entete__barre {
   /* hauteur fixe : le haut de page de l'accueil se cale dessus pour remplir l'écran au pixel près */
@@ -231,7 +238,8 @@ main > section:nth-of-type(even):not(.appel) {
 }
 .entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
 .entete__logo img {
-  height: 26px;
+  /* symbole vermillon */
+  height: 29px;
   width: auto;
   /* le dessin du « aa » démarre au bord de l'image, la lettre M du titre d'accueil un peu après :
      on décale le logo d'autant pour que les deux tombent à l'aplomb */
@@ -248,23 +256,23 @@ main > section:nth-of-type(even):not(.appel) {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0 28px;
+  gap: 0 29px;
 }
 .nav a {
   padding: 14px 0;
   color: var(--encre);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 15px;
 }
-.nav a:hover { color: var(--corail-texte); }
+.nav a:hover { color: var(--gris-chaud); }
 .nav__trait {
   position: absolute;
   left: 0;
   top: 0;
   height: 2px;
   border-radius: 2px;
-  background: var(--corail);
+  background: var(--vermillon);
   pointer-events: none;
   transition: transform 0.4s cubic-bezier(.55, 0, .25, 1), width 0.4s cubic-bezier(.55, 0, .25, 1), opacity var(--duree) ease;
 }
@@ -314,10 +322,9 @@ main > section:nth-of-type(even):not(.appel) {
   text-decoration: none;
   font-weight: 900;
   font-size: 28px;
-  letter-spacing: -0.035em;
-  text-transform: lowercase;
+  letter-spacing: -0.04em;
 }
-.menu-mobile a[aria-current="page"] { color: var(--corail-profond); }
+.menu-mobile a[aria-current="page"] { color: var(--vermillon); }
 .menu-mobile .bouton { margin-top: 24px; width: 100%; }
 
 @media (max-width: 960px) {
@@ -340,31 +347,24 @@ main > section:nth-of-type(even):not(.appel) {
 }
 .heros__photo {
   position: absolute;
-  top: 0;
-  right: 0;
-  /* la photo s'étend sous le texte, mais Marie reste à droite du titre */
-  width: 78%;
+  inset: 0;
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 8%;
-  opacity: 0.45;
-  /* la photo est agrandie au-delà de sa taille d'origine : un léger flou en adoucit les défauts */
-  filter: blur(1.5px) contrast(1.08);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 32%);
-  mask-image: linear-gradient(90deg, transparent, #000 32%);
+  object-position: 70% 30%;
 }
-/* Grain fin, comme une pellicule, posé sur la photo : il camoufle la compression de l'image */
+/* Voile encre, plus dense à gauche sous le texte */
 .heros::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
-  opacity: 0.11;
-  mix-blend-mode: screen;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background: linear-gradient(90deg, var(--voile-encre) 0 38%, rgba(22, 21, 20, 0.45) 70%, rgba(22, 21, 20, 0.35));
 }
 .heros__texte {
   position: relative;
+  z-index: 2;
   align-self: center;
   box-sizing: border-box;
   width: 100%;
@@ -372,40 +372,35 @@ main > section:nth-of-type(even):not(.appel) {
   margin: 0 auto;
   padding: 32px var(--gouttiere);
 }
-.heros .titre--accueil { color: var(--lin); text-transform: none; }
+.heros .titre--accueil { color: var(--craie); }
 .heros .titre--accueil .ligne { display: block; }
-.heros__ligne {
-  margin: clamp(16px, calc(1.8 * var(--vw)), 24px) 0 0;
-  font-size: clamp(18px, calc(1.45 * var(--vw)), 21px);
-  line-height: 1.3;
-  color: rgba(255, 255, 255, 0.82);
-}
-.heros .actions { margin-top: clamp(20px, calc(2.2 * var(--vw)), 32px); }
-/* M'écrire en néon sur le fond noir */
-.heros .bouton--principal { background: var(--neon); color: var(--encre); }
-.heros .bouton--principal:hover { background: var(--lin); color: var(--encre); }
-.heros .bouton--secondaire:hover { background: var(--corail); color: var(--encre); border-color: var(--corail); }
-/* Bandeau rouge : corail profond, sur lequel le blanc se lit bien */
+.heros__ligne { margin-top: 20px; color: var(--craie); opacity: 0.92; }
+.heros .actions { margin-top: 37px; gap: 19px; }
+/* Bandeau d'infos : vermillon, texte blanc (choix de Marie) */
 .heros__bandeau {
   position: relative;
+  z-index: 2;
   margin: 0;
-  padding: 11px var(--gouttiere);
+  padding: 12px var(--gouttiere);
+  min-height: 45px;
+  align-items: center;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px 0;
-  background: var(--corail-profond);
+  background: var(--vermillon);
   color: var(--blanc);
   font-weight: 800;
-  font-size: clamp(13px, calc(1.05 * var(--vw)), 16px);
-  letter-spacing: -0.01em;
+  font-size: 14px;
+  line-height: 20px;
 }
 .heros__bandeau li { white-space: nowrap; }
-.heros__bandeau li + li::before { content: "·"; margin: 0 12px; }
+.heros__bandeau li + li::before { content: "·"; margin: 0 17px; opacity: 0.8; }
 /* Téléphone : la photo couvre tout le fond, plus discrète ; le bandeau passe sur trois lignes */
 @media (max-width: 699px) {
-  .heros__photo { width: 100%; opacity: 0.28; -webkit-mask-image: linear-gradient(180deg, #000, transparent); mask-image: linear-gradient(180deg, #000, transparent); }
+  .heros::before { background: linear-gradient(180deg, rgba(22, 21, 20, 0.45), var(--voile-encre) 55%); }
+  .heros__photo { object-position: 42% 20%; }
   .heros__bandeau { flex-direction: column; align-items: center; }
   .heros__bandeau li + li::before { content: none; }
 }
@@ -424,9 +419,9 @@ main > section:nth-of-type(even):not(.appel) {
   padding: 0;
   list-style: none;
 }
-.fil li + li::before { content: "/"; margin-right: 8px; color: var(--encre-700); }
-.fil a { color: var(--encre-700); text-decoration: none; }
-.fil a:hover { color: var(--corail-texte); }
+.fil li + li::before { content: "/"; margin-right: 8px; color: var(--gris-chaud); }
+.fil a { color: var(--gris-chaud); text-decoration: none; }
+.fil a:hover { color: var(--encre); }
 
 /* ---------- Tuiles : blanches, néon au survol ---------- */
 .tuiles {
@@ -448,11 +443,6 @@ main > section:nth-of-type(even):not(.appel) {
   text-decoration: none;
   transition: background-color var(--duree) ease;
 }
-.tuile:nth-child(3n + 2) { background: var(--corail); }
-.tuile:nth-child(3n + 2) .texte { color: var(--encre); }
-.tuile:nth-child(3n + 3) { background: var(--encre); color: var(--lin); }
-.tuile:nth-child(3n + 3) .texte, .tuile:nth-child(3n + 3) .lien-fleche { color: var(--lin); }
-.tuile:nth-child(3n + 3) .mention { color: var(--neon); }
 /* Les tuiles ne s'alignent pas au cordeau : la deuxième descend un peu */
 @media (min-width: 900px) {
   .tuiles > .tuile:nth-child(3n + 2) { margin-top: 48px; }
@@ -465,55 +455,52 @@ main > section:nth-of-type(even):not(.appel) {
 .tuiles > .tuile:nth-child(3n + 2) { --pose: 5deg; transition-delay: 0.12s; }
 .tuiles > .tuile:nth-child(3n + 3) { --pose: -2deg; transition-delay: 0.24s; }
 .tuiles--posees > .tuile:hover { transition-delay: 0s; }
-a.tuile:hover { background-color: var(--neon); color: var(--encre); }
+@media (hover: hover) { a.tuile:hover { background-color: var(--jaune); color: var(--encre); } }
 a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .tuile__corps { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
 .tuile p.texte { font-size: 17px; }
 .tuile--lien .lien-fleche { margin-top: 8px; }
 .tuile--compacte { min-height: 150px; }
 
-/* ---------- Faits pratiques ---------- */
-.faits {
-  margin: 0;
-  display: grid;
-  gap: 28px 40px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  background: var(--fond-carte);
-  border-radius: var(--arrondi);
-  padding: clamp(24px, calc(3 * var(--vw)), 40px);
-}
-.faits dt { font-weight: 700; font-size: 15px; color: var(--corail-texte); }
-.faits dd { margin: 10px 0 0; font-size: 20px; line-height: 1.35; color: var(--encre); }
-.faits dd.provisoire { color: var(--encre-700); font-size: 18px; }
+/* ---------- Informations pratiques : un pictogramme + un texte en encre, entre deux filets ---------- */
+.faits { margin: 0; display: grid; }
+.faits > div { display: flex; align-items: flex-start; gap: 16px; padding: 12px 0; border-top: 1px solid var(--filet); }
+.faits > div:last-child { border-bottom: 1px solid var(--filet); }
+.faits .picto { flex: none; width: 24px; height: 24px; margin-top: 1px; color: var(--encre); }
+.faits dt { font-weight: 700; font-size: 16px; line-height: 24px; color: var(--encre); }
+.faits dd { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
+.faits dd.provisoire { color: var(--gris-chaud); }
 
 /* ---------- Photo (emplacement) ---------- */
 .photo {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
-  border-radius: var(--arrondi);
+  border-radius: var(--arrondi-grand);
   overflow: hidden;
-  background: #d6cfc5; /* reste visible sur lin comme sur lin 200 */
+  background: var(--craie-fonce);
   display: flex;
   align-items: flex-end;
   padding: 20px;
-  color: var(--encre-700);
+  color: var(--gris-chaud);
   font-size: 14px;
 }
 .photo--sombre { background: #2a2725; color: rgba(255, 255, 255, 0.72); }
 .photo__etiquette { display: flex; align-items: center; gap: 8px; margin-inline: auto; }
 
-/* Photos des rubriques « habillées » : un aplat de couleur décalé derrière, une légère inclinaison,
-   et un glissement au défilement (--glisse et --tourne, voir Layout.jsx). La photo du héros n'est pas concernée. */
+/* Photos de section : cadre légèrement incliné, posé sur un aplat jaune signal décalé
+   (et un léger glissement au défilement : --glisse et --tourne, voir Layout.jsx) */
 .deux-colonnes > .photo {
-  --penche-photo: -1.5deg;
-  box-shadow: 14px 14px 0 var(--corail);
+  --penche-photo: -1.2deg;
+  border-radius: var(--arrondi);
+  background: var(--craie-fonce);
+  box-shadow: 18px 17px 0 -4px var(--jaune);
   transform: translateY(var(--glisse, 0px)) rotate(calc(var(--penche-photo) + var(--tourne, 0deg)));
 }
-/* Photo à droite du texte : l'aplat passe de l'autre côté, en néon */
+/* Photo à droite du texte : l'aplat passe de l'autre côté */
 .deux-colonnes > .photo:last-child {
-  --penche-photo: 1.5deg;
-  box-shadow: -14px 14px 0 var(--neon);
+  --penche-photo: 1.2deg;
+  box-shadow: -18px 17px 0 -4px var(--jaune);
 }
 
 /* Sur téléphone : le titre d'abord, la photo juste dessous, décalée sur un côté, puis le texte */
@@ -528,7 +515,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
     order: 1;
     width: 78%;
     margin: -0.9em 0 44px auto;
-    font-size: clamp(40px, calc(5 * var(--vw)), 72px); /* même taille que le titre, pour que le chevauchement en suive la hauteur */
+    font-size: 36px; /* même taille que le titre, pour que le chevauchement en suive la hauteur */
   }
   .deux-colonnes > .photo .photo__etiquette { font-size: 14px; }
   .deux-colonnes > .photo:last-child { margin-inline: 14px auto; }
@@ -545,19 +532,12 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 }
 .formats li {
   padding: 10px 22px 12px;
-  border-radius: 6px;
+  border-radius: var(--arrondi);
   background: var(--fond-carte);
   font-weight: 900;
-  font-size: clamp(20px, calc(2 * var(--vw)), 26px);
-  letter-spacing: -0.035em;
-  transform: rotate(var(--penche, 0deg));
+  font-size: 24px;
+  letter-spacing: -0.04em;
 }
-.formats li:nth-child(1) { --penche: -3deg; background: var(--corail); }
-.formats li:nth-child(2) { --penche: 2deg; }
-.formats li:nth-child(3) { --penche: -1deg; background: var(--neon); }
-.formats li:nth-child(4) { --penche: 3deg; background: var(--encre); color: var(--lin); }
-.formats li:nth-child(5) { --penche: -2deg; }
-.formats li:nth-child(6) { --penche: 1.5deg; background: var(--corail); }
 
 /* ---------- Je viens à votre rencontre : la carte à gauche, le texte et les faits pratiques à droite ---------- */
 .zone { display: grid; gap: 32px; }
@@ -570,20 +550,18 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   isolation: isolate;
   width: 100%;
   aspect-ratio: 1;
-  border-radius: var(--arrondi);
+  border-radius: var(--arrondi-grand);
   overflow: hidden;
-  background: var(--lin-200);
+  background: var(--craie-fonce);
   font-family: inherit;
 }
 @media (min-width: 900px) {
   .zone { grid-template-columns: 1.15fr 1fr; gap: clamp(32px, calc(4 * var(--vw)), 64px); align-items: center; }
   .zone__carte { order: -1; aspect-ratio: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px); }
-  .zone__texte .faits { grid-template-columns: 1fr 1fr; gap: 16px 28px; padding: clamp(18px, calc(1.8 * var(--vw)), 28px); }
-  .zone__texte .faits dd { margin-top: 6px; font-size: 16px; }
 }
 
 /* ---------- Mes formules : trois cartes photo, qui passent au néon au survol ---------- */
-.services .titre--accueil { margin-bottom: clamp(24px, calc(2.4 * var(--vw)), 40px); }
+.services .titre--section { margin-bottom: 35px; }
 .services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
 @media (min-width: 900px) { .services__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
 .services__liste > li { display: flex; }
@@ -598,25 +576,26 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   text-decoration: none;
   transition: background-color var(--duree) ease;
 }
-.service:hover, .service:focus-visible { background: var(--neon); }
-.service .photo.service__photo { aspect-ratio: 16 / 10; border-radius: 0; }
+@media (hover: hover) { .service:hover { background: var(--jaune); } }
+.service:focus-visible { background: var(--jaune); }
+.service .photo.service__photo { aspect-ratio: 16 / 10; border-radius: 0; background: var(--craie-fonce); }
 @media (min-width: 900px) { .service .photo.service__photo { aspect-ratio: auto; height: clamp(110px, calc(var(--ecran) * 0.22), 280px); } }
-.service__corps { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: clamp(20px, calc(1.8 * var(--vw)), 32px); }
-.service .texte { font-size: 16px; line-height: 1.5; color: var(--encre-700); }
-.service:hover .texte, .service:focus-visible .texte { color: var(--encre); }
+.service__corps { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 26px; }
+.service .texte { font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
+@media (hover: hover) { .service:hover .texte { color: var(--encre); } }
+.service:focus-visible .texte { color: var(--encre); }
 .service__lien { margin-top: auto; padding-top: 8px; }
 .service:hover .lien-fleche svg { transform: translateX(4px); }
 
 /* ---------- Ma boîte à outils : rubrique fixée à l'écran, la roue des formats tourne au défilement (voir BoiteOutils.jsx) ----------
    Sans JavaScript ou avec « réduire les animations », on garde les pastilles des formats. */
-main > section.roue-section.sur-encre { background: var(--encre); color: var(--lin); }
+main > section.roue-section.sur-encre { background: var(--encre); color: var(--craie); }
 .roue-section__ecran { padding: clamp(64px, calc(9 * var(--vw)), 128px) var(--gouttiere); }
-.roue-section .titre { color: var(--lin); }
-.roue-section .texte { color: rgba(255, 255, 255, 0.78); }
+.roue-section .titre { color: var(--craie); }
+.roue-section .texte { color: rgba(244, 243, 239, 0.78); }
 .roue-section__texte { margin-top: 24px; }
 /* Pastilles de secours sur fond encre : la pastille encre passe en néon */
-.roue-section:not(.roue-section--animee) .formats li { color: var(--encre); }
-.roue-section:not(.roue-section--animee) .formats li:nth-child(4) { background: var(--neon); }
+.roue-section:not(.roue-section--animee) .formats li { background: var(--craie); color: var(--encre); }
 .roue-section__grille { display: grid; gap: 32px 64px; align-items: center; }
 @media (min-width: 900px) {
   .roue-section__grille { grid-template-columns: 1fr 1.2fr; }
@@ -634,7 +613,7 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 }
 .roue-section--animee .roue-section__grille { width: 100%; }
 .roue-section--animee .roue {
-  --bande: var(--corail);
+  --bande: var(--vermillon);
   --hauteur-format: clamp(72px, calc(9 * var(--vw)), 120px);
   position: relative;
   height: min(62vh, 520px);
@@ -682,9 +661,9 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   justify-content: center;
   padding: 0;
   background: none;
-  color: var(--lin);
+  color: var(--craie);
   font-size: clamp(32px, calc(4.6 * var(--vw)), 68px);
-  letter-spacing: -0.05em;
+  letter-spacing: -0.045em;
   white-space: nowrap;
 }
 .roue-section--animee .roue__liste li.roue__format--actif { color: var(--encre); }
@@ -729,29 +708,29 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   transition: transform var(--duree) ease;
 }
 .faq details[open] summary::after { transform: rotate(45deg); }
-.faq summary:hover { color: var(--corail-texte); }
-.faq details p { margin: 0 0 24px; max-width: 65ch; color: var(--encre-700); }
+.faq summary:hover { color: var(--encre); }
+.faq details p { margin: 0 0 24px; max-width: 65ch; color: var(--gris-chaud); }
 
 /* ---------- Bloc « écris-moi » (encre) ---------- */
 .appel {
   background: var(--encre);
-  color: var(--blanc);
+  color: var(--craie);
   padding: clamp(56px, calc(7 * var(--vw)), 96px) var(--gouttiere);
 }
 .appel__grille { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px 64px; }
-.appel .ligne-fine { color: var(--neon); }
-.appel .titre { color: var(--blanc); font-size: clamp(48px, calc(7 * var(--vw)), 112px); }
-.appel .texte { color: rgba(255, 255, 255, 0.78); margin-top: 20px; }
+.appel .surtitre { color: var(--jaune); }
+.appel .titre { color: var(--craie); }
+.appel .texte { color: rgba(244, 243, 239, 0.78); margin-top: 20px; }
 
 /* ---------- Pied de page ---------- */
 .pied {
   background: var(--encre);
-  color: var(--blanc);
+  color: var(--craie);
   padding: 0 var(--gouttiere) 32px;
   font-size: 16px;
 }
-.pied a { color: var(--blanc); text-decoration: none; }
-.pied a:hover { color: var(--corail); }
+.pied a { color: var(--craie); text-decoration: none; }
+.pied a:hover { color: var(--vermillon); }
 .pied__haut {
   border-top: 1px solid var(--filet-clair);
   padding-top: clamp(40px, calc(5 * var(--vw)), 64px);
@@ -759,10 +738,10 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   gap: 40px 48px;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
-.pied__logo img { height: 36px; width: auto; }
+.pied__logo img { width: 168px; height: auto; }
 .pied__colonne { display: flex; flex-direction: column; gap: 2px; }
 .pied__colonne a { padding: 6px 0; }
-.pied__colonne .mention { color: var(--neon); margin-bottom: 10px; }
+.pied__colonne .mention { color: var(--jaune); margin-bottom: 10px; }
 .pied__bas {
   margin-top: 48px;
   border-top: 1px solid var(--filet-clair);
@@ -772,7 +751,7 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   justify-content: space-between;
   gap: 8px 24px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(244, 243, 239, 0.72);
 }
 .pied__bas nav { display: flex; gap: 24px; }
 
@@ -781,12 +760,12 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
 @media (min-width: 960px) {
   .contact-grille { grid-template-columns: 0.8fr 1.2fr; }
 }
-.coordonnees { border-radius: var(--arrondi); background: var(--encre); color: var(--blanc); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: flex; flex-direction: column; gap: 32px; }
-.coordonnees .ligne-fine { color: var(--neon); }
-.coordonnees a { color: var(--blanc); text-decoration: none; font-weight: 900; font-size: clamp(22px, calc(2.2 * var(--vw)), 28px); letter-spacing: -0.03em; word-break: break-word; }
-.coordonnees a:hover { color: var(--corail); }
-.coordonnees .mention { color: var(--corail); margin-bottom: 8px; }
-.coordonnees p.texte { color: rgba(255, 255, 255, 0.78); }
+.coordonnees { border-radius: var(--arrondi); background: var(--encre); color: var(--craie); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: flex; flex-direction: column; gap: 32px; }
+.coordonnees .surtitre { color: var(--jaune); margin: 0; }
+.coordonnees a { color: var(--craie); text-decoration: none; font-weight: 900; font-size: clamp(22px, calc(2.2 * var(--vw)), 28px); letter-spacing: -0.03em; word-break: break-word; }
+.coordonnees a:hover { color: var(--vermillon); }
+.coordonnees .mention { color: var(--vermillon); margin-bottom: 8px; }
+.coordonnees p.texte { color: rgba(244, 243, 239, 0.78); }
 
 .formulaire { border-radius: var(--arrondi); background: var(--fond-carte); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: grid; gap: 24px; }
 @media (min-width: 640px) {
@@ -800,17 +779,17 @@ main > section.roue-section.sur-encre { background: var(--encre); color: var(--l
   width: 100%;
   min-height: 52px;
   padding: 12px 16px;
-  border: 1.5px solid var(--encre);
-  border-radius: 6px;
+  border: 1.5px solid var(--gris-controle);
+  border-radius: var(--arrondi);
   background: var(--blanc);
   font: inherit;
   color: var(--encre);
   transition: border-color var(--duree) ease, background-color var(--duree) ease;
 }
-.champ:hover { background: var(--lin); }
-.champ:focus { outline: 3px solid var(--corail); outline-offset: 2px; }
+.champ:hover { background: var(--craie); }
+.champ:focus { outline: 2px solid var(--encre); outline-offset: 2px; border-color: var(--encre); }
 textarea.champ { resize: vertical; min-height: 140px; }
-.optionnel { font-weight: 500; color: var(--encre-700); }
+.optionnel { font-weight: 500; color: var(--gris-chaud); }
 .choix { display: flex; flex-wrap: wrap; gap: 8px; }
 .choix label { position: relative; }
 .choix input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
@@ -825,9 +804,9 @@ textarea.champ { resize: vertical; min-height: 140px; }
   font-size: 16px;
   transition: background-color var(--duree) ease, color var(--duree) ease;
 }
-.choix input:hover + span { background: var(--lin); }
-.choix input:checked + span { background: var(--encre); color: var(--lin); }
-.choix input:focus-visible + span { outline: 3px solid var(--corail); outline-offset: 2px; }
+.choix input:hover + span { background: var(--craie); }
+.choix input:checked + span { background: var(--encre); color: var(--craie); }
+.choix input:focus-visible + span { outline: 2px solid var(--encre); outline-offset: 2px; }
 .confirmation { border-radius: var(--arrondi); background: var(--fond-carte); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: flex; flex-direction: column; gap: 12px; }
 
 /* ---------- Changement de page : fondu simple ---------- */
@@ -859,12 +838,12 @@ textarea.champ { resize: vertical; min-height: 140px; }
   font-size: 15px;
   line-height: 1.3;
 }
-.juridique__sommaire a:hover { color: var(--corail-texte); }
+.juridique__sommaire a:hover { color: var(--encre); }
 .juridique__texte { max-width: 72ch; }
 .juridique__texte > section { padding: 40px 0; border-top: 1px solid var(--filet); }
 .juridique__texte > section:first-child { padding-top: 0; border-top: 0; }
-.juridique__titre { font-size: clamp(30px, calc(3.4 * var(--vw)), 44px); margin: 10px 0 20px; line-height: 0.95; }
-.juridique__texte p, .juridique__texte li { color: var(--encre-700); }
+.juridique__titre { font-size: 32px; line-height: 34px; letter-spacing: -0.04em; margin: 10px 0 20px; }
+.juridique__texte p, .juridique__texte li { color: var(--gris-chaud); }
 .juridique__texte p { margin: 0 0 16px; }
 .juridique__texte ul { margin: 0 0 16px; padding-left: 20px; }
 .juridique__texte li { margin-bottom: 8px; }
@@ -872,17 +851,17 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .juridique__texte h3 { margin: 28px 0 10px; font-size: 18px; font-weight: 700; color: var(--encre); }
 .juridique__texte table { width: 100%; border-collapse: collapse; margin: 8px 0 20px; font-size: 16px; }
 .juridique__texte th, .juridique__texte td { text-align: left; vertical-align: top; padding: 14px 16px 14px 0; border-bottom: 1px solid var(--filet); }
-.juridique__texte th { font-weight: 700; font-size: 15px; color: var(--corail-texte); }
-.juridique__texte td { color: var(--encre-700); }
+.juridique__texte th { font-weight: 700; font-size: 15px; color: var(--encre); }
+.juridique__texte td { color: var(--gris-chaud); }
 .tableau-defilant { overflow-x: auto; }
 .coordonnees-legales { margin: 0 0 16px; display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; }
 .coordonnees-legales dt { font-weight: 700; color: var(--encre); }
-.coordonnees-legales dd { margin: 0; color: var(--encre-700); }
+.coordonnees-legales dd { margin: 0; color: var(--gris-chaud); }
 @media (max-width: 560px) {
   .coordonnees-legales { grid-template-columns: 1fr; gap: 2px; }
   .coordonnees-legales dd { margin-bottom: 10px; }
 }
-.a-completer { background: var(--neon); color: var(--encre); padding: 0 4px; }
+.a-completer { background: var(--jaune); color: var(--encre); padding: 0 4px; }
 
 /* Mention d'information sous le formulaire */
-.info-rgpd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--encre-700); max-width: 70ch; }
+.info-rgpd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gris-chaud); max-width: 70ch; }

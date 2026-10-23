@@ -6,7 +6,7 @@ import useTitre from '../components/useTitre.js'
 const SECTIONS = [
   {
     id: 'editeur',
-    titre: 'éditrice du site',
+    titre: 'Éditrice du site',
     contenu: (
       <>
         <p>Le site rimaactive est édité par :</p>
@@ -32,7 +32,7 @@ const SECTIONS = [
   },
   {
     id: 'activite',
-    titre: 'activité réglementée',
+    titre: 'Activité réglementée',
     contenu: (
       <>
         <p>
@@ -52,7 +52,7 @@ const SECTIONS = [
   },
   {
     id: 'hebergeur',
-    titre: 'hébergement',
+    titre: 'Hébergement',
     contenu: (
       <>
         <p>Le site est hébergé par :</p>
@@ -69,7 +69,7 @@ const SECTIONS = [
   },
   {
     id: 'propriete',
-    titre: 'propriété intellectuelle',
+    titre: 'Propriété intellectuelle',
     contenu: (
       <>
         <p>
@@ -83,7 +83,7 @@ const SECTIONS = [
   },
   {
     id: 'responsabilite',
-    titre: 'responsabilité',
+    titre: 'Responsabilité',
     contenu: (
       <>
         <p>
@@ -100,7 +100,7 @@ const SECTIONS = [
   },
   {
     id: 'donnees',
-    titre: 'données personnelles',
+    titre: 'Données personnelles',
     contenu: (
       <p>
         Le traitement de vos données et vos droits sont détaillés dans la{' '}
@@ -110,7 +110,7 @@ const SECTIONS = [
   },
   {
     id: 'droit',
-    titre: 'droit applicable',
+    titre: 'Droit applicable',
     contenu: (
       <>
         <p>
@@ -131,7 +131,7 @@ export default function MentionsLegales() {
   return (
     <PageJuridique
       fil="Mentions légales"
-      titre="mentions légales"
+      titre="Mentions légales"
       miseAJour="16 octobre 2026"
       intro="Qui édite ce site, qui l'héberge, et ce que vous pouvez en faire."
       sections={SECTIONS}

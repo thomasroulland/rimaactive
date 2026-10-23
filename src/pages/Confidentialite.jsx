@@ -8,7 +8,7 @@ const Email = () => <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
 const SECTIONS = [
   {
     id: 'essentiel',
-    titre: "l'essentiel",
+    titre: "L’essentiel",
     contenu: (
       <ul>
         <li><strong>Pas de cookie, pas de publicité, pas de mesure d'audience</strong> : vous n'êtes pas suivi sur ce site.</li>
@@ -20,7 +20,7 @@ const SECTIONS = [
   },
   {
     id: 'responsable',
-    titre: 'responsable du traitement',
+    titre: 'Responsable du traitement',
     contenu: (
       <p>
         Marie Sillas, Rimaactive, <ACompleter>adresse</ACompleter>. Contact pour toute question sur vos données :{' '}
@@ -30,7 +30,7 @@ const SECTIONS = [
   },
   {
     id: 'donnees',
-    titre: 'données collectées et utilisation',
+    titre: 'Données collectées et utilisation',
     contenu: (
       <>
         <div className="tableau-defilant">
@@ -76,7 +76,7 @@ const SECTIONS = [
   },
   {
     id: 'destinataires',
-    titre: 'qui y a accès',
+    titre: 'Qui y a accès',
     contenu: (
       <>
         <p>Vos données sont lues uniquement par Marie Sillas. Elles transitent aussi par des prestataires techniques, qui n'ont pas le droit de les utiliser pour leur propre compte :</p>
@@ -95,7 +95,7 @@ const SECTIONS = [
   },
   {
     id: 'duree',
-    titre: 'durée de conservation',
+    titre: 'Durée de conservation',
     contenu: (
       <ul>
         <li><strong>Demande sans suite</strong> : 3 ans après notre dernier échange, puis suppression.</li>
@@ -108,7 +108,7 @@ const SECTIONS = [
   },
   {
     id: 'cookies',
-    titre: 'cookies',
+    titre: 'Cookies',
     contenu: (
       <>
         <p>
@@ -125,7 +125,7 @@ const SECTIONS = [
   },
   {
     id: 'droits',
-    titre: 'vos droits',
+    titre: 'Vos droits',
     contenu: (
       <>
         <p>Conformément au RGPD et à la loi Informatique et Libertés, vous pouvez :</p>
@@ -152,7 +152,7 @@ const SECTIONS = [
   },
   {
     id: 'securite',
-    titre: 'sécurité',
+    titre: 'Sécurité',
     contenu: (
       <p>
         Le site est servi en HTTPS : les informations que vous saisissez sont chiffrées pendant leur envoi. L'accès aux
@@ -162,7 +162,7 @@ const SECTIONS = [
   },
   {
     id: 'modifications',
-    titre: 'modifications',
+    titre: 'Modifications',
     contenu: (
       <p>
         Cette politique peut évoluer, par exemple si un nouvel outil est ajouté au site. La date de mise à jour en haut
@@ -177,7 +177,7 @@ export default function Confidentialite() {
   return (
     <PageJuridique
       fil="Confidentialité"
-      titre="confidentialité"
+      titre="Confidentialité"
       miseAJour="16 octobre 2026"
       intro="Ce que deviennent les informations que vous me confiez, et comment garder la main dessus."
       sections={SECTIONS}

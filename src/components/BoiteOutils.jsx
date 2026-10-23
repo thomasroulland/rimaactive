@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { cran } from './cran.js'
 
 const PAS = 34 // écart entre deux formats sur la roue, en degrés
-const BANDES = ['var(--corail)', 'var(--neon)', 'var(--blanc)'] // la bande centrale change de couleur à chaque format
+const BANDES = ['var(--vermillon)', 'var(--jaune)', 'var(--craie)'] // la bande centrale change de couleur à chaque format
 
 // Rubrique « ma boîte à outils » : elle reste à l'écran pendant que la roue des formats d'entraînement
 // tourne au fil du défilement
@@ -99,7 +99,7 @@ export default function BoiteOutils({ formats, children }) {
       <div className="roue-section__ecran">
         <div className="conteneur roue-section__grille">
           <div>
-            <h2 id="outils-titre" className="titre titre--accueil">ma boîte à outils</h2>
+            <h2 id="outils-titre" className="titre titre--section">Ma boîte à outils</h2>
             <div className="roue-section__texte">{children}</div>
           </div>
           <div className="roue">

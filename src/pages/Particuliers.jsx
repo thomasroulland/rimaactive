@@ -5,22 +5,22 @@ export default function Particuliers() {
   useTitre('Particuliers')
   return (
     <>
-      <HerosPage fil="Particuliers" ligne="pour vous" titre="particuliers">
+      <HerosPage fil="Particuliers" ligne="pour vous" titre="Particuliers">
         <p className="texte texte--grand provisoire">
-          [Texte provisoire · message principal : on part de ton emploi du temps et de là où tu en es, et le but est
-          que tu deviennes autonome.]
+          [Texte provisoire · message principal : on part de votre emploi du temps et de là où vous en êtes, et le but
+          est que vous deveniez autonome.]
         </p>
       </HerosPage>
 
       <section className="section" aria-labelledby="vecu-titre">
         <div className="conteneur">
           <div className="entete-section">
-            <TitreSection id="vecu-titre" titre="ce que tu vis peut-être" />
+            <TitreSection id="vecu-titre" titre="Ce que vous vivez peut-être" />
           </div>
           <div className="tuiles">
-            <Tuile titre="manque de temps" compacte />
-            <Tuile titre="ne pas savoir par où commencer" compacte />
-            <Tuile titre="l'idée qu'il faut se priver" compacte />
+            <Tuile titre="Manque de temps" compacte />
+            <Tuile titre="Ne pas savoir par où commencer" compacte />
+            <Tuile titre="L’idée qu’il faut se priver" compacte />
           </div>
         </div>
       </section>
@@ -29,7 +29,7 @@ export default function Particuliers() {
         <div className="conteneur deux-colonnes">
           <Photo label="Photo de Marie en séance avec un particulier" />
           <div>
-            <TitreSection id="seance-titre" titre="comment se passe une séance" />
+            <TitreSection id="seance-titre" titre="Comment se passe une séance" />
             <div style={{ marginTop: 32 }}>
               <Faits items={[['Durée'], ['Lieu'], ['Matériel apporté'], ['Déroulé']]} />
             </div>
@@ -40,12 +40,12 @@ export default function Particuliers() {
       <section className="section" aria-labelledby="formules-titre">
         <div className="conteneur">
           <div className="entete-section">
-            <TitreSection id="formules-titre" titre="[titre des formules à rédiger]" />
+            <TitreSection id="formules-titre" titre="[Titre des formules à rédiger]" />
           </div>
           <div className="tuiles">
-            <Tuile titre="individuel" />
-            <Tuile titre="small group" />
-            <Tuile surtitre="en complément" titre="à distance" />
+            <Tuile titre="Individuel" />
+            <Tuile titre="Small group" />
+            <Tuile surtitre="en complément" titre="À distance" />
           </div>
           <p className="texte provisoire" style={{ marginTop: 24 }}>
             [Ligne tarifs à rédiger · selon le lieu et la formule, on en parle]
@@ -55,7 +55,7 @@ export default function Particuliers() {
 
       <section className="section" aria-labelledby="faq-titre">
         <div className="conteneur deux-colonnes" style={{ alignItems: 'start' }}>
-          <TitreSection id="faq-titre" titre="questions fréquentes" />
+          <TitreSection id="faq-titre" titre="Questions fréquentes" />
           <div className="faq">
             {[1, 2, 3, 4].map((n) => (
               <details key={n}>

@@ -16,7 +16,7 @@ export default function Contact() {
 
   return (
     <>
-      <HerosPage fil="Contact" ligne="On en parle ?" titre="écris-moi">
+      <HerosPage fil="Contact" ligne="On en parle ?" titre="Écrivez-moi">
         <p className="texte texte--grand provisoire">
           [Phrase d'introduction à rédiger · message principal : dites-moi où vous en êtes, je vous réponds.]
         </p>
@@ -25,25 +25,25 @@ export default function Contact() {
       <section className="section section--serree">
         <div className="conteneur contact-grille">
           <aside className="coordonnees sur-encre" aria-label="Coordonnées">
-            <p className="ligne-fine" style={{ margin: 0 }}>en direct</p>
+            <p className="surtitre">En direct</p>
             <div>
-              <p className="mention">e-mail</p>
+              <p className="mention">E-mail</p>
               <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
             </div>
             <div>
-              <p className="mention">téléphone</p>
+              <p className="mention">Téléphone</p>
               <a href={CONTACT.telephoneLien}>{CONTACT.telephone}</a>
             </div>
             <div>
-              <p className="mention">zone</p>
+              <p className="mention">Zone</p>
               <p className="texte">Houdan et les communes voisines, dans un rayon de 20 km.</p>
             </div>
           </aside>
 
           {envoye ? (
             <div role="status" className="confirmation">
-              <p className="ligne-fine" style={{ margin: 0 }}>merci</p>
-              <p className="titre titre--section">message envoyé</p>
+              <p className="surtitre">Merci</p>
+              <p className="titre titre--section">Message envoyé</p>
               <p className="texte provisoire">[Message de confirmation à rédiger]</p>
             </div>
           ) : (
@@ -62,7 +62,7 @@ export default function Contact() {
                   {['entreprise', 'commune', 'particulier'].map((profil) => (
                     <label key={profil}>
                       <input type="radio" name="profil" value={profil} />
-                      <span>{profil}</span>
+                      <span>{profil[0].toUpperCase() + profil.slice(1)}</span>
                     </label>
                   ))}
                 </div>
