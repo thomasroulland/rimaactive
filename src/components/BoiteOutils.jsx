@@ -40,7 +40,7 @@ export default function BoiteOutils({ formats }) {
   }
 
   return (
-    <section id="outils" className="outils sur-encre" aria-labelledby="outils-titre">
+    <section id="outils" className={`outils sur-encre outils--fleches-${new URLSearchParams(window.location.search).get('fleches') || 'a'}`} aria-labelledby="outils-titre">
       <div className="conteneur outils__entete">
         <h2 id="outils-titre" className="titre titre--section">Ma boîte à outils</h2>
       </div>

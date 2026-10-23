@@ -693,6 +693,20 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 .outils__segments { flex: 1; display: flex; gap: 6px; }
 .outils__segments button { flex: 1; height: 4px; padding: 0; border: 0; border-radius: 999px; background: rgba(244, 243, 239, 0.25); cursor: pointer; transition: background-color 0.3s ease; }
 .outils__segments button.rma-actif { background: var(--jaune); }
+/* Essais de flèches : a simples, b sur les côtés, c aucune */
+.outils--fleches-a .outils__fleche, .outils--fleches-b .outils__fleche { border: 0; width: 40px; height: 40px; }
+.outils--fleches-a .outils__fleche:hover { background: transparent; color: var(--jaune); }
+.outils--fleches-a .outils__fleche svg { width: 26px; height: 26px; }
+.outils--fleches-b { position: relative; }
+.outils--fleches-b .outils__fleche {
+  position: absolute; z-index: 2; top: calc(50% + 40px); width: 56px; height: 56px;
+  background: transparent; color: var(--craie);
+}
+.outils--fleches-b .outils__fleche:hover { background: transparent; color: var(--jaune); }
+.outils--fleches-b .outils__fleche svg { width: 40px; height: 40px; }
+.outils--fleches-b .outils__fleche--precedent { left: calc(50% - var(--carte) / 2 - 92px); }
+.outils--fleches-b .outils__fleche:not(.outils__fleche--precedent) { right: calc(50% - var(--carte) / 2 - 92px); }
+.outils--fleches-c .outils__fleche { display: none; }
 .visuellement-cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .outil { transition: none; } }
 /* Téléphone : les cartes voisines dépassent un peu sur les côtés */
