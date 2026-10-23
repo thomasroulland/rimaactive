@@ -5,10 +5,10 @@ export default function AppelContact() {
   return (
     <section className="appel sur-encre" aria-labelledby="appel-titre">
       <div className="conteneur appel__grille">
-        <p className="surtitre">On en parle ?</p>
+        <p className="surtitre">Besoin d’un accompagnement ?</p>
         {/* Le bouton est sur la même ligne que le titre, centré sur sa hauteur */}
         <div className="appel__ligne">
-          <h2 id="appel-titre" className="titre titre--section">Écrivez-moi</h2>
+          <h2 id="appel-titre" className="titre titre--section">Contactez-moi</h2>
           <Link to="/contact" className="bouton bouton--principal">Me contacter</Link>
         </div>
       </div>

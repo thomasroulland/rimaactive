@@ -16,7 +16,7 @@ export default function Contact() {
 
   return (
     <>
-      <HerosPage fil="Contact" ligne="On en parle ?" titre="Écrivez-moi">
+      <HerosPage fil="Contact" ligne="Besoin d’un accompagnement ?" titre="Contactez-moi">
         <p className="texte texte--grand provisoire">
           [Phrase d'introduction à rédiger · message principal : dites-moi où vous en êtes, je vous réponds.]
         </p>
