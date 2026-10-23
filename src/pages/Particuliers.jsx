@@ -2,10 +2,10 @@ import { Faits, HerosPage, Photo, TitreSection, Tuile } from '../components/Bloc
 import useTitre from '../components/useTitre.js'
 
 export default function Particuliers() {
-  useTitre('Particuliers')
+  useTitre('Individuel')
   return (
     <>
-      <HerosPage fil="Particuliers" ligne="pour vous" titre="Particuliers">
+      <HerosPage fil="Individuel" ligne="pour vous" titre="Individuel">
         <p className="texte texte--grand provisoire">
           [Texte provisoire · message principal : on part de votre emploi du temps et de là où vous en êtes, et le but
           est que vous deveniez autonome.]

@@ -895,3 +895,16 @@ textarea.champ { resize: vertical; min-height: 140px; }
 
 /* Mention d'information sous le formulaire */
 .info-rgpd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gris-chaud); max-width: 70ch; }
+
+/* ---------- Bloc « Écrivez-moi » et pied de page : à eux deux, un écran sur ordinateur ---------- */
+@media (min-width: 900px) {
+  .appel { padding-block: clamp(36px, calc(var(--ecran) * 0.08), 64px); }
+  .pied { padding-bottom: 20px; }
+  .pied__haut { padding-top: clamp(28px, calc(var(--ecran) * 0.05), 48px); gap: 24px 48px; }
+  .pied__colonne a { padding: 2px 0; }
+  .pied__colonne { gap: 0; }
+  .pied { font-size: 15px; }
+  .pied__colonne .mention { margin-bottom: 6px; }
+  .pied__bas { margin-top: clamp(24px, calc(var(--ecran) * 0.04), 40px); padding-top: 16px; }
+}
+

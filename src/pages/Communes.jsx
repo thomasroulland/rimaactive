@@ -2,10 +2,10 @@ import { HerosPage, TitreSection, Tuile } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 
 export default function Communes() {
-  useTitre('Communes')
+  useTitre('Groupes')
   return (
     <>
-      <HerosPage fil="Communes" ligne="pour vos habitants" titre="Communes">
+      <HerosPage fil="Groupes" ligne="pour vos habitants" titre="Groupes">
         <p className="texte texte--grand provisoire">
           [Texte provisoire · message principal : une activité sportive encadrée pour vos habitants, près de chez
           eux.]

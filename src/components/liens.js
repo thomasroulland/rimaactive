@@ -1,8 +1,8 @@
 export const PAGES = [
   { to: '/', label: 'Accueil' },
   { to: '/entreprises', label: 'Entreprises' },
-  { to: '/communes', label: 'Communes' },
-  { to: '/particuliers', label: 'Particuliers' },
+  { to: '/communes', label: 'Groupes' },
+  { to: '/particuliers', label: 'Individuel' },
   { to: '/a-propos', label: 'À propos' },
   { to: '/contact', label: 'Contact' },
 ]

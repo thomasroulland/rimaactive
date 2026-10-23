@@ -28,19 +28,19 @@ const SERVICES = [
     to: '/entreprises',
     titre: 'Entreprises',
     photo: 'Séance en groupe dans des locaux ou en extérieur',
-    texte: 'Des séances de mobilité et de renforcement pour remettre vos équipes en mouvement, dans vos locaux ou dehors.',
+    texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
   },
   {
     to: '/communes',
-    titre: 'Communes',
+    titre: 'Groupes',
     photo: 'Petit groupe en extérieur',
-    texte: 'Des séances conviviales en small group, en extérieur ou en salle communale, ouvertes à tous les niveaux.',
+    texte: 'Retrouvez-moi en extérieur, près de chez vous, pour bouger dans un esprit d’entraide et progresser ensemble.',
   },
   {
     to: '/particuliers',
-    titre: 'Particuliers',
+    titre: 'Individuel',
     photo: 'Séance à domicile ou dans un jardin',
-    texte: 'Un coaching individuel ou en petit groupe, à domicile, en extérieur ou en salle, pour reprendre le sport à votre rythme.',
+    texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',
   },
 ]
 
@@ -113,8 +113,7 @@ export default function Accueil() {
           <div className="zone__texte">
             <h2 id="zone-titre" className="titre titre--section">Ma zone d’intervention</h2>
             <p className="texte">
-              J’interviens avec mon matériel afin d’adapter chaque session au lieu, au niveau et aux objectifs des
-              pratiquants.
+              J’interviens avec mon matériel afin d’adapter chaque session au lieu, à votre niveau et à vos objectifs.
             </p>
             <Faits
               items={[
