@@ -1,6 +1,7 @@
 import BoiteOutils from '../components/BoiteOutils.jsx'
 import CarteZone from '../components/CarteZone.jsx'
 import photoHeros from '../assets/heros-squat-nb.jpg'
+import portraitMarie from '../assets/portrait-marie.jpg'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
@@ -60,7 +61,7 @@ export default function Accueil() {
 
       <section className="section ecran-plein" aria-labelledby="approche-titre">
         <div className="conteneur deux-colonnes">
-          <Photo label="Photo de Marie" />
+          <Photo label="Marie Sillas, coach sportive" src={portraitMarie} />
           <div>
             <h2 id="approche-titre" className="titre titre--section">Une pratique progressive, accessible et concrète</h2>
             <p className="texte" style={{ marginTop: 32 }}>
