@@ -558,7 +558,10 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 @media (min-width: 900px) {
   .zone { grid-template-columns: auto 1fr; gap: clamp(32px, calc(4 * var(--vw)), 64px); align-items: center; }
   .zone__carte { order: -1; width: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px); }
-  .zone__texte { gap: 12px; }
+  /* le bloc de texte prend la largeur de sa plus longue ligne : les filets s'arrêtent au bout du titre et de la phrase */
+  .zone__texte { gap: 12px; width: max-content; max-width: 100%; justify-self: start; }
+  .zone__texte .texte { max-width: none; }
+  .zone__texte .texte .ligne { display: block; }
   .zone__texte .faits > div { padding: 9px 0; }
 }
 
@@ -673,8 +676,8 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   top: calc(50% + 40px);
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -682,17 +685,17 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   cursor: pointer;
   transition: color var(--duree) ease;
 }
-.outils__fleche svg { width: 48px; height: 48px; }
+.outils__fleche svg { width: 34px; height: 34px; }
 .outils__fleche:hover { color: var(--jaune); }
 .outils__fleche--precedent svg { transform: scaleX(-1); }
-.outils__fleche--precedent { left: calc(50% - var(--carte) / 2 - 100px); }
-.outils__fleche:not(.outils__fleche--precedent) { right: calc(50% - var(--carte) / 2 - 100px); }
+.outils__fleche--precedent { left: calc(50% - var(--carte) / 2 - 88px); }
+.outils__fleche:not(.outils__fleche--precedent) { right: calc(50% - var(--carte) / 2 - 88px); }
 @media (max-width: 699px) {
   .outils__fleche { position: static; width: 48px; height: 48px; }
-  .outils__fleche svg { width: 32px; height: 32px; }
+  .outils__fleche svg { width: 26px; height: 26px; }
 }
-.outils__ronds { display: flex; gap: 14px; }
-.outils__ronds button { width: 18px; height: 18px; padding: 0; border-radius: 50%; border: 3px solid var(--craie); background: transparent; cursor: pointer; }
+.outils__ronds { display: flex; gap: 10px; }
+.outils__ronds button { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 2px solid var(--craie); background: transparent; cursor: pointer; }
 .outils__ronds button.rma-actif { background: var(--jaune); border-color: var(--jaune); }
 .visuellement-cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .outil { transition: none; } }
