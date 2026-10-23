@@ -605,13 +605,11 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 }
 .outils__entete, .outils__commandes { width: calc(100% - 2 * var(--gouttiere)); }
 .outils .titre--section { color: var(--craie); }
-.outils__texte { margin-top: 16px; }
-.outils__texte .texte { color: rgba(244, 243, 239, 0.78); }
 
 /* Les cartes sont posées les unes sur les autres au centre, puis décalées de --ecart pas */
 .outils__piste {
   position: relative;
-  height: clamp(260px, calc(var(--ecran) * 0.42), 360px);
+  height: clamp(300px, calc(var(--ecran) * 0.5), 430px);
   margin-top: clamp(24px, calc(3 * var(--vw)), 40px);
   touch-action: pan-y;
   user-select: none;
@@ -634,13 +632,13 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   border-radius: var(--arrondi-grand);
   background: var(--craie);
   color: var(--encre);
-  transform: translateX(calc(var(--ecart) * var(--pas))) scale(0.88);
+  transform: translateX(calc(var(--ecart) * var(--pas)));
   filter: blur(3px);
   opacity: 0.45;
   cursor: pointer;
   transition: transform 0.5s cubic-bezier(.3, .7, .2, 1), filter 0.5s ease, opacity 0.5s ease;
 }
-.outil--actif { transform: translateX(0) scale(1); filter: none; opacity: 1; cursor: auto; z-index: 1; }
+.outil--actif { transform: translateX(0); filter: none; opacity: 1; cursor: auto; z-index: 1; }
 .outil__numero { margin: 0; font-weight: 900; font-size: 15px; letter-spacing: 0.04em; color: var(--vermillon); }
 .outils .outil__nom { color: var(--encre); }
 .outil__texte { margin: 0; font-size: 17px; line-height: 27px; color: var(--gris-chaud); }

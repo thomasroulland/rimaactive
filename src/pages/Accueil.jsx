@@ -106,10 +106,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <BoiteOutils formats={FORMATS}>
-        {/* Texte à venir : Marie l'envoie */}
-        <p className="texte"><mark className="a-completer">[Texte à venir]</mark></p>
-      </BoiteOutils>
+      <BoiteOutils formats={FORMATS} />
 
       <section className="section ecran-plein" aria-labelledby="zone-titre">
         <div className="conteneur zone">
