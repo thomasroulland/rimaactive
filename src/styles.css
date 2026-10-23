@@ -913,42 +913,14 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .pied__bas { margin-top: clamp(24px, calc(var(--ecran) * 0.04), 40px); padding-top: 16px; }
 }
 
-/* Le bloc « Contactez-moi » et le pied de page partagent la même grille de 4 colonnes :
-   le bouton s'aligne sur la colonne « Contact », la dernière colonne se cale sur la marge de droite */
+/* Ordinateur : le bloc « Contactez-moi » et le pied de page sont centrés, en une seule colonne */
 @media (min-width: 900px) {
-  .appel, .pied { --colonnes-pied: 1.2fr 0.9fr 1.3fr 125px; }
-  .appel__ligne { display: grid; grid-template-columns: var(--colonnes-pied); column-gap: 48px; align-items: center; }
-  .appel__ligne .titre { grid-column: 1 / 3; }
-  .appel__ligne .bouton { grid-column: 3; justify-self: start; }
-  .pied__haut { grid-template-columns: var(--colonnes-pied); column-gap: 48px; }
-}
-
-/* ---------- Essais du bloc noir (?pied=1, 2, 3) ---------- */
-.pied__logo-bas { display: none; }
-@media (min-width: 900px) {
-  /* 1 : tout centré, en une colonne */
-  .appel--1 .conteneur, .appel--1 .appel__ligne { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 24px; }
-  .appel--1 .surtitre { margin: 0; }
-  .pied--1 .pied__haut { display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
-  .pied--1 .pied__colonne { align-items: center; }
-  .pied--1 .pied__colonne .mention { display: none; }
-  .pied--1 nav.pied__colonne { flex-direction: row; gap: 28px; }
-  .pied--1 .pied__colonne:nth-child(3), .pied--1 .pied__colonne:nth-child(4) { flex-direction: row; gap: 28px; }
-  .pied--1 .pied__bas { justify-content: center; gap: 8px 32px; }
-
-  /* 2 : le bouton suit le titre ; pied de page compact sur une ligne, logo à gauche */
-  .appel--2 .appel__ligne { display: flex; justify-content: flex-start; gap: 48px; }
-  .pied--2 .pied__haut { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; }
-  .pied--2 .pied__colonne .mention { margin-bottom: 10px; }
-  .pied--2 nav.pied__colonne { display: grid; grid-template-columns: auto auto; column-gap: 32px; }
-  .pied--2 nav.pied__colonne .mention { grid-column: 1 / -1; }
-
-  /* 3 : bandeau d'appel dans un encart craie, puis pied de page sur 4 colonnes égales */
-  .appel--3 { padding-bottom: 24px; }
-  .appel--3 .conteneur { background: var(--craie); color: var(--encre); border-radius: var(--arrondi-grand); padding: 32px 40px; }
-  .appel--3 .titre { color: var(--encre); }
-  .appel--3 .surtitre { color: var(--gris-chaud); }
-  .appel--3 .appel__ligne { display: flex; justify-content: space-between; align-items: center; }
-  .appel--3 .bouton--principal:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
-  .pied--3 .pied__haut { border-top: 0; grid-template-columns: repeat(4, 1fr); }
+  .appel .conteneur, .appel__ligne { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+  .appel__ligne { gap: 24px; }
+  .appel .surtitre { margin: 0; }
+  .pied__haut { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding-top: clamp(24px, calc(var(--ecran) * 0.04), 40px); }
+  .pied__colonne { align-items: center; }
+  .pied__colonne .mention { display: none; }
+  nav.pied__colonne, .pied__colonne:nth-child(4) { flex-direction: row; gap: 28px; }
+  .pied__bas { justify-content: center; gap: 8px 32px; }
 }

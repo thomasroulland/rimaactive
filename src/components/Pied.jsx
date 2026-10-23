@@ -4,7 +4,7 @@ import { PAGES, CONTACT, RESEAUX } from './liens.js'
 
 export default function Pied() {
   return (
-    <footer className={`pied sur-encre pied--${new URLSearchParams(window.location.search).get('pied') || '0'}`}>
+    <footer className="pied sur-encre">
       <div className="conteneur">
         <div className="pied__haut">
           <div className="pied__colonne">
@@ -31,7 +31,6 @@ export default function Pied() {
           </div>
         </div>
         <div className="pied__bas">
-          <img className="pied__logo-bas" src={logoCraie} alt="" width="120" height="24" />
           <span>© {new Date().getFullYear()} Rimaactive</span>
           <nav aria-label="Informations légales">
             <Link to="/mentions-legales">Mentions légales</Link>
