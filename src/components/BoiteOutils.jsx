@@ -8,6 +8,7 @@ export default function BoiteOutils({ formats }) {
   const [actif, setActif] = useState(0)
   const glisse = useRef(null)
   const n = formats.length
+  const curseur = Number(new URLSearchParams(window.location.search).get('curseur')) || 0
   const aller = (i) => setActif(((i % n) + n) % n)
 
   // Écart d'une carte à la carte active, ramené entre -n/2 et n/2 : c'est ce qui fait boucler le carrousel
@@ -81,6 +82,34 @@ export default function BoiteOutils({ formats }) {
         <button type="button" className="outils__fleche outils__fleche--precedent" onClick={() => aller(actif - 1)} aria-label="Format précédent">
           <Fleche />
         </button>
+        {/* Essai : ?curseur=1 ronds, 2 noms des formats, 3 compteur et barre segmentée ; sans paramètre : curseur */}
+        {curseur === 1 && (
+          <div className="outils__ronds" role="tablist" aria-label="Choisir un format">
+            {formats.map((format, i) => (
+              <button key={format.nom} type="button" role="tab" aria-selected={i === actif} aria-label={format.nom}
+                className={i === actif ? 'rma-actif' : ''} onClick={() => aller(i)} />
+            ))}
+          </div>
+        )}
+        {curseur === 2 && (
+          <div className="outils__noms" role="tablist" aria-label="Choisir un format">
+            {formats.map((format, i) => (
+              <button key={format.nom} type="button" role="tab" aria-selected={i === actif}
+                className={i === actif ? 'rma-actif' : ''} onClick={() => aller(i)}>{format.nom}</button>
+            ))}
+          </div>
+        )}
+        {curseur === 3 && (
+          <div className="outils__compteur">
+            <span className="outils__numero"><b>{String(actif + 1).padStart(2, '0')}</b> / {String(n).padStart(2, '0')}</span>
+            <div className="outils__segments">
+              {formats.map((format, i) => (
+                <button key={format.nom} type="button" aria-label={format.nom} className={i <= actif ? 'rma-actif' : ''} onClick={() => aller(i)} />
+              ))}
+            </div>
+          </div>
+        )}
+        {!curseur && (
         <input
           type="range"
           className="outils__curseur"
@@ -93,6 +122,7 @@ export default function BoiteOutils({ formats }) {
           aria-valuetext={formats[actif].nom}
           style={{ '--progression': `${(actif / (n - 1)) * 100}%` }}
         />
+        )}
         <button type="button" className="outils__fleche" onClick={() => aller(actif + 1)} aria-label="Format suivant">
           <Fleche />
         </button>

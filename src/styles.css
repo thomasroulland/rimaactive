@@ -679,6 +679,20 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 }
 .outils__curseur::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--jaune); border: 0; }
 .outils__curseur::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--jaune); border: 0; }
+/* Essais de commandes */
+.outils__ronds { display: flex; gap: 14px; }
+.outils__ronds button { width: 18px; height: 18px; padding: 0; border-radius: 50%; border: 3px solid var(--craie); background: transparent; cursor: pointer; }
+.outils__ronds button.rma-actif { background: var(--jaune); border-color: var(--jaune); }
+.outils__noms { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 760px; }
+.outils__noms button { padding: 8px 16px; border-radius: 999px; border: 1.5px solid rgba(244, 243, 239, 0.4); background: transparent; color: var(--craie); font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; transition: background-color var(--duree) ease, color var(--duree) ease; }
+.outils__noms button:hover { border-color: var(--craie); }
+.outils__noms button.rma-actif { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
+.outils__compteur { display: flex; align-items: center; gap: 20px; width: min(420px, 55vw); }
+.outils__numero { flex: none; font-weight: 600; font-size: 16px; color: rgba(244, 243, 239, 0.6); font-variant-numeric: tabular-nums; }
+.outils__numero b { font-weight: 900; font-size: 22px; color: var(--craie); }
+.outils__segments { flex: 1; display: flex; gap: 6px; }
+.outils__segments button { flex: 1; height: 4px; padding: 0; border: 0; border-radius: 999px; background: rgba(244, 243, 239, 0.25); cursor: pointer; transition: background-color 0.3s ease; }
+.outils__segments button.rma-actif { background: var(--jaune); }
 .visuellement-cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .outil { transition: none; } }
 /* Téléphone : les cartes voisines dépassent un peu sur les côtés */
