@@ -8,19 +8,37 @@ import { Fleche } from '../components/Entete.jsx'
 import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Textes à compléter par Marie pour les formats suivants
-const A_COMPLETER = { texte: '[Phrase d’explication à rédiger]', objectifs: ['[Objectif 1]', '[Objectif 2]'] }
 const FORMATS = [
   {
     nom: 'Density Training',
-    texte: 'Une séance à effectuer dans un temps donné en réduisant la durée ou en augmentant le volume au fil des semaines.',
-    objectifs: ['Prise de masse', 'Force fonctionnelle'],
+    texte: 'Une séance dans un temps donné à densifier au fil des semaines pour progresser de façon mesurable.',
+    objectifs: ['Prise de masse', 'Force'],
   },
-  { nom: 'Circuit Training', ...A_COMPLETER },
-  { nom: 'EMOM', ...A_COMPLETER },
-  { nom: 'AMRAP', ...A_COMPLETER },
-  { nom: 'Complex', ...A_COMPLETER },
-  { nom: 'Balistique', ...A_COMPLETER },
+  {
+    nom: 'Circuit training',
+    texte: 'Des enchaînements d’exercices qui sollicitent tout le corps pour améliorer votre endurance globale.',
+    objectifs: ['Dépense énergétique', 'Condition physique'],
+  },
+  {
+    nom: 'EMOM',
+    texte: 'Un départ toutes les minutes pour densifier votre séance et apprendre à gérer l’effort face à la fatigue.',
+    objectifs: ['Endurance de force', 'Mental'],
+  },
+  {
+    nom: 'AMRAP',
+    texte: 'Un maximum de tours sur un temps donné pour tester votre mental et apprendre à gérer votre rythme.',
+    objectifs: ['Dépassement de soi', 'Cardio'],
+  },
+  {
+    nom: 'Complex',
+    texte: 'Des combinaisons d’exercices enchaînés avec le même outil pour renforcer votre coordination.',
+    objectifs: ['Puissance', 'Coordination'],
+  },
+  {
+    nom: 'Balistique',
+    texte: 'Des mouvements explosifs pour développer votre vitesse et votre réactivité.',
+    objectifs: ['Performance', 'Vitesse'],
+  },
 ]
 
 const SERVICES = [
