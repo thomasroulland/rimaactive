@@ -118,7 +118,7 @@ a:hover { color: var(--gris-chaud); }
 }
 .mention { margin: 0; }
 /* site-texte : 18 / 29, texte secondaire */
-.texte { margin: 0; max-width: 65ch; font-size: 17px; line-height: 28px; color: var(--gris-chaud); }
+.texte { margin: 0; max-width: 65ch; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
 .texte--grand { font-size: 18px; line-height: 28px; }
 .texte + .texte { margin-top: 16px; }
 .provisoire { color: var(--gris-chaud); font-style: normal; }
@@ -471,8 +471,8 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .faits > div { display: flex; align-items: flex-start; gap: 16px; padding: 12px 0; border-top: 1px solid var(--filet); }
 .faits > div:last-child { border-bottom: 1px solid var(--filet); }
 .faits .picto { flex: none; width: 24px; height: 24px; margin-top: 1px; color: var(--encre); }
-.faits dt { font-weight: 700; font-size: 17px; line-height: 26px; color: var(--encre); }
-.faits dd { margin: 0; font-size: 17px; line-height: 28px; color: var(--gris-chaud); }
+.faits dt { font-weight: 700; font-size: 16px; line-height: 24px; color: var(--encre); }
+.faits dd { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
 .faits dd.provisoire { color: var(--gris-chaud); }
 
 /* ---------- Photo (emplacement) ---------- */
@@ -595,8 +595,8 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .service__corps { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: clamp(20px, calc(1.7 * var(--vw)), 26px); }
 .service__lien { margin-top: 0; }
 .service .texte {
-  font-size: 17px;
-  line-height: 28px;
+  font-size: 16px;
+  line-height: 26px;
   color: var(--gris-chaud);
   /* jamais plus de 3 lignes */
   display: -webkit-box;
@@ -658,7 +658,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 .outil--actif { transform: translateX(0); filter: none; opacity: 1; cursor: auto; z-index: 1; }
 .outil__numero { margin: 0; font-weight: 900; font-size: 15px; letter-spacing: 0.04em; color: var(--vermillon); }
 .outils .outil__nom { color: var(--encre); }
-.outil__texte { margin: 0; font-size: 17px; line-height: 28px; color: var(--gris-chaud); }
+.outil__texte { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
 .outil__objectifs { margin: auto 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
 .outil__objectifs li { padding: 8px 16px; border-radius: 999px; background: var(--jaune); color: var(--encre); font-weight: 700; font-size: 15px; }
 
@@ -925,9 +925,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .pied__bas { justify-content: center; gap: 8px 32px; }
 }
 
-/* Écrans d'ordinateur étroits (portables 13-14") : les cartes « Mon accompagnement » sont moins larges,
-   le texte peut prendre une 4e ligne plutôt que d'être coupé */
+/* Petits portables : la photo des cartes « Mon accompagnement » se réduit un peu pour que la rubrique tienne dans un écran */
 @media (min-width: 900px) and (max-width: 1399px) {
-  .service .texte { -webkit-line-clamp: 4; }
-  .services__liste > li { height: calc(var(--ecran) * 0.22 + 268px); }
+  .services__liste > li { height: calc(var(--ecran) * 0.22 + 265px); }
 }
