@@ -935,10 +935,10 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .service-page__haut .titre--section { margin: 0; }
 .service-page__vecu-titre { margin: clamp(32px, calc(var(--ecran) * 0.07), 64px) 0 24px; }
 .service-page__haut .tuile--compacte { min-height: 0; padding: 28px; }
-.formules-page__note { margin: 24px 0 0; color: var(--gris-chaud); }
-.formules { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 16px; }
+.formules-page__note { margin: 20px 0 0; color: var(--gris-chaud); }
+.formules { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 16px; }
 .formule__prix { margin: 0; font-weight: 900; font-size: 32px; line-height: 32px; letter-spacing: -0.04em; }
-.formule__points { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.formule__points { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .formule__points li { display: flex; gap: 10px; align-items: flex-start; }
 .formule__points .picto { flex: none; margin-top: 3px; }
 .formule__etiquette {
@@ -964,25 +964,63 @@ textarea.champ { resize: vertical; min-height: 140px; }
   flex-direction: column;
   gap: 12px;
 }
-.formule__pied { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 12px; padding-top: 20px; border-top: 1px solid var(--filet); }
+.formule__pied { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--filet); }
 .formule--avant .formule__pied { border-top-color: rgba(22, 21, 20, 0.2); }
 .formules--cartes .formule--avant { background: var(--jaune); transform: scale(1.04); }
 .formules--cartes .formule--avant .surtitre { color: var(--encre); }
 
-/* 2 : cartes photo, l'étiquette posée sur la photo */
-.formules--photo { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
-.formules--photo .formule { position: relative; display: flex; flex-direction: column; gap: 12px; }
-.formules--photo .formule__photo { aspect-ratio: 2 / 1; height: auto; margin-bottom: 0; }
-.formules--photo .formule__etiquette { position: absolute; top: 16px; left: 16px; background: var(--jaune); color: var(--encre); }
-.formules--photo .texte { margin: 0; }
-.formules--photo .formule__prix { font-size: 24px; line-height: 24px; }
-
-/* 3 : liste façon carnet, une ligne par formule entre deux filets */
-.formules--liste { gap: 0; border-top: 1px solid var(--filet); }
-.formules--liste .formule { display: grid; gap: 16px 32px; padding: 24px 0; border-bottom: 1px solid var(--filet); align-items: center; }
-.formules--liste .formule__numero { font-weight: 900; font-size: 32px; color: var(--vermillon); }
-.formules--liste .texte { margin: 8px 0 0; }
-@media (min-width: 900px) {
-  .formules--liste .formule { grid-template-columns: 64px 1.3fr 1.2fr auto auto; }
+/* 2 : choix « À la séance / Carnet de séances » à droite du titre */
+.formules-page__entete { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
+.bascule { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--fond-carte); border: 1px solid var(--filet); }
+.bascule button {
+  min-height: 42px;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gris-chaud);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
 }
-.formules--liste .formule__points { grid-template-columns: repeat(auto-fit, minmax(120px, max-content)); gap: 6px 24px; }
+.bascule button[aria-pressed="true"] { background: var(--encre); color: var(--craie); }
+
+/* 3 : les étapes pour démarrer à gauche, les cartes à droite */
+.formules-page__etapes { display: grid; gap: 40px 48px; align-items: center; }
+@media (min-width: 900px) { .formules-page__etapes { grid-template-columns: minmax(260px, 0.8fr) 2.2fr; } }
+.formules-page__etapes .formules { margin: 0; }
+.formules-page__etapes .formules--cartes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.formules-page__etapes .formule { padding: 24px; }
+.formules-page__etapes .formule__pied { flex-wrap: wrap; }
+.etapes { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 20px; }
+.etapes li { display: flex; gap: 16px; }
+.etapes__numero {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--vermillon);
+  color: #fff;
+  font-weight: 900;
+}
+.etapes h3 { margin: 4px 0 4px; font-size: 18px; font-weight: 700; }
+.etapes .texte { margin: 0; }
+
+/* 4 : ce qui est inclus dans toutes les formules, sur une ligne sous les cartes */
+.inclus { margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 40px; padding-top: 16px; border-top: 1px solid var(--filet); }
+.inclus .surtitre { margin: 0; }
+.inclus ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px 40px; }
+.inclus li { display: flex; align-items: center; gap: 10px; }
+
+/* 5 : la rubrique passe sur fond encre, les cartes restent claires */
+.formules-page--encre { background: var(--encre); color: var(--craie); }
+.formules-page--encre .formule { color: var(--encre); }
+.formules-page--encre .formule:not(.formule--avant) { background: var(--craie); }
+.formules-page--encre .formules-page__note { color: rgba(244, 243, 239, 0.7); }
+/* Petits écrans d'ordinateur : les cartes se resserrent pour que la rubrique tienne sur un écran */
+@media (min-width: 900px) and (max-height: 640px) {
+  .formules--cartes .formule { padding-block: 20px; gap: 8px; }
+}
