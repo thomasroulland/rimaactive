@@ -34,12 +34,12 @@
   font-style: normal;
   font-display: swap;
 }
-/* Fraunces italique, réglage « Soft » : réservée à l'accroche sous le titre d'accueil */
+/* Fraunces, réglage « Soft » (droite) : réservée à l'accroche sous le titre d'accueil */
 @font-face {
   font-family: "Fraunces";
-  src: url("/fonts/Fraunces-Soft-Italic-Variable.woff2") format("woff2");
+  src: url("/fonts/Fraunces-Soft-Variable.woff2") format("woff2");
   font-weight: 100 900;
-  font-style: italic;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -96,11 +96,11 @@ a:hover { color: var(--gris-chaud); }
   .titre--accueil, .titre--section, .titre--page { font-size: 36px; line-height: 38px; }
 }
 
-/* site-accroche : Fraunces italique, seulement sous le titre d'accueil */
+/* site-accroche : Fraunces droite, seulement sous le titre d'accueil */
 .accroche {
   margin: 0;
   font-family: var(--font-serif);
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   font-size: 22px;
   line-height: 30px;
@@ -118,7 +118,7 @@ a:hover { color: var(--gris-chaud); }
 }
 .mention { margin: 0; }
 /* site-texte : 18 / 29, texte secondaire */
-.texte { margin: 0; max-width: 65ch; font-size: 18px; line-height: 29px; color: var(--gris-chaud); }
+.texte { margin: 0; max-width: 65ch; font-size: 17px; line-height: 28px; color: var(--gris-chaud); }
 .texte--grand { font-size: 18px; line-height: 28px; }
 .texte + .texte { margin-top: 16px; }
 .provisoire { color: var(--gris-chaud); font-style: normal; }
@@ -195,7 +195,7 @@ main > section:nth-of-type(even):not(.appel) {
 .bouton--principal { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
 .bouton--principal:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
 /* secondaire : contour et texte encre */
-.bouton--secondaire { background: var(--craie); color: var(--encre); border-color: var(--encre); font-weight: 700; }
+.bouton--secondaire { background: var(--craie); color: var(--encre); border-color: var(--encre); }
 .bouton--secondaire:hover { background: var(--encre); color: var(--craie); }
 /* clair : craie, sur une photo ou un fond encre */
 .bouton--clair { background: var(--craie); border-color: var(--craie); color: var(--encre); }
@@ -471,8 +471,8 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .faits > div { display: flex; align-items: flex-start; gap: 16px; padding: 12px 0; border-top: 1px solid var(--filet); }
 .faits > div:last-child { border-bottom: 1px solid var(--filet); }
 .faits .picto { flex: none; width: 24px; height: 24px; margin-top: 1px; color: var(--encre); }
-.faits dt { font-weight: 700; font-size: 16px; line-height: 24px; color: var(--encre); }
-.faits dd { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
+.faits dt { font-weight: 700; font-size: 17px; line-height: 26px; color: var(--encre); }
+.faits dd { margin: 0; font-size: 17px; line-height: 28px; color: var(--gris-chaud); }
 .faits dd.provisoire { color: var(--gris-chaud); }
 
 /* ---------- Photo (emplacement) ---------- */
@@ -592,11 +592,11 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   .service .photo.service__photo { aspect-ratio: auto; height: auto; flex: 1 1 0; min-height: 110px; }
   .service__corps { flex: none; }
 }
-.service__corps { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 26px; }
+.service__corps { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: clamp(20px, calc(1.7 * var(--vw)), 26px); }
 .service__lien { margin-top: 0; }
 .service .texte {
-  font-size: 16px;
-  line-height: 26px;
+  font-size: 17px;
+  line-height: 28px;
   color: var(--gris-chaud);
   /* jamais plus de 3 lignes */
   display: -webkit-box;
@@ -658,7 +658,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 .outil--actif { transform: translateX(0); filter: none; opacity: 1; cursor: auto; z-index: 1; }
 .outil__numero { margin: 0; font-weight: 900; font-size: 15px; letter-spacing: 0.04em; color: var(--vermillon); }
 .outils .outil__nom { color: var(--encre); }
-.outil__texte { margin: 0; font-size: 17px; line-height: 27px; color: var(--gris-chaud); }
+.outil__texte { margin: 0; font-size: 17px; line-height: 28px; color: var(--gris-chaud); }
 .outil__objectifs { margin: auto 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
 .outil__objectifs li { padding: 8px 16px; border-radius: 999px; background: var(--jaune); color: var(--encre); font-weight: 700; font-size: 15px; }
 
@@ -923,4 +923,11 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .pied__colonne .mention { display: none; }
   nav.pied__colonne, .pied__colonne:nth-child(4) { flex-direction: row; gap: 28px; }
   .pied__bas { justify-content: center; gap: 8px 32px; }
+}
+
+/* Écrans d'ordinateur étroits (portables 13-14") : les cartes « Mon accompagnement » sont moins larges,
+   le texte peut prendre une 4e ligne plutôt que d'être coupé */
+@media (min-width: 900px) and (max-width: 1399px) {
+  .service .texte { -webkit-line-clamp: 4; }
+  .services__liste > li { height: calc(var(--ecran) * 0.22 + 268px); }
 }

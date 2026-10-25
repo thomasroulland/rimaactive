@@ -140,7 +140,7 @@ export default function Accueil() {
                 ['Où', 'Dans un rayon de 20\u00a0km autour de Houdan (78)', 'map-pin'],
                 ['Lieux', 'Dans vos locaux, en extérieur ou à domicile', 'buildings'],
                 ['Durée', 'De 30 à 60\u00a0min', 'clock'],
-                ['Tarifs', 'Définis à l’issue d’un premier échange, selon le lieu et la formule choisie', 'check-square'],
+                ['Tarifs', 'Définis à l’issue d’un premier échange, selon le lieu et la formule', 'check-square'],
               ]}
             />
           </div>
