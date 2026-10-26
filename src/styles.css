@@ -346,10 +346,12 @@ main > section:nth-of-type(even):not(.appel) {
   overflow: hidden;
 }
 .heros__photo {
-  /* toute la hauteur de la photo, calée à droite : le disque n'est jamais coupé */
+  /* toute la hauteur de la photo, calée à droite : le disque n'est jamais coupé.
+     Elle dépasse un peu à droite (seuls les montants du rack sortent du cadre) : depuis que l'en-tête
+     est plus bas, la photo est plus haute, donc plus large, et sans ce décalage elle passerait sous le texte */
   position: absolute;
   top: 0;
-  right: 0;
+  right: -55px;
   height: 100%;
   width: auto;
   max-width: none;
@@ -405,7 +407,7 @@ main > section:nth-of-type(even):not(.appel) {
 /* Téléphone : la photo couvre tout le fond, plus discrète ; le bandeau passe sur trois lignes */
 @media (max-width: 699px) {
   .heros::before { background: linear-gradient(180deg, rgba(22, 21, 20, 0.45), var(--voile-encre) 55%); }
-  .heros__photo { width: 100%; object-fit: cover; object-position: 42% 20%; -webkit-mask-image: none; mask-image: none; }
+  .heros__photo { right: 0; width: 100%; object-fit: cover; object-position: 42% 20%; -webkit-mask-image: none; mask-image: none; }
   .heros__bandeau { flex-direction: column; align-items: center; }
 }
 
