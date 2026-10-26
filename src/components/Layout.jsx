@@ -30,7 +30,7 @@ export default function Layout() {
     return () => observateur.disconnect()
   }, [pathname])
 
-  // Les photos des rubriques glissent et se redressent un peu pendant le défilement
+  // Les photos des rubriques glissent un peu pendant le défilement
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const photos = [...document.querySelectorAll('.deux-colonnes > .photo')]
@@ -46,7 +46,6 @@ export default function Layout() {
       })
       photos.forEach((photo, i) => {
         photo.style.setProperty('--glisse', `${(positions[i] * -40).toFixed(1)}px`)
-        photo.style.setProperty('--tourne', `${(positions[i] * 1.5).toFixed(2)}deg`)
       })
     }
     const auDefilement = () => { if (!image) image = requestAnimationFrame(suivre) }
