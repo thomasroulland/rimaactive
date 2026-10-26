@@ -954,7 +954,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 }
 .formule .titre--tuile, .formule .surtitre { margin: 0; }
 
-/* 1 : cartes tarifaires ; la formule mise en avant est jaune et dépasse un peu */
+/* Cartes tarifaires ; la formule mise en avant est jaune et dépasse un peu */
 .formules--cartes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); align-items: center; }
 .formules--cartes .formule {
   background: var(--fond-carte);
@@ -969,58 +969,14 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .formules--cartes .formule--avant { background: var(--jaune); transform: scale(1.04); }
 .formules--cartes .formule--avant .surtitre { color: var(--encre); }
 
-/* 2 : choix « À la séance / Carnet de séances » à droite du titre */
-.formules-page__entete { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
-.bascule { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--fond-carte); border: 1px solid var(--filet); }
-.bascule button {
-  min-height: 42px;
-  padding: 8px 20px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--gris-chaud);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.bascule button[aria-pressed="true"] { background: var(--encre); color: var(--craie); }
-
-/* 3 : les étapes pour démarrer à gauche, les cartes à droite */
-.formules-page__etapes { display: grid; gap: 40px 48px; align-items: center; }
-@media (min-width: 900px) { .formules-page__etapes { grid-template-columns: minmax(260px, 0.8fr) 2.2fr; } }
-.formules-page__etapes .formules { margin: 0; }
-.formules-page__etapes .formules--cartes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
-.formules-page__etapes .formule { padding: 24px; }
-.formules-page__etapes .formule__pied { flex-wrap: wrap; }
-.etapes { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 20px; }
-.etapes li { display: flex; gap: 16px; }
-.etapes__numero {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--vermillon);
-  color: #fff;
-  font-weight: 900;
-}
-.etapes h3 { margin: 4px 0 4px; font-size: 18px; font-weight: 700; }
-.etapes .texte { margin: 0; }
-
-/* 4 : ce qui est inclus dans toutes les formules, sur une ligne sous les cartes */
-.inclus { margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 40px; padding-top: 16px; border-top: 1px solid var(--filet); }
-.inclus .surtitre { margin: 0; }
-.inclus ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px 40px; }
-.inclus li { display: flex; align-items: center; gap: 10px; }
-
-/* 5 : la rubrique passe sur fond encre, les cartes restent claires */
-.formules-page--encre { background: var(--encre); color: var(--craie); }
-.formules-page--encre .formule { color: var(--encre); }
-.formules-page--encre .formule:not(.formule--avant) { background: var(--craie); }
-.formules-page--encre .formules-page__note { color: rgba(244, 243, 239, 0.7); }
+/* La rubrique est sur fond encre, les cartes restent claires */
+.formules-page { background: var(--encre); color: var(--craie); }
+.formules-page .formule { color: var(--encre); }
+.formules-page .formule:not(.formule--avant) { background: var(--craie); }
+.formules-page .formules-page__note { color: rgba(244, 243, 239, 0.7); }
 /* Petits écrans d'ordinateur : les cartes se resserrent pour que la rubrique tienne sur un écran */
 @media (min-width: 900px) and (max-height: 640px) {
   .formules--cartes .formule { padding-block: 20px; gap: 8px; }
 }
+/* Téléphone : les cartes sont empilées, la formule mise en avant ne dépasse pas sur les côtés */
+@media (max-width: 899px) { .formules--cartes .formule--avant { transform: none; } }
