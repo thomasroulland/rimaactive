@@ -21,7 +21,7 @@ function useTrait(navRef) {
         actif && actif.offsetWidth
           ? {
               left: actif.offsetLeft,
-              top: actif.offsetTop + actif.offsetHeight - 5,
+              top: actif.offsetTop + actif.offsetHeight - 8,
               width: actif.offsetWidth,
               anime: avant !== null,
             }

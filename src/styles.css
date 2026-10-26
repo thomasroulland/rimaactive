@@ -562,7 +562,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   .zone__texte .faits > div { padding: 9px 0; }
 }
 
-/* ---------- Mon accompagnement : trois cartes photo, qui se soulèvent au survol ---------- */
+/* ---------- Mon accompagnement : trois cartes photo, qui passent en jaune au survol ---------- */
 .services .titre--section { margin-bottom: 22px; }
 .services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
 @media (min-width: 900px) { .services__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
@@ -576,11 +576,12 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   overflow: hidden;
   color: var(--encre);
   text-decoration: none;
-  box-shadow: 0 1px 0 var(--filet);
-  transition: transform var(--duree) ease, box-shadow var(--duree) ease;
+  transition: background-color var(--duree) ease;
 }
-@media (hover: hover) { .service:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -20px rgba(22, 21, 20, 0.35); } }
-.service:focus-visible { transform: translateY(-4px); box-shadow: 0 20px 40px -20px rgba(22, 21, 20, 0.35); }
+@media (hover: hover) { .service:hover { background: var(--jaune); color: var(--encre); } }
+.service:focus-visible { background: var(--jaune); }
+@media (hover: hover) { .service:hover .texte { color: var(--encre); } }
+.service:focus-visible .texte { color: var(--encre); }
 .service .photo.service__photo { aspect-ratio: 16 / 10; border-radius: 0; background: var(--craie-fonce); }
 /* Ordinateur : toutes les cartes ont la même hauteur ; la photo prend la place que le texte (3 lignes au plus) laisse */
 @media (min-width: 900px) {
