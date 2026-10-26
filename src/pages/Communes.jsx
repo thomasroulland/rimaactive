@@ -11,23 +11,24 @@ const PAGE = {
     ['[Situation 3]', '[Texte à rédiger]'],
   ],
   photoSession: 'Séance en groupe, en extérieur',
-  session: [['Lieu', null, 'map-pin'], ['Durée', 'De 30 à 60\u00a0min', 'timer'], ['Matériel apporté', null, 'kettlebell'], ['Déroulé', null, 'check-square']],
-  formules: [
-    {
-      nom: '[Formule 1]',
-      surtitre: 'La mairie finance les séances',
-      texte: 'La mairie finance les séances et les ouvre aux habitants.',
-      prix: '[Prix]',
-      points: ['[Point 1]', '[Point 2]', '[Point 3]'],
-    },
-    {
-      nom: '[Formule 2]',
-      surtitre: 'Séances ouvertes',
-      texte: 'J’organise des séances ouvertes, la mairie prête le lieu et les habitants paient leur place.',
-      prix: '[Prix]',
-      points: ['[Point 1]', '[Point 2]', '[Point 3]'],
-    },
-  ],
+  session: [['Lieu', null, 'map-pin'], ['Durée', '60\u00a0min', 'timer'], ['Matériel apporté', null, 'kettlebell'], ['Déroulé', null, 'check-square']],
+  tarifs: {
+    cartes: [
+      {
+        nom: 'Active Duo',
+        details: [['Durée', '60\u00a0min'], ['Participants', '2'], ['Lieu', 'À domicile ou en extérieur']],
+        prix: { montant: '80\u00a0€', apres: 'la séance' },
+        autresPrix: ['300\u00a0€ par mois (4 séances)', '540\u00a0€ par mois (8 séances)'],
+      },
+      {
+        nom: 'Active Group',
+        details: [['Durée', '60\u00a0min'], ['Participants', '4 à 10'], ['Lieu', 'En extérieur']],
+        prix: { montant: '14\u00a0€', apres: 'par personne' },
+        autresPrix: ['12\u00a0€ par personne dès 7 inscrits'],
+      },
+    ],
+    notes: ['Séance Active Group maintenue à partir de 4 inscrits. Trajet compris jusqu’à 10\u00a0km autour de Houdan.'],
+  },
   faq: [
     ['Pourquoi me faire confiance ?', '[Réponse à rédiger]'],
     ['[Question 2 à rédiger]', '[Réponse à rédiger]'],

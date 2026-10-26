@@ -11,24 +11,30 @@ const PAGE = {
     ['[Situation 3]', '[Texte à rédiger]'],
   ],
   photoSession: 'Séance en entreprise',
-  session: [['Lieu', null, 'map-pin'], ['Espace', null, 'buildings'], ['Durée', 'De 30 à 60\u00a0min', 'timer'], ['Nombre de personnes', null, 'check-square']],
-  formules: [
-    {
-      nom: 'Séances régulières',
-      surtitre: 'Chaque semaine',
-      texte: '[Description à rédiger]',
-      prix: '[Prix]',
-      points: ['[Point 1]', '[Point 2]', '[Point 3]'],
-    },
-    {
-      nom: 'Séminaire ponctuel',
-      surtitre: 'Le temps d’un événement',
-      texte: '[Description à rédiger]',
-      prix: '[Prix]',
-      points: ['[Point 1]', '[Point 2]', '[Point 3]'],
-      etiquette: '[Étiquette, ex. le plus choisi]',
-    },
-  ],
+  session: [['Lieu', null, 'map-pin'], ['Espace', null, 'buildings'], ['Durée', '30 ou 60\u00a0min', 'timer'], ['Nombre de personnes', 'De 4 à 16', 'check-square']],
+  tarifs: {
+    cartes: [
+      {
+        nom: 'Active 30',
+        details: [['Durée', '30\u00a0min'], ['Participants', '4 à 12'], ['Fréquence', 'Ponctuelle ou chaque semaine']],
+        prix: { avant: 'À partir de ', montant: '80\u00a0€' },
+      },
+      {
+        nom: 'Active 60',
+        details: [['Durée', '60\u00a0min'], ['Participants', '4 à 12'], ['Fréquence', 'Chaque semaine, par trimestre']],
+        prix: { avant: 'À partir de ', montant: '110\u00a0€' },
+      },
+      {
+        nom: 'Active Day',
+        details: [['Durée', '60\u00a0min'], ['Participants', 'Jusqu’à 16'], ['Fréquence', 'Ponctuelle']],
+        prix: { avant: 'À partir de ', montant: '180\u00a0€' },
+      },
+    ],
+    notes: [
+      'Tarif selon le nombre de participants et la fréquence. Devis gratuit sous 48\u00a0h.',
+      'TVA non applicable, art. 293\u00a0B du CGI.',
+    ],
+  },
   faq: [
     ['Pourquoi me faire confiance ?', '[Réponse à rédiger]'],
     ['[Question 2 à rédiger]', '[Réponse à rédiger]'],

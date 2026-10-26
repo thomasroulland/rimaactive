@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo, Tuile } from './Blocs.jsx'
 import Picto from './Picto.jsx'
@@ -42,7 +43,7 @@ export default function PageService({ page }) {
         </div>
       </section>
 
-      <RubriqueFormules formules={page.formules} />
+      <RubriqueFormules tarifs={page.tarifs} />
 
       <section className="section ecran-plein" aria-labelledby="faq-titre">
         <div className="conteneur deux-colonnes" style={{ alignItems: 'start' }}>
@@ -61,29 +62,69 @@ export default function PageService({ page }) {
   )
 }
 
-// Rubrique « Formules » sur fond encre : les cartes restent claires, la formule mise en avant en jaune
-function RubriqueFormules({ formules }) {
+// Rubrique « Formules » sur fond encre : les cartes restent claires.
+// tarifs.onglets : plusieurs jeux de cartes (À domicile, En salle, En ligne…) ; sinon tarifs.cartes
+function RubriqueFormules({ tarifs }) {
+  const [actif, setActif] = useState(0)
+  const onglets = tarifs.onglets ?? [{ cartes: tarifs.cartes, notes: [] }]
+  const onglet = onglets[actif]
   return (
     <section className="section ecran-plein formules-page sur-encre" aria-labelledby="formules-titre">
       <div className="conteneur">
-        <h2 id="formules-titre" className="titre titre--section">Formules</h2>
+        <div className="formules-page__entete">
+          <h2 id="formules-titre" className="titre titre--section">Formules</h2>
+          {tarifs.onglets && (
+            <div className="bascule" role="tablist" aria-label="Choisir la formule">
+              {onglets.map((o, i) => (
+                <button key={o.nom} type="button" role="tab" aria-selected={i === actif} onClick={() => setActif(i)}>
+                  {o.nom}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        {onglet.intro && <p className="mention formules-page__intro">{onglet.intro}</p>}
         <ul className="formules formules--cartes">
-          {formules.map((f) => (
-            <li key={f.nom} className={`formule ${f.etiquette ? 'formule--avant' : ''}`}>
-              {f.etiquette && <span className="formule__etiquette">{f.etiquette}</span>}
-              <p className="surtitre">{f.surtitre}</p>
+          {onglet.cartes.map((f) => (
+            <li key={f.nom} className="formule">
               <h3 className="titre titre--tuile">{f.nom}</h3>
-              <ul className="formule__points">
-                {f.points.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
-              </ul>
+              {f.pourQui && <p className="formule__pour-qui">{f.pourQui}</p>}
+              <dl className="formule__details">
+                {f.details.map(([terme, valeur]) => (
+                  <div key={terme}>
+                    <dt>{terme}</dt>
+                    <dd>{valeur}</dd>
+                  </div>
+                ))}
+              </dl>
+              {f.inclus && (
+                <ul className="formule__points" aria-label="Inclus">
+                  {f.inclus.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
+                </ul>
+              )}
               <div className="formule__pied">
-                <p className="formule__prix">{f.prix}</p>
-                <BoutonLien to="/contact" variante="secondaire">M’écrire</BoutonLien>
+                <p className="formule__prix">
+                  {f.prix.avant && <span className="formule__prix-petit">{f.prix.avant}</span>}
+                  {f.prix.montant}
+                  {f.prix.apres && <span className="formule__prix-petit"> {f.prix.apres}</span>}
+                </p>
+                {f.autresPrix && (
+                  <ul className="formule__autres-prix">
+                    {f.autresPrix.map((p) => <li key={p}>{p}</li>)}
+                  </ul>
+                )}
               </div>
             </li>
           ))}
         </ul>
-        <p className="texte formules-page__note">Définies à l’issue d’un premier échange, selon le lieu et la formule.</p>
+        <div className="formules-page__bas">
+          <div>
+            {[...(onglet.notes ?? []), ...(tarifs.notes ?? [])].map((note) => (
+              <p key={note} className="texte formules-page__note">{note}</p>
+            ))}
+          </div>
+          <BoutonLien to="/contact">M’écrire</BoutonLien>
+        </div>
       </div>
     </section>
   )

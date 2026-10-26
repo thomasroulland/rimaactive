@@ -952,7 +952,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .formule .titre--tuile, .formule .surtitre { margin: 0; }
 
 /* Cartes tarifaires ; la formule mise en avant est jaune et dépasse un peu */
-.formules--cartes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); align-items: center; }
+.formules--cartes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); align-items: stretch; }
 .formules--cartes .formule {
   background: var(--fond-carte);
   border-radius: var(--arrondi);
@@ -961,7 +961,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
   flex-direction: column;
   gap: 12px;
 }
-.formule__pied { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--filet); }
+.formule__pied { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--filet); }
 .formule--avant .formule__pied { border-top-color: rgba(22, 21, 20, 0.2); }
 .formules--cartes .formule--avant { background: var(--jaune); transform: scale(1.04); }
 .formules--cartes .formule--avant .surtitre { color: var(--encre); }
@@ -977,3 +977,40 @@ textarea.champ { resize: vertical; min-height: 140px; }
 }
 /* Téléphone : les cartes sont empilées, la formule mise en avant ne dépasse pas sur les côtés */
 @media (max-width: 899px) { .formules--cartes .formule--avant { transform: none; } }
+
+/* Tarifs : titre et choix de formule sur une ligne, détails de chaque carte, prix et bouton commun en bas */
+.formules-page__entete { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
+.bascule { display: inline-flex; padding: 4px; border-radius: 999px; border: 1px solid var(--filet-clair); }
+.bascule button {
+  min-height: 40px;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(244, 243, 239, 0.75);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--duree) ease, color var(--duree) ease;
+}
+.bascule button:hover { color: var(--craie); }
+.bascule button[aria-selected="true"] { background: var(--jaune); color: var(--encre); }
+.formules-page__intro { margin: 14px 0 0; color: rgba(244, 243, 239, 0.7); }
+.formule__pour-qui { margin: 0; font-size: 15px; line-height: 22px; color: var(--gris-chaud); }
+.formule__details { margin: 4px 0 0; display: grid; gap: 4px; }
+.formule__details > div { display: grid; grid-template-columns: 124px 1fr; gap: 12px; align-items: baseline; }
+.formule__details dt { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris-chaud); }
+.formule__details dd { margin: 0; font-size: 15px; line-height: 22px; }
+.formule .formule__points { font-size: 15px; line-height: 22px; }
+.formule__prix-petit { font-size: 15px; font-weight: 500; letter-spacing: 0; }
+.formule__autres-prix { list-style: none; margin: 6px 0 0; padding: 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+.formules-page__bas { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; margin-top: 20px; }
+.formules-page__bas .formules-page__note { margin: 0; font-size: 14px; line-height: 22px; }
+@media (min-width: 900px) and (max-width: 1399px) {
+  .formule__details > div { grid-template-columns: 92px 1fr; gap: 8px; }
+  .formule__details dt { letter-spacing: 0.06em; }
+  .formules-page .formules { margin-top: 14px; }
+  .formules-page__bas { margin-top: 14px; }
+  .formule .formule__points li { font-size: 14px; }
+}
