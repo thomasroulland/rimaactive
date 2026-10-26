@@ -83,7 +83,6 @@ function RubriqueFormules({ tarifs }) {
             </div>
           )}
         </div>
-        {onglet.intro && <p className="mention formules-page__intro">{onglet.intro}</p>}
         <ul className="formules formules--cartes">
           {onglet.cartes.map((f) => (
             <li key={f.nom} className="formule">
@@ -113,13 +112,16 @@ function RubriqueFormules({ tarifs }) {
                     {f.autresPrix.map((p) => <li key={p}>{p}</li>)}
                   </ul>
                 )}
+                {f.deplacement && (
+                  <p className="formule__deplacement"><Picto nom="car-simple" taille={18} />Entre 10 et 20&nbsp;km : {f.deplacement}</p>
+                )}
               </div>
             </li>
           ))}
         </ul>
         <div className="formules-page__bas">
           <div>
-            {[...(onglet.notes ?? []), ...(tarifs.notes ?? [])].map((note) => (
+            {[onglet.intro, ...(onglet.notes ?? []), ...(tarifs.notes ?? [])].filter(Boolean).map((note) => (
               <p key={note} className="texte formules-page__note">{note}</p>
             ))}
           </div>

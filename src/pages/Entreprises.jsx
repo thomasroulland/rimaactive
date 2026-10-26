@@ -31,7 +31,7 @@ const PAGE = {
       },
     ],
     notes: [
-      'Tarif selon le nombre de participants et la fréquence. Devis gratuit sous 48\u00a0h.',
+      'Tarif selon le nombre de participants et la fréquence, déplacement compris. Devis gratuit sous 48\u00a0h.',
       'TVA non applicable, art. 293\u00a0B du CGI.',
     ],
   },

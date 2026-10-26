@@ -16,13 +16,15 @@ const PAGE = {
     onglets: [
       {
         nom: 'À domicile',
-        intro: 'En présentiel · séances de 60\u00a0min',
+        intro: 'Séances de 60\u00a0min en présentiel.',
+        notes: ['Déplacement offert jusqu’à 10\u00a0km autour de Houdan.'],
         cartes: [
           {
             nom: 'Active Solo',
             pourQui: 'Pour des conseils techniques ou une séance ponctuelle',
             details: [['Séances', '1']],
             prix: { montant: '60\u00a0€', apres: 'la séance' },
+            deplacement: '70\u00a0€ la séance',
           },
           {
             nom: 'Active Flex',
@@ -30,6 +32,7 @@ const PAGE = {
             details: [['Séances', '4 par mois (1 par semaine)']],
             inclus: ['Bilan initial', 'Programme personnalisé', 'Suivi par message'],
             prix: { montant: '220\u00a0€', apres: 'par mois' },
+            deplacement: '240\u00a0€ par mois',
           },
           {
             nom: 'Active Plus',
@@ -37,12 +40,13 @@ const PAGE = {
             details: [['Séances', '8 par mois (2 par semaine)']],
             inclus: ['Bilan initial', 'Bilan postural', 'Programme personnalisé', 'Suivi par message'],
             prix: { montant: '400\u00a0€', apres: 'par mois' },
+            deplacement: '440\u00a0€ par mois',
           },
         ],
       },
       {
         nom: 'En salle',
-        intro: 'En présentiel · séances de 60\u00a0min',
+        intro: 'Séances de 60\u00a0min en présentiel.',
         cartes: [
           {
             nom: 'Active Solo',
@@ -68,7 +72,7 @@ const PAGE = {
       },
       {
         nom: 'En ligne',
-        intro: 'Programmes de 8 semaines',
+        intro: 'Programmes de 8 semaines.',
         cartes: [
           {
             nom: 'Active Start',

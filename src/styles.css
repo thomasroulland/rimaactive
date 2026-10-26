@@ -996,7 +996,6 @@ textarea.champ { resize: vertical; min-height: 140px; }
 }
 .bascule button:hover { color: var(--craie); }
 .bascule button[aria-selected="true"] { background: var(--jaune); color: var(--encre); }
-.formules-page__intro { margin: 14px 0 0; color: rgba(244, 243, 239, 0.7); }
 .formule__pour-qui { margin: 0; font-size: 15px; line-height: 22px; color: var(--gris-chaud); }
 .formule__details { margin: 4px 0 0; display: grid; gap: 4px; }
 .formule__details > div { display: grid; grid-template-columns: 124px 1fr; gap: 12px; align-items: baseline; }
@@ -1014,3 +1013,13 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .formules-page__bas { margin-top: 14px; }
   .formule .formule__points li { font-size: 14px; }
 }
+.formule__deplacement { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 0; font-size: 13px; line-height: 19px; color: var(--gris-chaud); }
+.formule__deplacement .picto { flex: none; margin-top: 1px; }
+/* Aucune formule mise en avant : chaque carte passe en jaune au survol */
+.formules-page .formule { transition: background-color var(--duree) ease; }
+@media (hover: hover) { .formules-page .formule:hover { background: var(--jaune); } }
+.formules-page .formule:hover .formule__pour-qui,
+.formules-page .formule:hover .formule__details dt,
+.formules-page .formule:hover .formule__autres-prix,
+.formules-page .formule:hover .formule__deplacement { color: var(--encre); }
+.formules-page .formule:hover .formule__pied { border-top-color: rgba(22, 21, 20, 0.2); }

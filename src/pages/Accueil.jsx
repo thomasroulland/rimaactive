@@ -132,15 +132,15 @@ export default function Accueil() {
           <div className="zone__texte">
             <h2 id="zone-titre" className="titre titre--section">Ma zone d’intervention</h2>
             <p className="texte">
-              <span className="ligne">J’interviens avec mon matériel afin d’adapter chaque session au lieu,</span>{' '}
+              <span className="ligne">J’interviens avec mon matériel pour adapter chaque séance au lieu,</span>{' '}
               <span className="ligne">à votre niveau et à vos objectifs.</span>
             </p>
             <Faits
               items={[
                 ['Où', 'Dans un rayon de 20\u00a0km autour de Houdan (78)', 'map-pin'],
+                ['Déplacement', 'Offert jusqu’à 10\u00a0km', 'car-simple'],
                 ['Lieux', 'Dans vos locaux, en extérieur ou à domicile', 'buildings'],
                 ['Durée', 'De 30 à 60\u00a0min', 'clock'],
-                ['Tarifs', 'Définis à l’issue d’un premier échange, selon le lieu et la formule', 'check-square'],
               ]}
             />
           </div>
