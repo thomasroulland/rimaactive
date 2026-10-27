@@ -1,17 +1,10 @@
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Entreprises ; les textes entre crochets restent à rédiger
+// Contenu de la page Entreprises
 const PAGE = {
   titre: 'Entreprises',
   surtitre: 'Pour vos équipes',
-  vecu: [
-    ['[Situation 1]', '[Texte à rédiger]'],
-    ['[Situation 2]', '[Texte à rédiger]'],
-    ['[Situation 3]', '[Texte à rédiger]'],
-  ],
-  photoSession: 'Séance en entreprise',
-  session: [['Lieu', null, 'map-pin'], ['Espace', null, 'buildings'], ['Durée', '30 ou 60\u00a0min', 'timer'], ['Nombre de personnes', 'De 4 à 16', 'check-square']],
   tarifs: {
     cartes: [
       {
@@ -35,12 +28,6 @@ const PAGE = {
       'TVA non applicable, art. 293\u00a0B du CGI.',
     ],
   },
-  faq: [
-    ['Pourquoi me faire confiance ?', '[Réponse à rédiger]'],
-    ['[Question 2 à rédiger]', '[Réponse à rédiger]'],
-    ['[Question 3 à rédiger]', '[Réponse à rédiger]'],
-    ['[Question 4 à rédiger]', '[Réponse à rédiger]'],
-  ],
 }
 
 export default function Entreprises() {

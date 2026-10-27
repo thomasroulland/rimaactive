@@ -1,17 +1,10 @@
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Individuel ; les textes entre crochets restent à rédiger
+// Contenu de la page Individuel
 const PAGE = {
   titre: 'Individuel',
   surtitre: 'Pour vous',
-  vecu: [
-    ['Manque de temps', '[Texte à rédiger]'],
-    ['Ne pas savoir par où commencer', '[Texte à rédiger]'],
-    ['L’idée qu’il faut se priver', '[Texte à rédiger]'],
-  ],
-  photoSession: 'Séance avec un particulier',
-  session: [['Lieu', null, 'map-pin'], ['Durée', '60\u00a0min en présentiel', 'timer'], ['Matériel apporté', null, 'kettlebell'], ['Déroulé', null, 'check-square']],
   tarifs: {
     onglets: [
       {
@@ -100,12 +93,6 @@ const PAGE = {
       },
     ],
   },
-  faq: [
-    ['Pourquoi me faire confiance ?', '[Réponse à rédiger]'],
-    ['[Question 2 à rédiger]', '[Réponse à rédiger]'],
-    ['[Question 3 à rédiger]', '[Réponse à rédiger]'],
-    ['[Question 4 à rédiger]', '[Réponse à rédiger]'],
-  ],
 }
 
 export default function Particuliers() {

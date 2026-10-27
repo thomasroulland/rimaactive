@@ -1,17 +1,10 @@
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Groupes ; les textes entre crochets restent à rédiger
+// Contenu de la page Groupes
 const PAGE = {
   titre: 'Groupes',
-  surtitre: 'Pour vos habitants',
-  vecu: [
-    ['[Situation 1]', '[Texte à rédiger]'],
-    ['[Situation 2]', '[Texte à rédiger]'],
-    ['[Situation 3]', '[Texte à rédiger]'],
-  ],
-  photoSession: 'Séance en groupe, en extérieur',
-  session: [['Lieu', null, 'map-pin'], ['Durée', '60\u00a0min', 'timer'], ['Matériel apporté', null, 'kettlebell'], ['Déroulé', null, 'check-square']],
+  surtitre: 'À plusieurs',
   tarifs: {
     cartes: [
       {
@@ -32,12 +25,6 @@ const PAGE = {
       'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan.',
     ],
   },
-  faq: [
-    ['Pourquoi me faire confiance ?', '[Réponse à rédiger]'],
-    ['[Question 2 à rédiger]', '[Réponse à rédiger]'],
-    ['[Question 3 à rédiger]', '[Réponse à rédiger]'],
-    ['[Question 4 à rédiger]', '[Réponse à rédiger]'],
-  ],
 }
 
 export default function Communes() {
