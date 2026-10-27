@@ -794,7 +794,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 }
 .coordonnees { border-radius: var(--arrondi); background: var(--encre); color: var(--craie); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: flex; flex-direction: column; gap: 32px; }
 .coordonnees .surtitre { color: var(--jaune); margin: 0; }
-.coordonnees a { color: var(--craie); text-decoration: none; font-weight: 900; font-size: clamp(22px, calc(2.2 * var(--vw)), 28px); letter-spacing: -0.03em; word-break: break-word; }
+.coordonnees a { color: var(--craie); text-decoration: none; font-weight: 900; font-size: clamp(17px, calc(1.6 * var(--vw)), 24px); letter-spacing: -0.03em; overflow-wrap: anywhere; }
 .coordonnees a:hover { color: var(--vermillon); }
 .coordonnees .mention { color: var(--vermillon); margin-bottom: 8px; }
 .coordonnees p.texte { color: rgba(244, 243, 239, 0.78); }
@@ -960,7 +960,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
   flex-direction: column;
   gap: 12px;
 }
-.formule__pied { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--filet); }
+.formule__pied { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--filet); display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .formule--avant .formule__pied { border-top-color: rgba(22, 21, 20, 0.2); }
 .formules--cartes .formule--avant { background: var(--jaune); transform: scale(1.04); }
 .formules--cartes .formule--avant .surtitre { color: var(--encre); }

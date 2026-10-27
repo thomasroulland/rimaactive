@@ -4,7 +4,7 @@ import { BoutonLien } from './Blocs.jsx'
 import Picto from './Picto.jsx'
 
 // Gabarit commun aux pages Entreprises, Groupes et Individuel : un seul écran, avec le fil d'Ariane,
-// le titre de la page et, juste en dessous, les formules (une carte par formule, en jaune au survol).
+// le titre « Formules » et, juste en dessous, les formules (une carte par formule, en jaune au survol).
 // tarifs.onglets : plusieurs jeux de cartes (À domicile, En salle, En ligne…) ; sinon tarifs.cartes
 export default function PageService({ page }) {
   const { tarifs } = page
@@ -22,7 +22,7 @@ export default function PageService({ page }) {
         </nav>
         <p className="surtitre">{page.surtitre}</p>
         <div className="formules-page__entete">
-          <h1 id="page-titre" className="titre titre--section">{page.titre}</h1>
+          <h1 id="page-titre" className="titre titre--section">Formules</h1>
           {tarifs.onglets && (
             <div className="bascule" role="tablist" aria-label="Choisir la formule">
               {onglets.map((o, i) => (
@@ -33,7 +33,7 @@ export default function PageService({ page }) {
             </div>
           )}
         </div>
-        <Cartes cartes={onglet.cartes} />
+        <Cartes cartes={onglet.cartes} contexte={onglet.nom ?? page.titre} />
         <div className="formules-page__bas">
           {/* les notes se suivent dans un même paragraphe, pour tenir sur deux lignes */}
           <p className="texte formules-page__note">
@@ -87,8 +87,8 @@ function Inclus({ f }) {
   )
 }
 
-// Cartes blanches côte à côte, le prix en bas
-function Cartes({ cartes }) {
+// Cartes blanches côte à côte, le prix en bas ; le bouton ouvre le formulaire de contact avec la formule déjà indiquée
+function Cartes({ cartes, contexte }) {
   return (
     <ul className="formules formules--cartes">
       {cartes.map((f) => (
@@ -98,8 +98,17 @@ function Cartes({ cartes }) {
           <Details f={f} />
           <Inclus f={f} />
           <div className="formule__pied">
-            <Prix f={f} />
-            <AutresPrix f={f} />
+            <div>
+              <Prix f={f} />
+              <AutresPrix f={f} />
+            </div>
+            <Link
+              to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${contexte}`)}`}
+              className="bouton bouton--secondaire bouton--compact"
+              aria-label={`Choisir ${f.nom}`}
+            >
+              Choisir
+            </Link>
           </div>
         </li>
       ))}

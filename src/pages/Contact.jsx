@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { HerosPage } from '../components/Blocs.jsx'
 import { CONTACT } from '../components/liens.js'
 import useTitre from '../components/useTitre.js'
@@ -7,6 +7,11 @@ import useTitre from '../components/useTitre.js'
 export default function Contact() {
   useTitre('Contact')
   const [envoye, setEnvoye] = useState(false)
+  // Formule choisie depuis une carte des pages Entreprises, Groupes ou Individuel (ex. « Active Flex · À domicile »)
+  const [parametres] = useSearchParams()
+  const formule = parametres.get('formule') ?? ''
+  const contexte = formule.split(' · ')[1] ?? ''
+  const profilChoisi = contexte === 'Entreprises' ? 'entreprise' : contexte === 'Groupes' ? 'groupe' : formule ? 'particulier' : undefined
 
   // Envoi à brancher (Formspree, Resend, fonction Vercel…) : pour l'instant on affiche la confirmation
   function envoyer(event) {
@@ -52,12 +57,18 @@ export default function Contact() {
                 <label htmlFor="joindre">E-mail ou téléphone</label>
                 <input id="joindre" name="joindre" className="champ" type="text" autoComplete="email" required />
               </div>
+              {formule && (
+                <div className="champ-groupe pleine">
+                  <label htmlFor="formule">Formule choisie</label>
+                  <input id="formule" name="formule" className="champ" type="text" defaultValue={formule} />
+                </div>
+              )}
               <fieldset className="champ-groupe pleine">
                 <legend>Vous êtes</legend>
                 <div className="choix">
-                  {['entreprise', 'commune', 'particulier'].map((profil) => (
+                  {['entreprise', 'groupe', 'particulier'].map((profil) => (
                     <label key={profil}>
-                      <input type="radio" name="profil" value={profil} />
+                      <input type="radio" name="profil" value={profil} defaultChecked={profil === profilChoisi} />
                       <span>{profil[0].toUpperCase() + profil.slice(1)}</span>
                     </label>
                   ))}
