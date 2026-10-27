@@ -62,14 +62,14 @@ export default function PageService({ page }) {
   )
 }
 
-// Rubrique « Formules » sur fond encre : les cartes restent claires.
+// Rubrique « Formules » sur fond clair : une carte par formule, qui passe en jaune au survol.
 // tarifs.onglets : plusieurs jeux de cartes (À domicile, En salle, En ligne…) ; sinon tarifs.cartes
 function RubriqueFormules({ tarifs }) {
   const [actif, setActif] = useState(0)
   const onglets = tarifs.onglets ?? [{ cartes: tarifs.cartes, notes: [] }]
   const onglet = onglets[actif]
   return (
-    <section className="section ecran-plein formules-page sur-encre" aria-labelledby="formules-titre">
+    <section className="section ecran-plein formules-page" aria-labelledby="formules-titre">
       <div className="conteneur">
         <div className="formules-page__entete">
           <h2 id="formules-titre" className="titre titre--section">Formules</h2>
@@ -83,42 +83,7 @@ function RubriqueFormules({ tarifs }) {
             </div>
           )}
         </div>
-        <ul className="formules formules--cartes">
-          {onglet.cartes.map((f) => (
-            <li key={f.nom} className="formule">
-              <h3 className="titre titre--tuile">{f.nom}</h3>
-              {f.pourQui && <p className="formule__pour-qui">{f.pourQui}</p>}
-              <dl className="formule__details">
-                {f.details.map(([terme, valeur]) => (
-                  <div key={terme}>
-                    <dt>{terme}</dt>
-                    <dd>{valeur}</dd>
-                  </div>
-                ))}
-              </dl>
-              {f.inclus && (
-                <ul className="formule__points" aria-label="Inclus">
-                  {f.inclus.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
-                </ul>
-              )}
-              <div className="formule__pied">
-                <p className="formule__prix">
-                  {f.prix.avant && <span className="formule__prix-petit">{f.prix.avant}</span>}
-                  {f.prix.montant}
-                  {f.prix.apres && <span className="formule__prix-petit"> {f.prix.apres}</span>}
-                </p>
-                {f.autresPrix && (
-                  <ul className="formule__autres-prix">
-                    {f.autresPrix.map((p) => <li key={p}>{p}</li>)}
-                  </ul>
-                )}
-                {f.deplacement && (
-                  <p className="formule__deplacement"><Picto nom="car-simple" taille={18} />Entre 10 et 20&nbsp;km : {f.deplacement}</p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <Cartes cartes={onglet.cartes} />
         <div className="formules-page__bas">
           <div>
             {[onglet.intro, ...(onglet.notes ?? []), ...(tarifs.notes ?? [])].filter(Boolean).map((note) => (
@@ -129,5 +94,66 @@ function RubriqueFormules({ tarifs }) {
         </div>
       </div>
     </section>
+  )
+}
+
+function Prix({ f }) {
+  return (
+    <p className="formule__prix">
+      {f.prix.avant && <span className="formule__prix-petit">{f.prix.avant}</span>}
+      {f.prix.montant}
+      {f.prix.apres && <span className="formule__prix-petit"> {f.prix.apres}</span>}
+    </p>
+  )
+}
+
+function AutresPrix({ f }) {
+  if (!f.autresPrix) return null
+  return (
+    <ul className="formule__autres-prix">
+      {f.autresPrix.map((p) => <li key={p}>{p}</li>)}
+    </ul>
+  )
+}
+
+function Details({ f }) {
+  return (
+    <dl className="formule__details">
+      {f.details.map(([terme, valeur]) => (
+        <div key={terme}>
+          <dt>{terme}</dt>
+          <dd>{valeur}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+function Inclus({ f }) {
+  if (!f.inclus) return null
+  return (
+    <ul className="formule__points" aria-label="Inclus">
+      {f.inclus.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
+    </ul>
+  )
+}
+
+// Cartes blanches côte à côte, le prix en bas
+function Cartes({ cartes }) {
+  return (
+    <ul className="formules formules--cartes">
+      {cartes.map((f) => (
+        <li key={f.nom} className="formule">
+          <h3 className="titre titre--tuile">{f.nom}</h3>
+          {f.pourQui && <p className="formule__pour-qui">{f.pourQui}</p>}
+          <Details f={f} />
+          <Inclus f={f} />
+          <div className="formule__pied">
+            <Prix f={f} />
+            <AutresPrix f={f} />
+          </div>
+        </li>
+      ))}
+    </ul>
   )
 }

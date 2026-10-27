@@ -31,7 +31,7 @@ const PAGE = {
       },
     ],
     notes: [
-      'Tarif selon le nombre de participants et la fréquence, déplacement compris. Devis gratuit sous 48\u00a0h.',
+      'Tarif selon le nombre de participants et la fréquence. Déplacement compris dans un rayon de 20\u00a0km autour de Houdan. Devis gratuit sous 48\u00a0h.',
       'TVA non applicable, art. 293\u00a0B du CGI.',
     ],
   },

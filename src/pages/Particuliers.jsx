@@ -17,14 +17,16 @@ const PAGE = {
       {
         nom: 'À domicile',
         intro: 'Séances de 60\u00a0min en présentiel.',
-        notes: ['Déplacement offert jusqu’à 10\u00a0km autour de Houdan.'],
+        notes: [
+          'Bilan postural + correctifs seul : 70\u00a0€.',
+          'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan.',
+        ],
         cartes: [
           {
             nom: 'Active Solo',
             pourQui: 'Pour des conseils techniques ou une séance ponctuelle',
             details: [['Séances', '1']],
-            prix: { montant: '60\u00a0€', apres: 'la séance' },
-            deplacement: '70\u00a0€ la séance',
+            prix: { montant: '65\u00a0€', apres: 'la séance' },
           },
           {
             nom: 'Active Flex',
@@ -32,7 +34,6 @@ const PAGE = {
             details: [['Séances', '4 par mois (1 par semaine)']],
             inclus: ['Bilan initial', 'Programme personnalisé', 'Suivi par message'],
             prix: { montant: '220\u00a0€', apres: 'par mois' },
-            deplacement: '240\u00a0€ par mois',
           },
           {
             nom: 'Active Plus',
@@ -40,19 +41,22 @@ const PAGE = {
             details: [['Séances', '8 par mois (2 par semaine)']],
             inclus: ['Bilan initial', 'Bilan postural', 'Programme personnalisé', 'Suivi par message'],
             prix: { montant: '400\u00a0€', apres: 'par mois' },
-            deplacement: '440\u00a0€ par mois',
           },
         ],
       },
       {
         nom: 'En salle',
         intro: 'Séances de 60\u00a0min en présentiel.',
+        notes: [
+          'Bilan postural + correctifs seul : 70\u00a0€.',
+          'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan.',
+        ],
         cartes: [
           {
             nom: 'Active Solo',
             pourQui: 'Pour des conseils techniques ou une séance ponctuelle',
             details: [['Séances', '1']],
-            prix: { montant: '50\u00a0€', apres: 'la séance' },
+            prix: { montant: '55\u00a0€', apres: 'la séance' },
           },
           {
             nom: 'Active Flex',

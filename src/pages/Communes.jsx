@@ -17,9 +17,8 @@ const PAGE = {
       {
         nom: 'Active Duo',
         details: [['Durée', '60\u00a0min'], ['Participants', '2'], ['Lieu', 'À domicile ou en extérieur']],
-        prix: { montant: '80\u00a0€', apres: 'la séance' },
+        prix: { montant: '85\u00a0€', apres: 'la séance' },
         autresPrix: ['300\u00a0€ par mois (4 séances)', '540\u00a0€ par mois (8 séances)'],
-        deplacement: '90\u00a0€ la séance, 320\u00a0€ ou 580\u00a0€ par mois',
       },
       {
         nom: 'Active Group',
@@ -29,8 +28,8 @@ const PAGE = {
       },
     ],
     notes: [
-      'Déplacement offert jusqu’à 10\u00a0km autour de Houdan, et toujours offert pour Active Group.',
       'Séance Active Group maintenue à partir de 4 inscrits.',
+      'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan.',
     ],
   },
   faq: [

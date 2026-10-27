@@ -138,7 +138,7 @@ export default function Accueil() {
             <Faits
               items={[
                 ['Où', 'Dans un rayon de 20\u00a0km autour de Houdan (78)', 'map-pin'],
-                ['Déplacement', 'Offert jusqu’à 10\u00a0km', 'car-simple'],
+                ['Déplacement', 'Compris dans toute la zone', 'car-simple'],
                 ['Lieux', 'Dans vos locaux, en extérieur ou à domicile', 'buildings'],
                 ['Durée', 'De 30 à 60\u00a0min', 'clock'],
               ]}
