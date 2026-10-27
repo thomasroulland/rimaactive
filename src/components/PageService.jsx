@@ -104,7 +104,7 @@ function Cartes({ cartes, contexte }) {
             </div>
             <Link
               to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${contexte}`)}`}
-              className="bouton bouton--secondaire bouton--compact"
+              className="bouton bouton--secondaire"
               aria-label={`Choisir ${f.nom}`}
             >
               Choisir

@@ -119,7 +119,7 @@ a:hover { color: var(--gris-chaud); }
 .mention { margin: 0; }
 /* site-texte : 18 / 29, texte secondaire */
 .texte { margin: 0; max-width: 65ch; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
-.texte--grand { font-size: 18px; line-height: 28px; }
+.texte--grand { font-size: 16px; line-height: 26px; }
 .texte + .texte { margin-top: 16px; }
 .provisoire { color: var(--gris-chaud); font-style: normal; }
 @media (max-width: 600px) {
@@ -794,7 +794,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 }
 .coordonnees { border-radius: var(--arrondi); background: var(--encre); color: var(--craie); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: flex; flex-direction: column; gap: 32px; }
 .coordonnees .surtitre { color: var(--jaune); margin: 0; }
-.coordonnees a { color: var(--craie); text-decoration: none; font-weight: 900; font-size: clamp(17px, calc(1.6 * var(--vw)), 24px); letter-spacing: -0.03em; overflow-wrap: anywhere; }
+.coordonnees a { color: var(--craie); text-decoration: none; font-weight: 900; font-size: 16px; line-height: 26px; font-weight: 700; overflow-wrap: anywhere; }
 .coordonnees a:hover { color: var(--vermillon); }
 .coordonnees .mention { color: var(--vermillon); margin-bottom: 8px; }
 .coordonnees p.texte { color: rgba(244, 243, 239, 0.78); }
@@ -805,7 +805,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   .formulaire .pleine { grid-column: 1 / -1; }
 }
 .champ-groupe { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; border: 0; min-width: 0; }
-.champ-groupe > label, .champ-groupe legend { font-weight: 700; font-size: 15px; padding: 0; }
+.champ-groupe > label, .champ-groupe legend { font-weight: 700; font-size: 16px; line-height: 26px; padding: 0; }
 .champ-groupe legend { margin-bottom: 8px; }
 .champ {
   width: 100%;
@@ -896,7 +896,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .a-completer { background: var(--jaune); color: var(--encre); padding: 0 4px; }
 
 /* Mention d'information sous le formulaire */
-.info-rgpd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gris-chaud); max-width: 70ch; }
+.info-rgpd { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); max-width: 70ch; }
 
 /* ---------- Bloc « Écrivez-moi » et pied de page : à eux deux, un écran sur ordinateur ---------- */
 @media (min-width: 900px) {
@@ -983,27 +983,26 @@ textarea.champ { resize: vertical; min-height: 140px; }
   background: transparent;
   color: var(--gris-chaud);
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color var(--duree) ease, color var(--duree) ease;
 }
 .bascule button:hover { color: var(--encre); }
 .bascule button[aria-selected="true"] { background: var(--jaune); color: var(--encre); }
-.formule__pour-qui { margin: 0; font-size: 15px; line-height: 22px; color: var(--gris-chaud); }
+.formule__pour-qui { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
 .formule__details { margin: 4px 0 0; display: grid; gap: 4px; }
 .formule__details > div { display: grid; grid-template-columns: 124px 1fr; gap: 12px; align-items: baseline; }
 .formule__details dt { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris-chaud); }
-.formule__details dd { margin: 0; font-size: 15px; line-height: 22px; }
-.formule .formule__points { font-size: 15px; line-height: 22px; }
-.formule__prix-petit { font-size: 15px; font-weight: 500; letter-spacing: 0; }
-.formule__autres-prix { list-style: none; margin: 6px 0 0; padding: 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+.formule__details dd { margin: 0; font-size: 16px; line-height: 26px; }
+.formule .formule__points { font-size: 16px; line-height: 26px; }
+.formule__prix-petit { font-size: 16px; font-weight: 500; letter-spacing: 0; }
+.formule__autres-prix { list-style: none; margin: 6px 0 0; padding: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
 .formules-page__bas { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; margin-top: 14px; }
-.formules-page__bas .formules-page__note { flex: 1 1 0; min-width: min(100%, 420px); max-width: 760px; margin: 0; font-size: 14px; line-height: 22px; }
+.formules-page__bas .formules-page__note { flex: 1 1 0; min-width: min(100%, 420px); max-width: 760px; margin: 0; font-size: 16px; line-height: 26px; }
 @media (min-width: 900px) and (max-width: 1399px) {
   .formule__details > div { grid-template-columns: 92px 1fr; gap: 8px; }
   .formule__details dt { letter-spacing: 0.06em; }
-  .formule .formule__points li { font-size: 14px; }
 }
 /* Aucune formule mise en avant : chaque carte passe en jaune au survol */
 .formules-page .formule { transition: background-color var(--duree) ease; }
@@ -1018,3 +1017,13 @@ textarea.champ { resize: vertical; min-height: 140px; }
 /* Pages Entreprises, Groupes, Individuel : le contenu part du haut, pour que le titre ne bouge pas
    d'une page à l'autre ni quand on change d'onglet */
 @media (min-width: 900px) { .section.ecran-plein.formules-page { justify-content: flex-start; padding-top: 28px; } }
+/* Texte en 16 px comme sur l'accueil : espacements resserrés pour que la page tienne sur un écran */
+@media (min-width: 900px) {
+  .section.ecran-plein.formules-page { padding-top: 16px; }
+  .formules-page .fil { margin-bottom: 8px; }
+  .formules-page .formules--cartes .formule { padding-block: 22px; gap: 8px; }
+  .formules-page .formule__points { gap: 0; }
+  .formules-page .formule__details { gap: 0; }
+  .formules-page .formule__pied { padding-top: 10px; }
+}
+@media (min-width: 900px) and (max-width: 1399px) { .formules-page .formules--cartes .formule { padding-block: 18px; } }
