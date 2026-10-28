@@ -2,6 +2,9 @@ import BoiteOutils from '../components/BoiteOutils.jsx'
 import CarteZone from '../components/CarteZone.jsx'
 import photoHeros from '../assets/heros-squat-nb.jpg'
 import portraitMarie from '../assets/portrait-marie.jpg'
+import photoEntreprises from '../assets/service-entreprises.jpg'
+import photoGroupes from '../assets/service-groupes.jpg'
+import photoIndividuel from '../assets/service-individuel.jpg'
 import { Link } from 'react-router-dom'
 import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
 import { Fleche } from '../components/Entete.jsx'
@@ -45,19 +48,22 @@ const SERVICES = [
   {
     to: '/entreprises',
     titre: 'Entreprises',
-    photo: 'Séance en groupe dans des locaux ou en extérieur',
+    photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
+    image: photoEntreprises,
     texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
   },
   {
     to: '/communes',
     titre: 'Groupes',
-    photo: 'Petit groupe en extérieur',
+    photo: 'Rangée de kettlebells sur le sol d’une salle',
+    image: photoGroupes,
     texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
   },
   {
     to: '/particuliers',
     titre: 'Individuel',
-    photo: 'Séance à domicile ou dans un jardin',
+    photo: 'Kettlebells et barres sur un sol de salle',
+    image: photoIndividuel,
     texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',
   },
 ]
@@ -112,7 +118,7 @@ export default function Accueil() {
             {SERVICES.map((service) => (
               <li key={service.to}>
                 <Link to={service.to} className="service">
-                  <Photo label={service.photo} sansEtiquette className="service__photo" />
+                  <Photo label={service.photo} src={service.image} className="service__photo" />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
                     <p className="texte">{service.texte}</p>
