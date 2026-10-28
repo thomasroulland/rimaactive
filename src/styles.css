@@ -1027,3 +1027,5 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .formules-page .formule__pied { padding-top: 10px; }
 }
 @media (min-width: 900px) and (max-width: 1399px) { .formules-page .formules--cartes .formule { padding-block: 18px; } }
+/* Groupes : la photo est calée en bas, pour que la kettlebell du premier plan ne soit pas coupée */
+.service__photo--groupes img { object-position: 50% 100%; }

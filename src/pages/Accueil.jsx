@@ -118,7 +118,7 @@ export default function Accueil() {
             {SERVICES.map((service) => (
               <li key={service.to}>
                 <Link to={service.to} className="service">
-                  <Photo label={service.photo} src={service.image} className="service__photo" />
+                  <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.titre.toLowerCase()}`} />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
                     <p className="texte">{service.texte}</p>
