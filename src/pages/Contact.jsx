@@ -19,7 +19,7 @@ export default function Contact() {
   }
 
   return (
-    // Page M'écrire, sur fond craie : « Contactez-moi », la zone et l'e-mail à gauche, le formulaire à droite
+    // Page M'écrire, sur fond craie : « Contactez-moi » et l'e-mail à gauche, le formulaire à droite
     <section className="section page-contact" aria-labelledby="contact-titre">
       <div className="conteneur page-contact__grille">
         <PresentationContact titre="h1" avecEmail />

@@ -1,15 +1,11 @@
 import BoiteOutils from '../components/BoiteOutils.jsx'
-import CarteZone from '../components/CarteZone.jsx'
 import photoHeros from '../assets/heros-squat-nb.jpg'
 import portraitMarie from '../assets/portrait-marie.jpg'
 import photoEntreprises from '../assets/service-entreprises.jpg'
 import photoGroupes from '../assets/service-groupes.jpg'
 import photoIndividuel from '../assets/service-individuel.jpg'
-import { useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { BoutonLien, Faits, Photo } from '../components/Blocs.jsx'
-import { Fleche } from '../components/Entete.jsx'
-import Picto from '../components/Picto.jsx'
+import { Link } from 'react-router-dom'
+import { BoutonLien, Photo } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 
 const FORMATS = [
@@ -70,11 +66,6 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  // Arrivée par « Voir la carte » (/#zone) depuis une autre page : on descend jusqu'à la rubrique
-  const { hash } = useLocation()
-  useEffect(() => {
-    if (hash) document.querySelector(hash)?.scrollIntoView()
-  }, [hash])
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -142,27 +133,6 @@ export default function Accueil() {
       </section>
 
       <BoiteOutils formats={FORMATS} />
-
-      <section id="zone" className="section ecran-plein" aria-labelledby="zone-titre">
-        <div className="conteneur zone">
-          <div className="zone__texte">
-            <h2 id="zone-titre" className="titre titre--section">Ma zone d’intervention</h2>
-            <p className="texte">
-              <span className="ligne">J’interviens avec mon matériel pour adapter chaque séance au lieu,</span>{' '}
-              <span className="ligne">à votre niveau et à vos objectifs.</span>
-            </p>
-            <Faits
-              items={[
-                ['Où', 'Dans un rayon de 20\u00a0km autour de Houdan (78)', 'map-pin'],
-                ['Déplacement', 'Compris dans toute la zone', 'car-simple'],
-                ['Lieux', 'Dans vos locaux, en extérieur ou à domicile', 'buildings'],
-                ['Durée', 'De 30 à 60\u00a0min', 'clock'],
-              ]}
-            />
-          </div>
-          <CarteZone />
-        </div>
-      </section>
     </>
   )
 }
