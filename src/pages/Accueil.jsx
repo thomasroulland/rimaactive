@@ -71,6 +71,8 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Essai : ?points=1, 2 ou 3 pour comparer la présentation des quatre points de « Mon approche »
+  const modelePoints = Number(new URLSearchParams(window.location.search).get('points')) || 1
   return (
     <>
       <section className="heros">
@@ -93,19 +95,30 @@ export default function Accueil() {
         </ul>
       </section>
 
-      <section className="section ecran-plein" aria-labelledby="approche-titre">
-        <div className="conteneur deux-colonnes">
-          <Photo label="Marie Sillas, coach sportive" src={portraitMarie} />
-          <div>
-            <h2 id="approche-titre" className="titre titre--section">Mon approche</h2>
-            <p className="texte" style={{ marginTop: 32 }}>
+      {/* Mon approche : le portrait à fond perdu sur la moitié gauche, la présentation dans un encadré à droite.
+          C'est la seule rubrique qui présente Marie (plus de page « À propos »). */}
+      <section id="approche" className={`section ecran-plein approche approche--points-${modelePoints}`} aria-labelledby="approche-titre">
+        <figure className="approche__photo">
+          <img src={portraitMarie} alt="Marie Sillas, coach sportive" />
+        </figure>
+        <div className="approche__panneau">
+          <div className="approche__cadre">
+            <p className="surtitre">Mon approche</p>
+            <h2 id="approche-titre" className="titre titre--section">S’entraîner moins, mais mieux</h2>
+            <p className="texte">
               Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
-              partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie. Au fil des séances,
-              vous prenez confiance et le plaisir de bouger s’installe.
+              partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
             </p>
-            <div className="actions">
-              <BoutonLien to="/a-propos" variante="secondaire">Qui suis-je ?</BoutonLien>
-            </div>
+            <p className="texte">Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.</p>
+            <p className="approche__citation">— Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
+            <ol className="approche__points" aria-label="Ce que l’on travaille">
+              {['Force', 'Endurance', 'Puissance', 'Mobilité'].map((point, i) => (
+                <li key={point}>
+                  <span className="approche__numero">{String(i + 1).padStart(2, '0')}</span>
+                  {point}
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>

@@ -5,7 +5,6 @@ import Accueil from './pages/Accueil.jsx'
 import Entreprises from './pages/Entreprises.jsx'
 import Communes from './pages/Communes.jsx'
 import Particuliers from './pages/Particuliers.jsx'
-import APropos from './pages/APropos.jsx'
 import Contact from './pages/Contact.jsx'
 import MentionsLegales from './pages/MentionsLegales.jsx'
 import Confidentialite from './pages/Confidentialite.jsx'
@@ -28,7 +27,6 @@ export default function App() {
           <Route path="entreprises" element={<Entreprises />} />
           <Route path="communes" element={<Communes />} />
           <Route path="particuliers" element={<Particuliers />} />
-          <Route path="a-propos" element={<APropos />} />
           <Route path="contact" element={<Contact />} />
           <Route path="mentions-legales" element={<MentionsLegales />} />
           <Route path="confidentialite" element={<Confidentialite />} />

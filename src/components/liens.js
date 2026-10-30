@@ -3,7 +3,6 @@ export const PAGES = [
   { to: '/entreprises', label: 'Entreprises' },
   { to: '/communes', label: 'Groupes' },
   { to: '/particuliers', label: 'Individuel' },
-  { to: '/a-propos', label: 'À propos' },
   { to: '/contact', label: 'Contact' },
 ]
 
