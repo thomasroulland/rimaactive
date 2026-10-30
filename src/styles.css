@@ -665,6 +665,8 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 /* ---------- « Contactez-moi » : colonne commune au bloc encre du bas et à la page M'écrire ---------- */
 .presentation-contact { display: flex; flex-direction: column; align-items: flex-start; }
 .presentation-contact .titre { margin: 0; }
+.presentation-contact__lieu { margin: 12px 0 0; max-width: 40ch; }
+.pied .presentation-contact__lieu { color: rgba(244, 243, 239, 0.78); }
 .presentation-contact__email { margin-top: 24px; }
 .presentation-contact__email .mention { margin-bottom: 4px; }
 .presentation-contact__email a { color: var(--encre); font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
