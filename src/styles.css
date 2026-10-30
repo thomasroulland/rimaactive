@@ -703,13 +703,6 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 /* ---------- « Contactez-moi » : colonne commune au bloc encre du bas et à la page M'écrire ---------- */
 .presentation-contact { display: flex; flex-direction: column; align-items: flex-start; }
 .presentation-contact .titre { margin: 0; }
-.presentation-contact > .texte { margin: 12px 0 0; }
-.presentation-contact__zone { display: flex; gap: 14px; align-items: flex-start; width: 100%; max-width: 420px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--filet); }
-.presentation-contact__picto { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--jaune); color: var(--encre); }
-.presentation-contact__zone .mention { margin-bottom: 4px; }
-.presentation-contact__lieu { margin: 0; font-weight: 700; }
-.presentation-contact__lien { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--encre); text-decoration: none; }
-.presentation-contact__lien:hover { text-decoration: underline; }
 .presentation-contact__email { margin-top: 24px; }
 .presentation-contact__email .mention { margin-bottom: 4px; }
 .presentation-contact__email a { color: var(--encre); font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
@@ -726,10 +719,6 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 .pied a:hover { color: var(--jaune); }
 .pied .surtitre { color: var(--jaune); }
 .pied .titre { color: var(--craie); }
-.pied .presentation-contact > .texte { color: rgba(244, 243, 239, 0.78); }
-.pied .presentation-contact__zone { border-top-color: var(--filet-clair); }
-.pied .presentation-contact__zone .mention { color: rgba(244, 243, 239, 0.72); }
-.pied .presentation-contact__lien { color: var(--craie); }
 .pied__grille { display: grid; gap: 48px 64px; }
 @media (min-width: 900px) { .pied__grille { grid-template-columns: 1fr 1fr; align-items: start; } }
 .pied__infos { display: grid; gap: 28px; align-content: start; }
@@ -737,6 +726,8 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 .pied__infos a { font-weight: 700; overflow-wrap: anywhere; }
 .pied__menu { display: flex; flex-wrap: wrap; gap: 8px 28px; padding-bottom: 24px; border-bottom: 1px solid var(--filet-clair); }
 .pied__menu a { font-weight: 500; }
+.pied__reseaux { margin: 0; font-weight: 700; }
+.pied__reseau-attente { color: rgba(244, 243, 239, 0.72); }
 .pied__bas {
   margin-top: clamp(40px, calc(5 * var(--vw)), 64px);
   border-top: 1px solid var(--filet-clair);

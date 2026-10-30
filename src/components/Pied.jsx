@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import PresentationContact from './AppelContact.jsx'
 import { PAGES, CONTACT, RESEAUX } from './liens.js'
 
-// Bloc encre en bas de chaque page : « Contactez-moi » et la zone d'intervention à gauche,
+// Bloc encre en bas de chaque page : « Contactez-moi » à gauche,
 // le menu, l'e-mail et Instagram à droite, puis les mentions. Sur la page M'écrire, qui reprend
 // déjà « Contactez-moi », il ne reste que la ligne des mentions.
 export default function Pied({ seulementMentions = false }) {
@@ -24,9 +24,16 @@ export default function Pied({ seulementMentions = false }) {
               </div>
               <div>
                 <p className="mention">Suivez-moi</p>
-                {RESEAUX.map((reseau) => (
-                  <a key={reseau.label} href={reseau.href} target="_blank" rel="noopener noreferrer">{reseau.label}</a>
-                ))}
+                <p className="pied__reseaux">
+                  {RESEAUX.map((reseau, i) => (
+                    <span key={reseau.label}>
+                      {i > 0 && <span aria-hidden="true"> / </span>}
+                      {reseau.href
+                        ? <a href={reseau.href} target="_blank" rel="noopener noreferrer">{reseau.label}</a>
+                        : <span className="pied__reseau-attente">{reseau.label}</span>}
+                    </span>
+                  ))}
+                </p>
               </div>
             </div>
           </div>

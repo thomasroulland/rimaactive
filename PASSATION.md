@@ -16,7 +16,7 @@ Mis à jour le 30 octobre 2026.
 ## 2. Règles à ne jamais enfreindre
 
 - **Aucun numéro de téléphone** de Marie sur le site.
-- E-mail : **marie.sillas.coaching@outlook.com**. Réseaux : **Instagram @rimaactive** seulement (pas de TikTok, pas de Facebook).
+- E-mail : **marie.sillas.coaching@outlook.com**. Réseaux : **Instagram @rimaactive, Facebook, LinkedIn** (ajoutés par Marie le 30 octobre 2026 ; adresses Facebook et LinkedIn à demander). Pas de TikTok.
 - **Vouvoiement** partout sur le site.
 - **Ne rien inventer** : ni prix, ni témoignage, ni chiffre, ni diplôme. Les textes écrits par Claude sont signalés à Marie pour validation.
 - Une majuscule au début des titres, c'est tout (pas de titres tout en capitales). Pas d'émoji.
