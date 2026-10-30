@@ -114,20 +114,23 @@ export default function Accueil() {
       <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
           <h2 id="services-titre" className="titre titre--section">Mon accompagnement</h2>
-          {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, le prix « à partir de »
-              (fiche tarifs) et « Découvrir les formules », qui passe en jaune au survol.
+          {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, puis le prix « à partir de »
+              (fiche tarifs) et une flèche ronde, qui passe en jaune au survol.
               Sur téléphone et tablette, les cartes sont compactes : petite photo à gauche, sans la phrase. */}
           <ul className="services__liste">
             {SERVICES.map((service) => (
               <li key={service.to}>
-                <Link to={service.to} className="service">
+                <Link to={service.to} className="service" aria-label={`${service.titre} : voir les formules`}>
                   <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
                     <p className="surtitre service__lieux">{service.lieux}</p>
                     <p className="texte">{service.texte}</p>
-                    <p className="service__prix">{service.prix}</p>
-                    <span className="service__bouton">Découvrir les formules <FlecheDiagonale /></span>
+                    {/* le prix à gauche, la flèche ronde à droite (toute la carte est le lien) */}
+                    <div className="service__bas">
+                      <p className="service__prix">{service.prix}</p>
+                      <span className="service__fleche" aria-hidden="true"><FlecheDiagonale /></span>
+                    </div>
                   </div>
                 </Link>
               </li>

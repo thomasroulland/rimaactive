@@ -507,21 +507,10 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.service__bouton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 44px;
-  margin-top: 14px;
-  border: 1px solid var(--encre);
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 15px;
-  transition: background-color var(--duree) ease, border-color var(--duree) ease;
-}
-@media (hover: hover) { .service:hover .service__bouton { background: var(--jaune); border-color: var(--jaune); } }
-.service:focus-visible .service__bouton { background: var(--jaune); border-color: var(--jaune); }
+.service__bas { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 10px; }
+.service__fleche { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border: 1px solid var(--encre); border-radius: 50%; transition: background-color var(--duree) ease, border-color var(--duree) ease; }
+@media (hover: hover) { .service:hover .service__fleche { background: var(--jaune); border-color: var(--jaune); } }
+.service:focus-visible .service__fleche { background: var(--jaune); border-color: var(--jaune); }
 /* Ordinateur : la photo prend la place que le texte laisse, pour que la rubrique tienne dans l'écran */
 @media (min-width: 900px) {
   .services__liste > li { height: calc(var(--ecran) * 0.22 + 290px); }
@@ -709,14 +698,25 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 .pied--mentions a:hover { color: var(--encre); }
 .pied--mentions .pied__bas { margin-top: 0; border-top-color: var(--filet); color: var(--gris-chaud); justify-content: center; }
 
-/* ---------- Page M'écrire (craie) : « Contactez-moi » à gauche, formulaire à droite ---------- */
-.page-contact__grille { display: grid; gap: 40px 72px; }
-@media (min-width: 960px) { .page-contact__grille { grid-template-columns: 0.85fr 1.15fr; align-items: start; } }
-/* Ordinateur : formulaire resserré pour que la page tienne dans un écran, même avec la formule choisie */
+/* ---------- Page M'écrire : la photo de Marie à gauche avec « Contactez-moi » posé dessus, le formulaire à droite ---------- */
+.page-contact { display: grid; }
+.page-contact__gauche { position: relative; display: flex; align-items: flex-end; min-height: 420px; background: var(--encre); overflow: hidden; }
+.page-contact__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.page-contact__gauche::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(22, 21, 20, 0.88), rgba(22, 21, 20, 0.2) 70%); }
+.page-contact__gauche .presentation-contact { position: relative; z-index: 2; padding: 32px var(--gouttiere); color: var(--craie); }
+.page-contact__gauche .surtitre { color: var(--jaune); } /* jaune sur photo sombre uniquement */
+.page-contact__gauche .titre { color: var(--craie); }
+.page-contact__gauche .presentation-contact__lieu { color: rgba(244, 243, 239, 0.85); }
+.page-contact__gauche .mention { color: rgba(244, 243, 239, 0.72); }
+.page-contact__gauche .presentation-contact__email a { color: var(--craie); }
+.page-contact__droite { padding: 32px var(--gouttiere) 40px; display: grid; align-content: center; }
 @media (min-width: 900px) {
-  .section.page-contact { padding-block: clamp(28px, calc(var(--ecran) * 0.06), 48px); }
-  .page-contact .formulaire { gap: 12px 20px; }
-  .page-contact .champ-groupe { gap: 6px; }
+  .page-contact { grid-template-columns: 1fr 1fr; min-height: calc(var(--ecran) - var(--hauteur-entete) - 60px); }
+  .page-contact__gauche { min-height: 0; }
+  .page-contact__gauche .presentation-contact { padding: 40px 48px 40px max(var(--gouttiere), calc((100vw - var(--largeur)) / 2)); }
+  .page-contact__droite { padding: 24px max(var(--gouttiere), calc((100vw - var(--largeur)) / 2)) 24px 56px; }
+  .page-contact .formulaire { gap: 10px 20px; }
+  .page-contact .champ-groupe { gap: 4px; }
   .page-contact .champ { min-height: 44px; padding-block: 8px; font-size: 16px; line-height: 26px; }
   .page-contact textarea.champ { min-height: 80px; }
 }
@@ -838,20 +838,26 @@ textarea.champ { resize: vertical; min-height: 140px; }
 /* Duo et groupes (accueil) : la photo est calée en bas, pour que la kettlebell du premier plan ne soit pas coupée */
 .service__photo--communes img { object-position: 50% 100%; }
 
-/* ---------- Pages Entreprises, Groupes, Individuel (gabarit PageService) ----------
-   À gauche le titre, la phrase, la liste et « M'écrire » ; à droite une carte par formule, claire ou encre */
-.formules-page__grille { display: grid; gap: 40px 56px; align-items: center; }
-@media (min-width: 900px) { .formules-page__grille { grid-template-columns: minmax(300px, 1fr) 1.45fr; } }
-.formules-page .fil { margin-bottom: 14px; }
-.formules-page__gauche .surtitre { color: var(--gris-chaud); margin: 0; }
-.formules-page__titre { margin: 8px 0 14px; font-size: 64px; line-height: 64px; }
-.formules-page__gauche > .texte { max-width: 46ch; }
-.formules-page .bascule { margin-top: 16px; }
-.formules-page__liste { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 2px; }
+/* ---------- Pages Entreprises, Duo et groupes, Individuel (gabarit PageService) ----------
+   Un bandeau photo (la photo de la carte de l'accueil) avec les lieux et le nom de la page ; dessous, une tuile
+   craie foncé (onglets, liste, « M'écrire », mentions) et une carte par formule, blanche ou encre */
+.bandeau-page { position: relative; margin-top: calc(-1 * var(--hauteur-entete)); height: 300px; display: flex; align-items: flex-end; background: var(--encre); overflow: hidden; }
+.bandeau-page > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* voile encre : en haut pour la barre de menu, en bas pour le titre */
+.bandeau-page::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(22, 21, 20, 0.55), rgba(22, 21, 20, 0.15) 35%, rgba(22, 21, 20, 0.8)); }
+.bandeau-page__texte { position: relative; z-index: 2; width: 100%; padding-bottom: 32px; }
+.bandeau-page .surtitre { margin: 0 0 8px; color: var(--jaune); } /* jaune sur photo sombre uniquement */
+.bandeau-page__titre { margin: 0; color: var(--craie); font-size: 80px; line-height: 80px; letter-spacing: -0.05em; }
+.formules-page__grille { display: grid; gap: 20px; align-items: stretch; }
+@media (min-width: 900px) { .formules-page__grille { grid-template-columns: minmax(300px, 0.85fr) 1.45fr; } }
+.formules-page__gauche { display: flex; flex-direction: column; align-items: flex-start; padding: 28px; border-radius: var(--arrondi); background: var(--craie-fonce); }
+.formules-page__gauche > .texte { max-width: 46ch; margin-bottom: 4px; }
+.formules-page .bascule { margin-bottom: 16px; }
+.formules-page__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .formules-page__liste li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 26px; }
 /* la case cochée s'aligne sur la première ligne quand le texte en fait deux */
 .formules-page__liste .picto { flex: none; margin-top: 3px; }
-.formules-page__bas { margin-top: 18px; display: grid; gap: 10px; justify-items: start; }
+.formules-page__bas { margin-top: auto; padding-top: 24px; display: grid; gap: 10px; justify-items: start; }
 .formules-page__note { margin: 0; font-size: 14px; line-height: 22px; color: var(--gris-chaud); }
 
 .bascule { display: inline-flex; padding: 4px; border-radius: 999px; border: 1px solid var(--filet); background: var(--blanc); }
@@ -907,25 +913,19 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .bouton--encre:hover { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
 .offre--sombre .bouton--principal:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
 
-/* Le contenu part du haut, pour que le titre ne bouge pas d'une page à l'autre ni quand on change d'onglet */
-@media (min-width: 900px) { .section.ecran-plein.formules-page { padding-block: 24px; } }
+@media (min-width: 900px) { .section.formules-page { padding-block: 24px 48px; } }
+@media (max-width: 899px) { .bandeau-page { height: 240px; } .bandeau-page__titre { font-size: 48px; line-height: 48px; } }
 @media (min-width: 900px) and (max-width: 1399px) {
-  .formules-page__titre { font-size: 52px; line-height: 52px; }
-  .formules-page .fil { margin-bottom: 8px; }
-  .section.ecran-plein.formules-page { padding-block: 20px; }
-  .formules-page .bascule { margin-top: 12px; }
-  .formules-page__liste { margin-top: 12px; }
-  .formules-page__bas { margin-top: 14px; }
+  .bandeau-page { height: 260px; }
+  .bandeau-page__titre { font-size: 64px; line-height: 64px; }
   .offre { padding: 20px 22px; gap: 8px; }
   .offre__prix { font-size: 44px; line-height: 48px; }
   .offre__tarifs { margin-bottom: 12px; padding-top: 10px; }
 
 }
 /* Même hauteur de cartes d'une page à l'autre (Entreprises / Duo et groupes) et d'un onglet à l'autre (Présentiel / En ligne) */
-@media (min-width: 900px) {
-  .offres--2 > .offre { min-height: calc(var(--ecran) - 234px); }
-  .formules-page__grille--large .offre { min-height: calc(var(--ecran) - 94px); }
-}
+@media (min-width: 1400px) { .offres--2 > .offre { min-height: 416px; } .formules-page__grille--large .offre { min-height: 554px; } }
+@media (min-width: 900px) and (max-width: 1399px) { .offres--2 > .offre { min-height: 333px; } .formules-page__grille--large .offre { min-height: 461px; } }
 /* Individuel (jusqu'à trois formules) : la colonne de gauche se resserre pour laisser la place aux cartes */
 @media (min-width: 900px) { .formules-page__grille--large { grid-template-columns: minmax(260px, 0.72fr) 2fr; } }
 
@@ -963,7 +963,7 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
 }
 
 /* ---------- Mon accompagnement : prix « à partir de » ; téléphone et tablette : cartes compactes ---------- */
-.service__prix { margin: 4px 0 0; font-weight: 800; font-size: 16px; line-height: 26px; color: var(--encre); }
+.service__prix { margin: 0; font-weight: 800; font-size: 16px; line-height: 26px; color: var(--encre); }
 @media (max-width: 899px) {
   .services__liste { gap: 20px; }
   .service { display: grid; grid-template-columns: 112px 1fr; gap: 0 16px; align-items: start; }
@@ -972,12 +972,12 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .service .titre--tuile { font-size: 24px; line-height: 28px; }
   .service .texte { display: none; }
   .service__prix { margin-top: 2px; font-size: 14px; line-height: 20px; }
-  .service__bouton { margin-top: 8px; height: 36px; font-size: 14px; }
+  .service__bas { margin-top: 4px; }
+  .service__fleche { width: 36px; height: 36px; }
 }
 @media (min-width: 600px) and (max-width: 899px) {
   .service { grid-template-columns: 160px 1fr; }
   .service .photo.service__photo { height: 160px; }
-  .service__bouton { max-width: 320px; }
 }
 
 /* Téléphone et tablette : « M'écrire » fixe en bas de l'écran ; le pied garde de la place pour lui */

@@ -5,11 +5,12 @@ import logoEncre from '../assets/rimaactive-mot-encre.svg'
 import { PAGES_MENU } from './liens.js'
 
 // Barre de menu : logo « rimaactive » à gauche, les pages en bulles au centre, « M'écrire » à droite.
-// Sur l'accueil, tant qu'on n'a pas défilé, elle se fond dans la photo (logo et textes clairs) ;
-// dès qu'on défile, et sur les autres pages, elle passe en craie. Seules les couleurs changent.
+// Sur l'accueil et les pages de formules, tant qu'on n'a pas défilé, elle se fond dans la photo (logo et textes
+// clairs) ; dès qu'on défile, et sur les autres pages, elle passe en craie. Seules les couleurs changent.
 export default function Entete() {
   const { pathname } = useLocation()
-  const surPhoto = useSurPhoto(pathname === '/')
+  // pages qui commencent par une photo plein cadre : l'accueil et les trois pages de formules
+  const surPhoto = useSurPhoto(['/', '/entreprises', '/communes', '/particuliers'].includes(pathname))
   const [ouvert, setOuvert] = useState(false)
   // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
   useEffect(() => setOuvert(false), [pathname])

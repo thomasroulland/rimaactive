@@ -1,9 +1,12 @@
+import photoEntreprises from '../assets/service-entreprises.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
 // Contenu de la page Entreprises : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
   titre: 'Entreprises',
+  lieux: 'Locaux · Extérieur',
+  image: photoEntreprises,
   liste: [
     'Dans vos locaux ou en extérieur',
     'Matériel fourni : tapis, kettlebells, slam balls, etc.',

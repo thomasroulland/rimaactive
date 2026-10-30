@@ -1,3 +1,4 @@
+import photoIndividuel from '../assets/service-individuel.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
@@ -6,6 +7,8 @@ const KETTLEBELLS = 'En salle ou à la maison avec des kettlebells'
 
 const PAGE = {
   titre: 'Individuel',
+  lieux: 'Domicile · Salle · En ligne',
+  image: photoIndividuel,
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   onglets: [
     {

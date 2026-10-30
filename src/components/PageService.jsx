@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 import { BoutonLien } from './Blocs.jsx'
 import Picto from './Picto.jsx'
 
-// Gabarit commun aux pages Entreprises, Groupes et Individuel, sur un seul écran :
-// à gauche le titre « Formules », une phrase, la liste de ce qui est compris et le bouton « M'écrire » ;
-// à droite une carte par formule (claire, ou encre pour celle marquée « sombre »).
+// Gabarit commun aux pages Entreprises, Duo et groupes et Individuel :
+// en haut un bandeau avec la photo de la carte de l'accueil, les lieux et le nom de la page ;
+// dessous, à gauche une tuile craie foncé (onglets, liste cochée, « M'écrire », mentions),
+// à droite une carte par formule (blanche, ou encre pour celle marquée « sombre »).
 // page.onglets : plusieurs jeux de cartes (Présentiel, En ligne) ; sinon page.cartes.
 // Une carte peut avoir un ou deux tarifs (côte à côte : À domicile / En salle, 4 à 8 / 9 à 12 personnes).
 export default function PageService({ page }) {
@@ -17,17 +18,18 @@ export default function PageService({ page }) {
   const note = onglet.note ?? page.note
   const contexte = onglet.nom ?? page.titre
   return (
-    <section className="section ecran-plein formules-page" aria-labelledby="page-titre">
+    <>
+    <header className="bandeau-page">
+      <img src={page.image} alt="" />
+      <div className="conteneur bandeau-page__texte">
+        <p className="surtitre">{page.lieux}</p>
+        <h1 id="page-titre" className="titre bandeau-page__titre">{page.titre}</h1>
+      </div>
+    </header>
+    <section className="section formules-page" aria-labelledby="page-titre">
       {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
       <div className={`conteneur formules-page__grille ${onglets.some((o) => o.cartes.length === 3) ? 'formules-page__grille--large' : ''}`}>
         <div className="formules-page__gauche">
-          <nav aria-label="Fil d'Ariane">
-            <ol className="fil mention">
-              <li><Link to="/">Accueil</Link></li>
-              <li aria-current="page">{page.titre}</li>
-            </ol>
-          </nav>
-          <h1 id="page-titre" className="titre formules-page__titre">Formules</h1>
           {intro && <p className="texte">{intro}</p>}
           {page.onglets && (
             <div className="bascule" role="tablist" aria-label="Choisir la formule">
@@ -89,6 +91,7 @@ export default function PageService({ page }) {
         </ul>
       </div>
     </section>
+    </>
   )
 }
 
