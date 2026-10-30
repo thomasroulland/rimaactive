@@ -37,11 +37,6 @@ const FORMATS = [
     texte: 'Des combinaisons d’exercices enchaînés avec le même outil pour renforcer votre coordination.',
     objectifs: ['Puissance', 'Coordination'],
   },
-  {
-    nom: 'Balistique',
-    texte: 'Des mouvements explosifs pour développer votre vitesse et votre réactivité.',
-    objectifs: ['Performance', 'Vitesse'],
-  },
 ]
 
 const SERVICES = [
