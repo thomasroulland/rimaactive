@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Entete from './Entete.jsx'
-import AppelContact from './AppelContact.jsx'
 import Pied from './Pied.jsx'
 
 export default function Layout() {
@@ -66,9 +65,8 @@ export default function Layout() {
       {/* La clé change à chaque page : le contenu est remonté et rejoue son fondu d'entrée */}
       <main id="contenu" key={pathname} className="page-entree">
         <Outlet />
-        {pathname !== '/contact' && <AppelContact />}
       </main>
-      <Pied />
+      <Pied seulementMentions={pathname === '/contact'} />
     </>
   )
 }

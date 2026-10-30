@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { HerosPage } from '../components/Blocs.jsx'
-import { CONTACT } from '../components/liens.js'
+import PresentationContact from '../components/AppelContact.jsx'
 import useTitre from '../components/useTitre.js'
 
 export default function Contact() {
@@ -20,90 +19,61 @@ export default function Contact() {
   }
 
   return (
-    <>
-      <HerosPage fil="Contact" ligne="Besoin d’un accompagnement ?" titre="Contactez-moi">
-        <p className="texte texte--grand provisoire">
-          [Phrase d'introduction à rédiger · message principal : dites-moi où vous en êtes, je vous réponds.]
-        </p>
-      </HerosPage>
+    // Page M'écrire, sur fond craie : « Contactez-moi », la zone et l'e-mail à gauche, le formulaire à droite
+    <section className="section page-contact" aria-labelledby="contact-titre">
+      <div className="conteneur page-contact__grille">
+        <PresentationContact titre="h1" avecEmail />
 
-      <section className="section section--serree">
-        <div className="conteneur contact-grille">
-          <aside className="coordonnees sur-encre" aria-label="Coordonnées">
-            <p className="surtitre">En direct</p>
-            <div>
-              <p className="mention">E-mail</p>
-              <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        {envoye ? (
+          <div role="status" className="confirmation">
+            <p className="surtitre">Merci</p>
+            <p className="titre titre--section">Message envoyé</p>
+            <p className="texte provisoire">[Message de confirmation à rédiger]</p>
+          </div>
+        ) : (
+          <form className="formulaire" onSubmit={envoyer}>
+            <div className="champ-groupe">
+              <label htmlFor="nom">Prénom et nom</label>
+              <input id="nom" name="nom" className="champ" type="text" autoComplete="name" placeholder="Prénom et nom" required />
             </div>
-            <div>
-              <p className="mention">Zone</p>
-              <p className="texte">Houdan et les communes voisines, dans un rayon de 20 km.</p>
+            <div className="champ-groupe">
+              <label htmlFor="email">E-mail</label>
+              <input id="email" name="email" className="champ" type="email" autoComplete="email" placeholder="vous@exemple.fr" required />
             </div>
-          </aside>
-
-          {envoye ? (
-            <div role="status" className="confirmation">
-              <p className="surtitre">Merci</p>
-              <p className="titre titre--section">Message envoyé</p>
-              <p className="texte provisoire">[Message de confirmation à rédiger]</p>
+            {formule && (
+              <div className="champ-groupe">
+                <label htmlFor="formule">Formule choisie</label>
+                <input id="formule" name="formule" className="champ" type="text" defaultValue={formule} />
+              </div>
+            )}
+            {/* à côté de la formule choisie quand il y en a une, sur toute la largeur sinon */}
+            <div className={`champ-groupe ${formule ? '' : 'pleine'}`}>
+              <label htmlFor="profil">Vous êtes</label>
+              <select id="profil" name="profil" className="champ" defaultValue={profilChoisi ?? 'particulier'}>
+                <option value="particulier">Particulier</option>
+                <option value="entreprise">Entreprise</option>
+                <option value="groupe">Duo ou groupe</option>
+              </select>
             </div>
-          ) : (
-            <form className="formulaire" onSubmit={envoyer}>
-              <div className="champ-groupe">
-                <label htmlFor="nom">Prénom et nom</label>
-                <input id="nom" name="nom" className="champ" type="text" autoComplete="name" required />
-              </div>
-              <div className="champ-groupe">
-                <label htmlFor="joindre">E-mail ou téléphone</label>
-                <input id="joindre" name="joindre" className="champ" type="text" autoComplete="email" required />
-              </div>
-              {formule && (
-                <div className="champ-groupe pleine">
-                  <label htmlFor="formule">Formule choisie</label>
-                  <input id="formule" name="formule" className="champ" type="text" defaultValue={formule} />
-                </div>
-              )}
-              <fieldset className="champ-groupe pleine">
-                <legend>Vous êtes</legend>
-                <div className="choix">
-                  {['entreprise', 'groupe', 'particulier'].map((profil) => (
-                    <label key={profil}>
-                      <input type="radio" name="profil" value={profil} defaultChecked={profil === profilChoisi} />
-                      <span>{profil[0].toUpperCase() + profil.slice(1)}</span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <div className="champ-groupe">
-                <label htmlFor="structure">
-                  Structure <span className="optionnel">(le cas échéant)</span>
-                </label>
-                <input id="structure" name="structure" className="champ" type="text" autoComplete="organization" />
-              </div>
-              <div className="champ-groupe">
-                <label htmlFor="commune">Commune</label>
-                <input id="commune" name="commune" className="champ" type="text" autoComplete="address-level2" />
-              </div>
-              <div className="champ-groupe pleine">
-                <label htmlFor="besoin">Ce que vous cherchez</label>
-                <textarea id="besoin" name="besoin" className="champ" rows="4" />
-              </div>
-              <div className="champ-groupe pleine">
-                <label htmlFor="dispos">Disponibilités</label>
-                <input id="dispos" name="dispos" className="champ" type="text" placeholder="ex. le mardi midi, le samedi matin" />
-              </div>
-              <div className="pleine">
-                <button type="submit" className="bouton bouton--principal">Envoyer</button>
-              </div>
-              <p className="info-rgpd pleine">
-                Ces informations servent uniquement à répondre à votre demande. Elles sont lues par Marie Sillas seule
-                et conservées 3 ans au plus sans suite de votre part. Vous pouvez les consulter ou les faire supprimer
-                à tout moment : voir la <Link to="/confidentialite">politique de confidentialité</Link>.
-              </p>
-            </form>
-          )}
-        </div>
-      </section>
-    </>
+            <div className="champ-groupe pleine">
+              <label htmlFor="message">
+                Votre message <span className="optionnel">(facultatif)</span>
+              </label>
+              <textarea id="message" name="message" className="champ" rows="3" placeholder="Vos objectifs, vos disponibilités…" />
+            </div>
+            <label className="case pleine">
+              <input type="checkbox" name="accord" required />
+              <span>
+                J’accepte d’être recontacté(e) au sujet de ma demande. Mes informations restent privées
+                (<Link to="/confidentialite">politique de confidentialité</Link>).
+              </span>
+            </label>
+            <div className="pleine">
+              <button type="submit" className="bouton bouton--principal">Envoyer</button>
+            </div>
+          </form>
+        )}
+      </div>
+    </section>
   )
 }

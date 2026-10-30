@@ -130,7 +130,7 @@ a:hover { color: var(--gris-chaud); }
 .section { padding: clamp(64px, calc(9 * var(--vw)), 128px) var(--gouttiere); }
 /* Une rubrique sur deux passe en blanc, séparée nettement, sur toute la largeur.
    Les cartes, blanches sur fond craie, passent en craie sur ces rubriques pour rester visibles. */
-main > section:nth-of-type(even):not(.appel) {
+main > section:nth-of-type(even):not(.page-contact) {
   --fond-rubrique: var(--blanc);
   --fond-carte: var(--craie);
   background: var(--fond-rubrique);
@@ -700,40 +700,47 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 .faq summary:hover { color: var(--encre); }
 .faq details p { margin: 0 0 24px; max-width: 65ch; color: var(--gris-chaud); }
 
-/* ---------- Bloc « écris-moi » (encre) ---------- */
-.appel {
-  background: var(--encre);
-  color: var(--craie);
-  padding: clamp(56px, calc(7 * var(--vw)), 96px) var(--gouttiere);
-}
-.appel__ligne { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 64px; }
-.appel .surtitre { color: var(--jaune); }
-.appel .titre { color: var(--craie); }
+/* ---------- « Contactez-moi » : colonne commune au bloc encre du bas et à la page M'écrire ---------- */
+.presentation-contact { display: flex; flex-direction: column; align-items: flex-start; }
+.presentation-contact .titre { margin: 0; }
+.presentation-contact > .texte { margin: 12px 0 0; }
+.presentation-contact__zone { display: flex; gap: 14px; align-items: flex-start; width: 100%; max-width: 420px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--filet); }
+.presentation-contact__picto { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--jaune); color: var(--encre); }
+.presentation-contact__zone .mention { margin-bottom: 4px; }
+.presentation-contact__lieu { margin: 0; font-weight: 700; }
+.presentation-contact__lien { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--encre); text-decoration: none; }
+.presentation-contact__lien:hover { text-decoration: underline; }
+.presentation-contact__email { margin-top: 24px; }
+.presentation-contact__email .mention { margin-bottom: 4px; }
+.presentation-contact__email a { color: var(--encre); font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
+.presentation-contact__email a:hover { text-decoration: underline; }
 
-/* ---------- Pied de page ---------- */
+/* ---------- Pied de page (encre) : « Contactez-moi » à gauche, menu et contacts à droite, puis les mentions ---------- */
 .pied {
   background: var(--encre);
   color: var(--craie);
-  padding: 0 var(--gouttiere) 32px;
+  padding: clamp(56px, calc(7 * var(--vw)), 88px) var(--gouttiere) 28px;
   font-size: 16px;
 }
 .pied a { color: var(--craie); text-decoration: none; }
-.pied a:hover { color: var(--vermillon); }
-.pied__haut {
-  border-top: 1px solid var(--filet-clair);
-  padding-top: clamp(40px, calc(5 * var(--vw)), 64px);
-  display: grid;
-  gap: 40px 48px;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-.pied__logo img { width: 168px; height: auto; }
-.pied__colonne { display: flex; flex-direction: column; gap: 2px; }
-.pied__colonne a { padding: 6px 0; }
-.pied__colonne .mention { color: var(--jaune); margin-bottom: 10px; }
+.pied a:hover { color: var(--jaune); }
+.pied .surtitre { color: var(--jaune); }
+.pied .titre { color: var(--craie); }
+.pied .presentation-contact > .texte { color: rgba(244, 243, 239, 0.78); }
+.pied .presentation-contact__zone { border-top-color: var(--filet-clair); }
+.pied .presentation-contact__zone .mention { color: rgba(244, 243, 239, 0.72); }
+.pied .presentation-contact__lien { color: var(--craie); }
+.pied__grille { display: grid; gap: 48px 64px; }
+@media (min-width: 900px) { .pied__grille { grid-template-columns: 1fr 1fr; align-items: start; } }
+.pied__infos { display: grid; gap: 28px; align-content: start; }
+.pied__infos .mention { color: rgba(244, 243, 239, 0.72); margin-bottom: 6px; }
+.pied__infos a { font-weight: 700; overflow-wrap: anywhere; }
+.pied__menu { display: flex; flex-wrap: wrap; gap: 8px 28px; padding-bottom: 24px; border-bottom: 1px solid var(--filet-clair); }
+.pied__menu a { font-weight: 500; }
 .pied__bas {
-  margin-top: 48px;
+  margin-top: clamp(40px, calc(5 * var(--vw)), 64px);
   border-top: 1px solid var(--filet-clair);
-  padding-top: 24px;
+  padding-top: 20px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -742,20 +749,26 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   color: rgba(244, 243, 239, 0.72);
 }
 .pied__bas nav { display: flex; gap: 24px; }
+/* Page M'écrire : seulement la ligne des mentions, sur craie */
+.pied--mentions { background: var(--craie); color: var(--gris-chaud); padding-top: 0; }
+.pied--mentions a { color: var(--gris-chaud); }
+.pied--mentions a:hover { color: var(--encre); }
+.pied--mentions .pied__bas { margin-top: 0; border-top-color: var(--filet); color: var(--gris-chaud); justify-content: center; }
+
+/* ---------- Page M'écrire (craie) : « Contactez-moi » à gauche, formulaire à droite ---------- */
+.page-contact__grille { display: grid; gap: 40px 72px; }
+@media (min-width: 960px) { .page-contact__grille { grid-template-columns: 0.85fr 1.15fr; align-items: start; } }
+/* Ordinateur : formulaire resserré pour que la page tienne dans un écran, même avec la formule choisie */
+@media (min-width: 900px) {
+  .section.page-contact { padding-block: clamp(28px, calc(var(--ecran) * 0.06), 48px); }
+  .page-contact .formulaire { gap: 12px 20px; }
+  .page-contact .champ-groupe { gap: 6px; }
+  .page-contact .champ { min-height: 44px; padding-block: 8px; font-size: 16px; line-height: 26px; }
+  .page-contact textarea.champ { min-height: 80px; }
+}
 
 /* ---------- Formulaire ---------- */
-.contact-grille { display: grid; gap: 12px; }
-@media (min-width: 960px) {
-  .contact-grille { grid-template-columns: 0.8fr 1.2fr; }
-}
-.coordonnees { border-radius: var(--arrondi); background: var(--encre); color: var(--craie); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: flex; flex-direction: column; gap: 32px; }
-.coordonnees .surtitre { color: var(--jaune); margin: 0; }
-.coordonnees a { color: var(--craie); text-decoration: none; font-weight: 900; font-size: 16px; line-height: 26px; font-weight: 700; overflow-wrap: anywhere; }
-.coordonnees a:hover { color: var(--vermillon); }
-.coordonnees .mention { color: var(--vermillon); margin-bottom: 8px; }
-.coordonnees p.texte { color: rgba(244, 243, 239, 0.78); }
-
-.formulaire { border-radius: var(--arrondi); background: var(--fond-carte); padding: clamp(28px, calc(4 * var(--vw)), 48px); display: grid; gap: 24px; }
+.formulaire { display: grid; gap: 18px 20px; }
 @media (min-width: 640px) {
   .formulaire { grid-template-columns: 1fr 1fr; }
   .formulaire .pleine { grid-column: 1 / -1; }
@@ -851,31 +864,16 @@ textarea.champ { resize: vertical; min-height: 140px; }
 }
 .a-completer { background: var(--jaune); color: var(--encre); padding: 0 4px; }
 
-/* Mention d'information sous le formulaire */
-.info-rgpd { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); max-width: 70ch; }
+/* Case à cocher du formulaire (accord pour être recontacté) */
+.case { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 22px; color: var(--gris-chaud); cursor: pointer; }
+.case input { flex: none; width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--encre); }
+.case a { color: var(--encre); }
 
-/* ---------- Bloc « Écrivez-moi » et pied de page : à eux deux, un écran sur ordinateur ---------- */
+/* Ordinateur : le bloc « Contactez-moi » et le pied de page tiennent ensemble dans un écran */
 @media (min-width: 900px) {
-  .appel { padding-block: clamp(36px, calc(var(--ecran) * 0.08), 64px); }
-  .pied { padding-bottom: 20px; }
-  .pied__haut { padding-top: clamp(28px, calc(var(--ecran) * 0.05), 48px); gap: 24px 48px; }
-  .pied__colonne a { padding: 2px 0; }
-  .pied__colonne { gap: 0; }
-  .pied { font-size: 15px; }
-  .pied__colonne .mention { margin-bottom: 6px; }
-  .pied__bas { margin-top: clamp(24px, calc(var(--ecran) * 0.04), 40px); padding-top: 16px; }
-}
-
-/* Ordinateur : le bloc « Contactez-moi » et le pied de page sont centrés, en une seule colonne */
-@media (min-width: 900px) {
-  .appel .conteneur, .appel__ligne { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; }
-  .appel__ligne { gap: 24px; }
-  .appel .surtitre { margin: 0; }
-  .pied__haut { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding-top: clamp(24px, calc(var(--ecran) * 0.04), 40px); }
-  .pied__colonne { align-items: center; }
-  .pied__colonne .mention { display: none; }
-  nav.pied__colonne, .pied__colonne:nth-child(4) { flex-direction: row; gap: 28px; }
-  .pied__bas { justify-content: center; gap: 8px 32px; }
+  .pied { padding-block: clamp(40px, calc(var(--ecran) * 0.08), 72px) 20px; }
+  .pied--mentions { padding-top: 0; }
+  .pied__bas { margin-top: clamp(28px, calc(var(--ecran) * 0.05), 48px); padding-top: 16px; }
 }
 
 /* Petits portables : la photo des cartes « Mon accompagnement » se réduit un peu pour que la rubrique tienne dans un écran */
