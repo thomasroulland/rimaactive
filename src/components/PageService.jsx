@@ -26,7 +26,6 @@ export default function PageService({ page }) {
               <li aria-current="page">{page.titre}</li>
             </ol>
           </nav>
-          <p className="surtitre">{page.surtitre}</p>
           <h1 id="page-titre" className="titre formules-page__titre">Formules</h1>
           <p className="texte">{intro}</p>
           {page.onglets && (
@@ -50,13 +49,14 @@ export default function PageService({ page }) {
         </div>
 
         <ul className={`offres offres--${onglet.cartes.length}`}>
-          {onglet.cartes.map((f, i) => (
+          {onglet.cartes.map((f) => (
             <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''}`}>
-              <p className="surtitre">{String(i + 1).padStart(2, '0')} — {f.surtitre}</p>
+              {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
               <div className="offre__tete">
-                <h2 className="titre titre--tuile">{f.nom}</h2>
-                <Picto nom="kettlebell" taille={24} />
+                <p className="surtitre">{f.surtitre}</p>
+                <Picto nom={f.picto} taille={24} />
               </div>
+              <h2 className="titre titre--tuile">{f.nom}</h2>
               {f.infos && <p className="offre__infos">{f.infos}</p>}
               <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
                 {f.tarifs.map((t) => (

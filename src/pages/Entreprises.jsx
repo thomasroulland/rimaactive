@@ -4,8 +4,7 @@ import useTitre from '../components/useTitre.js'
 // Contenu de la page Entreprises : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
   titre: 'Entreprises',
-  surtitre: 'Entreprises',
-  intro: 'Active 60 et Active Day, de 4 à 16 personnes.',
+  intro: 'De 4 à 16 personnes.',
   liste: [
     'Dans vos locaux ou en extérieur',
     'J’apporte tout le matériel',
@@ -16,6 +15,7 @@ const PAGE = {
   cartes: [
     {
       nom: 'Active 60',
+      picto: 'buildings',
       surtitre: '4 à 12 personnes',
       infos: '60\u00a0min · ponctuel ou hebdomadaire',
       tarifs: [
@@ -25,6 +25,7 @@ const PAGE = {
     },
     {
       nom: 'Active Day',
+      picto: 'clock',
       surtitre: 'Jusqu’à 16 personnes',
       infos: 'Sur devis · ponctuel',
       tarifs: [{ libelle: 'Par séance', avant: 'À partir de', montant: '180\u00a0€', detail: 'Selon le devis et le nombre de personnes' }],

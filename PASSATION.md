@@ -82,6 +82,12 @@ Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite le menu, l'e-mail, « Instagr
 `src/components/PageService.jsx`, données dans `src/pages/*.jsx`) : un seul écran. Contenus repris
 **mot pour mot** de la fiche « Formules et tarifs » de Marie (octobre 2026), sans texte ajouté.
 Cartes de même hauteur d'une page et d'un onglet à l'autre ; une carte peut porter deux tarifs côte à côte.
+Pas de surtitre sous le fil d'Ariane ; intro sans les noms des formules (« De 4 à 16 personnes. », « De 2 à 10
+personnes. », « À domicile ou en salle. », « Programmes en ligne sur 8 semaines. ») ; cartes sans numéro.
+Un pictogramme de la charte par formule, sur la ligne du surtitre : Active 60 entreprise (buildings),
+Active Day durée (clock), Active Duo à la maison (house), Active Group extérieur (tree), Active Solo kettlebell,
+Active Flex tours (repeat), Bilan postural case cochée, Active Start format (timer), Active Progress barre (barbell),
+Active Plus groupe (users). Tracés Phosphor Light copiés du design system dans `src/components/Picto.jsx`.
 Bouton « Choisir » → `/contact?formule=…` (formule pré-remplie, profil choisi).
 - Entreprises : Active 60 (110 € de 4 à 8 pers., 150 € de 9 à 12), Active Day (à partir de 180 €, sur devis).
 - Duo et groupes : Active Duo 85 € la séance, Active Group 56 à 140 € (14 € par personne).

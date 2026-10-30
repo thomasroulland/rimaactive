@@ -6,16 +6,16 @@ const KETTLEBELLS = 'En salle ou à la maison avec des kettlebells'
 
 const PAGE = {
   titre: 'Individuel',
-  surtitre: 'Individuel',
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   onglets: [
     {
       nom: 'Présentiel',
-      intro: 'Active Solo et Active Flex, à domicile ou en salle.',
+      intro: 'À domicile ou en salle.',
       liste: ['Déplacement compris dans un rayon de 20\u00a0km autour de Houdan', 'Au-delà de 20\u00a0km : sur devis'],
       cartes: [
         {
           nom: 'Active Solo',
+          picto: 'kettlebell',
           surtitre: '1 séance en présentiel',
           tarifs: [
             { libelle: 'À domicile', montant: '65\u00a0€', detail: 'la séance' },
@@ -24,6 +24,7 @@ const PAGE = {
         },
         {
           nom: 'Active Flex',
+          picto: 'repeat',
           surtitre: '4 séances par mois en présentiel',
           titrePoints: 'Compris',
           points: [
@@ -41,6 +42,7 @@ const PAGE = {
         },
         {
           nom: 'Bilan postural + correctifs',
+          picto: 'check-square',
           surtitre: 'À domicile ou en salle',
           tarifs: [{ montant: '70\u00a0€' }],
         },
@@ -48,23 +50,26 @@ const PAGE = {
     },
     {
       nom: 'En ligne',
-      intro: 'Active Start, Progress et Plus, sur 8 semaines.',
+      intro: 'Programmes en ligne sur 8 semaines.',
       liste: [],
       cartes: [
         {
           nom: 'Active Start',
+          picto: 'timer',
           surtitre: 'Programme en ligne',
           points: ['2 séances par semaine', KETTLEBELLS],
           tarifs: [{ libelle: '8 semaines', montant: '35\u00a0€', detail: '4,40\u00a0€ par semaine' }],
         },
         {
           nom: 'Active Progress',
+          picto: 'barbell',
           surtitre: 'Programme en ligne',
           points: ['3 séances par semaine', KETTLEBELLS],
           tarifs: [{ libelle: '8 semaines', montant: '40\u00a0€', detail: '5\u00a0€ par semaine' }],
         },
         {
           nom: 'Active Plus',
+          picto: 'users',
           surtitre: 'Programme personnalisé',
           points: ['Suivi hebdomadaire', 'Bilan initial et bilan à mi-parcours'],
           tarifs: [{ libelle: '8 semaines', montant: '160\u00a0€', apres: 'ou 2 × 80\u00a0€', detail: '20\u00a0€ par semaine' }],
