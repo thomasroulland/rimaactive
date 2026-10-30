@@ -10,7 +10,7 @@ const PAGE = {
   onglets: [
     {
       nom: 'Présentiel',
-      liste: ['En salle ou à domicile', 'Matériel fourni : tapis, kettlebells, slam balls, cordes à sauter…', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
+      liste: ['En salle ou à domicile', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
       cartes: [
         {
           nom: 'Active Solo',
@@ -65,7 +65,7 @@ const PAGE = {
           picto: 'users',
           surtitre: 'Programme personnalisé',
           points: ['Suivi hebdomadaire', 'Bilan initial et bilan à mi-parcours'],
-          tarifs: [{ libelle: '8 semaines', montant: '160\u00a0€', apres: 'ou 2 × 80\u00a0€', detail: '20\u00a0€ par semaine' }],
+          tarifs: [{ libelle: '8 semaines', montant: '160\u00a0€', detail: 'ou 2 × 80\u00a0€ · 20\u00a0€ par semaine' }],
           sombre: true,
         },
       ],

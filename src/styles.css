@@ -893,14 +893,14 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .offre__tarifs { display: grid; gap: 16px; margin: 6px 0 18px; padding-top: 14px; border-top: 1px solid var(--filet); }
 .offre__tarifs--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .offre__libelle { margin: 0 0 6px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
-.offre__prix { display: flex; flex-wrap: wrap; align-items: baseline; margin: 0; font-weight: 900; font-size: 64px; line-height: 64px; letter-spacing: -0.05em; }
-.offre__tarifs--2 .offre__prix { font-size: 44px; line-height: 48px; }
-.offre__avant { font-size: 16px; font-weight: 600; letter-spacing: 0; margin-right: 6px; }
-.offre__apres { flex-basis: 100%; margin-top: 4px; font-size: 24px; line-height: 28px; letter-spacing: -0.02em; color: var(--gris-chaud); }
+/* tous les prix ont la même taille, sur les trois pages, qu'il y ait un ou deux tarifs dans la carte */
+.offre__prix { display: flex; flex-wrap: wrap; align-items: baseline; margin: 0; font-weight: 900; font-size: 56px; line-height: 56px; letter-spacing: -0.05em; }
+/* « À partir de » : même taille que les libellés (14 px) */
+.offre__avant { font-size: 14px; font-weight: 600; letter-spacing: 0; margin-right: 6px; }
 .offre__detail { margin: 4px 0 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
 .offre__bouton { margin-top: auto; width: 100%; }
 .offre--sombre { background: var(--encre); color: var(--craie); }
-.offre--sombre .surtitre, .offre--sombre .offre__libelle, .offre--sombre .offre__detail, .offre--sombre .offre__apres { color: rgba(244, 243, 239, 0.78); }
+.offre--sombre .surtitre, .offre--sombre .offre__libelle, .offre--sombre .offre__detail { color: rgba(244, 243, 239, 0.78); }
 .offre--sombre .offre__tarifs { border-top-color: rgba(244, 243, 239, 0.2); }
 /* Bouton plein encre, pour l'action des cartes claires */
 .bouton--encre { background: var(--encre); border-color: var(--encre); color: var(--craie); }
@@ -917,8 +917,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .formules-page__liste { margin-top: 12px; }
   .formules-page__bas { margin-top: 14px; }
   .offre { padding: 20px 22px; gap: 8px; }
-  .offre__prix { font-size: 48px; line-height: 48px; }
-  .offre__tarifs--2 .offre__prix { font-size: 36px; line-height: 40px; }
+  .offre__prix { font-size: 44px; line-height: 48px; }
   .offre__tarifs { margin-bottom: 12px; padding-top: 10px; }
 
 }

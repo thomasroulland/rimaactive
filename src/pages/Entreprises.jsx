@@ -6,7 +6,7 @@ const PAGE = {
   titre: 'Entreprises',
   liste: [
     'Dans vos locaux ou en extérieur',
-    'Matériel fourni : tapis, kettlebells, slam balls, cordes à sauter…',
+    'Matériel fourni : tapis, kettlebells, slam balls, etc.',
     'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)',
   ],
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
@@ -16,10 +16,7 @@ const PAGE = {
       picto: 'buildings',
       surtitre: '4 à 12 personnes',
       infos: '60\u00a0min · ponctuel ou hebdomadaire',
-      tarifs: [
-        { libelle: '4 à 8 personnes · par séance', montant: '110\u00a0€' },
-        { libelle: '9 à 12 personnes · par séance', montant: '150\u00a0€' },
-      ],
+      tarifs: [{ libelle: 'Par séance', avant: 'À partir de', montant: '110\u00a0€', detail: 'Selon le devis et le nombre de personnes' }],
     },
     {
       nom: 'Active Day',

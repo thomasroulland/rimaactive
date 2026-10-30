@@ -85,7 +85,7 @@ Cartes de même hauteur d'une page et d'un onglet à l'autre ; une carte peut po
 Pas de surtitre sous le fil d'Ariane ni de phrase d'intro (sauf onglet En ligne : « Programmes en ligne sur
 8 semaines. ») ; cartes sans numéro. Liste cochée en 16 px : le lieu (Entreprises « Dans vos locaux ou en extérieur », Duo et groupes « À domicile ou
 en extérieur », Individuel « En salle ou à domicile »), puis partout « Matériel fourni : tapis, kettlebells, slam balls,
-cordes à sauter… » et « Déplacement inclus jusqu'à 20 km autour de Houdan (78) » (plus de « au-delà de 20 km »).
+etc. » et « Déplacement inclus jusqu'à 20 km autour de Houdan (78) » (plus de « au-delà de 20 km »).
 Matériel au lancement (donné par Marie) : tapis, kettlebells de 4 à 16 kg, 2 slam balls de 4 et 8 kg,
 2 cordes à sauter, 3 élastiques fessiers. Sur une ligne
 sur ordinateur, sauf Individuel (colonne trop étroite à cause des trois cartes : deux lignes).
@@ -94,11 +94,14 @@ Un pictogramme de la charte par formule, sur la ligne du surtitre, **choisis par
 (barbell), Active Flex kettlebell. En ligne (pas encore revu avec Marie) : Active Start durée (timer),
 Active Progress barre (barbell), Active Plus groupe (users). Tracés Phosphor Light copiés du design system dans `src/components/Picto.jsx`.
 Bouton « Choisir » → `/contact?formule=…` (formule pré-remplie, profil choisi).
-- Entreprises : Active 60 (110 € de 4 à 8 pers., 150 € de 9 à 12, sans prix par personne), Active Day (à partir de 180 €, sur devis).
+- Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
+  « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
 - Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
 - Individuel, onglet Présentiel : Active Solo 65 € domicile / 55 € salle ; Active Flex 220 € / 180 € par mois
   (liste « Compris » dans la carte). Offre Bilan postural + correctifs seul **retirée** par Marie. Onglet En ligne (8 semaines) :
-  Active Start 35 €, Active Progress 40 €, Active Plus 160 € ou 2 × 80 €.
+  Active Start 35 €, Active Progress 40 €, Active Plus 160 € (« ou 2 × 80 € · 20 € par semaine » en petit dessous).
+- Tailles identiques sur les trois pages : prix 56 px (44 px sur petit portable), tout le texte des cartes en 14 px,
+  liste cochée 16 px, noms des formules 32 px.
 - Déplacement inclus jusqu'à 20 km autour de Houdan (78). Tarifs valables jusqu'au
   30 avril 2027. TVA non applicable, art. 293 B du CGI.
 
