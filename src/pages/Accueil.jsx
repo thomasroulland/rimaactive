@@ -5,7 +5,7 @@ import photoEntreprises from '../assets/service-entreprises.jpg'
 import photoGroupes from '../assets/service-groupes.jpg'
 import photoIndividuel from '../assets/service-individuel.jpg'
 import { Link } from 'react-router-dom'
-import { BoutonLien, Photo } from '../components/Blocs.jsx'
+import { Photo } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 
 const FORMATS = [
@@ -77,7 +77,6 @@ export default function Accueil() {
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
             <a href="#approche" className="bouton bouton--principal">Mon approche</a>
-            <BoutonLien to="/contact" variante="clair">M’écrire</BoutonLien>
           </div>
         </div>
       </section>

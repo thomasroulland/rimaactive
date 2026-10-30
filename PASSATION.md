@@ -52,12 +52,12 @@ Mis à jour le 30 octobre 2026 (refonte de l'accueil mise en ligne).
 plus de logo rouge), bulles Accueil / Entreprises / Duo et groupes / Individuel (typo des surtitres,
 page en cours cernée d'encre, toutes les bulles restent claires), bouton « M'écrire » à droite.
 En haut de l'accueil, la barre est transparente sur la photo ; dès qu'on défile (et sur les autres pages)
-elle passe en craie et « M'écrire » en jaune. Seules les couleurs changent. Téléphone : bouton « Menu ».
+elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs changent. Téléphone : bouton « Menu ».
 
 **Accueil** (`src/pages/Accueil.jsx`), dans l'ordre :
 1. Haut de page : photo du squat (`heros-squat-nb.jpg`) en plein écran sous la barre, calée en haut
    (tête jamais coupée). « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) » en jaune, « Marie Sillas » en grand,
-   accroche en italique, boutons « Mon approche » (jaune) et « M'écrire » (clair). Plus de bandeau vermillon.
+   accroche en italique, bouton « Mon approche » (jaune) seul. Plus de bandeau vermillon.
 2. Mon approche : portrait entier (`portrait-marie.jpg`, 4:5, ni coupé ni rapproché, sans aplat jaune)
    et encadré de même hauteur, centrés ensemble. Encadré : titre « Mon approche », texte, citation,
    4 pastilles 01 Force / 02 Endurance / 03 Puissance / 04 Mobilité (bulle vermillon, chiffre encre).
