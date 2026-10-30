@@ -71,8 +71,6 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  // Essai : ?points=1, 2 ou 3 pour comparer la présentation des quatre points de « Mon approche »
-  const modelePoints = Number(new URLSearchParams(window.location.search).get('points')) || 1
   return (
     <>
       <section className="heros">
@@ -97,7 +95,7 @@ export default function Accueil() {
 
       {/* Mon approche : le portrait à fond perdu sur la moitié gauche, la présentation dans un encadré à droite.
           C'est la seule rubrique qui présente Marie (plus de page « À propos »). */}
-      <section id="approche" className={`section ecran-plein approche approche--points-${modelePoints}`} aria-labelledby="approche-titre">
+      <section id="approche" className="section ecran-plein approche" aria-labelledby="approche-titre">
         <figure className="approche__photo">
           <img src={portraitMarie} alt="Marie Sillas, coach sportive" />
         </figure>

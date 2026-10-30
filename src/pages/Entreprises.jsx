@@ -1,33 +1,33 @@
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Entreprises (fiche « Formules et tarifs » du design system, octobre 2026)
+// Contenu de la page Entreprises : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
   titre: 'Entreprises',
-  surtitre: 'Pour vos équipes',
-  intro: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
+  surtitre: 'Entreprises',
+  intro: 'Active 60 et Active Day, de 4 à 16 personnes.',
   liste: [
     'Dans vos locaux ou en extérieur',
-    'Tout le matériel est apporté',
-    'Déplacement compris dans un rayon de 20\u00a0km',
-    'Devis gratuit sous 48\u00a0h',
+    'J’apporte tout le matériel',
+    'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan',
+    'Au-delà de 20\u00a0km : sur devis',
   ],
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
-      surtitre: 'Régulier ou ponctuel',
       nom: 'Active 60',
-      prix: { montant: '110\u00a0€', unite: 'la séance, de 4 à 8 personnes' },
-      texte: '60\u00a0min, de 4 à 12 personnes, ponctuellement ou chaque semaine.',
-      petit: '150\u00a0€ la séance de 9 à 12 personnes',
+      surtitre: '4 à 12 personnes',
+      infos: '60\u00a0min · ponctuel ou hebdomadaire',
+      tarifs: [
+        { libelle: '4 à 8 personnes · par séance', montant: '110\u00a0€', detail: '27,50\u00a0€ à 13,75\u00a0€ par personne' },
+        { libelle: '9 à 12 personnes · par séance', montant: '150\u00a0€', detail: '16,70\u00a0€ à 12,50\u00a0€ par personne' },
+      ],
     },
     {
-      surtitre: 'Événement',
       nom: 'Active Day',
-      pastille: 'Sur devis',
-      prix: { avant: 'Dès ', montant: '180\u00a0€', unite: 'la séance' },
-      texte: 'Une séance ponctuelle pour votre équipe, jusqu’à 16 personnes.',
-      petit: 'Selon le nombre de participants',
+      surtitre: 'Jusqu’à 16 personnes',
+      infos: 'Sur devis · ponctuel',
+      tarifs: [{ libelle: 'Par séance', avant: 'À partir de', montant: '180\u00a0€', detail: 'Selon le devis et le nombre de personnes' }],
       sombre: true,
     },
   ],

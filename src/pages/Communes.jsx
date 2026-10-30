@@ -1,33 +1,25 @@
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Groupes (fiche « Formules et tarifs » du design system, octobre 2026)
+// Contenu de la page Groupes : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
   titre: 'Groupes',
-  surtitre: 'À plusieurs',
-  intro: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
-  liste: [
-    'Séances d’une heure',
-    'À domicile ou en extérieur',
-    'Matériel apporté',
-    'Déplacement compris dans un rayon de 20\u00a0km',
-  ],
-  note: 'Séance Active Group maintenue à partir de 4 inscrits. Tarifs valables jusqu’au 30 avril 2027.',
+  surtitre: 'Duo et groupes',
+  intro: 'Active Duo et Active Group, de 2 à 10 personnes.',
+  liste: ['Déplacement compris dans un rayon de 20\u00a0km autour de Houdan', 'Au-delà de 20\u00a0km : sur devis'],
+  note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
-      surtitre: 'À deux',
       nom: 'Active Duo',
-      prix: { montant: '85\u00a0€', unite: 'la séance' },
-      texte: '60\u00a0min à deux, à domicile ou en extérieur.',
-      petit: 'Soit 42,50\u00a0€ par personne',
+      surtitre: '2 personnes',
+      infos: '60\u00a0min · à domicile ou en extérieur',
+      tarifs: [{ libelle: 'Par séance', montant: '85\u00a0€', detail: '42,50\u00a0€ par personne' }],
     },
     {
-      surtitre: 'En petit groupe',
       nom: 'Active Group',
-      pastille: '4 à 10 personnes',
-      prix: { montant: '14\u00a0€', unite: 'par personne' },
-      texte: '60\u00a0min en extérieur, près de chez vous.',
-      petit: 'Soit 56 à 140\u00a0€ la séance',
+      surtitre: '4 à 10 personnes',
+      infos: '60\u00a0min · en extérieur',
+      tarifs: [{ libelle: 'Par séance', montant: '56 à 140\u00a0€', detail: '14\u00a0€ par personne' }],
       sombre: true,
     },
   ],
