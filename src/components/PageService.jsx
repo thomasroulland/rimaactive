@@ -27,7 +27,7 @@ export default function PageService({ page }) {
             </ol>
           </nav>
           <h1 id="page-titre" className="titre formules-page__titre">Formules</h1>
-          <p className="texte">{intro}</p>
+          {intro && <p className="texte">{intro}</p>}
           {page.onglets && (
             <div className="bascule" role="tablist" aria-label="Choisir la formule">
               {onglets.map((o, i) => (

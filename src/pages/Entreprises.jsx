@@ -4,12 +4,10 @@ import useTitre from '../components/useTitre.js'
 // Contenu de la page Entreprises : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
   titre: 'Entreprises',
-  intro: 'De 4 à 16 personnes.',
   liste: [
     'Dans vos locaux ou en extérieur',
     'J’apporte tout le matériel',
-    'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan',
-    'Au-delà de 20\u00a0km : sur devis',
+    'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)',
   ],
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [

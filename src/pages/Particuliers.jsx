@@ -10,8 +10,7 @@ const PAGE = {
   onglets: [
     {
       nom: 'Présentiel',
-      intro: 'À domicile ou en salle.',
-      liste: ['Déplacement compris dans un rayon de 20\u00a0km autour de Houdan', 'Au-delà de 20\u00a0km : sur devis'],
+      liste: ['En salle ou à domicile', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
       cartes: [
         {
           nom: 'Active Solo',

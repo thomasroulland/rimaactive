@@ -4,8 +4,7 @@ import useTitre from '../components/useTitre.js'
 // Contenu de la page Groupes : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
   titre: 'Duo et groupes',
-  intro: 'De 2 à 10 personnes.',
-  liste: ['Déplacement compris dans un rayon de 20\u00a0km autour de Houdan', 'Au-delà de 20\u00a0km : sur devis'],
+  liste: ['À domicile ou en extérieur', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {

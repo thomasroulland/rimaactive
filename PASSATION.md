@@ -82,8 +82,11 @@ Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite le menu, l'e-mail, « Instagr
 `src/components/PageService.jsx`, données dans `src/pages/*.jsx`) : un seul écran. Contenus repris
 **mot pour mot** de la fiche « Formules et tarifs » de Marie (octobre 2026), sans texte ajouté.
 Cartes de même hauteur d'une page et d'un onglet à l'autre ; une carte peut porter deux tarifs côte à côte.
-Pas de surtitre sous le fil d'Ariane ; intro sans les noms des formules (« De 4 à 16 personnes. », « De 2 à 10
-personnes. », « À domicile ou en salle. », « Programmes en ligne sur 8 semaines. ») ; cartes sans numéro.
+Pas de surtitre sous le fil d'Ariane ni de phrase d'intro (sauf onglet En ligne : « Programmes en ligne sur
+8 semaines. ») ; cartes sans numéro. Liste cochée en 16 px : Entreprises « Dans vos locaux ou en extérieur »,
+« J'apporte tout le matériel » ; Duo et groupes « À domicile ou en extérieur » ; Individuel « En salle ou à domicile » ;
+partout « Déplacement inclus jusqu'à 20 km autour de Houdan (78) » (plus de « au-delà de 20 km »). Sur une ligne
+sur ordinateur, sauf Individuel (colonne trop étroite à cause des trois cartes : deux lignes).
 Un pictogramme de la charte par formule, sur la ligne du surtitre : Active 60 entreprise (buildings),
 Active Day durée (clock), Active Duo à la maison (house), Active Group extérieur (tree), Active Solo kettlebell,
 Active Flex tours (repeat), Bilan postural case cochée, Active Start format (timer), Active Progress barre (barbell),
@@ -94,7 +97,7 @@ Bouton « Choisir » → `/contact?formule=…` (formule pré-remplie, profil ch
 - Individuel, onglet Présentiel : Active Solo 65 € domicile / 55 € salle ; Active Flex 220 € / 180 € par mois
   (liste « Compris » dans la carte) ; Bilan postural + correctifs 70 €. Onglet En ligne (8 semaines) :
   Active Start 35 €, Active Progress 40 €, Active Plus 160 € ou 2 × 80 €.
-- Déplacement compris dans 20 km autour de Houdan ; au-delà, sur devis. Tarifs valables jusqu'au
+- Déplacement inclus jusqu'à 20 km autour de Houdan (78). Tarifs valables jusqu'au
   30 avril 2027. TVA non applicable, art. 293 B du CGI.
 
 **Page M'écrire** (`/contact`), fond craie, tient sur un écran : même colonne de gauche que le bloc du bas
