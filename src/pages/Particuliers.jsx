@@ -10,7 +10,7 @@ const PAGE = {
   onglets: [
     {
       nom: 'Présentiel',
-      liste: ['En salle ou à domicile', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
+      liste: ['En salle ou à domicile', 'Matériel fourni : tapis, kettlebells, slam balls, cordes à sauter…', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
       cartes: [
         {
           nom: 'Active Solo',

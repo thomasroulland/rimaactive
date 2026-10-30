@@ -6,7 +6,7 @@ const PAGE = {
   titre: 'Entreprises',
   liste: [
     'Dans vos locaux ou en extérieur',
-    'J’apporte tout le matériel',
+    'Matériel fourni : tapis, kettlebells, slam balls, cordes à sauter…',
     'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)',
   ],
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',

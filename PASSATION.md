@@ -83,9 +83,11 @@ Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite le menu, l'e-mail, « Instagr
 **mot pour mot** de la fiche « Formules et tarifs » de Marie (octobre 2026), sans texte ajouté.
 Cartes de même hauteur d'une page et d'un onglet à l'autre ; une carte peut porter deux tarifs côte à côte.
 Pas de surtitre sous le fil d'Ariane ni de phrase d'intro (sauf onglet En ligne : « Programmes en ligne sur
-8 semaines. ») ; cartes sans numéro. Liste cochée en 16 px : Entreprises « Dans vos locaux ou en extérieur »,
-« J'apporte tout le matériel » ; Duo et groupes « À domicile ou en extérieur » ; Individuel « En salle ou à domicile » ;
-partout « Déplacement inclus jusqu'à 20 km autour de Houdan (78) » (plus de « au-delà de 20 km »). Sur une ligne
+8 semaines. ») ; cartes sans numéro. Liste cochée en 16 px : le lieu (Entreprises « Dans vos locaux ou en extérieur », Duo et groupes « À domicile ou
+en extérieur », Individuel « En salle ou à domicile »), puis partout « Matériel fourni : tapis, kettlebells, slam balls,
+cordes à sauter… » et « Déplacement inclus jusqu'à 20 km autour de Houdan (78) » (plus de « au-delà de 20 km »).
+Matériel au lancement (donné par Marie) : tapis, kettlebells de 4 à 16 kg, 2 slam balls de 4 et 8 kg,
+2 cordes à sauter, 3 élastiques fessiers. Sur une ligne
 sur ordinateur, sauf Individuel (colonne trop étroite à cause des trois cartes : deux lignes).
 Un pictogramme de la charte par formule, sur la ligne du surtitre, **choisis par Marie** : Active 60 entreprise
 (buildings), Active Day lieu (map-pin), Active Duo groupe (users), Active Group extérieur (tree), Active Solo barre
