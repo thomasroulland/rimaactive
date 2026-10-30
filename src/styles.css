@@ -523,53 +523,56 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   .zone__texte .faits > div { padding: 9px 0; }
 }
 
-/* ---------- Mon accompagnement : trois cartes photo, qui passent en jaune au survol ---------- */
+/* ---------- Mon accompagnement : trois cartes, photo arrondie puis texte, « Découvrir les formules » jaune au survol ---------- */
 .services .titre--section { margin-bottom: 22px; }
-.services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+.services__liste { margin: 0; padding: 0; list-style: none; display: grid; gap: 32px; }
 @media (min-width: 900px) { .services__liste { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
 .services__liste > li { display: flex; }
-.service {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--fond-carte);
-  border-radius: var(--arrondi);
-  overflow: hidden;
-  color: var(--encre);
-  text-decoration: none;
-  transition: background-color var(--duree) ease;
-}
-@media (hover: hover) { .service:hover { background: var(--jaune); color: var(--encre); } }
-.service:focus-visible { background: var(--jaune); }
-@media (hover: hover) { .service:hover .texte { color: var(--encre); } }
-.service:focus-visible .texte { color: var(--encre); }
-.service .photo.service__photo { aspect-ratio: 16 / 10; border-radius: 0; background: var(--craie-fonce); }
-/* Ordinateur : toutes les cartes ont la même hauteur ; la photo prend la place que le texte (3 lignes au plus) laisse */
-@media (min-width: 900px) {
-  .services__liste > li { height: calc(var(--ecran) * 0.22 + 275px); }
-  .service .photo.service__photo { aspect-ratio: auto; height: auto; flex: 1 1 0; min-height: 110px; }
-  .service__corps { flex: none; }
-}
-.service__corps { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: clamp(20px, calc(1.7 * var(--vw)), 26px); }
-.service__lien { margin-top: 0; }
+.service { flex: 1; display: flex; flex-direction: column; color: var(--encre); text-decoration: none; }
+.service .photo.service__photo { aspect-ratio: 16 / 10; border-radius: var(--arrondi); background: var(--craie-fonce); }
+.service .photo.service__photo img { transition: transform 0.6s cubic-bezier(.3, .7, .2, 1); }
+@media (hover: hover) { .service:hover .photo.service__photo img { transform: scale(1.04); } }
+.service__corps { flex: none; display: flex; flex-direction: column; gap: 6px; padding-top: 16px; }
+.service__lieux { margin: 0; }
 .service .texte {
+  margin: 6px 0 0;
   font-size: 16px;
   line-height: 26px;
   color: var(--gris-chaud);
-  /* jamais plus de 3 lignes */
+  /* toujours la place de 3 lignes, jamais plus : les photos des trois cartes restent alignées */
+  min-height: 78px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.service__lien { margin-top: auto; padding-top: 8px; }
-.service:hover .lien-fleche svg { transform: translateX(4px); }
+.service__bouton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  margin-top: 14px;
+  border: 1px solid var(--encre);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  transition: background-color var(--duree) ease, border-color var(--duree) ease;
+}
+@media (hover: hover) { .service:hover .service__bouton { background: var(--jaune); border-color: var(--jaune); } }
+.service:focus-visible .service__bouton { background: var(--jaune); border-color: var(--jaune); }
+/* Ordinateur : la photo prend la place que le texte laisse, pour que la rubrique tienne dans l'écran */
+@media (min-width: 900px) {
+  .services__liste > li { height: calc(var(--ecran) * 0.22 + 290px); }
+  .service .photo.service__photo { aspect-ratio: auto; height: auto; flex: 1 1 0; min-height: 110px; }
+}
 
-/* ---------- Ma boîte à outils : carrousel horizontal en boucle (voir BoiteOutils.jsx) ---------- */
-main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background: var(--encre); color: var(--craie); }
+/* ---------- Ma boîte à outils : carrousel horizontal en boucle, sur fond clair (voir BoiteOutils.jsx) ---------- */
+main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); color: var(--encre); }
 .outils {
-  --carte: min(520px, 74vw);
-  --pas: calc(var(--carte) + 32px);
+  --carte: min(310px, 78vw);
+  --pas: calc(var(--carte) + 20px);
+  position: relative;
   padding: clamp(48px, calc(6 * var(--vw)), 80px) 0;
   overflow: hidden;
 }
@@ -577,12 +580,11 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   .outils { min-height: calc(var(--ecran) - var(--hauteur-entete)); box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding-block: 32px; }
 }
 .outils__entete, .outils__commandes { width: calc(100% - 2 * var(--gouttiere)); }
-.outils .titre--section { color: var(--craie); }
 
 /* Les cartes sont posées les unes sur les autres au centre, puis décalées de --ecart pas */
 .outils__piste {
   position: relative;
-  height: clamp(300px, calc(var(--ecran) * 0.5), 430px);
+  height: 300px;
   margin-top: clamp(24px, calc(3 * var(--vw)), 40px);
   touch-action: pan-y;
   user-select: none;
@@ -592,46 +594,43 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
 .outils__piste:focus-visible { outline-offset: -2px; }
 .outil {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 24px;
+  bottom: 24px;
   left: 50%;
   box-sizing: border-box;
   width: var(--carte);
   margin-left: calc(var(--carte) / -2);
-  padding: clamp(24px, calc(2.4 * var(--vw)), 36px);
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  border-radius: var(--arrondi-grand);
-  background: var(--craie);
+  gap: 8px;
+  border-radius: var(--arrondi);
+  background: var(--blanc);
   color: var(--encre);
+  box-shadow: 0 1px 2px rgba(22, 21, 20, 0.06);
   transform: translateX(calc(var(--ecart) * var(--pas)));
-  filter: blur(3px);
-  opacity: 0.45;
   cursor: pointer;
-  transition: transform 0.5s cubic-bezier(.3, .7, .2, 1), filter 0.5s ease, opacity 0.5s ease;
+  transition: transform 0.5s cubic-bezier(.3, .7, .2, 1), opacity 0.5s ease, box-shadow 0.5s ease;
 }
-.outil--actif { transform: translateX(0); filter: none; opacity: 1; cursor: auto; z-index: 1; }
+/* carte du milieu : un peu plus grande et posée au-dessus, avec une ombre douce */
+.outil--actif { transform: translateX(0) scale(1.08); box-shadow: 0 18px 40px rgba(22, 21, 20, 0.14); cursor: auto; z-index: 1; }
+.outil--loin { opacity: 0.45; }
 .outil__numero { margin: 0; font-weight: 900; font-size: 15px; letter-spacing: 0.04em; color: var(--vermillon); }
-.outils .outil__nom { color: var(--encre); }
-.outil__texte { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
-.outil__objectifs { margin: auto 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
-.outil__objectifs li { padding: 8px 16px; border-radius: 999px; background: var(--jaune); color: var(--encre); font-weight: 700; font-size: 15px; }
+.outil__nom { margin: 0; }
+.outil__texte { margin: 0; font-size: 15px; line-height: 24px; color: var(--gris-chaud); }
+.outil__objectifs { margin: auto 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.outil__objectifs li { padding: 6px 12px; border-radius: 999px; background: var(--jaune); color: var(--encre); font-weight: 700; font-size: 13px; line-height: 18px; }
 
-/* Commandes : flèches et curseur */
+/* Commandes : flèche à gauche, ronds au centre, flèche à droite */
 .outils__commandes {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 20px;
-  margin-top: clamp(20px, calc(2.4 * var(--vw)), 28px);
+  margin: clamp(16px, calc(2 * var(--vw)), 24px) auto 0;
+  max-width: calc(var(--largeur));
 }
-.outils { position: relative; }
-/* Flèches au trait fin, posées entre la carte du milieu et ses voisines floutées */
 .outils__fleche {
-  position: absolute;
-  z-index: 2;
-  top: calc(50% + 40px);
   display: grid;
   place-items: center;
   width: 48px;
@@ -639,26 +638,18 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--craie);
+  color: var(--encre);
   cursor: pointer;
   transition: color var(--duree) ease;
 }
-.outils__fleche svg { width: 34px; height: 34px; }
-.outils__fleche:hover { color: var(--jaune); }
+.outils__fleche svg { width: 28px; height: 28px; }
+.outils__fleche:hover { color: var(--gris-chaud); }
 .outils__fleche--precedent svg { transform: scaleX(-1); }
-.outils__fleche--precedent { left: calc(50% - var(--carte) / 2 - 88px); }
-.outils__fleche:not(.outils__fleche--precedent) { right: calc(50% - var(--carte) / 2 - 88px); }
-@media (max-width: 699px) {
-  .outils__fleche { position: static; width: 48px; height: 48px; }
-  .outils__fleche svg { width: 26px; height: 26px; }
-}
 .outils__ronds { display: flex; gap: 10px; }
-.outils__ronds button { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 2px solid var(--craie); background: transparent; cursor: pointer; }
+.outils__ronds button { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 2px solid var(--gris-controle); background: transparent; cursor: pointer; }
 .outils__ronds button.rma-actif { background: var(--jaune); border-color: var(--jaune); }
 .visuellement-cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .outil { transition: none; } }
-/* Téléphone : les cartes voisines dépassent un peu sur les côtés */
-@media (max-width: 699px) { .outils { --pas: calc(var(--carte) * 0.9 + 8px); } }
 
 /* ---------- Liste à puces sobre ---------- */
 .liste {
@@ -883,11 +874,11 @@ textarea.champ { resize: vertical; min-height: 140px; }
 
 /* Petits portables : la photo des cartes « Mon accompagnement » se réduit un peu pour que la rubrique tienne dans un écran */
 @media (min-width: 900px) and (max-width: 1399px) {
-  .services__liste > li { height: calc(var(--ecran) * 0.22 + 265px); }
+  .services__liste > li { height: calc(var(--ecran) * 0.22 + 280px); }
 }
 
-/* Groupes (accueil) : la photo est calée en bas, pour que la kettlebell du premier plan ne soit pas coupée */
-.service__photo--groupes img { object-position: 50% 100%; }
+/* Duo et groupes (accueil) : la photo est calée en bas, pour que la kettlebell du premier plan ne soit pas coupée */
+.service__photo--communes img { object-position: 50% 100%; }
 
 /* ---------- Pages Entreprises, Groupes, Individuel (gabarit PageService) ----------
    À gauche le titre, la phrase, la liste et « M'écrire » ; à droite une carte par formule, claire ou encre */

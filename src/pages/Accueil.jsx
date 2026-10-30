@@ -48,13 +48,15 @@ const SERVICES = [
   {
     to: '/entreprises',
     titre: 'Entreprises',
+    lieux: 'Locaux · Extérieur',
     photo: 'Rangée de kettlebells sur le sol d’une salle',
     image: photoEntreprises,
     texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
   },
   {
     to: '/communes',
-    titre: 'Groupes',
+    titre: 'Duo et groupes',
+    lieux: 'Domicile · Extérieur',
     photo: 'Kettlebells et barres sur un sol de salle',
     image: photoGroupes,
     texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
@@ -62,6 +64,7 @@ const SERVICES = [
   {
     to: '/particuliers',
     titre: 'Individuel',
+    lieux: 'Domicile · Salle · En ligne',
     photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoIndividuel,
     texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',
@@ -117,16 +120,18 @@ export default function Accueil() {
       <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
           <h2 id="services-titre" className="titre titre--section">Mon accompagnement</h2>
-          {/* Toute la carte est un lien ; elle passe au néon au survol */}
+          {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase et « Découvrir les formules »,
+              qui passe en jaune au survol */}
           <ul className="services__liste">
             {SERVICES.map((service) => (
               <li key={service.to}>
                 <Link to={service.to} className="service">
-                  <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.titre.toLowerCase()}`} />
+                  <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
+                    <p className="surtitre service__lieux">{service.lieux}</p>
                     <p className="texte">{service.texte}</p>
-                    <span className="lien-fleche service__lien">En savoir plus <Fleche /></span>
+                    <span className="service__bouton">Découvrir les formules <FlecheDiagonale /></span>
                   </div>
                 </Link>
               </li>
@@ -158,5 +163,13 @@ export default function Accueil() {
         </div>
       </section>
     </>
+  )
+}
+
+function FlecheDiagonale() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 256 256" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M72 184 184 72M88 72h96v96" />
+    </svg>
   )
 }

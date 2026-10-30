@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
-// Rubrique « ma boîte à outils » : un carrousel horizontal en boucle. La carte du milieu est nette,
-// ses voisines dépassent sur les côtés, floutées. On change de carte avec les flèches, les ronds du bas,
-// le clavier (← →) ou en faisant glisser au doigt et à la souris.
+// Rubrique « ma boîte à outils » : un carrousel horizontal en boucle, sur fond clair. La carte du milieu
+// est mise en avant (un peu plus grande, avec une ombre), les plus éloignées s'estompent sur les bords.
+// On change de carte avec les flèches, les ronds du bas, le clavier (← →) ou en faisant glisser.
 // Flèche au trait fin, comme les pictogrammes Phosphor Light de la marque
 function FlecheOutils() {
   return (
@@ -47,7 +47,7 @@ export default function BoiteOutils({ formats }) {
   }
 
   return (
-    <section id="outils" className="outils sur-encre" aria-labelledby="outils-titre">
+    <section id="outils" className="outils" aria-labelledby="outils-titre">
       <div className="conteneur outils__entete">
         <h2 id="outils-titre" className="titre titre--section">Ma boîte à outils</h2>
       </div>
@@ -67,7 +67,7 @@ export default function BoiteOutils({ formats }) {
           return (
             <article
               key={format.nom}
-              className={`outil ${d === 0 ? 'outil--actif' : ''}`}
+              className={`outil ${d === 0 ? 'outil--actif' : ''} ${Math.abs(d) === 2 ? 'outil--loin' : ''}`}
               style={{ '--ecart': d, visibility: Math.abs(d) > 2 ? 'hidden' : undefined }}
               aria-hidden={d !== 0}
               onClick={() => d !== 0 && aller(i)}
@@ -89,7 +89,7 @@ export default function BoiteOutils({ formats }) {
         <button type="button" className="outils__fleche outils__fleche--precedent" onClick={() => aller(actif - 1)} aria-label="Format précédent">
           <FlecheOutils />
         </button>
-        {/* Un rond par format : la page active est pleine, en jaune (pagination en ronds de la marque) */}
+        {/* Un rond par format : celui de la carte du milieu est plein, en jaune (pagination en ronds de la marque) */}
         <div className="outils__ronds" role="tablist" aria-label="Choisir un format">
           {formats.map((format, i) => (
             <button key={format.nom} type="button" role="tab" aria-selected={i === actif} aria-label={format.nom}
