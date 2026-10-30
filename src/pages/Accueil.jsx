@@ -95,8 +95,7 @@ export default function Accueil() {
         </figure>
         <div className="approche__panneau">
           <div className="approche__cadre">
-            <p className="surtitre">Mon approche</p>
-            <h2 id="approche-titre" className="titre titre--section">S’entraîner moins, mais mieux</h2>
+            <h2 id="approche-titre" className="titre titre--section">Mon approche</h2>
             <p className="texte">
               Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
               partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
