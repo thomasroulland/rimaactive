@@ -72,7 +72,7 @@ export default function Accueil() {
       <section className="heros">
         <img className="heros__photo" src={photoHeros} alt="" />
         <div className="heros__texte">
-          <p className="surtitre heros__surtitre">Coach sportive diplômée</p>
+          <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78)</p>
           <h1 className="titre heros__titre">Marie Sillas</h1>
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">

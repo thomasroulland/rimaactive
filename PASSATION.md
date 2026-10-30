@@ -1,7 +1,7 @@
 # Passation — site Rimaactive
 
 Document de reprise pour une nouvelle discussion avec Claude. À lire en entier avant de toucher au site.
-Mis à jour le 30 octobre 2026.
+Mis à jour le 30 octobre 2026 (refonte de l'accueil mise en ligne).
 
 ## 1. Qui, quoi
 
@@ -37,7 +37,6 @@ Mis à jour le 30 octobre 2026.
   titres de rubrique 55/54 ; titres de cartes 32/32 ; surtitres 12 px capitales espacées ; boutons 15 px.
 - Pictogrammes **Phosphor Light** (`src/components/Picto.jsx`), plus une kettlebell dessinée sur la même grille.
 - Arrondis : 16 px cartes et photos, 8 px champs ; boutons en pilule.
-- Photos du site sous les portraits : cadre droit posé sur un **aplat jaune décalé** (Marie y tient : « moins fade »).
 
 ## 4. Contraintes de mise en page
 
@@ -45,72 +44,77 @@ Mis à jour le 30 octobre 2026.
   et 1280 × 620 (petit portable), puis sur téléphone (390 × 844, les rubriques s'empilent).
 - `index.html` contient un script de mise à l'échelle (variables `--ecran`, `--vw`, `--largeur`) ;
   `.section.ecran-plein` fait tenir une rubrique dans l'écran.
-- Barre de menu : **45 px**, même hauteur que le bandeau vermillon de l'accueil.
+- Barre de menu : **45 px** (56 px sur téléphone).
 
 ## 5. État actuel du site (branche `main`, en ligne)
 
+**Barre de menu** (`src/components/Entete.jsx`) : logo « rimaactive » (craie sur la photo, encre sinon ;
+plus de logo rouge), bulles Accueil / Entreprises / Duo et groupes / Individuel (typo des surtitres,
+page en cours cernée d'encre, toutes les bulles restent claires), bouton « M'écrire » à droite.
+En haut de l'accueil, la barre est transparente sur la photo ; dès qu'on défile (et sur les autres pages)
+elle passe en craie et « M'écrire » en jaune. Seules les couleurs changent. Téléphone : bouton « Menu ».
+
 **Accueil** (`src/pages/Accueil.jsx`), dans l'ordre :
-1. Haut de page : photo noir et blanc du squat calée à droite (`heros-squat-nb.jpg`, `right: -55px` pour
-   ne pas la couper), voile encre, « Marie Sillas / Coach sportive », accroche en italique,
-   boutons « Mon accompagnement » (clair) puis « M'écrire » (jaune). Bandeau vermillon :
-   20 km autour de Houdan (78) · Sessions de 30 à 60 min · Matériel mis à disposition.
-2. Mon approche : portrait (`portrait-marie.jpg`, recadrage choisi par Marie) + texte + « Qui suis-je ? ».
-   → **en cours de refonte**, voir § 6.
-3. Mon accompagnement : 3 cartes photo Entreprises (photo pleine de kettlebells), Groupes
-   (3-4 kettlebells, photo calée en bas), Individuel (barre + kettlebell) ; jaunes au survol.
-4. Ma boîte à outils : carrousel en boucle (`BoiteOutils.jsx`), 6 formats
-   (Density Training, Circuit training, EMOM, AMRAP, Complex, Balistique).
-5. Ma zone d'intervention : carte OpenStreetMap (image), Où / Déplacement (« Compris dans toute la zone »,
-   picto voiture) / Lieux / Durée.
-6. Bloc noir « Besoin d'un accompagnement ? Contactez-moi » + bouton « M'écrire », puis pied de page centré.
+1. Haut de page : photo du squat (`heros-squat-nb.jpg`) en plein écran sous la barre, calée en haut
+   (tête jamais coupée). « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) » en jaune, « Marie Sillas » en grand,
+   accroche en italique, boutons « Mon approche » (jaune) et « M'écrire » (clair). Plus de bandeau vermillon.
+2. Mon approche : portrait entier (`portrait-marie.jpg`, 4:5, ni coupé ni rapproché, sans aplat jaune)
+   et encadré de même hauteur, centrés ensemble. Encadré : titre « Mon approche », texte, citation,
+   4 pastilles 01 Force / 02 Endurance / 03 Puissance / 04 Mobilité (bulle vermillon, chiffre encre).
+   Page À propos supprimée : c'est la seule présentation de Marie.
+3. Mon accompagnement : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
+   bouton contour « Découvrir les formules » qui passe en jaune au survol) : Entreprises (Locaux · Extérieur),
+   Duo et groupes (Domicile · Extérieur), Individuel (Domicile · Salle · En ligne).
+4. Ma boîte à outils : carrousel clair (`BoiteOutils.jsx`), cartes blanches toutes de même taille, celle
+   du milieu avec une ombre ; 5 formats (Density Training, Circuit training, EMOM, AMRAP, Complex ;
+   Balistique retiré), bulles jaunes d'objectifs toujours sur une ligne.
+   Rubrique « Ma zone d'intervention » supprimée (Marie va aussi au-delà de 20 km).
 
-**Pages Entreprises / Groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
-`src/components/PageService.jsx`, données dans `src/pages/*.jsx`) : un seul écran.
-À gauche : fil d'Ariane, surtitre, grand titre « Formules », phrase, liste cochée, « M'écrire », mentions.
-À droite : une carte par formule (la dernière en encre), prix en grand, bouton « Choisir » qui ouvre
-`/contact?formule=…` avec la formule pré-remplie et le profil coché. Individuel a un sélecteur
-À domicile / En salle / En ligne. Tarifs repris de la fiche « Formules et tarifs » du design system
-(valables jusqu'au 30 avril 2027) :
-- Entreprises : Active 60 (110 € la séance de 4 à 8 pers., 150 € de 9 à 12), Active Day (dès 180 €, sur devis).
-- Groupes : Active Duo 85 € la séance, Active Group 14 € par personne.
-- Individuel présentiel : Active Solo 65 € domicile / 55 € salle ; Active Flex 220 € / 180 € par mois.
-  Bilan postural + correctifs seul : 70 €.
-- En ligne (8 semaines) : Active Start 35 €, Active Progress 40 €, Active Plus 160 € ou 2 × 80 €.
-- Déplacement compris dans 20 km autour de Houdan ; au-delà, sur devis. TVA non applicable, art. 293 B du CGI.
+**Bloc du bas** (`Pied.jsx` + `AppelContact.jsx`), encre, sur toutes les pages sauf M'écrire :
+à gauche « Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans les
+Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite le menu, l'e-mail, « Instagram / Facebook / LinkedIn »
+(Facebook et LinkedIn sans lien en attendant leurs adresses, voir `RESEAUX` dans `liens.js`) ; puis les mentions.
 
-**Contact** : formulaire (formule choisie, Vous êtes : Entreprise / Groupe / Particulier).
+**Pages Entreprises / Duo et groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
+`src/components/PageService.jsx`, données dans `src/pages/*.jsx`) : un seul écran. Contenus repris
+**mot pour mot** de la fiche « Formules et tarifs » de Marie (octobre 2026), sans texte ajouté.
+Cartes de même hauteur d'une page et d'un onglet à l'autre ; une carte peut porter deux tarifs côte à côte.
+Bouton « Choisir » → `/contact?formule=…` (formule pré-remplie, profil choisi).
+- Entreprises : Active 60 (110 € de 4 à 8 pers., 150 € de 9 à 12), Active Day (à partir de 180 €, sur devis).
+- Duo et groupes : Active Duo 85 € la séance, Active Group 56 à 140 € (14 € par personne).
+- Individuel, onglet Présentiel : Active Solo 65 € domicile / 55 € salle ; Active Flex 220 € / 180 € par mois
+  (liste « Compris » dans la carte) ; Bilan postural + correctifs 70 €. Onglet En ligne (8 semaines) :
+  Active Start 35 €, Active Progress 40 €, Active Plus 160 € ou 2 × 80 €.
+- Déplacement compris dans 20 km autour de Houdan ; au-delà, sur devis. Tarifs valables jusqu'au
+  30 avril 2027. TVA non applicable, art. 293 B du CGI.
+
+**Page M'écrire** (`/contact`), fond craie, tient sur un écran : même colonne de gauche que le bloc du bas
+avec l'e-mail ; formulaire Prénom et nom / E-mail / (Formule choisie) / Vous êtes / Votre message (facultatif) /
+case d'accord / Envoyer ; en bas seulement la ligne des mentions.
 ⚠️ Le formulaire **n'envoie rien** pour l'instant (simple message de confirmation) : à brancher
 (Formspree ou autre) si Marie le demande.
 
-## 6. Travail en cours (pas encore en ligne)
+**Description pour Google** (`index.html`) : « Marie Sillas, coach sportive diplômée basée à Houdan (78) : … ».
 
-Branche **`approche-maquette1`** (poussée, non fusionnée dans `main`) :
-- « Mon approche » refaite façon « maquette 1 » : portrait à fond perdu sur la moitié gauche,
-  encadré fin à droite (surtitre « Mon approche », titre « S'entraîner moins, mais mieux », texte,
-  citation en italique), **sans** « Qui suis-je ? ».
-- **Page À propos supprimée** (route, fichier et liens du menu/pied) : cet encart est la seule présentation de Marie.
-- 4 points en petit : 01 Force, 02 Endurance, 03 Puissance, 04 Mobilité, avec 3 présentations à comparer
-  via `?points=1|2|3` : (1) rangée de 4 colonnes avec filets, (2) deux lignes de deux, (3) pastilles.
-- **En attente** : Marie doit choisir 1, 2 ou 3. Ensuite : garder seulement la version choisie,
-  retirer le paramètre `?points=` et le code des autres versions, vérifier l'écran, fusionner dans `main`.
+## 6. Travail en cours
+
+Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `approche-maquette1`,
+`accueil-refonte`…) sont toutes fusionnées ou abandonnées.
 
 ## 7. Questions ouvertes à reposer à Marie
 
-1. Version des 4 points de « Mon approche » (1, 2 ou 3).
-2. Taille du texte courant : la charte dit 18 px (« site-texte ») et 16 px (« corps ») ; le site est en 16 px. Corriger la charte ?
-3. Prix supprimés en Groupes (Duo au mois 300/540 €, Group 12 € dès 7 inscrits) : existent-ils encore ?
-4. Picto voiture « Déplacement » : absent des 11 pictos de la charte, l'ajouter ou en choisir un autre ?
-5. Textes écrits par Claude à valider : surtitres et descriptions courtes des cartes de formules, listes cochées.
-6. Maquettes complètes inspirées d'autres sites (maquette 1 « FORME » et maquette 2 « X1 / Regex ») :
-   Marie aime les deux et veut mixer rubrique par rubrique. Grille de choix proposée :
-   A en-tête, B haut de page, C accompagnement, D approche, E formules, F boîte à outils, G contact,
-   H numéros verticaux. Elle a déjà retenu de la maquette 1 : le design des formules (fait) et « Mon approche » (en cours).
-7. Mentions légales : SIRET, carte professionnelle, assurance RC pro, médiateur à compléter.
+1. Adresses de ses pages **Facebook** et **LinkedIn** (à mettre dans `RESEAUX`, `src/components/liens.js`).
+2. Brancher l'envoi du formulaire de contact (Formspree ou autre) ?
+3. Textes repris de sa maquette, à confirmer : phrase de la case d'accord du formulaire.
+4. Courte présentation « qui je suis » : elle n'a pas encore donné de texte (diplôme, parcours).
+5. Taille du texte courant : la charte dit 18 px (« site-texte ») et 16 px (« corps ») ; le site est en 16 px. Corriger la charte ?
+6. Mentions légales : SIRET, carte professionnelle, assurance RC pro, médiateur à compléter.
 
 ## 8. Ce que Marie a déjà dit (préférences)
 
-- Aime : cartes jaunes au survol, aplat jaune sous les photos, formules en cartes sur fond clair,
-  pages courtes qui tiennent sur un écran, bouton « Choisir » sur chaque formule.
+- Aime : formules en cartes sur fond clair, pages courtes qui tiennent sur un écran, bouton « Choisir »
+  sur chaque formule, cartes toutes de la même taille, textes de même taille dans une rubrique,
+  bulles jaunes sur une seule ligne.
 - N'aime pas : le look « cartoon » (photos penchées) ; texte trop gros ; photos coupées (vérifier les cadrages) ;
   qu'on change l'emplacement d'une photo sans le dire ; qu'on sorte de la charte.
 - Veut voir des **maquettes en images** (captures) avant la mise en ligne, et une **seule image** par maquette complète.
