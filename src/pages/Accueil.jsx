@@ -71,55 +71,32 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  const versionHeros = Number(new URLSearchParams(window.location.search).get('heros')) || 1
   return (
     <>
-      {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu.
-          Essai : ?heros=1 ou 2 pour comparer les deux versions demandées par Marie */}
-      {versionHeros === 2 ? (
-        <section className="heros heros--v2">
-          <img className="heros__photo" src={photoHeros} alt="" />
-          <div className="heros__texte">
-            <p className="surtitre heros__surtitre">Coach sportive diplômée</p>
-            <h1 className="titre heros__titre">Marie Sillas</h1>
-            <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
-            <div className="actions">
-              <a href="#approche" className="bouton bouton--principal">Mon approche</a>
-              <BoutonLien to="/contact" variante="clair">M’écrire</BoutonLien>
-            </div>
+      {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
+      <section className="heros">
+        <img className="heros__photo" src={photoHeros} alt="" />
+        <div className="heros__texte">
+          <p className="surtitre heros__surtitre">Coach sportive diplômée</p>
+          <h1 className="titre heros__titre">Marie Sillas</h1>
+          <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
+          <div className="actions">
+            <a href="#approche" className="bouton bouton--principal">Mon approche</a>
+            <BoutonLien to="/contact" variante="clair">M’écrire</BoutonLien>
           </div>
-        </section>
-      ) : (
-        <section className="heros heros--v1">
-          <img className="heros__photo" src={photoHeros} alt="" />
-          <div className="heros__texte">
-            <h1 className="titre heros__titre">
-              <span className="ligne">Marie Sillas</span> <span className="ligne heros__jaune">Coach sportive</span>
-            </h1>
-            <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
-            <div className="actions">
-              <a href="#approche" className="bouton bouton--principal">Mon approche</a>
-            </div>
-          </div>
-          <ul className="heros__bandeau" aria-label="Ce que l’on travaille">
-            {['Force', 'Endurance', 'Puissance', 'Mobilité'].map((mot) => <li key={mot}>{mot}</li>)}
-          </ul>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* Mon approche : « Mon approche » au-dessus du portrait entier (ni coupé ni rapproché), l'encadré à droite.
+      {/* Mon approche : le portrait entier (ni coupé ni rapproché) et l'encadré, de même hauteur, centrés ensemble.
           C'est la seule rubrique qui présente Marie (plus de page « À propos »). */}
       <section id="approche" className="section ecran-plein approche" aria-labelledby="approche-titre">
-        <div className="approche__gauche">
-          <h2 id="approche-titre" className="titre titre--section approche__titre">Mon approche</h2>
-          <figure className="approche__photo">
-            <img src={portraitMarie} alt="Marie Sillas, coach sportive" width="960" height="1200" />
-          </figure>
-        </div>
+        <figure className="approche__photo">
+          <img src={portraitMarie} alt="Marie Sillas, coach sportive" width="960" height="1200" />
+        </figure>
         <div className="approche__panneau">
           <div className="approche__cadre">
             <p className="surtitre">Mon approche</p>
-            <h3 className="titre titre--section">S’entraîner moins, mais mieux</h3>
+            <h2 id="approche-titre" className="titre titre--section">S’entraîner moins, mais mieux</h2>
             <p className="texte">
               Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
               partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.

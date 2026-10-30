@@ -321,13 +321,12 @@ main > section:nth-of-type(even):not(.appel) {
 
 /* ---------- Héros de l'accueil ---------- */
 /* La photo de Marie en plein écran, sous la barre de menu (qui est transparente au-dessus) ;
-   le texte à gauche sur un voile encre. Le tout occupe exactement l'écran. */
+   le texte en bas à gauche sur un voile encre. Le tout occupe exactement l'écran. */
 .heros {
   position: relative;
   margin-top: calc(-1 * var(--hauteur-entete));
   min-height: var(--ecran);
   display: grid;
-  grid-template-rows: 1fr auto;
   background: var(--encre);
   overflow: hidden;
 }
@@ -362,40 +361,13 @@ main > section:nth-of-type(even):not(.appel) {
   padding: calc(var(--hauteur-entete) + 32px) var(--gouttiere) clamp(40px, calc(6 * var(--vw)), 72px);
 }
 .heros__titre { margin: 0; color: var(--craie); font-size: clamp(56px, calc(8.4 * var(--vw)), 120px); line-height: 0.95; letter-spacing: -0.045em; }
-.heros__titre .ligne { display: block; }
-.heros__jaune { color: var(--jaune); } /* jaune sur la photo sombre uniquement, jamais sur fond clair */
-.heros__surtitre { color: var(--jaune); margin-bottom: 14px; }
+.heros__surtitre { color: var(--jaune); margin-bottom: 14px; } /* jaune sur la photo sombre uniquement, jamais sur fond clair */
 .heros__ligne { margin: 20px 0 0; color: var(--craie); opacity: 0.92; }
 .heros .actions { margin-top: 32px; gap: 16px; }
-/* Bandeau vermillon : texte encre (sur-signature, 5,4:1), mots séparés par des tirets */
-.heros__bandeau {
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  padding: 12px var(--gouttiere);
-  min-height: 45px;
-  box-sizing: border-box;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 4px 0;
-  background: var(--vermillon);
-  color: var(--encre);
-  font-weight: 800;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.heros__bandeau li + li::before { content: "–"; margin: 0 18px; }
 /* Téléphone : la photo est cadrée sur Marie, le voile passe du haut vers le bas */
 @media (max-width: 699px) {
   .heros::before { background: linear-gradient(180deg, rgba(22, 21, 20, 0.5), rgba(22, 21, 20, 0.2) 35%, var(--voile-encre) 70%); }
   .heros__photo { object-position: 40% 0%; }
-  .heros__bandeau { letter-spacing: 0.1em; }
-  .heros__bandeau li + li::before { margin: 0 8px; }
 }
 
 /* ---------- Héros des pages ---------- */
@@ -1000,28 +972,28 @@ textarea.champ { resize: vertical; min-height: 140px; }
 @media (min-width: 900px) { .formules-page__grille:has(.offres--3) { grid-template-columns: minmax(260px, 0.72fr) 2fr; } }
 .offres--3 .offre__tete > .picto { display: none; }
 
-/* ---------- Mon approche : « Mon approche » au-dessus du portrait entier, présentation encadrée à droite ---------- */
+/* ---------- Mon approche : le portrait entier et l'encadré, de même hauteur, centrés ensemble ---------- */
 main > section.approche.section { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }
 .approche { display: grid; gap: 32px; }
-.approche__titre { margin: 0 0 16px; }
 .approche__photo { margin: 0; }
 /* le portrait garde son format (4:5) : jamais coupé ni rapproché */
 .approche__photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; border-radius: var(--arrondi); }
-.approche__cadre { width: 100%; max-width: 680px; justify-self: center; box-sizing: border-box; display: grid; gap: 12px; padding: clamp(26px, calc(2.6 * var(--vw)), 44px); border: 1px solid var(--gris-chaud); border-radius: var(--arrondi); }
+.approche__cadre { width: 100%; max-width: 680px; box-sizing: border-box; display: grid; align-content: center; gap: 12px; padding: clamp(26px, calc(2.6 * var(--vw)), 44px); border: 1px solid var(--gris-chaud); border-radius: var(--arrondi); }
 .approche__cadre .surtitre { margin: 0; color: var(--gris-chaud); }
 .approche__cadre .titre--section { margin: 0 0 6px; }
 .approche__citation { margin: 0; font-style: italic; color: var(--gris-chaud); }
 @media (min-width: 900px) {
-  /* la photo prend la hauteur de l'écran moins le titre : sa largeur en découle */
   main > section.approche.section.ecran-plein {
     display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: clamp(32px, calc(4 * var(--vw)), 72px);
-    padding-inline: max(var(--gouttiere), calc((100% - var(--largeur)) / 2));
+    grid-template-columns: auto minmax(0, 680px);
+    justify-content: center;
+    align-items: stretch;
+    align-content: center;
+    gap: clamp(32px, calc(4 * var(--vw)), 64px);
   }
-  /* hauteur de l'écran, moins la barre, les marges de la rubrique (2 × 32 px) et le titre (54 + 16 px) */
-  .approche__photo img { width: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px - 70px); }
+  /* photo et encadré à la même hauteur : celle de l'écran moins la barre et les marges de la rubrique (2 × 64 px) */
+  .approche__photo img { width: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 128px); }
+  .approche__cadre { min-height: calc(var(--ecran) - var(--hauteur-entete) - 128px); }
 }
 
 /* Les quatre points : pastilles blanches, numéro dans une bulle vermillon (texte encre sur vermillon, voir la charte) */
