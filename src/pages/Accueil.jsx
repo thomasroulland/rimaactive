@@ -59,7 +59,7 @@ const SERVICES = [
     to: '/particuliers',
     titre: 'Individuel',
     lieux: 'Domicile · Salle · En ligne',
-    prix: 'Dès 55\u00a0€ la séance · en ligne dès 35\u00a0€',
+    prix: 'Dès 45\u00a0€ la séance',
     photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoIndividuel,
     texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',

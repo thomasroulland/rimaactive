@@ -18,7 +18,8 @@ export default function PageService({ page }) {
   const contexte = onglet.nom ?? page.titre
   return (
     <section className="section ecran-plein formules-page" aria-labelledby="page-titre">
-      <div className="conteneur formules-page__grille">
+      {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
+      <div className={`conteneur formules-page__grille ${onglets.some((o) => o.cartes.length === 3) ? 'formules-page__grille--large' : ''}`}>
         <div className="formules-page__gauche">
           <nav aria-label="Fil d'Ariane">
             <ol className="fil mention">

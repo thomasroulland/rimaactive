@@ -17,13 +17,13 @@ const PAGE = {
       surtitre: '4 à 12 personnes',
       infos: '60\u00a0min · ponctuel ou hebdomadaire',
       tarifs: [
-        { libelle: '4 à 8 personnes · par séance', montant: '110\u00a0€', detail: '27,50\u00a0€ à 13,75\u00a0€ par personne' },
-        { libelle: '9 à 12 personnes · par séance', montant: '150\u00a0€', detail: '16,70\u00a0€ à 12,50\u00a0€ par personne' },
+        { libelle: '4 à 8 personnes · par séance', montant: '110\u00a0€' },
+        { libelle: '9 à 12 personnes · par séance', montant: '150\u00a0€' },
       ],
     },
     {
       nom: 'Active Day',
-      picto: 'clock',
+      picto: 'map-pin',
       surtitre: 'Jusqu’à 16 personnes',
       infos: 'Sur devis · ponctuel',
       tarifs: [{ libelle: 'Par séance', avant: 'À partir de', montant: '180\u00a0€', detail: 'Selon le devis et le nombre de personnes' }],

@@ -9,7 +9,7 @@ const PAGE = {
   cartes: [
     {
       nom: 'Active Duo',
-      picto: 'house',
+      picto: 'users',
       surtitre: '2 personnes',
       infos: '60\u00a0min · à domicile ou en extérieur',
       tarifs: [{ libelle: 'Par séance', montant: '85\u00a0€', detail: '42,50\u00a0€ par personne' }],
@@ -19,7 +19,7 @@ const PAGE = {
       picto: 'tree',
       surtitre: '4 à 10 personnes',
       infos: '60\u00a0min · en extérieur',
-      tarifs: [{ libelle: 'Par séance', montant: '56 à 140\u00a0€', detail: '14\u00a0€ par personne' }],
+      tarifs: [{ libelle: 'Par séance', montant: '14\u00a0€', detail: 'par personne' }],
       sombre: true,
     },
   ],

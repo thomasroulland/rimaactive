@@ -66,7 +66,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    bouton contour « Découvrir les formules » qui passe en jaune au survol) : Entreprises (Locaux · Extérieur),
    Duo et groupes (Domicile · Extérieur), Individuel (Domicile · Salle · En ligne).
    Sous la phrase, un prix « à partir de » tiré de la fiche : À partir de 110 € la séance /
-   Dès 14 € par personne / Dès 55 € la séance · en ligne dès 35 €. Sur téléphone et tablette (< 900 px),
+   Dès 14 € par personne / Dès 45 € la séance. Sur téléphone et tablette (< 900 px),
    cartes compactes : petite photo à gauche, sans la phrase.
 4. Ma boîte à outils : carrousel clair (`BoiteOutils.jsx`), cartes blanches toutes de même taille, celle
    du milieu avec une ombre ; 5 formats (Density Training, Circuit training, EMOM, AMRAP, Complex ;
@@ -87,15 +87,15 @@ Pas de surtitre sous le fil d'Ariane ni de phrase d'intro (sauf onglet En ligne 
 « J'apporte tout le matériel » ; Duo et groupes « À domicile ou en extérieur » ; Individuel « En salle ou à domicile » ;
 partout « Déplacement inclus jusqu'à 20 km autour de Houdan (78) » (plus de « au-delà de 20 km »). Sur une ligne
 sur ordinateur, sauf Individuel (colonne trop étroite à cause des trois cartes : deux lignes).
-Un pictogramme de la charte par formule, sur la ligne du surtitre : Active 60 entreprise (buildings),
-Active Day durée (clock), Active Duo à la maison (house), Active Group extérieur (tree), Active Solo kettlebell,
-Active Flex tours (repeat), Bilan postural case cochée, Active Start format (timer), Active Progress barre (barbell),
-Active Plus groupe (users). Tracés Phosphor Light copiés du design system dans `src/components/Picto.jsx`.
+Un pictogramme de la charte par formule, sur la ligne du surtitre, **choisis par Marie** : Active 60 entreprise
+(buildings), Active Day lieu (map-pin), Active Duo groupe (users), Active Group extérieur (tree), Active Solo barre
+(barbell), Active Flex kettlebell. En ligne (pas encore revu avec Marie) : Active Start durée (timer),
+Active Progress barre (barbell), Active Plus groupe (users). Tracés Phosphor Light copiés du design system dans `src/components/Picto.jsx`.
 Bouton « Choisir » → `/contact?formule=…` (formule pré-remplie, profil choisi).
-- Entreprises : Active 60 (110 € de 4 à 8 pers., 150 € de 9 à 12), Active Day (à partir de 180 €, sur devis).
-- Duo et groupes : Active Duo 85 € la séance, Active Group 56 à 140 € (14 € par personne).
+- Entreprises : Active 60 (110 € de 4 à 8 pers., 150 € de 9 à 12, sans prix par personne), Active Day (à partir de 180 €, sur devis).
+- Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
 - Individuel, onglet Présentiel : Active Solo 65 € domicile / 55 € salle ; Active Flex 220 € / 180 € par mois
-  (liste « Compris » dans la carte) ; Bilan postural + correctifs 70 €. Onglet En ligne (8 semaines) :
+  (liste « Compris » dans la carte). Offre Bilan postural + correctifs seul **retirée** par Marie. Onglet En ligne (8 semaines) :
   Active Start 35 €, Active Progress 40 €, Active Plus 160 € ou 2 × 80 €.
 - Déplacement inclus jusqu'à 20 km autour de Houdan (78). Tarifs valables jusqu'au
   30 avril 2027. TVA non applicable, art. 293 B du CGI.

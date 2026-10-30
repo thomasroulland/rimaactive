@@ -882,7 +882,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .offre__tete .picto { flex: none; }
 .offre > .titre { margin: 0; }
 /* trois formules côte à côte : la place de deux lignes de surtitre, pour que les noms restent alignés */
-.offres--3 .offre__tete { min-height: 32px; align-items: flex-start; }
+.formules-page__grille--large .offre__tete { min-height: 32px; align-items: flex-start; }
 .offre__infos { margin: 0; font-size: 14px; line-height: 20px; font-weight: 600; }
 .offre__points { list-style: none; margin: -6px 0 18px; padding: 0; display: grid; gap: 4px; font-size: 14px; line-height: 20px; }
 .offre__titre-points { margin: -6px 0 0; font-size: 14px; line-height: 20px; font-weight: 800; }
@@ -924,10 +924,10 @@ textarea.champ { resize: vertical; min-height: 140px; }
 /* Même hauteur de cartes d'une page à l'autre (Entreprises / Duo et groupes) et d'un onglet à l'autre (Présentiel / En ligne) */
 @media (min-width: 900px) {
   .offres--2 > .offre { min-height: calc(var(--ecran) - 234px); }
-  .offres--3 > .offre { min-height: calc(var(--ecran) - 94px); }
+  .formules-page__grille--large .offre { min-height: calc(var(--ecran) - 94px); }
 }
-/* Trois formules (En ligne) : la colonne de gauche se resserre pour laisser la place aux cartes */
-@media (min-width: 900px) { .formules-page__grille:has(.offres--3) { grid-template-columns: minmax(260px, 0.72fr) 2fr; } }
+/* Individuel (jusqu'à trois formules) : la colonne de gauche se resserre pour laisser la place aux cartes */
+@media (min-width: 900px) { .formules-page__grille--large { grid-template-columns: minmax(260px, 0.72fr) 2fr; } }
 
 /* ---------- Mon approche : le portrait entier et l'encadré, de même hauteur, centrés ensemble ---------- */
 main > section.approche.section { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }

@@ -14,7 +14,7 @@ const PAGE = {
       cartes: [
         {
           nom: 'Active Solo',
-          picto: 'kettlebell',
+          picto: 'barbell',
           surtitre: '1 séance en présentiel',
           tarifs: [
             { libelle: 'À domicile', montant: '65\u00a0€', detail: 'la séance' },
@@ -23,7 +23,7 @@ const PAGE = {
         },
         {
           nom: 'Active Flex',
-          picto: 'repeat',
+          picto: 'kettlebell',
           surtitre: '4 séances par mois en présentiel',
           titrePoints: 'Compris',
           points: [
@@ -38,12 +38,6 @@ const PAGE = {
             { libelle: 'En salle', montant: '180\u00a0€', detail: '45\u00a0€ la séance' },
           ],
           sombre: true,
-        },
-        {
-          nom: 'Bilan postural + correctifs',
-          picto: 'check-square',
-          surtitre: 'À domicile ou en salle',
-          tarifs: [{ montant: '70\u00a0€' }],
         },
       ],
     },
