@@ -1009,7 +1009,7 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
 .approche__photo { margin: 0; min-height: 420px; }
 .approche__photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 .approche__panneau { display: flex; align-items: center; padding: 32px var(--gouttiere); }
-.approche__cadre { width: 100%; display: grid; gap: 12px; padding: clamp(26px, calc(2.6 * var(--vw)), 44px); border: 1px solid var(--gris-chaud); border-radius: var(--arrondi); }
+.approche__cadre { width: 100%; display: grid; gap: 12px; background: var(--craie); padding: clamp(26px, calc(2.6 * var(--vw)), 44px); border: 1px solid var(--gris-chaud); border-radius: var(--arrondi); }
 .approche__cadre .surtitre { margin: 0; color: var(--gris-chaud); }
 .approche__cadre .titre--section { margin: 0 0 6px; }
 .approche__citation { margin: 0; font-style: italic; color: var(--gris-chaud); }
@@ -1021,7 +1021,8 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .approche__panneau { padding: 24px clamp(32px, calc(4 * var(--vw)), 64px); }
 }
 
-/* Les quatre points : grand numéro vermillon (24 px et plus, voir la charte) et le mot */
+/* Les quatre points : grand numéro vermillon (24 px et plus, voir la charte) et le mot.
+   Encadré sur craie : le vermillon y atteint 3:1 (2,7:1 seulement sur craie foncé). */
 .approche__points { list-style: none; margin: 6px 0 0; padding: 0; }
 .approche__numero { color: var(--vermillon); font-weight: 900; letter-spacing: -0.02em; }
 /* 1 : une rangée de quatre, séparés par des filets verticaux */
