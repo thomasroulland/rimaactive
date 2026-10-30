@@ -67,10 +67,8 @@ export default function Layout() {
         <Outlet />
       </main>
       <Pied seulementMentions={pathname === '/contact'} />
-      {/* Maquette : bouton « M'écrire » toujours visible en bas de l'écran sur téléphone */}
-      {new URLSearchParams(window.location.search).get('maquette') === 'telephone' && pathname !== '/contact' && (
-        <Link to="/contact" className="bouton bouton--principal ecrire-fixe">M’écrire</Link>
-      )}
+      {/* Téléphone et tablette : « M'écrire » toujours visible en bas de l'écran (sauf sur la page M'écrire) */}
+      {pathname !== '/contact' && <Link to="/contact" className="bouton bouton--principal ecrire-fixe">M’écrire</Link>}
     </>
   )
 }

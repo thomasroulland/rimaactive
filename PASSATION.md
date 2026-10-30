@@ -65,6 +65,9 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
 3. Mon accompagnement : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
    bouton contour « Découvrir les formules » qui passe en jaune au survol) : Entreprises (Locaux · Extérieur),
    Duo et groupes (Domicile · Extérieur), Individuel (Domicile · Salle · En ligne).
+   Sous la phrase, un prix « à partir de » tiré de la fiche : À partir de 110 € la séance /
+   Dès 14 € par personne / Dès 55 € la séance · en ligne dès 35 €. Sur téléphone et tablette (< 900 px),
+   cartes compactes : petite photo à gauche, sans la phrase.
 4. Ma boîte à outils : carrousel clair (`BoiteOutils.jsx`), cartes blanches toutes de même taille, celle
    du milieu avec une ombre ; 5 formats (Density Training, Circuit training, EMOM, AMRAP, Complex ;
    Balistique retiré), bulles jaunes d'objectifs toujours sur une ligne.
@@ -94,6 +97,13 @@ case d'accord / Envoyer ; en bas seulement la ligne des mentions.
 ⚠️ Le formulaire **n'envoie rien** pour l'instant (simple message de confirmation) : à brancher
 (Formspree ou autre) si Marie le demande.
 
+**Téléphone et tablette** : bouton « M'écrire » fixe en bas de l'écran (sauf sur la page M'écrire),
+en plus de celui de la barre.
+
+**Aperçu de partage** : image prête dans `public/apercu-partage.jpg` (photo, « Coach sportive diplômée ·
+Houdan (78) », « Marie Sillas »), balises og:title / og:description dans `index.html`. **Manque** og:image
+et og:url, qui demandent l'adresse complète du site : Marie doit d'abord acheter son nom de domaine.
+
 **Description pour Google** (`index.html`) : « Marie Sillas, coach sportive diplômée basée à Houdan (78) : … ».
 
 ## 6. Travail en cours
@@ -103,12 +113,13 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 
 ## 7. Questions ouvertes à reposer à Marie
 
-1. Adresses de ses pages **Facebook** et **LinkedIn** (à mettre dans `RESEAUX`, `src/components/liens.js`).
-2. Brancher l'envoi du formulaire de contact (Formspree ou autre) ?
-3. Textes repris de sa maquette, à confirmer : phrase de la case d'accord du formulaire.
-4. Courte présentation « qui je suis » : elle n'a pas encore donné de texte (diplôme, parcours).
-5. Taille du texte courant : la charte dit 18 px (« site-texte ») et 16 px (« corps ») ; le site est en 16 px. Corriger la charte ?
-6. Mentions légales : SIRET, carte professionnelle, assurance RC pro, médiateur à compléter.
+1. **Nom de domaine** (Marie doit l'acheter) : ensuite ajouter og:image et og:url dans `index.html`.
+2. Adresses de ses pages **Facebook** et **LinkedIn** (à mettre dans `RESEAUX`, `src/components/liens.js`).
+3. Brancher l'envoi du formulaire de contact (Formspree ou autre) ?
+4. Textes repris de sa maquette, à confirmer : phrase de la case d'accord du formulaire.
+5. Courte présentation « qui je suis » : elle n'a pas encore donné de texte (diplôme, parcours).
+6. Taille du texte courant : la charte dit 18 px (« site-texte ») et 16 px (« corps ») ; le site est en 16 px. Corriger la charte ?
+7. Mentions légales : SIRET, carte professionnelle, assurance RC pro, médiateur à compléter.
 
 ## 8. Ce que Marie a déjà dit (préférences)
 

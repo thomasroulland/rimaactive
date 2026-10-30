@@ -69,8 +69,6 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  // Maquettes d'amélioration à montrer à Marie : ?maquette=prix, etapes ou telephone
-  const maquette = new URLSearchParams(window.location.search).get('maquette')
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -116,9 +114,10 @@ export default function Accueil() {
       <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
           <h2 id="services-titre" className="titre titre--section">Mon accompagnement</h2>
-          {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase et « Découvrir les formules »,
-              qui passe en jaune au survol */}
-          <ul className={`services__liste ${maquette === 'telephone' ? 'services__liste--compacte' : ''}`}>
+          {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, le prix « à partir de »
+              (fiche tarifs) et « Découvrir les formules », qui passe en jaune au survol.
+              Sur téléphone et tablette, les cartes sont compactes : petite photo à gauche, sans la phrase. */}
+          <ul className="services__liste">
             {SERVICES.map((service) => (
               <li key={service.to}>
                 <Link to={service.to} className="service">
@@ -127,7 +126,7 @@ export default function Accueil() {
                     <h3 className="titre titre--tuile">{service.titre}</h3>
                     <p className="surtitre service__lieux">{service.lieux}</p>
                     <p className="texte">{service.texte}</p>
-                    {maquette === 'prix' && <p className="service__prix">{service.prix}</p>}
+                    <p className="service__prix">{service.prix}</p>
                     <span className="service__bouton">Découvrir les formules <FlecheDiagonale /></span>
                   </div>
                 </Link>
@@ -136,8 +135,6 @@ export default function Accueil() {
           </ul>
         </div>
       </section>
-
-      {maquette === 'etapes' && <Etapes />}
 
       <BoiteOutils formats={FORMATS} />
     </>
@@ -152,29 +149,3 @@ function FlecheDiagonale() {
   )
 }
 
-// Maquette « Comment ça se passe » : trois étapes, textes proposés par Claude, à valider par Marie
-const ETAPES = [
-  ['Vous m’écrivez', 'Dites-moi vos objectifs et vos disponibilités, par le formulaire ou par e-mail.'],
-  ['On fait le point', 'Je vous réponds pour choisir ensemble la formule et le lieu qui vous conviennent.'],
-  ['On s’entraîne', 'À domicile, en salle, en extérieur ou en ligne, avec le matériel fourni.'],
-]
-
-function Etapes() {
-  return (
-    <section className="section ecran-plein etapes" aria-labelledby="etapes-titre">
-      <div className="conteneur">
-        <h2 id="etapes-titre" className="titre titre--section">Comment ça se passe</h2>
-        <ol className="etapes__liste">
-          {ETAPES.map(([titre, texte], i) => (
-            <li key={titre} className="etape">
-              <span className="etape__numero">{String(i + 1).padStart(2, '0')}</span>
-              <h3 className="titre titre--tuile">{titre}</h3>
-              <p className="texte">{texte}</p>
-            </li>
-          ))}
-        </ol>
-        <Link to="/contact" className="bouton bouton--principal etapes__bouton">M’écrire</Link>
-      </div>
-    </section>
-  )
-}
