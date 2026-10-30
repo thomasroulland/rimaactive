@@ -71,38 +71,55 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  const versionHeros = Number(new URLSearchParams(window.location.search).get('heros')) || 1
   return (
     <>
-      <section className="heros">
-        {/* Photo de Marie en squat, en noir et blanc, calée à droite sans être coupée, fondue vers la gauche */}
-        <img className="heros__photo" src={photoHeros} alt="" />
-        <div className="heros__texte">
-          <h1 className="titre titre--accueil">
-            <span className="ligne">Marie Sillas</span> <span className="ligne">Coach sportive</span>
-          </h1>
-          <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
-          <div className="actions">
-            <a href="#accompagnement" className="bouton bouton--clair">Mon accompagnement</a>
-            <BoutonLien to="/contact">M'écrire</BoutonLien>
+      {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu.
+          Essai : ?heros=1 ou 2 pour comparer les deux versions demandées par Marie */}
+      {versionHeros === 2 ? (
+        <section className="heros heros--v2">
+          <img className="heros__photo" src={photoHeros} alt="" />
+          <div className="heros__texte">
+            <p className="surtitre heros__surtitre">Coach sportive diplômée</p>
+            <h1 className="titre heros__titre">Marie Sillas</h1>
+            <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
+            <div className="actions">
+              <a href="#approche" className="bouton bouton--principal">Mon approche</a>
+              <BoutonLien to="/contact" variante="clair">M’écrire</BoutonLien>
+            </div>
           </div>
-        </div>
-        <ul className="heros__bandeau">
-          <li><Picto nom="map-pin" taille={20} />Jusqu’à 20&nbsp;km autour de Houdan (78)</li>
-          <li><Picto nom="timer" taille={20} />Sessions de 30 à 60 min</li>
-          <li><Picto nom="kettlebell" taille={20} />Matériel mis à disposition</li>
-        </ul>
-      </section>
+        </section>
+      ) : (
+        <section className="heros heros--v1">
+          <img className="heros__photo" src={photoHeros} alt="" />
+          <div className="heros__texte">
+            <h1 className="titre heros__titre">
+              <span className="ligne">Marie Sillas</span> <span className="ligne heros__jaune">Coach sportive</span>
+            </h1>
+            <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
+            <div className="actions">
+              <a href="#approche" className="bouton bouton--principal">Mon approche</a>
+            </div>
+          </div>
+          <ul className="heros__bandeau" aria-label="Ce que l’on travaille">
+            {['Force', 'Endurance', 'Puissance', 'Mobilité'].map((mot) => <li key={mot}>{mot}</li>)}
+          </ul>
+        </section>
+      )}
 
-      {/* Mon approche : le portrait à fond perdu sur la moitié gauche, la présentation dans un encadré à droite.
+      {/* Mon approche : « Mon approche » au-dessus du portrait entier (ni coupé ni rapproché), l'encadré à droite.
           C'est la seule rubrique qui présente Marie (plus de page « À propos »). */}
       <section id="approche" className="section ecran-plein approche" aria-labelledby="approche-titre">
-        <figure className="approche__photo">
-          <img src={portraitMarie} alt="Marie Sillas, coach sportive" />
-        </figure>
+        <div className="approche__gauche">
+          <h2 id="approche-titre" className="titre titre--section approche__titre">Mon approche</h2>
+          <figure className="approche__photo">
+            <img src={portraitMarie} alt="Marie Sillas, coach sportive" width="960" height="1200" />
+          </figure>
+        </div>
         <div className="approche__panneau">
           <div className="approche__cadre">
             <p className="surtitre">Mon approche</p>
-            <h2 id="approche-titre" className="titre titre--section">S’entraîner moins, mais mieux</h2>
+            <h3 className="titre titre--section">S’entraîner moins, mais mieux</h3>
             <p className="texte">
               Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
               partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.

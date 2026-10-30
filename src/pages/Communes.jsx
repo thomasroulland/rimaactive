@@ -3,7 +3,7 @@ import useTitre from '../components/useTitre.js'
 
 // Contenu de la page Groupes : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
-  titre: 'Groupes',
+  titre: 'Duo et groupes',
   surtitre: 'Duo et groupes',
   intro: 'Active Duo et Active Group, de 2 à 10 personnes.',
   liste: ['Déplacement compris dans un rayon de 20\u00a0km autour de Houdan', 'Au-delà de 20\u00a0km : sur devis'],
@@ -26,6 +26,6 @@ const PAGE = {
 }
 
 export default function Communes() {
-  useTitre('Groupes')
+  useTitre('Duo et groupes')
   return <PageService page={PAGE} />
 }

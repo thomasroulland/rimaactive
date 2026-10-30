@@ -7,11 +7,11 @@ import useTitre from '../components/useTitre.js'
 export default function Contact() {
   useTitre('Contact')
   const [envoye, setEnvoye] = useState(false)
-  // Formule choisie depuis une carte des pages Entreprises, Groupes ou Individuel (ex. « Active Flex · À domicile »)
+  // Formule choisie depuis une carte des pages Entreprises, Duo et groupes ou Individuel (ex. « Active Flex · À domicile »)
   const [parametres] = useSearchParams()
   const formule = parametres.get('formule') ?? ''
   const contexte = formule.split(' · ')[1] ?? ''
-  const profilChoisi = contexte === 'Entreprises' ? 'entreprise' : contexte === 'Groupes' ? 'groupe' : formule ? 'particulier' : undefined
+  const profilChoisi = contexte === 'Entreprises' ? 'entreprise' : contexte === 'Duo et groupes' ? 'groupe' : formule ? 'particulier' : undefined
 
   // Envoi à brancher (Formspree, Resend, fonction Vercel…) : pour l'instant on affiche la confirmation
   function envoyer(event) {

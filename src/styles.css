@@ -218,12 +218,16 @@ main > section:nth-of-type(even):not(.appel) {
 .lien-fleche:hover svg { transform: translateX(4px); }
 
 /* ---------- En-tête ---------- */
+/* Logo à gauche, les pages en bulles au centre, « M'écrire » à droite. Sur l'accueil, avant tout défilement,
+   la barre est transparente sur la photo (.entete--sur-photo) ; seules les couleurs changent d'un état à l'autre. */
 .entete {
   position: sticky;
   top: 0;
   z-index: 50;
   background: var(--craie);
+  transition: background-color var(--duree) ease;
 }
+.entete--sur-photo { background: transparent; }
 .entete__barre {
   /* hauteur fixe : le haut de page de l'accueil se cale dessus pour remplir l'écran au pixel près */
   box-sizing: border-box;
@@ -231,56 +235,49 @@ main > section:nth-of-type(even):not(.appel) {
   max-width: calc(var(--largeur) + 2 * var(--gouttiere));
   margin: 0 auto;
   padding: 0 var(--gouttiere);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
 }
-.entete__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--encre); text-decoration: none; }
-.entete__logo img {
-  /* symbole vermillon */
-  height: 24px;
-  width: auto;
-  /* le dessin du « aa » démarre au bord de l'image, la lettre M du titre d'accueil un peu après :
-     on décale le logo d'autant pour que les deux tombent à l'aplomb */
-  margin-left: calc(0.04 * clamp(34px, calc(4.1 * var(--vw)), 58px));
-}
-.entete__droite { display: flex; align-items: center; gap: 32px; }
-/* Ordinateur : le menu au centre de la barre, le logo à gauche */
-@media (min-width: 961px) {
-  .entete__barre { display: grid; grid-template-columns: 1fr auto 1fr; }
-  .entete__droite { grid-column: 2; }
-}
+.entete__logo { display: flex; align-items: center; }
+.entete__logo img { display: block; height: 21px; width: auto; }
+.entete__droite { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
 
-.nav {
-  position: relative;
-  display: flex;
+/* Bulles : même typographie que les surtitres (12 px, capitales espacées) */
+.nav { display: flex; align-items: center; gap: 6px; }
+.nav__bulle, .entete__ecrire {
+  display: inline-flex;
   align-items: center;
-  gap: 0 29px;
-}
-.nav a {
-  padding: 10px 0;
+  gap: 6px;
+  height: 30px;
+  padding: 0 14px;
+  border: 1px solid var(--filet);
+  border-radius: 999px;
+  background: var(--blanc);
   color: var(--encre);
   text-decoration: none;
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease;
 }
-.nav a:hover { color: var(--gris-chaud); }
-.nav__trait {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--vermillon);
-  pointer-events: none;
-  transition: transform 0.4s cubic-bezier(.55, 0, .25, 1), width 0.4s cubic-bezier(.55, 0, .25, 1), opacity var(--duree) ease;
-}
+.nav__bulle:hover { border-color: var(--encre); }
+/* page en cours : bulle cernée d'encre */
+.nav__bulle[aria-current="page"] { border-color: var(--encre); box-shadow: inset 0 0 0 1px var(--encre); }
+.entete__ecrire { background: var(--jaune); border-color: var(--jaune); }
+.entete__ecrire:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
+/* Sur la photo : bulles en verre clair, textes craie, « M'écrire » en craie */
+.entete--sur-photo .nav__bulle { background: rgba(244, 243, 239, 0.12); border-color: rgba(244, 243, 239, 0.28); color: var(--craie); }
+.entete--sur-photo .nav__bulle:hover, .entete--sur-photo .nav__bulle[aria-current="page"] { border-color: var(--craie); box-shadow: inset 0 0 0 1px var(--craie); }
+.entete--sur-photo .entete__ecrire { background: var(--craie); border-color: var(--craie); }
+.entete--sur-photo .menu-bouton { color: var(--craie); }
 
 .menu-bouton {
   display: none;
   align-items: center;
-  gap: 10px;
   min-height: 44px;
   padding: 0 4px;
   border: 0;
@@ -288,31 +285,19 @@ main > section:nth-of-type(even):not(.appel) {
   color: var(--encre);
   font: inherit;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
 }
-.menu-bouton__icone { position: relative; width: 22px; height: 12px; }
-.menu-bouton__icone::before,
-.menu-bouton__icone::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: currentColor;
-  transition: transform var(--duree) ease, top var(--duree) ease;
-}
-.menu-bouton__icone::before { top: 0; }
-.menu-bouton__icone::after { top: 10px; }
-.menu-bouton[aria-expanded="true"] .menu-bouton__icone::before { top: 5px; transform: rotate(45deg); }
-.menu-bouton[aria-expanded="true"] .menu-bouton__icone::after { top: 5px; transform: rotate(-45deg); }
 
 .menu-mobile {
   display: none;
+  background: var(--craie);
   border-top: 1px solid var(--filet);
   padding: 8px var(--gouttiere) 24px;
 }
-.menu-mobile a:not(.bouton) {
+.menu-mobile a {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -325,90 +310,92 @@ main > section:nth-of-type(even):not(.appel) {
   letter-spacing: -0.04em;
 }
 .menu-mobile a[aria-current="page"] { color: var(--vermillon); }
-.menu-mobile .bouton { margin-top: 24px; width: 100%; }
 
 @media (max-width: 960px) {
   :root { --hauteur-entete: 56px; }
-  .nav, .entete__droite > .bouton { display: none; }
+  .entete__barre { grid-template-columns: auto 1fr; }
+  .nav { display: none; }
   .menu-bouton { display: inline-flex; }
   .menu-mobile.ouvert { display: block; animation: fondu var(--duree) ease both; }
 }
 
 /* ---------- Héros de l'accueil ---------- */
-/* Fond encre, une photo en transparence à droite qui se fond sous le texte, et un bandeau rouge en bas.
-   Le tout occupe exactement l'écran sous l'en-tête : la rubrique suivante n'apparaît qu'au défilement. */
+/* La photo de Marie en plein écran, sous la barre de menu (qui est transparente au-dessus) ;
+   le texte à gauche sur un voile encre. Le tout occupe exactement l'écran. */
 .heros {
   position: relative;
-  min-height: calc(var(--ecran) - var(--hauteur-entete));
+  margin-top: calc(-1 * var(--hauteur-entete));
+  min-height: var(--ecran);
   display: grid;
   grid-template-rows: 1fr auto;
   background: var(--encre);
   overflow: hidden;
 }
 .heros__photo {
-  /* toute la hauteur de la photo, calée à droite : le disque n'est jamais coupé.
-     Elle dépasse un peu à droite (seuls les montants du rack sortent du cadre) : depuis que l'en-tête
-     est plus bas, la photo est plus haute, donc plus large, et sans ce décalage elle passerait sous le texte */
+  /* photo paysage en plein écran, calée en haut : la tête n'est jamais coupée */
   position: absolute;
-  top: 0;
-  right: -55px;
+  inset: 0;
+  width: 100%;
   height: 100%;
-  width: auto;
-  max-width: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%);
-  mask-image: linear-gradient(90deg, transparent, #000 30%);
+  object-fit: cover;
+  object-position: 50% 0%;
 }
-/* Léger voile encre sous le texte : la ligne lumineuse du sol ne gêne pas la lecture */
+/* Voile encre à gauche sous le texte, et en haut sous la barre de menu */
 .heros::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(90deg, var(--voile-encre) 0 44%, rgba(22, 21, 20, 0.4) 58%, transparent 72%);
+  background:
+    linear-gradient(180deg, rgba(22, 21, 20, 0.55), transparent 18%),
+    linear-gradient(90deg, rgba(22, 21, 20, 0.82) 0 22%, rgba(22, 21, 20, 0.35) 50%, transparent 68%);
 }
 .heros__texte {
   position: relative;
   z-index: 2;
-  align-self: center;
+  align-self: end;
   box-sizing: border-box;
   width: 100%;
   max-width: calc(var(--largeur) + 2 * var(--gouttiere));
   margin: 0 auto;
-  padding: 32px var(--gouttiere);
+  padding: calc(var(--hauteur-entete) + 32px) var(--gouttiere) clamp(40px, calc(6 * var(--vw)), 72px);
 }
-.heros .titre--accueil { color: var(--craie); }
-.heros .titre--accueil .ligne { display: block; }
-.heros__ligne { margin-top: 20px; color: var(--craie); opacity: 0.92; }
-.heros .actions { margin-top: 37px; gap: 19px; }
-/* Bandeau d'infos : vermillon, texte encre (sur-signature, 5,4:1) */
+.heros__titre { margin: 0; color: var(--craie); font-size: clamp(56px, calc(8.4 * var(--vw)), 120px); line-height: 0.95; letter-spacing: -0.045em; }
+.heros__titre .ligne { display: block; }
+.heros__jaune { color: var(--jaune); } /* jaune sur la photo sombre uniquement, jamais sur fond clair */
+.heros__surtitre { color: var(--jaune); margin-bottom: 14px; }
+.heros__ligne { margin: 20px 0 0; color: var(--craie); opacity: 0.92; }
+.heros .actions { margin-top: 32px; gap: 16px; }
+/* Bandeau vermillon : texte encre (sur-signature, 5,4:1), mots séparés par des tirets */
 .heros__bandeau {
   position: relative;
   z-index: 2;
   margin: 0;
   padding: 12px var(--gouttiere);
   min-height: 45px;
-  align-items: center;
+  box-sizing: border-box;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px 40px;
+  align-items: center;
+  gap: 4px 0;
   background: var(--vermillon);
-  color: var(--encre); /* sur-signature : encre sur vermillon (5,4:1) */
+  color: var(--encre);
   font-weight: 800;
   font-size: 14px;
   line-height: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
-.heros__bandeau li { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-/* pictogrammes du bandeau : tous en picto-s (20 px), au trait, de la couleur du texte */
-.heros__bandeau .picto { flex: none; width: 20px; height: 20px; }
-/* les pictogrammes séparent les infos : pas de point entre elles */
-/* Téléphone : la photo couvre tout le fond, plus discrète ; le bandeau passe sur trois lignes */
+.heros__bandeau li + li::before { content: "–"; margin: 0 18px; }
+/* Téléphone : la photo est cadrée sur Marie, le voile passe du haut vers le bas */
 @media (max-width: 699px) {
-  .heros::before { background: linear-gradient(180deg, rgba(22, 21, 20, 0.45), var(--voile-encre) 55%); }
-  .heros__photo { right: 0; width: 100%; object-fit: cover; object-position: 42% 20%; -webkit-mask-image: none; mask-image: none; }
-  .heros__bandeau { flex-direction: column; align-items: center; }
+  .heros::before { background: linear-gradient(180deg, rgba(22, 21, 20, 0.5), rgba(22, 21, 20, 0.2) 35%, var(--voile-encre) 70%); }
+  .heros__photo { object-position: 40% 0%; }
+  .heros__bandeau { letter-spacing: 0.1em; }
+  .heros__bandeau li + li::before { margin: 0 8px; }
 }
 
 /* ---------- Héros des pages ---------- */
@@ -1013,21 +1000,28 @@ textarea.champ { resize: vertical; min-height: 140px; }
 @media (min-width: 900px) { .formules-page__grille:has(.offres--3) { grid-template-columns: minmax(260px, 0.72fr) 2fr; } }
 .offres--3 .offre__tete > .picto { display: none; }
 
-/* ---------- Mon approche : portrait à fond perdu à gauche, présentation encadrée à droite ---------- */
-main > section.approche.section { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
-.approche__photo { margin: 0; min-height: 420px; }
-.approche__photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
-.approche__panneau { display: flex; align-items: center; padding: 32px var(--gouttiere); }
-.approche__cadre { width: 100%; display: grid; gap: 12px; padding: clamp(26px, calc(2.6 * var(--vw)), 44px); border: 1px solid var(--gris-chaud); border-radius: var(--arrondi); }
+/* ---------- Mon approche : « Mon approche » au-dessus du portrait entier, présentation encadrée à droite ---------- */
+main > section.approche.section { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }
+.approche { display: grid; gap: 32px; }
+.approche__titre { margin: 0 0 16px; }
+.approche__photo { margin: 0; }
+/* le portrait garde son format (4:5) : jamais coupé ni rapproché */
+.approche__photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; border-radius: var(--arrondi); }
+.approche__cadre { width: 100%; max-width: 680px; justify-self: center; box-sizing: border-box; display: grid; gap: 12px; padding: clamp(26px, calc(2.6 * var(--vw)), 44px); border: 1px solid var(--gris-chaud); border-radius: var(--arrondi); }
 .approche__cadre .surtitre { margin: 0; color: var(--gris-chaud); }
 .approche__cadre .titre--section { margin: 0 0 6px; }
 .approche__citation { margin: 0; font-style: italic; color: var(--gris-chaud); }
 @media (min-width: 900px) {
-  main > section.approche.section.ecran-plein { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; padding: 0; }
-  /* la photo remplit sa moitié sans imposer sa propre hauteur */
-  .approche__photo { position: relative; min-height: 0; }
-  .approche__photo img { position: absolute; inset: 0; }
-  .approche__panneau { padding: 24px clamp(32px, calc(4 * var(--vw)), 64px); }
+  /* la photo prend la hauteur de l'écran moins le titre : sa largeur en découle */
+  main > section.approche.section.ecran-plein {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: clamp(32px, calc(4 * var(--vw)), 72px);
+    padding-inline: max(var(--gouttiere), calc((100% - var(--largeur)) / 2));
+  }
+  /* hauteur de l'écran, moins la barre, les marges de la rubrique (2 × 32 px) et le titre (54 + 16 px) */
+  .approche__photo img { width: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 64px - 70px); }
 }
 
 /* Les quatre points : pastilles blanches, numéro dans une bulle vermillon (texte encre sur vermillon, voir la charte) */
