@@ -26,7 +26,7 @@ export default function Pied() {
           <div className="pied__colonne">
             <p className="mention">Suivez-moi</p>
             {RESEAUX.map((reseau) => (
-              <a key={reseau.label} href={reseau.href}>{reseau.label}</a>
+              <a key={reseau.label} href={reseau.href} target="_blank" rel="noopener noreferrer">{reseau.label}</a>
             ))}
           </div>
         </div>

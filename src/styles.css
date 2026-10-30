@@ -1,5 +1,5 @@
 /* Rimaactive — d'après la charte graphique (octobre 2026), section 13 « site web » */
-/* Rimaactive — d'après le design system Rimaactive (version 3.1, octobre 2026) */
+/* Rimaactive — d'après le design system Rimaactive (charte validée le 29 octobre 2026) */
 :root {
   --vw: 1vw; /* 1 % de la largeur de l'écran, corrigé par la mise à l'échelle (index.html) */
   --ecran: 100svh; /* hauteur de l'écran, corrigée sur grands écrans (voir zoom plus bas) */
@@ -17,12 +17,12 @@
   --filet-clair: rgba(244, 243, 239, 0.16);
 
   --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
 
   --gouttiere: clamp(20px, calc(5 * var(--vw)), 80px);
   --largeur: 1240px;
   --duree: 160ms;
-  --arrondi: 8px; /* rayon-s : cartes, cadre photo, champs */
+  --rayon-s: 8px; /* étiquettes, champs */
+  --arrondi: 16px; /* rayon-m : cartes du site, cadres photo */
   --arrondi-grand: 16px; /* rayon-m : photos et carte */
   --hauteur-entete: 45px; /* en-tête collant, même hauteur que le bandeau rouge de l'accueil, voir .entete */
 }
@@ -34,12 +34,12 @@
   font-style: normal;
   font-display: swap;
 }
-/* Fraunces, réglage « Soft » (droite) : réservée à l'accroche sous le titre d'accueil */
+/* Hanken Grotesk italique : réservée à l'accroche sous le titre d'accueil */
 @font-face {
-  font-family: "Fraunces";
-  src: url("/fonts/Fraunces-Soft-Variable.woff2") format("woff2");
+  font-family: "Hanken Grotesk";
+  src: url("/fonts/HankenGrotesk-Italic-Variable.woff2") format("woff2");
   font-weight: 100 900;
-  font-style: normal;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -80,7 +80,7 @@ a:hover { color: var(--gris-chaud); }
 /* Titres du site : Hanken Grotesk Black, une majuscule au début (écrite dans le texte) */
 .titre {
   margin: 0;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: -0.045em;
   line-height: 0.98;
   text-wrap: balance;
@@ -96,11 +96,11 @@ a:hover { color: var(--gris-chaud); }
   .titre--accueil, .titre--section, .titre--page { font-size: 36px; line-height: 38px; }
 }
 
-/* site-accroche : Fraunces droite, seulement sous le titre d'accueil */
+/* site-accroche : Hanken Grotesk italique, seulement sous le titre d'accueil */
 .accroche {
   margin: 0;
-  font-family: var(--font-serif);
-  font-style: normal;
+  font-family: var(--font-sans);
+  font-style: italic;
   font-weight: 400;
   font-size: 22px;
   line-height: 30px;
@@ -180,12 +180,12 @@ main > section:nth-of-type(even):not(.appel) {
   justify-content: center;
   gap: 8px;
   min-height: 48px;
-  padding: 12px 26px;
+  padding: 12px 22px;
   border: 2px solid transparent;
   border-radius: 999px;
   font: inherit;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 20px;
   text-decoration: none;
   cursor: pointer;
@@ -194,8 +194,8 @@ main > section:nth-of-type(even):not(.appel) {
 /* principal : jaune signal, texte encre ; un seul par écran */
 .bouton--principal { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
 .bouton--principal:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
-/* secondaire : contour et texte encre */
-.bouton--secondaire { background: var(--craie); color: var(--encre); border-color: var(--encre); }
+/* secondaire : contour et texte encre, libellé en gras */
+.bouton--secondaire { background: var(--craie); color: var(--encre); border-color: var(--encre); font-weight: 700; }
 .bouton--secondaire:hover { background: var(--encre); color: var(--craie); }
 /* clair : craie, sur une photo ou un fond encre */
 .bouton--clair { background: var(--craie); border-color: var(--craie); color: var(--encre); }
@@ -381,7 +381,7 @@ main > section:nth-of-type(even):not(.appel) {
 .heros .titre--accueil .ligne { display: block; }
 .heros__ligne { margin-top: 20px; color: var(--craie); opacity: 0.92; }
 .heros .actions { margin-top: 37px; gap: 19px; }
-/* Bandeau d'infos : vermillon, texte blanc (choix de Marie) */
+/* Bandeau d'infos : vermillon, texte encre (sur-signature, 5,4:1) */
 .heros__bandeau {
   position: relative;
   z-index: 2;
@@ -395,7 +395,7 @@ main > section:nth-of-type(even):not(.appel) {
   justify-content: center;
   gap: 6px 40px;
   background: var(--vermillon);
-  color: var(--blanc);
+  color: var(--encre); /* sur-signature : encre sur vermillon (5,4:1) */
   font-weight: 800;
   font-size: 14px;
   line-height: 20px;
@@ -812,7 +812,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--encre); background
   min-height: 52px;
   padding: 12px 16px;
   border: 1.5px solid var(--gris-controle);
-  border-radius: var(--arrondi);
+  border-radius: var(--rayon-s);
   background: var(--blanc);
   font: inherit;
   color: var(--encre);
@@ -1029,3 +1029,5 @@ textarea.champ { resize: vertical; min-height: 140px; }
 @media (min-width: 900px) and (max-width: 1399px) { .formules-page .formules--cartes .formule { padding-block: 18px; } }
 /* Groupes : la photo est calée en bas, pour que la kettlebell du premier plan ne soit pas coupée */
 .service__photo--groupes img { object-position: 50% 100%; }
+/* Inclus sur deux colonnes quand la carte est assez large (deux cartes par ligne) */
+.formules--cartes .formule__points { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); column-gap: 24px; }

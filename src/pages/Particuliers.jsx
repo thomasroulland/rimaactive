@@ -1,7 +1,7 @@
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Individuel
+// Contenu de la page Individuel (fiche « Formules et tarifs » du design system, octobre 2026)
 const PAGE = {
   titre: 'Individuel',
   surtitre: 'Pour vous',
@@ -12,7 +12,7 @@ const PAGE = {
         intro: 'Séances de 60\u00a0min en présentiel.',
         notes: [
           'Bilan postural + correctifs seul : 70\u00a0€.',
-          'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan.',
+          'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan ; au-delà, sur devis.',
         ],
         cartes: [
           {
@@ -24,16 +24,9 @@ const PAGE = {
           {
             nom: 'Active Flex',
             pourQui: 'Pour devenir autonome avec un cadre',
-            details: [['Séances', '4 par mois (1 par semaine)']],
-            inclus: ['Bilan initial', 'Programme personnalisé', 'Suivi par message'],
+            details: [['Séances', '4 par mois (1 par semaine)'], ['Engagement', 'Sans engagement, mois par mois']],
+            inclus: ['Bilan initial', 'Bilan postural et correctifs', 'Programme personnalisé', 'Suivi hebdomadaire par message', 'Bilan mensuel'],
             prix: { montant: '220\u00a0€', apres: 'par mois' },
-          },
-          {
-            nom: 'Active Plus',
-            pourQui: 'Pour être accompagné de près, idéal pour débuter',
-            details: [['Séances', '8 par mois (2 par semaine)']],
-            inclus: ['Bilan initial', 'Bilan postural', 'Programme personnalisé', 'Suivi par message'],
-            prix: { montant: '400\u00a0€', apres: 'par mois' },
           },
         ],
       },
@@ -42,7 +35,7 @@ const PAGE = {
         intro: 'Séances de 60\u00a0min en présentiel.',
         notes: [
           'Bilan postural + correctifs seul : 70\u00a0€.',
-          'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan.',
+          'Déplacement compris dans un rayon de 20\u00a0km autour de Houdan ; au-delà, sur devis.',
         ],
         cartes: [
           {
@@ -54,16 +47,9 @@ const PAGE = {
           {
             nom: 'Active Flex',
             pourQui: 'Pour devenir autonome avec un cadre',
-            details: [['Séances', '4 par mois (1 par semaine)']],
-            inclus: ['Bilan initial', 'Programme personnalisé', 'Suivi par message'],
+            details: [['Séances', '4 par mois (1 par semaine)'], ['Engagement', 'Sans engagement, mois par mois']],
+            inclus: ['Bilan initial', 'Bilan postural et correctifs', 'Programme personnalisé', 'Suivi hebdomadaire par message', 'Bilan mensuel'],
             prix: { montant: '180\u00a0€', apres: 'par mois' },
-          },
-          {
-            nom: 'Active Plus',
-            pourQui: 'Pour être accompagné de près, idéal pour débuter',
-            details: [['Séances', '8 par mois (2 par semaine)']],
-            inclus: ['Bilan initial', 'Bilan postural', 'Programme personnalisé', 'Suivi par message'],
-            prix: { montant: '320\u00a0€', apres: 'par mois' },
           },
         ],
       },
@@ -84,14 +70,15 @@ const PAGE = {
             prix: { montant: '40\u00a0€' },
           },
           {
-            nom: 'Active Personal',
+            nom: 'Active Plus',
             details: [['Rythme', 'Adapté à vous'], ['Lieu', 'Maison ou salle']],
-            inclus: ['Bilan initial', '2 visios', 'Messages du lundi au vendredi'],
+            inclus: ['Programme personnalisé', 'Suivi hebdomadaire', 'Bilan initial', 'Bilan à mi-parcours'],
             prix: { montant: '160\u00a0€', apres: 'ou 2 × 80\u00a0€' },
           },
         ],
       },
     ],
+    notes: ['Tarifs valables jusqu’au 30 avril 2027.'],
   },
 }
 

@@ -12,8 +12,7 @@ export const CONTACT = {
   email: 'marie.sillas.coaching@outlook.com',
 }
 
-// Liens des réseaux sociaux à renseigner
+// Réseaux sociaux (design system : Instagram @rimaactive)
 export const RESEAUX = [
-  { label: 'Instagram', href: '#' },
-  { label: 'TikTok', href: '#' },
+  { label: 'Instagram', href: 'https://www.instagram.com/rimaactive/' },
 ]
