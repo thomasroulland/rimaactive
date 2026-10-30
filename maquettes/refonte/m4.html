@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette 4 · Mosaïque</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* Maquette 4 · Mosaïque : tout l'accueil tient en deux écrans, dans une grille de tuiles de tailles
+   différentes selon leur importance. La tuile « Contactez-moi » est la seule grande surface jaune. */
+.mosaique { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); padding-top: 16px; padding-bottom: 16px; }
+.tuile { border-radius: var(--arrondi); background: var(--blanc); padding: 28px; overflow: hidden; position: relative; }
+.t-heros { grid-column: span 8; grid-row: span 2; min-height: 600px; padding: 0; background: var(--encre); color: var(--craie); display: flex; align-items: flex-end; }
+.t-heros img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.t-heros::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(22,21,20,.85), transparent 60%); }
+.t-heros .txt { position: relative; z-index: 1; padding: 36px; }
+.t-heros h1 { font-size: 96px; line-height: 0.92; letter-spacing: -0.05em; margin: 10px 0 14px; }
+.t-heros .surtitre { color: var(--jaune); }
+.t-portrait { grid-column: span 4; padding: 0; min-height: 292px; }
+.t-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+.t-approche { grid-column: span 4; display: grid; gap: 12px; align-content: start; background: var(--craie-fonce); }
+.t-approche p { font-size: 15px; line-height: 24px; }
+.t-approche .points { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-top: 6px; font-weight: 800; font-size: 15px; }
+.t-approche .points b { color: var(--vermillon); margin-right: 6px; }
+.t-offre { grid-column: span 4; padding: 0; display: grid; grid-template-rows: 190px auto; }
+.t-offre img { width: 100%; height: 100%; object-fit: cover; }
+.t-offre .txt { padding: 22px 24px 24px; display: grid; gap: 8px; }
+.t-offre .bas { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.rond { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--encre); }
+.t-outils { grid-column: span 8; }
+.t-outils .grille-f { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-top: 18px; }
+.t-outils h3 { font-weight: 900; font-size: 20px; letter-spacing: -0.03em; line-height: 22px; }
+.t-outils .f p { font-size: 14px; line-height: 20px; color: var(--gris); margin: 8px 0 10px; }
+.t-outils .pil { display: grid; gap: 6px; justify-items: start; }
+.t-contact { grid-column: span 4; background: var(--jaune); display: flex; flex-direction: column; }
+.t-contact h2 { font-size: 48px; line-height: 48px; letter-spacing: -0.05em; margin: 8px 0 12px; }
+.t-contact .surtitre { color: var(--encre); }
+.t-contact .bouton { margin-top: auto; align-self: flex-start; }
+/* formules en mosaïque */
+.t-titre { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; gap: 18px; background: var(--craie-fonce); }
+.t-titre h1 { font-size: 72px; line-height: 0.95; letter-spacing: -0.05em; }
+.t-formule { grid-column: span 4; grid-row: span 2; display: grid; gap: 14px; align-content: start; }
+.t-formule.sombre { background: var(--encre); color: var(--craie); }
+.t-formule.sombre .gris, .t-formule.sombre .surtitre { color: rgba(244,243,239,.78); }
+.t-formule .tarifs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--filet); padding-top: 16px; }
+.t-formule.sombre .tarifs { border-color: rgba(244,243,239,.2); }
+.t-formule .m { font-weight: 900; font-size: 56px; line-height: 56px; letter-spacing: -0.05em; }
+.t-formule .tete { display: flex; justify-content: space-between; }
+.t-ligne { grid-column: span 6; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.t-ligne .m { font-weight: 900; font-size: 44px; letter-spacing: -0.05em; }
+.t-ecrire { grid-column: span 6; background: var(--jaune); display: flex; justify-content: space-between; align-items: center; }
+.t-form { grid-column: span 8; grid-row: span 2; }
+.t-cote { grid-column: span 4; }
+.t-cote.photo { padding: 0; min-height: 280px; }
+.t-cote.photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+@media (max-width: 899px) {
+  .mosaique { grid-template-columns: 1fr; }
+  .mosaique > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
+  .t-heros { min-height: 520px; }
+  .t-heros h1 { font-size: 56px; }
+  .t-outils .grille-f { grid-template-columns: 1fr; }
+  .t-ligne, .t-ecrire { flex-direction: column; align-items: start; }
+}
+</style></head>
+<body>
+<script src="pictos.js"></script><script src="commun.js"></script>
+<script>
+// Ici la tuile jaune fait déjà « Contactez-moi » : le pied ne garde que le logo, le menu et les contacts
+const piedSansAppel = () => pied().replace(/<div><p class="surtitre">Besoin[\s\S]*?<\/p><\/div>/, `<div><img src="${IMG.logoCraie}" alt="rimaactive" style="height:34px"></div>`);
+afficher({
+  accueil: () => `${barre('Accueil')}
+  <main class="conteneur mosaique">
+    <section class="tuile t-heros"><img src="${IMG.heros}" alt=""><div class="txt"><p class="surtitre">${D.surtitre}</p><h1 class="titre">${D.nom}</h1><p class="accroche">${D.accroche}</p>
+      <a class="bouton bouton--jaune" style="margin-top:22px">Mon approche</a></div></section>
+    <div class="tuile t-portrait"><img src="${IMG.portrait}" alt="Marie Sillas"></div>
+    <section class="tuile t-approche"><h2 class="titre t-carte">Mon approche</h2><p>${D.approche[0]}</p>
+      <div class="points">${D.points.map((p, i) => `<span><b>0${i + 1}</b>${p}</span>`).join('')}</div></section>
+    ${D.offres.map((o) => `<a class="tuile t-offre" style="text-decoration:none"><img src="${o.image}" alt=""><div class="txt">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h2 class="titre t-carte">${o.titre}</h2>${picto(o.picto)}</div>
+      <p class="surtitre">${o.lieux}</p><p class="gris" style="font-size:15px;line-height:24px">${o.texte}</p>
+      <div class="bas"><b>${o.prix}</b><span class="rond">${fleche}</span></div></div></a>`).join('')}
+    <section class="tuile t-outils"><h2 class="titre t-carte">Ma boîte à outils</h2><div class="grille-f">${D.formats.map(([n, t, o]) => `<div class="f"><h3>${n}</h3><p>${t}</p><div class="pil">${o.map((x) => `<span class="pilule">${x}</span>`).join('')}</div></div>`).join('')}</div></section>
+    <section class="tuile t-contact"><p class="surtitre">Besoin d’en savoir plus ?</p><h2 class="titre">Contactez-moi</h2><p>${D.lieu}</p><a class="bouton bouton--encre">M’écrire</a></section>
+  </main>${piedSansAppel()}`,
+  formules: () => `${barre('Individuel')}
+  <main class="conteneur mosaique">
+    <section class="tuile t-titre"><p class="surtitre">Accueil / Individuel</p><h1 class="titre">Formules</h1>
+      <div style="display:inline-flex;padding:4px;border:1px solid var(--filet);border-radius:999px;background:#fff;align-self:flex-start"><span style="padding:8px 18px;border-radius:999px;background:var(--jaune);font-weight:600">Présentiel</span><span style="padding:8px 18px;font-weight:600">En ligne</span></div>
+      ${coche(D.individuel.liste)}<p class="gris petit" style="margin-top:auto">${D.note}</p></section>
+    ${D.individuel.formules.map((f) => `<section class="tuile t-formule ${f.sombre ? 'sombre' : ''}"><div class="tete"><p class="surtitre">${f.sur}</p>${picto(f.picto)}</div><h2 class="titre t-carte">${f.nom}</h2>
+      <div class="tarifs">${f.tarifs.map(([l, m, d]) => `<div><p class="petit gris">${l}</p><div class="m">${m}</div><p class="petit gris">${d}</p></div>`).join('')}</div>
+      ${f.compris ? `<div class="petit">${coche(f.compris)}</div>` : ''}<a class="bouton ${f.sombre ? 'bouton--jaune' : 'bouton--encre'}">Choisir ${fleche}</a></section>`).join('')}
+    <section class="tuile t-ligne"><div><p class="surtitre">Programmes en ligne · 8 semaines</p><h2 class="titre t-carte" style="margin-top:8px">Active Start, Progress et Plus</h2></div><div style="text-align:right"><div class="m">dès 35 €</div><a class="petit">Voir l’onglet En ligne</a></div></section>
+    <section class="tuile t-ecrire"><h2 class="titre t-carte">Une question avant de choisir ?</h2><a class="bouton bouton--encre">M’écrire</a></section>
+  </main>${piedSansAppel()}`,
+  contact: () => `${barre('')}
+  <main class="conteneur mosaique">
+    <section class="tuile t-form"><p class="surtitre">Besoin d’en savoir plus ?</p><h1 class="titre" style="font-size:64px;line-height:64px;letter-spacing:-.05em;margin:10px 0 24px">Contactez-moi</h1>${formulaire()}</section>
+    <div class="tuile t-cote photo"><img src="${IMG.portrait}" alt="Marie Sillas"></div>
+    <section class="tuile t-cote" style="background:var(--craie-fonce);display:grid;gap:14px;align-content:start"><p class="surtitre">E-mail</p><b>${D.email}</b><p class="surtitre" style="margin-top:8px">Où</p><p>${D.lieu}</p></section>
+  </main>${pied(true)}`,
+});
+</script></body></html>

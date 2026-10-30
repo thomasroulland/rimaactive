@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette 2 · Grand format</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* Maquette 2 · Grand format : les photos de Marie portent le site, en grandes moitiés d'écran ;
+   le seul moment typographique fort est la rangée des formats en très grandes lettres. */
+.heros { display: grid; grid-template-columns: 1fr 1fr; min-height: 710px; }
+.heros > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.heros .droite { display: flex; flex-direction: column; padding: 0 var(--g) 56px 64px; }
+.heros .droite .corps { margin-top: auto; }
+.heros h1 { font-size: 120px; line-height: 0.88; letter-spacing: -0.055em; margin: 16px 0 24px; }
+.heros .actions { display: flex; gap: 12px; margin-top: 28px; }
+.heros .points { display: flex; gap: 22px; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--filet); font-weight: 800; }
+.heros .points b { color: var(--vermillon); margin-right: 6px; }
+.heros .barre { padding: 0; }
+.declaration { padding: 112px 0 96px; }
+.declaration p.grand { font-weight: 800; font-size: 40px; line-height: 48px; letter-spacing: -0.03em; max-width: 26ch; }
+.declaration .suite { display: flex; gap: 48px; margin-top: 32px; color: var(--gris); }
+.declaration .suite p { max-width: 42ch; }
+.bande { display: grid; grid-template-columns: 1.15fr 0.85fr; min-height: 520px; }
+.bande:nth-child(even) { grid-template-columns: 0.85fr 1.15fr; }
+.bande:nth-child(even) img { order: 2; }
+.bande img { width: 100%; height: 100%; object-fit: cover; }
+.bande .txt { padding: 56px 64px; display: flex; flex-direction: column; justify-content: center; gap: 14px; background: var(--blanc); }
+.bande:nth-child(2) .txt { background: var(--craie-fonce); }
+.bande .t-section { margin-top: 4px; }
+.bande .prix { font-weight: 900; font-size: 24px; letter-spacing: -0.02em; margin-top: 10px; }
+.bandes-titre { padding-top: 88px; padding-bottom: 32px; }
+.outils { padding: 96px 0 104px; overflow: hidden; }
+.outils .rangee { display: flex; gap: 56px; margin-top: 40px; padding-left: var(--g); }
+.outils .f { flex: 0 0 360px; }
+.outils .f h3 { font-weight: 900; font-size: 72px; line-height: 72px; letter-spacing: -0.05em; white-space: nowrap; }
+.outils .f p { margin-top: 14px; color: var(--gris); max-width: 34ch; }
+.outils .f .pil { display: flex; gap: 6px; margin-top: 14px; }
+/* page de formules : bandeau photo puis deux grandes cartes */
+.bandeau { position: relative; height: 340px; }
+.bandeau > img { width: 100%; height: 100%; object-fit: cover; }
+.bandeau::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(22,21,20,.75), rgba(22,21,20,.15) 60%); }
+.bandeau .sur { position: absolute; z-index: 1; left: 0; right: 0; bottom: 36px; color: var(--craie); }
+.bandeau .sur h1 { font-size: 96px; line-height: 0.95; letter-spacing: -0.05em; }
+.bandeau .sur .surtitre { color: var(--jaune); }
+.bandeau .barre-abs { position: absolute; z-index: 2; top: 0; left: 0; right: 0; }
+.formules { display: grid; grid-template-columns: 0.7fr 1fr 1fr; gap: 20px; padding-top: 48px; padding-bottom: 56px; align-items: start; }
+.formule { background: var(--blanc); border-radius: var(--arrondi); padding: 32px; display: grid; gap: 14px; }
+.formule.sombre { background: var(--encre); color: var(--craie); }
+.formule .tarifs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 16px; border-top: 1px solid var(--filet); }
+.formule.sombre .tarifs { border-top-color: rgba(244,243,239,.2); }
+.formule .m { font-weight: 900; font-size: 56px; line-height: 56px; letter-spacing: -0.05em; }
+.formule .gris, .formule.sombre .gris { opacity: 1; }
+.formule.sombre .gris { color: rgba(244,243,239,.78); }
+.formule .tete { display: flex; justify-content: space-between; }
+.contact { display: grid; grid-template-columns: 1fr 1fr; min-height: 692px; }
+.contact > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.contact .droite { padding: 0 var(--g) 32px 64px; display: flex; flex-direction: column; }
+.contact h1 { font-size: 80px; line-height: 0.95; letter-spacing: -0.05em; margin: 10px 0 12px; }
+@media (max-width: 899px) {
+  .heros, .bande, .bande:nth-child(even), .formules, .contact { grid-template-columns: 1fr; }
+  .heros > img { height: 420px; order: 2; }
+  .heros .droite { padding: 0 var(--g) 32px; }
+  .heros h1 { font-size: 64px; }
+  .heros .points { flex-wrap: wrap; gap: 8px 18px; }
+  .bande img, .bande:nth-child(even) img { order: 0; height: 260px; }
+  .bande .txt { padding: 32px var(--g); }
+  .declaration { padding: 64px 0; }
+  .declaration p.grand { font-size: 28px; line-height: 36px; }
+  .declaration .suite { flex-direction: column; gap: 16px; }
+  .outils .f { flex-basis: 280px; }
+  .outils .f h3 { font-size: 48px; line-height: 48px; }
+}
+</style></head>
+<body>
+<script src="pictos.js"></script><script src="commun.js"></script>
+<script>
+afficher({
+  accueil: () => `${barre('Accueil')}
+  <section class="heros"><img src="${IMG.portrait}" alt="Marie Sillas">
+    <div class="droite">
+      <div class="corps"><p class="surtitre">${D.surtitre}</p><h1 class="titre">Marie<br>Sillas</h1><p class="accroche">${D.accroche}</p>
+        <div class="actions"><a class="bouton bouton--jaune">Mon approche</a><a class="bouton">Voir les formules</a></div>
+        <div class="points">${D.points.map((p, i) => `<span><b>0${i + 1}</b>${p}</span>`).join('')}</div></div></div>
+  </section>
+  <section class="declaration"><div class="conteneur"><h2 class="titre t-section" style="margin-bottom:28px">Mon approche</h2>
+    <p class="grand">${D.approche[0]}</p>
+    <div class="suite"><p>${D.approche[1]}</p><p style="font-style:italic">— ${D.accroche}.</p></div></div></section>
+  <div class="conteneur bandes-titre"><h2 class="titre t-section">Mon accompagnement</h2></div>
+  <div>${D.offres.map((o) => `<section class="bande"><img src="${o.image}" alt="">
+    <div class="txt"><p class="surtitre">${o.lieux}</p><h3 class="titre t-section">${o.titre}</h3><p class="gris" style="max-width:40ch">${o.texte}</p>
+      <p class="prix">${o.prix}</p><div><a class="bouton bouton--encre">Découvrir les formules ${fleche}</a></div></div></section>`).join('')}</div>
+  <section class="outils"><div class="conteneur"><h2 class="titre t-section">Ma boîte à outils</h2></div>
+    <div class="rangee">${D.formats.map(([n, t, o]) => `<div class="f"><h3>${n}</h3><p>${t}</p><div class="pil">${o.map((x) => `<span class="pilule">${x}</span>`).join('')}</div></div>`).join('')}</div></section>
+  ${pied()}`,
+  formules: () => `
+  <div class="bandeau"><img src="${IMG.individuel}" alt=""><div class="barre-abs">${barre('Individuel', true)}</div>
+    <div class="sur conteneur"><p class="surtitre">Domicile · Salle · En ligne</p><h1 class="titre" style="margin-top:10px">Individuel</h1></div></div>
+  <div class="conteneur formules">
+    <div style="display:grid;gap:20px"><div class="onglets" style="display:inline-flex;padding:4px;border:1px solid var(--filet);border-radius:999px;background:#fff;justify-self:start"><span style="padding:8px 18px;border-radius:999px;background:var(--jaune);font-weight:600">Présentiel</span><span style="padding:8px 18px;font-weight:600">En ligne</span></div>
+      ${coche(D.individuel.liste)}<p class="gris petit">${D.note}</p></div>
+    ${D.individuel.formules.map((f) => `<div class="formule ${f.sombre ? 'sombre' : ''}"><div class="tete"><p class="surtitre ${f.sombre ? '' : ''}" style="${f.sombre ? 'color:rgba(244,243,239,.78)' : ''}">${f.sur}</p>${picto(f.picto)}</div>
+      <h2 class="titre t-carte">${f.nom}</h2>
+      <div class="tarifs">${f.tarifs.map(([l, m, d]) => `<div><p class="petit gris">${l}</p><div class="m">${m}</div><p class="petit gris">${d}</p></div>`).join('')}</div>
+      ${f.compris ? `<div class="petit">${coche(f.compris)}</div>` : ''}
+      <a class="bouton ${f.sombre ? 'bouton--jaune' : 'bouton--encre'}" style="margin-top:8px">Choisir ${fleche}</a></div>`).join('')}
+  </div>${pied()}`,
+  contact: () => `${barre('')}
+  <section class="contact"><img src="${IMG.heros}" alt="">
+    <div class="droite">
+      <div style="margin-top:auto;margin-bottom:auto"><p class="surtitre">Besoin d’en savoir plus ?</p><h1 class="titre">Contactez-moi</h1>
+      <p class="gris" style="margin-bottom:28px">${D.lieu} &nbsp;<b style="color:var(--encre)">${D.email}</b></p>${formulaire()}</div></div>
+  </section>${pied(true)}`,
+});
+</script></body></html>

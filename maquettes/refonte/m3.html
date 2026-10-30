@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette 3 · Choisir son profil</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* Maquette 3 · Choisir son profil : dès le haut de page, le visiteur dit qui il est et voit ses formules
+   et ses prix. Les trois pages de formules deviennent une seule page « Formules » avec trois onglets. */
+.heros { position: relative; margin-top: -45px; min-height: 760px; display: grid; align-content: end; background: var(--encre); color: var(--craie); }
+.heros > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.heros::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(22,21,20,.85) 0 25%, rgba(22,21,20,.2) 65%), linear-gradient(0deg, rgba(22,21,20,.6), transparent 40%); }
+.heros .contenu { position: relative; z-index: 2; padding-top: 120px; padding-bottom: 40px; }
+.heros h1 { font-size: 96px; line-height: 0.95; letter-spacing: -0.05em; margin: 12px 0 18px; }
+.heros .surtitre { color: var(--jaune); }
+.choix .surtitre { color: var(--gris); } /* jamais de jaune en texte sur fond clair */
+.mini .surtitre { min-height: 32px; }
+/* le sélecteur de profil, posé sur la photo */
+.choix { margin-top: 40px; background: var(--craie); color: var(--encre); border-radius: var(--arrondi); padding: 24px; display: grid; grid-template-columns: 300px 1fr; gap: 32px; max-width: 1060px; }
+.choix .question { font-weight: 900; font-size: 28px; line-height: 30px; letter-spacing: -0.03em; margin-bottom: 14px; }
+.profils { display: grid; gap: 8px; }
+.profil { display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--filet); background: var(--blanc); font-weight: 700; }
+.profil.on { background: var(--jaune); border-color: var(--jaune); }
+.apercu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mini { background: var(--blanc); border-radius: 12px; padding: 18px; display: grid; gap: 6px; align-content: start; }
+.mini .m { font-weight: 900; font-size: 40px; line-height: 40px; letter-spacing: -0.05em; margin-top: 6px; }
+.apercu-bas { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
+section.bloc { padding: 96px 0; }
+.approche { display: grid; grid-template-columns: 420px 1fr; gap: 72px; align-items: center; }
+.approche img { border-radius: var(--arrondi); aspect-ratio: 4 / 5; object-fit: cover; }
+.approche .texte p + p { margin-top: 16px; }
+.points { display: flex; gap: 8px; margin-top: 28px; flex-wrap: wrap; }
+.points span { display: inline-flex; gap: 8px; align-items: center; padding: 5px 14px 5px 6px; border-radius: 999px; background: var(--blanc); font-weight: 800; font-size: 15px; }
+.points b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--vermillon); font-size: 14px; }
+.outils { background: var(--craie-fonce); }
+.liste-formats { margin-top: 32px; }
+.lf { display: grid; grid-template-columns: 320px 1fr auto; gap: 32px; align-items: baseline; padding: 22px 0; border-top: 1px solid rgba(22,21,20,.16); }
+.lf h3 { font-weight: 900; font-size: 32px; letter-spacing: -0.04em; }
+.lf .pil { display: flex; gap: 6px; }
+/* page Formules unique */
+.f-haut { padding: 48px 0 28px; }
+.f-haut h1 { font-size: 80px; line-height: 0.95; letter-spacing: -0.05em; margin: 10px 0 24px; }
+.f-onglets { display: flex; gap: 8px; }
+.f-onglets span { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--filet); background: var(--blanc); font-weight: 700; }
+.f-onglets .on { background: var(--encre); color: var(--craie); border-color: var(--encre); }
+.f-sous { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 32px; padding: 20px 0; border-top: 1px solid var(--filet); margin-top: 28px; }
+.f-sous .note { flex-basis: 100%; }
+.f-sous .coche { grid-auto-flow: column; gap: 28px; }
+.f-cartes { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 20px; padding-bottom: 64px; }
+.carte { background: var(--blanc); border-radius: var(--arrondi); padding: 32px; display: grid; gap: 14px; align-content: start; }
+.carte.sombre { background: var(--encre); color: var(--craie); }
+.carte.sombre .gris, .carte.sombre .surtitre { color: rgba(244,243,239,.78); }
+.carte .tarifs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--filet); padding-top: 16px; }
+.carte.sombre .tarifs { border-color: rgba(244,243,239,.2); }
+.carte .m { font-weight: 900; font-size: 56px; line-height: 56px; letter-spacing: -0.05em; }
+.carte .tete { display: flex; justify-content: space-between; }
+.encart-ligne { background: var(--craie-fonce); border-radius: var(--arrondi); padding: 32px; display: grid; gap: 12px; align-content: start; }
+.contact { padding: 56px 0 48px; display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 72px; }
+.contact h1 { font-size: 80px; line-height: 0.95; letter-spacing: -0.05em; margin: 10px 0 16px; }
+.contact .profils { margin: 0 0 24px; grid-template-columns: repeat(3, auto); justify-content: start; }
+@media (max-width: 899px) {
+  .heros { min-height: 0; }
+  .heros h1 { font-size: 56px; }
+  .heros .contenu { padding-top: 360px; }
+  .choix, .approche, .contact, .f-cartes { grid-template-columns: 1fr; }
+  .apercu { grid-template-columns: 1fr; }
+  .apercu-bas { grid-column: 1; flex-direction: column; align-items: start; gap: 12px; }
+  .lf { grid-template-columns: 1fr; gap: 8px; }
+  .f-onglets { flex-wrap: wrap; }
+  .f-sous { flex-direction: column; align-items: start; gap: 12px; }
+  .f-sous .coche { grid-auto-flow: row; }
+  .contact .profils { grid-template-columns: 1fr; }
+  section.bloc { padding: 56px 0; }
+}
+</style></head>
+<body>
+<script src="pictos.js"></script><script src="commun.js"></script>
+<script>
+const profils = (actif) => `<div class="profils">${[['buildings', 'Une entreprise'], ['users', 'Un duo ou un groupe'], ['kettlebell', 'Un particulier']].map(([p, l]) => `<span class="profil ${l === actif ? 'on' : ''}">${picto(p, 20)}${l}</span>`).join('')}</div>`;
+afficher({
+  accueil: () => `${barre('Accueil', true)}
+  <section class="heros"><img src="${IMG.heros}" alt="">
+    <div class="conteneur contenu"><p class="surtitre">${D.surtitre}</p><h1 class="titre">${D.nom}</h1><p class="accroche">${D.accroche}</p>
+      <div class="choix">
+        <div><p class="question">Vous êtes…</p>${profils('Un particulier')}</div>
+        <div><div class="apercu">
+          <div class="mini"><p class="surtitre">1 séance en présentiel</p><b>Active Solo</b><div class="m">55 €</div><p class="petit gris">en salle · 65 € à domicile</p></div>
+          <div class="mini"><p class="surtitre">4 séances par mois</p><b>Active Flex</b><div class="m">180 €</div><p class="petit gris">en salle · 220 € à domicile</p></div>
+          <div class="mini"><p class="surtitre">Programme en ligne</p><b>Active Start</b><div class="m">35 €</div><p class="petit gris">8 semaines</p></div>
+        </div></div>
+        <div class="apercu-bas"><span class="petit gris">Déplacement inclus jusqu’à 20 km autour de Houdan (78)</span><a class="bouton bouton--encre">Voir toutes les formules ${fleche}</a></div>
+      </div></div>
+  </section>
+  <section class="bloc"><div class="conteneur approche"><img src="${IMG.portrait}" alt="Marie Sillas">
+    <div><h2 class="titre t-section">Mon approche</h2><div class="texte" style="margin-top:22px">${D.approche.map((t) => `<p>${t}</p>`).join('')}</div>
+      <div class="points">${D.points.map((p, i) => `<span><b>0${i + 1}</b>${p}</span>`).join('')}</div></div></div></section>
+  <section class="bloc outils"><div class="conteneur"><h2 class="titre t-section">Ma boîte à outils</h2>
+    <div class="liste-formats">${D.formats.map(([n, t, o]) => `<div class="lf"><h3>${n}</h3><p class="gris">${t}</p><div class="pil">${o.map((x) => `<span class="pilule">${x}</span>`).join('')}</div></div>`).join('')}</div></div></section>
+  ${pied()}`,
+  formules: () => `${barre('Individuel')}
+  <div class="conteneur"><div class="f-haut"><p class="surtitre">Accueil / Formules</p><h1 class="titre">Formules</h1>
+    <div class="f-onglets"><span>${picto('buildings', 20)}Entreprises</span><span>${picto('users', 20)}Duo et groupes</span><span class="on">${picto('kettlebell', 20)}Individuel</span></div>
+    <div class="f-sous">${coche(D.individuel.liste)}<span class="gris petit note">${D.note}</span></div></div>
+    <div class="f-cartes">${D.individuel.formules.map((f) => `<div class="carte ${f.sombre ? 'sombre' : ''}"><div class="tete"><p class="surtitre">${f.sur}</p>${picto(f.picto)}</div><h2 class="titre t-carte">${f.nom}</h2>
+      <div class="tarifs">${f.tarifs.map(([l, m, d]) => `<div><p class="petit gris">${l}</p><div class="m">${m}</div><p class="petit gris">${d}</p></div>`).join('')}</div>
+      ${f.compris ? `<div class="petit">${coche(f.compris)}</div>` : ''}<a class="bouton ${f.sombre ? 'bouton--jaune' : 'bouton--encre'}">Choisir ${fleche}</a></div>`).join('')}
+      <div class="encart-ligne"><p class="surtitre">8 semaines</p><h2 class="titre t-carte">En ligne</h2><p class="gris">Active Start, Active Progress et Active Plus.</p><div class="m" style="font-weight:900;font-size:56px;line-height:56px;letter-spacing:-.05em">dès 35 €</div><a class="bouton">Voir les programmes en ligne ${fleche}</a></div>
+    </div></div>${pied()}`,
+  contact: () => `${barre('')}
+  <div class="conteneur contact"><div><p class="surtitre">Besoin d’en savoir plus ?</p><h1 class="titre">Contactez-moi</h1><p class="gris">${D.lieu}</p><p style="margin-top:20px"><b>${D.email}</b></p></div>
+    <div><p style="font-weight:700;margin-bottom:10px">Vous êtes</p>${profils('Un particulier')}${formulaire().replace('<label class="champ plein"><span>Vous êtes</span><select><option>Particulier</option></select></label>', '')}</div>
+  </div>${pied(true)}`,
+});
+</script></body></html>
