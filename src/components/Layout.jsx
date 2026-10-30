@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import Entete from './Entete.jsx'
 import Pied from './Pied.jsx'
 
@@ -67,6 +67,10 @@ export default function Layout() {
         <Outlet />
       </main>
       <Pied seulementMentions={pathname === '/contact'} />
+      {/* Maquette : bouton « M'écrire » toujours visible en bas de l'écran sur téléphone */}
+      {new URLSearchParams(window.location.search).get('maquette') === 'telephone' && pathname !== '/contact' && (
+        <Link to="/contact" className="bouton bouton--principal ecrire-fixe">M’écrire</Link>
+      )}
     </>
   )
 }

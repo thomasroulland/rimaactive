@@ -958,3 +958,27 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .approche__cadre { gap: 8px; padding: 24px 28px; }
   .approche__cadre .titre--section { font-size: 46px; line-height: 46px; }
 }
+
+/* ---------- Maquettes d'amélioration (?maquette=…) ---------- */
+/* prix : « à partir de » sous la phrase de chaque carte Mon accompagnement */
+.service__prix { margin: 4px 0 0; font-weight: 800; font-size: 16px; line-height: 26px; color: var(--encre); }
+/* etapes : « Comment ça se passe » en trois étapes numérotées */
+.etapes__liste { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 20px; counter-reset: etape; }
+@media (min-width: 900px) { .etapes__liste { grid-template-columns: repeat(3, 1fr); } }
+.etape { display: flex; flex-direction: column; gap: 10px; padding: 28px; border-radius: var(--arrondi); background: var(--fond-carte); }
+.etape .titre { margin: 0; }
+.etape .texte { margin: 0; color: var(--gris-chaud); }
+.etape__numero { font-weight: 900; font-size: 48px; line-height: 48px; letter-spacing: -0.04em; color: var(--vermillon); }
+.etapes__bouton { margin-top: 32px; }
+/* telephone : cartes Mon accompagnement compactes (photo à gauche) et « M'écrire » fixe en bas */
+@media (max-width: 899px) {
+  .services__liste--compacte { gap: 20px; }
+  .services__liste--compacte .service { display: grid; grid-template-columns: 112px 1fr; gap: 0 16px; align-items: start; }
+  .services__liste--compacte .service .photo.service__photo { aspect-ratio: 1; height: 112px; }
+  .services__liste--compacte .service__corps { padding-top: 0; }
+  .services__liste--compacte .service .titre--tuile { font-size: 24px; line-height: 28px; }
+  .services__liste--compacte .service .texte { display: none; }
+  .services__liste--compacte .service__bouton { margin-top: 8px; height: 36px; font-size: 14px; }
+  .ecrire-fixe { position: fixed; z-index: 40; left: var(--gouttiere); right: var(--gouttiere); bottom: 16px; justify-content: center; box-shadow: 0 10px 30px rgba(22, 21, 20, 0.25); }
+}
+@media (min-width: 900px) { .ecrire-fixe { display: none; } }

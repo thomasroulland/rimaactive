@@ -41,6 +41,7 @@ const SERVICES = [
     to: '/entreprises',
     titre: 'Entreprises',
     lieux: 'Locaux · Extérieur',
+    prix: 'À partir de 110\u00a0€ la séance',
     photo: 'Rangée de kettlebells sur le sol d’une salle',
     image: photoEntreprises,
     texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
@@ -49,6 +50,7 @@ const SERVICES = [
     to: '/communes',
     titre: 'Duo et groupes',
     lieux: 'Domicile · Extérieur',
+    prix: 'Dès 14\u00a0€ par personne',
     photo: 'Kettlebells et barres sur un sol de salle',
     image: photoGroupes,
     texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
@@ -57,6 +59,7 @@ const SERVICES = [
     to: '/particuliers',
     titre: 'Individuel',
     lieux: 'Domicile · Salle · En ligne',
+    prix: 'Dès 55\u00a0€ la séance · en ligne dès 35\u00a0€',
     photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoIndividuel,
     texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',
@@ -66,6 +69,8 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Maquettes d'amélioration à montrer à Marie : ?maquette=prix, etapes ou telephone
+  const maquette = new URLSearchParams(window.location.search).get('maquette')
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -113,7 +118,7 @@ export default function Accueil() {
           <h2 id="services-titre" className="titre titre--section">Mon accompagnement</h2>
           {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase et « Découvrir les formules »,
               qui passe en jaune au survol */}
-          <ul className="services__liste">
+          <ul className={`services__liste ${maquette === 'telephone' ? 'services__liste--compacte' : ''}`}>
             {SERVICES.map((service) => (
               <li key={service.to}>
                 <Link to={service.to} className="service">
@@ -122,6 +127,7 @@ export default function Accueil() {
                     <h3 className="titre titre--tuile">{service.titre}</h3>
                     <p className="surtitre service__lieux">{service.lieux}</p>
                     <p className="texte">{service.texte}</p>
+                    {maquette === 'prix' && <p className="service__prix">{service.prix}</p>}
                     <span className="service__bouton">Découvrir les formules <FlecheDiagonale /></span>
                   </div>
                 </Link>
@@ -130,6 +136,8 @@ export default function Accueil() {
           </ul>
         </div>
       </section>
+
+      {maquette === 'etapes' && <Etapes />}
 
       <BoiteOutils formats={FORMATS} />
     </>
@@ -141,5 +149,32 @@ function FlecheDiagonale() {
     <svg aria-hidden="true" viewBox="0 0 256 256" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round">
       <path d="M72 184 184 72M88 72h96v96" />
     </svg>
+  )
+}
+
+// Maquette « Comment ça se passe » : trois étapes, textes proposés par Claude, à valider par Marie
+const ETAPES = [
+  ['Vous m’écrivez', 'Dites-moi vos objectifs et vos disponibilités, par le formulaire ou par e-mail.'],
+  ['On fait le point', 'Je vous réponds pour choisir ensemble la formule et le lieu qui vous conviennent.'],
+  ['On s’entraîne', 'À domicile, en salle, en extérieur ou en ligne, avec le matériel fourni.'],
+]
+
+function Etapes() {
+  return (
+    <section className="section ecran-plein etapes" aria-labelledby="etapes-titre">
+      <div className="conteneur">
+        <h2 id="etapes-titre" className="titre titre--section">Comment ça se passe</h2>
+        <ol className="etapes__liste">
+          {ETAPES.map(([titre, texte], i) => (
+            <li key={titre} className="etape">
+              <span className="etape__numero">{String(i + 1).padStart(2, '0')}</span>
+              <h3 className="titre titre--tuile">{titre}</h3>
+              <p className="texte">{texte}</p>
+            </li>
+          ))}
+        </ol>
+        <Link to="/contact" className="bouton bouton--principal etapes__bouton">M’écrire</Link>
+      </div>
+    </section>
   )
 }
