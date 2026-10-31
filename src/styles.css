@@ -917,15 +917,8 @@ textarea.champ { resize: vertical; min-height: 140px; }
 
 }
 /* Même hauteur de cartes d'une page à l'autre (Entreprises / Duo et groupes) et d'un onglet à l'autre (Présentiel / En ligne) */
-@media (min-width: 1400px) { .offres--2 > .offre { min-height: 416px; } .formules-page__grille--large .offre, .formules-page__grille--large .encart-formules { min-height: 554px; } }
-@media (min-width: 900px) and (max-width: 1399px) { .offres--2 > .offre { min-height: 333px; } .formules-page__grille--large .offre, .formules-page__grille--large .encart-formules { min-height: 461px; } }
-/* Encart craie foncé à côté des formules, qui ouvre un autre onglet (Individuel : « En ligne dès 35 € ») */
-.encart-formules { display: flex; flex-direction: column; gap: 10px; padding: 28px; border-radius: var(--arrondi); background: var(--craie-fonce); }
-.encart-formules .surtitre, .encart-formules .titre { margin: 0; }
-.encart-formules__texte { margin: 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
-.encart-formules .offre__prix { margin-top: 8px; }
-.encart-formules__bouton { margin-top: auto; align-self: stretch; justify-content: center; background: transparent; border: 1px solid var(--encre); color: var(--encre); font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; }
-.encart-formules__bouton:hover { background: var(--jaune); border-color: var(--jaune); }
+@media (min-width: 1400px) { .offres--2 > .offre { min-height: 416px; } .formules-page__grille--large .offre { min-height: 505px; } }
+@media (min-width: 900px) and (max-width: 1399px) { .offres--2 > .offre { min-height: 333px; } .formules-page__grille--large .offre { min-height: 461px; } }
 
 /* ---------- Mon approche : le portrait entier et l'encadré, de même hauteur, centrés ensemble ---------- */
 main > section.approche.section { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }

@@ -5,7 +5,7 @@ import Picto from './Picto.jsx'
 // Gabarit commun aux pages Entreprises, Duo et groupes et Individuel :
 // en haut un bandeau avec la photo de la carte de l'accueil, les lieux et le nom de la page ;
 // dessous, sur toute la largeur, une ligne d'infos (onglets, liste cochée, mentions), puis une carte par formule
-// (blanche, ou encre pour celle marquée « sombre ») et, si l'onglet en a un, un encart craie foncé vers un autre onglet.
+// (blanche, ou encre pour celle marquée « sombre »).
 // page.onglets : plusieurs jeux de cartes (Présentiel, En ligne) ; sinon page.cartes.
 // Une carte peut avoir un ou deux tarifs (côte à côte : À domicile / En salle, 4 à 8 / 9 à 12 personnes).
 export default function PageService({ page }) {
@@ -48,7 +48,7 @@ export default function PageService({ page }) {
           <p className="formules-page__note">{note}</p>
         </div>
 
-        <ul className={`offres offres--${onglet.cartes.length + (onglet.encart ? 1 : 0)}`}>
+        <ul className={`offres offres--${onglet.cartes.length}`}>
           {onglet.cartes.map((f) => (
             <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''}`}>
               {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
@@ -85,17 +85,6 @@ export default function PageService({ page }) {
               </Link>
             </li>
           ))}
-          {onglet.encart && (
-            <li className="encart-formules">
-              <p className="surtitre">{onglet.encart.surtitre}</p>
-              <h2 className="titre titre--tuile">{onglet.encart.titre}</h2>
-              <p className="encart-formules__texte">{onglet.encart.texte}</p>
-              <p className="offre__prix">{onglet.encart.prix}</p>
-              <button type="button" className="bouton bouton--contour encart-formules__bouton" onClick={() => setActif(onglet.encart.onglet)}>
-                {onglet.encart.bouton} <FlecheDiagonale />
-              </button>
-            </li>
-          )}
         </ul>
       </div>
     </section>
