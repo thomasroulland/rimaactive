@@ -13,6 +13,8 @@ const PAGE = {
   onglets: [
     {
       nom: 'Présentiel',
+      // encart vers l'onglet En ligne (textes proposés par Claude, validés sur la maquette 3)
+      encart: { surtitre: '8 semaines', titre: 'En ligne', texte: 'Active Start, Active Progress et Active Plus.', prix: 'Dès 35\u00a0€', bouton: 'Voir les programmes en ligne', onglet: 1 },
       liste: ['En salle ou à domicile', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
       cartes: [
         {

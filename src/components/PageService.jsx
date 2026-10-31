@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { BoutonLien } from './Blocs.jsx'
 import Picto from './Picto.jsx'
 
 // Gabarit commun aux pages Entreprises, Duo et groupes et Individuel :
 // en haut un bandeau avec la photo de la carte de l'accueil, les lieux et le nom de la page ;
-// dessous, à gauche une tuile craie foncé (onglets, liste cochée, « M'écrire », mentions),
-// à droite une carte par formule (blanche, ou encre pour celle marquée « sombre »).
+// dessous, sur toute la largeur, une ligne d'infos (onglets, liste cochée, mentions), puis une carte par formule
+// (blanche, ou encre pour celle marquée « sombre ») et, si l'onglet en a un, un encart craie foncé vers un autre onglet.
 // page.onglets : plusieurs jeux de cartes (Présentiel, En ligne) ; sinon page.cartes.
 // Une carte peut avoir un ou deux tarifs (côte à côte : À domicile / En salle, 4 à 8 / 9 à 12 personnes).
 export default function PageService({ page }) {
@@ -29,8 +28,8 @@ export default function PageService({ page }) {
     <section className="section formules-page" aria-labelledby="page-titre">
       {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
       <div className={`conteneur formules-page__grille ${onglets.some((o) => o.cartes.length === 3) ? 'formules-page__grille--large' : ''}`}>
-        <div className="formules-page__gauche">
-          {intro && <p className="texte">{intro}</p>}
+        {/* Ligne d'infos sur toute la largeur : onglets, liste cochée, puis les mentions */}
+        <div className="formules-page__infos">
           {page.onglets && (
             <div className="bascule" role="tablist" aria-label="Choisir la formule">
               {onglets.map((o, i) => (
@@ -40,18 +39,16 @@ export default function PageService({ page }) {
               ))}
             </div>
           )}
+          {intro && <p className="texte">{intro}</p>}
           {liste.length > 0 && (
             <ul className="formules-page__liste">
               {liste.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
             </ul>
           )}
-          <div className="formules-page__bas">
-            <BoutonLien to="/contact">M’écrire</BoutonLien>
-            <p className="formules-page__note">{note}</p>
-          </div>
+          <p className="formules-page__note">{note}</p>
         </div>
 
-        <ul className={`offres offres--${onglet.cartes.length}`}>
+        <ul className={`offres offres--${onglet.cartes.length + (onglet.encart ? 1 : 0)}`}>
           {onglet.cartes.map((f) => (
             <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''}`}>
               {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
@@ -88,6 +85,17 @@ export default function PageService({ page }) {
               </Link>
             </li>
           ))}
+          {onglet.encart && (
+            <li className="encart-formules">
+              <p className="surtitre">{onglet.encart.surtitre}</p>
+              <h2 className="titre titre--tuile">{onglet.encart.titre}</h2>
+              <p className="encart-formules__texte">{onglet.encart.texte}</p>
+              <p className="offre__prix">{onglet.encart.prix}</p>
+              <button type="button" className="bouton bouton--contour encart-formules__bouton" onClick={() => setActif(onglet.encart.onglet)}>
+                {onglet.encart.bouton} <FlecheDiagonale />
+              </button>
+            </li>
+          )}
         </ul>
       </div>
     </section>

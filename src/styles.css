@@ -698,27 +698,22 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 .pied--mentions a:hover { color: var(--encre); }
 .pied--mentions .pied__bas { margin-top: 0; border-top-color: var(--filet); color: var(--gris-chaud); justify-content: center; }
 
-/* ---------- Page M'écrire : la photo de Marie à gauche avec « Contactez-moi » posé dessus, le formulaire à droite ---------- */
+/* ---------- Page M'écrire (maquette 2) : la photo de Marie à gauche ; « Contactez-moi », l'e-mail et le formulaire à droite ---------- */
 .page-contact { display: grid; }
-.page-contact__gauche { position: relative; display: flex; align-items: flex-end; min-height: 420px; background: var(--encre); overflow: hidden; }
-.page-contact__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
-.page-contact__gauche::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(22, 21, 20, 0.88), rgba(22, 21, 20, 0.2) 70%); }
-.page-contact__gauche .presentation-contact { position: relative; z-index: 2; padding: 32px var(--gouttiere); color: var(--craie); }
-.page-contact__gauche .surtitre { color: var(--jaune); } /* jaune sur photo sombre uniquement */
-.page-contact__gauche .titre { color: var(--craie); }
-.page-contact__gauche .presentation-contact__lieu { color: rgba(244, 243, 239, 0.85); }
-.page-contact__gauche .mention { color: rgba(244, 243, 239, 0.72); }
-.page-contact__gauche .presentation-contact__email a { color: var(--craie); }
-.page-contact__droite { padding: 32px var(--gouttiere) 40px; display: grid; align-content: center; }
+.page-contact__photo { width: 100%; height: 320px; object-fit: cover; object-position: 50% 0; }
+.page-contact__droite { padding: 32px var(--gouttiere) 40px; display: grid; gap: 22px; align-content: center; }
+/* l'e-mail se lit juste sous la phrase, sans étiquette */
+.page-contact .presentation-contact__email { margin-top: 4px; }
+.page-contact .presentation-contact__email .mention { display: none; }
 @media (min-width: 900px) {
   .page-contact { grid-template-columns: 1fr 1fr; min-height: calc(var(--ecran) - var(--hauteur-entete) - 60px); }
-  .page-contact__gauche { min-height: 0; }
-  .page-contact__gauche .presentation-contact { padding: 40px 48px 40px max(var(--gouttiere), calc((100vw - var(--largeur)) / 2)); }
+  .page-contact__photo { height: 100%; }
   .page-contact__droite { padding: 24px max(var(--gouttiere), calc((100vw - var(--largeur)) / 2)) 24px 56px; }
-  .page-contact .formulaire { gap: 10px 20px; }
+  .page-contact .presentation-contact__lieu { max-width: none; margin-top: 8px; }
+  .page-contact .formulaire { gap: 8px 20px; }
   .page-contact .champ-groupe { gap: 4px; }
-  .page-contact .champ { min-height: 44px; padding-block: 8px; font-size: 16px; line-height: 26px; }
-  .page-contact textarea.champ { min-height: 80px; }
+  .page-contact .champ { min-height: 40px; padding-block: 6px; font-size: 16px; line-height: 26px; }
+  .page-contact textarea.champ { min-height: 64px; }
 }
 
 /* ---------- Formulaire ---------- */
@@ -848,17 +843,15 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .bandeau-page__texte { position: relative; z-index: 2; width: 100%; padding-bottom: 32px; }
 .bandeau-page .surtitre { margin: 0 0 8px; color: var(--jaune); } /* jaune sur photo sombre uniquement */
 .bandeau-page__titre { margin: 0; color: var(--craie); font-size: 80px; line-height: 80px; letter-spacing: -0.05em; }
-.formules-page__grille { display: grid; gap: 20px; align-items: stretch; }
-@media (min-width: 900px) { .formules-page__grille { grid-template-columns: minmax(300px, 0.85fr) 1.45fr; } }
-.formules-page__gauche { display: flex; flex-direction: column; align-items: flex-start; padding: 28px; border-radius: var(--arrondi); background: var(--craie-fonce); }
-.formules-page__gauche > .texte { max-width: 46ch; margin-bottom: 4px; }
-.formules-page .bascule { margin-bottom: 16px; }
-.formules-page__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.formules-page__grille { display: grid; gap: 24px; }
+/* ligne d'infos : onglets, liste cochée en ligne, puis les mentions en dessous */
+.formules-page__infos { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; padding-bottom: 20px; border-bottom: 1px solid var(--filet); }
+.formules-page__infos > .texte { margin: 0; }
+.formules-page__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 32px; }
 .formules-page__liste li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 26px; }
 /* la case cochée s'aligne sur la première ligne quand le texte en fait deux */
 .formules-page__liste .picto { flex: none; margin-top: 3px; }
-.formules-page__bas { margin-top: auto; padding-top: 24px; display: grid; gap: 10px; justify-items: start; }
-.formules-page__note { margin: 0; font-size: 14px; line-height: 22px; color: var(--gris-chaud); }
+.formules-page__note { flex-basis: 100%; margin: 0; font-size: 14px; line-height: 22px; color: var(--gris-chaud); }
 
 .bascule { display: inline-flex; padding: 4px; border-radius: 999px; border: 1px solid var(--filet); background: var(--blanc); }
 .bascule button {
@@ -924,10 +917,15 @@ textarea.champ { resize: vertical; min-height: 140px; }
 
 }
 /* Même hauteur de cartes d'une page à l'autre (Entreprises / Duo et groupes) et d'un onglet à l'autre (Présentiel / En ligne) */
-@media (min-width: 1400px) { .offres--2 > .offre { min-height: 416px; } .formules-page__grille--large .offre { min-height: 554px; } }
-@media (min-width: 900px) and (max-width: 1399px) { .offres--2 > .offre { min-height: 333px; } .formules-page__grille--large .offre { min-height: 461px; } }
-/* Individuel (jusqu'à trois formules) : la colonne de gauche se resserre pour laisser la place aux cartes */
-@media (min-width: 900px) { .formules-page__grille--large { grid-template-columns: minmax(260px, 0.72fr) 2fr; } }
+@media (min-width: 1400px) { .offres--2 > .offre { min-height: 416px; } .formules-page__grille--large .offre, .formules-page__grille--large .encart-formules { min-height: 554px; } }
+@media (min-width: 900px) and (max-width: 1399px) { .offres--2 > .offre { min-height: 333px; } .formules-page__grille--large .offre, .formules-page__grille--large .encart-formules { min-height: 461px; } }
+/* Encart craie foncé à côté des formules, qui ouvre un autre onglet (Individuel : « En ligne dès 35 € ») */
+.encart-formules { display: flex; flex-direction: column; gap: 10px; padding: 28px; border-radius: var(--arrondi); background: var(--craie-fonce); }
+.encart-formules .surtitre, .encart-formules .titre { margin: 0; }
+.encart-formules__texte { margin: 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+.encart-formules .offre__prix { margin-top: 8px; }
+.encart-formules__bouton { margin-top: auto; align-self: stretch; justify-content: center; background: transparent; border: 1px solid var(--encre); color: var(--encre); font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; }
+.encart-formules__bouton:hover { background: var(--jaune); border-color: var(--jaune); }
 
 /* ---------- Mon approche : le portrait entier et l'encadré, de même hauteur, centrés ensemble ---------- */
 main > section.approche.section { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }

@@ -20,14 +20,12 @@ export default function Contact() {
   }
 
   return (
-    // Page M'écrire : la photo de Marie sur la moitié gauche, avec « Contactez-moi », la phrase et l'e-mail posés
-    // dessus (voile encre) ; le formulaire seul sur la moitié droite, pour que tout tienne dans l'écran
+    // Page M'écrire (maquette 2) : la photo de Marie sur la moitié gauche ; à droite « Contactez-moi »,
+    // la phrase, l'e-mail, puis le formulaire
     <section className="page-contact" aria-labelledby="contact-titre">
-      <div className="page-contact__gauche">
-        <img className="page-contact__photo" src={photoMarie} alt="Marie Sillas à l’entraînement" />
-        <PresentationContact titre="h1" avecEmail />
-      </div>
+      <img className="page-contact__photo" src={photoMarie} alt="Marie Sillas à l’entraînement" />
       <div className="page-contact__droite">
+        <PresentationContact titre="h1" avecEmail />
 
         {envoye ? (
           <div role="status" className="confirmation">
