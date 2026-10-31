@@ -1,7 +1,7 @@
 # Passation — site Rimaactive
 
 Document de reprise pour une nouvelle discussion avec Claude. À lire en entier avant de toucher au site.
-Mis à jour le 30 octobre 2026 (refonte de l'accueil mise en ligne).
+Mis à jour le 31 octobre 2026 (pages de formules et page M'écrire refaites, mises en ligne).
 
 ## 1. Qui, quoi
 
@@ -63,7 +63,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    4 pastilles 01 Force / 02 Endurance / 03 Puissance / 04 Mobilité (bulle vermillon, chiffre encre).
    Page À propos supprimée : c'est la seule présentation de Marie.
 3. Mon accompagnement : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
-   bouton contour « Découvrir les formules » qui passe en jaune au survol) : Entreprises (Locaux · Extérieur),
+   puis le prix et une flèche ronde qui passe en jaune au survol ; toute la carte est le lien) : Entreprises (Locaux · Extérieur),
    Duo et groupes (Domicile · Extérieur), Individuel (Domicile · Salle · En ligne).
    Sous la phrase, un prix « à partir de » tiré de la fiche : À partir de 110 € la séance /
    Dès 14 € par personne / Dès 45 € la séance. Sur téléphone et tablette (< 900 px),
@@ -79,21 +79,19 @@ Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite le menu, l'e-mail, « Instagr
 (Facebook et LinkedIn sans lien en attendant leurs adresses, voir `RESEAUX` dans `liens.js`) ; puis les mentions.
 
 **Pages Entreprises / Duo et groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
-`src/components/PageService.jsx`, données dans `src/pages/*.jsx`) : un seul écran. Contenus repris
-**mot pour mot** de la fiche « Formules et tarifs » de Marie (octobre 2026), sans texte ajouté.
-Cartes de même hauteur d'une page et d'un onglet à l'autre ; une carte peut porter deux tarifs côte à côte.
-Pas de surtitre sous le fil d'Ariane ni de phrase d'intro (sauf onglet En ligne : « Programmes en ligne sur
-8 semaines. ») ; cartes sans numéro. Liste cochée en 16 px : le lieu (Entreprises « Dans vos locaux ou en extérieur », Duo et groupes « À domicile ou
-en extérieur », Individuel « En salle ou à domicile »), puis partout « Matériel fourni : tapis, kettlebells, slam balls,
-etc. » et « Déplacement inclus jusqu'à 20 km autour de Houdan (78) » (plus de « au-delà de 20 km »).
-Matériel au lancement (donné par Marie) : tapis, kettlebells de 4 à 16 kg, 2 slam balls de 4 et 8 kg,
-2 cordes à sauter, 3 élastiques fessiers. Sur une ligne
-sur ordinateur, sauf Individuel (colonne trop étroite à cause des trois cartes : deux lignes).
-Un pictogramme de la charte par formule, sur la ligne du surtitre, **choisis par Marie** : Active 60 entreprise
-(buildings), Active Day lieu (map-pin), Active Duo groupe (users), Active Group extérieur (tree), Active Solo barre
-(barbell), Active Flex kettlebell. En ligne (pas encore revu avec Marie) : Active Start durée (timer),
-Active Progress barre (barbell), Active Plus groupe (users). Tracés Phosphor Light copiés du design system dans `src/components/Picto.jsx`.
-Bouton « Choisir » → `/contact?formule=…` (formule pré-remplie, profil choisi).
+`src/components/PageService.jsx`, données dans `src/pages/*.jsx`), refaites le 31 octobre 2026 (mélange des
+maquettes de refonte 2 et 3, couleurs de la 4) :
+- en haut, un **bandeau photo** (la photo de la carte de l'accueil, voile encre), les lieux en jaune et le nom de la
+  page en grand ; la barre de menu est transparente dessus, comme sur l'accueil ;
+- dessous, sur toute la largeur, une **ligne d'infos** : onglets Présentiel / En ligne (Individuel), liste cochée
+  (lieu, « Matériel fourni : tapis, kettlebells, slam balls, etc. », « Déplacement inclus jusqu'à 20 km autour de
+  Houdan (78) »), puis les mentions de tarifs ;
+- puis les **cartes en pleine largeur**, blanches et encre, de même hauteur d'une page et d'un onglet à l'autre ;
+  un pictogramme de la charte par formule, choisi par Marie : Active 60 entreprise, Active Day lieu, Active Duo
+  groupe, Active Group extérieur, Active Solo barre, Active Flex kettlebell (en ligne : Start durée, Progress barre,
+  Plus groupe). Marie veut garder **3 pages distinctes** (mieux pour Google) ; pas d'encart « En ligne » dans
+  l'onglet Présentiel (le bouton Présentiel / En ligne suffit).
+- Ces pages ne tiennent plus sur un seul écran (le bandeau photo prend de la place) : choix accepté par Marie.
 - Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
   « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
 - Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
@@ -105,9 +103,10 @@ Bouton « Choisir » → `/contact?formule=…` (formule pré-remplie, profil ch
 - Déplacement inclus jusqu'à 20 km autour de Houdan (78). Tarifs valables jusqu'au
   30 avril 2027. TVA non applicable, art. 293 B du CGI.
 
-**Page M'écrire** (`/contact`), fond craie, tient sur un écran : même colonne de gauche que le bloc du bas
-avec l'e-mail ; formulaire Prénom et nom / E-mail / (Formule choisie) / Vous êtes / Votre message (facultatif) /
-case d'accord / Envoyer ; en bas seulement la ligne des mentions.
+**Page M'écrire** (`/contact`) (maquette de refonte 2) : la photo du squat sur la moitié gauche ; à droite
+« Besoin d'en savoir plus ? », « Contactez-moi », la phrase sur les déplacements, l'e-mail, puis le formulaire
+Prénom et nom / E-mail / (Formule choisie) / Vous êtes / Votre message (facultatif) / case d'accord / Envoyer ;
+en bas seulement la ligne des mentions. Il faut défiler d'environ 110 px sur l'écran de Marie.
 ⚠️ Le formulaire **n'envoie rien** pour l'instant (simple message de confirmation) : à brancher
 (Formspree ou autre) si Marie le demande.
 
@@ -151,4 +150,6 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 - Commits signés `git -c user.name="Marie Sillas" -c user.email="marie.sillas@gmail.com"`.
 - Serveur d'aperçu : `npx vite build` puis `npx vite preview --port 4173` en arrière-plan
   (il s'arrête tout seul après un moment, le relancer si besoin).
+- Les maquettes de refonte complète (4 directions, HTML statique) sont sur la branche `maquettes-refonte`,
+  dossier `maquettes/refonte/`. Marie a écarté la 1 ; elle a retenu des morceaux des 2, 3 et 4.
 - Ne jamais enregistrer de captures d'écran dans le dépôt (c'est arrivé une fois).
