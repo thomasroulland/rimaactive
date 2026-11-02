@@ -69,6 +69,9 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Maquette (?maquette=methode) : rubrique « Ma méthode » sur fond encre après « Moi c'est Marie »,
+  // qui reprend les formats de la boîte à outils (la rubrique Boîte à outils disparaît alors)
+  const methode = new URLSearchParams(window.location.search).get('maquette') === 'methode'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -79,7 +82,7 @@ export default function Accueil() {
           <h1 className="titre heros__titre">Marie Sillas</h1>
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
-            <a href="#approche" className="bouton bouton--clair">Mon approche</a>
+            <a href="#approche" className="bouton bouton--clair">Qui je suis</a>
             <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
           </div>
         </div>
@@ -114,6 +117,8 @@ export default function Accueil() {
         </div>
       </section>
 
+      {methode && <Methode />}
+
       <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
           <h2 id="services-titre" className="titre titre--section">Mon accompagnement</h2>
@@ -142,7 +147,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <BoiteOutils formats={FORMATS} />
+      {!methode && <BoiteOutils formats={FORMATS} />}
     </>
   )
 }
@@ -155,3 +160,46 @@ function FlecheDiagonale() {
   )
 }
 
+// Quatre principes repris de l'ancien texte « Mon approche » et du contexte de marque (à valider par Marie)
+const PRINCIPES = [
+  ['Le mouvement d’abord', 'Des séances construites à partir des mouvements fondamentaux, pour gagner en mobilité, en force et en autonomie.'],
+  ['Moins, mais mieux', 'Des séances d’une heure, à la maison, dehors ou en salle, adaptées à votre niveau.'],
+  ['Le défi plutôt que la routine', 'Du volume global avec des formats qui changent, à l’opposé du « 3 séries de 12 ».'],
+  ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.'],
+]
+
+function Methode() {
+  return (
+    <section id="methode" className="section ecran-plein methode" aria-labelledby="methode-titre">
+      <div className="conteneur">
+        <div className="methode__entete">
+          <p className="surtitre">Ma méthode</p>
+          <h2 id="methode-titre" className="titre titre--section">Pourquoi ça <span className="mot-avant">marche</span></h2>
+        </div>
+        <ol className="methode__principes">
+          {PRINCIPES.map(([titre, texte], i) => (
+            <li key={titre}>
+              <span className="methode__numero">{String(i + 1).padStart(2, '0')}</span>
+              <h3 className="methode__titre">{titre}</h3>
+              <p>{texte}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="methode__outils">
+          <p className="surtitre">Ma boîte à outils</p>
+          <ul className="methode__formats">
+            {FORMATS.map((f) => (
+              <li key={f.nom} className="methode__format">
+                <h3 className="methode__format-nom">{f.nom}</h3>
+                <p>{f.texte}</p>
+                <ul className="methode__objectifs" aria-label="Objectifs">
+                  {f.objectifs.map((o) => <li key={o}>{o}</li>)}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}
