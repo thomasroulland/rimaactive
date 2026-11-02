@@ -91,7 +91,9 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
   groupe, Active Group extérieur, Active Solo barre, Active Flex kettlebell (en ligne : Start durée, Progress barre,
   Plus groupe). Marie veut garder **3 pages distinctes** (mieux pour Google) ; pas d'encart « En ligne » dans
   l'onglet Présentiel (le bouton Présentiel / En ligne suffit).
-- Ces pages ne tiennent plus sur un seul écran (le bandeau photo prend de la place) : choix accepté par Marie.
+- Sur ordinateur, chaque page de formules **tient sur un écran** (demande de Marie du 2 novembre 2026) : bandeau bas,
+  onglets Présentiel / En ligne posés sur la photo à droite du titre, cartes resserrées, liste « Compris » d'Active Flex
+  sur deux colonnes. Les min-height des cartes sont en px avant le zoom automatique du site (`index.html`).
 - Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
   « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
 - Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
@@ -103,10 +105,11 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
 - Déplacement inclus jusqu'à 20 km autour de Houdan (78). Tarifs valables jusqu'au
   30 avril 2027. TVA non applicable, art. 293 B du CGI.
 
-**Page M'écrire** (`/contact`) (maquette de refonte 2) : la photo du squat sur la moitié gauche ; à droite
+**Page M'écrire** (`/contact`) (maquette de refonte 2) : le portrait bras croisés de Marie (`portrait-contact.jpg`,
+envoyé le 2 novembre 2026) sur la moitié gauche ; à droite
 « Besoin d'en savoir plus ? », « Contactez-moi », la phrase sur les déplacements, l'e-mail, puis le formulaire
 Prénom et nom / E-mail / (Formule choisie) / Vous êtes / Votre message (facultatif) / case d'accord / Envoyer ;
-en bas seulement la ligne des mentions. Il faut défiler d'environ 110 px sur l'écran de Marie.
+en bas seulement la ligne des mentions. Tient sur un écran d'ordinateur.
 ⚠️ Le formulaire **n'envoie rien** pour l'instant (simple message de confirmation) : à brancher
 (Formspree ou autre) si Marie le demande.
 

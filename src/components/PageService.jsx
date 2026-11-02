@@ -23,22 +23,23 @@ export default function PageService({ page }) {
       <div className="conteneur bandeau-page__texte">
         <p className="surtitre">{page.lieux}</p>
         <h1 id="page-titre" className="titre bandeau-page__titre">{page.titre}</h1>
+        {/* Individuel : le choix Présentiel / En ligne est posé sur la photo, à droite du titre */}
+        {page.onglets && (
+          <div className="bascule" role="tablist" aria-label="Choisir la formule">
+            {onglets.map((o, i) => (
+              <button key={o.nom} type="button" role="tab" aria-selected={i === actif} onClick={() => setActif(i)}>
+                {o.nom}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </header>
     <section className="section formules-page" aria-labelledby="page-titre">
       {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
       <div className={`conteneur formules-page__grille ${onglets.some((o) => o.cartes.length === 3) ? 'formules-page__grille--large' : ''}`}>
-        {/* Ligne d'infos sur toute la largeur : onglets, liste cochée, puis les mentions */}
+        {/* Ligne d'infos sur toute la largeur : liste cochée, puis les mentions */}
         <div className="formules-page__infos">
-          {page.onglets && (
-            <div className="bascule" role="tablist" aria-label="Choisir la formule">
-              {onglets.map((o, i) => (
-                <button key={o.nom} type="button" role="tab" aria-selected={i === actif} onClick={() => setActif(i)}>
-                  {o.nom}
-                </button>
-              ))}
-            </div>
-          )}
           {intro && <p className="texte">{intro}</p>}
           {liste.length > 0 && (
             <ul className="formules-page__liste">

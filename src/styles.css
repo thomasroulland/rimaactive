@@ -700,7 +700,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 
 /* ---------- Page M'écrire (maquette 2) : la photo de Marie à gauche ; « Contactez-moi », l'e-mail et le formulaire à droite ---------- */
 .page-contact { display: grid; }
-.page-contact__photo { width: 100%; height: 320px; object-fit: cover; object-position: 50% 0; }
+.page-contact__photo { width: 100%; height: 360px; object-fit: cover; object-position: 50% 28%; }
 .page-contact__droite { padding: 32px var(--gouttiere) 40px; display: grid; gap: 22px; align-content: center; }
 /* l'e-mail se lit juste sous la phrase, sans étiquette */
 .page-contact .presentation-contact__email { margin-top: 4px; }
@@ -840,7 +840,9 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .bandeau-page > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* voile encre : en haut pour la barre de menu, en bas pour le titre */
 .bandeau-page::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(22, 21, 20, 0.55), rgba(22, 21, 20, 0.15) 35%, rgba(22, 21, 20, 0.8)); }
-.bandeau-page__texte { position: relative; z-index: 2; width: 100%; box-sizing: border-box; padding: 0 var(--gouttiere) 32px; }
+.bandeau-page__texte { position: relative; z-index: 2; width: 100%; box-sizing: border-box; padding-bottom: 32px; display: grid; grid-template-columns: 1fr auto; align-items: end; column-gap: 24px; }
+.bandeau-page__texte > .surtitre, .bandeau-page__titre { grid-column: 1; }
+.bandeau-page__texte > .bascule { grid-column: 2; grid-row: 1 / 3; align-self: end; }
 .bandeau-page .surtitre { margin: 0 0 8px; color: var(--jaune); } /* jaune sur photo sombre uniquement */
 .bandeau-page__titre { margin: 0; color: var(--craie); font-size: 80px; line-height: 80px; letter-spacing: -0.05em; }
 .formules-page__grille { display: grid; gap: 24px; }
@@ -907,7 +909,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .offre--sombre .bouton--principal:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
 
 @media (min-width: 900px) { .section.formules-page { padding-block: 24px 48px; } }
-@media (max-width: 899px) { .bandeau-page { height: 240px; } .bandeau-page__titre { font-size: 44px; line-height: 46px; } .bandeau-page .surtitre { letter-spacing: 0.12em; } }
+@media (max-width: 899px) { .bandeau-page__texte { padding-inline: var(--gouttiere); grid-template-columns: 1fr; } .bandeau-page__texte > .bascule { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 14px; } .bandeau-page { height: 280px; } .bandeau-page__titre { font-size: 44px; line-height: 46px; } .bandeau-page .surtitre { letter-spacing: 0.12em; } }
 @media (min-width: 900px) and (max-width: 1399px) {
   .bandeau-page { height: 260px; }
   .bandeau-page__titre { font-size: 64px; line-height: 64px; }
@@ -917,8 +919,6 @@ textarea.champ { resize: vertical; min-height: 140px; }
 
 }
 /* Même hauteur de cartes d'une page à l'autre (Entreprises / Duo et groupes) et d'un onglet à l'autre (Présentiel / En ligne) */
-@media (min-width: 1400px) { .offres--2 > .offre { min-height: 416px; } .formules-page__grille--large .offre { min-height: 505px; } }
-@media (min-width: 900px) and (max-width: 1399px) { .offres--2 > .offre { min-height: 333px; } .formules-page__grille--large .offre { min-height: 461px; } }
 
 /* ---------- Mon approche : le portrait entier et l'encadré, de même hauteur, centrés ensemble ---------- */
 main > section.approche.section { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }
@@ -970,3 +970,43 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .service .photo.service__photo { height: 160px; }
 }
 
+
+/* ---------- Ordinateur : les pages de formules et la page M'écrire tiennent dans un écran ---------- */
+@media (min-width: 900px) {
+  /* bandeau plus bas, titre plus petit */
+  .bandeau-page { height: calc(var(--hauteur-entete) + 100px); }
+  .bandeau-page__texte { padding-bottom: 18px; }
+  .bandeau-page__titre { font-size: 56px; line-height: 56px; }
+  .section.formules-page { padding-block: 12px 16px; }
+  .formules-page__grille { gap: 12px; }
+  /* ligne d'infos : onglets et liste sur une ligne, mentions en petit dessous */
+  .formules-page__infos { gap: 4px 28px; padding-bottom: 10px; }
+  .formules-page__infos .bascule button { min-height: 34px; padding: 5px 16px; }
+  .formules-page__note { font-size: 13px; line-height: 18px; }
+  /* cartes resserrées */
+  .offre { padding: 18px 24px; gap: 4px; }
+  .offre__tete { min-height: 0; }
+  .offre__tarifs { margin: 2px 0 8px; padding-top: 8px; gap: 12px; }
+  .offre__libelle { margin-bottom: 2px; }
+  .offre__prix { font-size: 40px; line-height: 42px; }
+  .offre__detail { margin-top: 2px; }
+  .offre__points { margin: -4px 0 12px; gap: 2px; }
+  /* liste « Compris » d'Active Flex sur deux colonnes */
+  .offre__points:has(> li:nth-child(4)) { grid-template-columns: 1fr 1fr; column-gap: 16px; margin-bottom: 8px; }
+  .offre__bouton { min-height: 0; height: 44px; }
+  /* même hauteur de cartes d'une page à l'autre et d'un onglet à l'autre */
+  .offres--2 > .offre { min-height: 286px; } /* valeurs avant le zoom automatique du site */
+  .formules-page__grille--large .offre { min-height: 371px; }
+  /* M'écrire */
+  .page-contact__photo { height: 0; min-height: 100%; } /* la photo suit la hauteur du formulaire, sans l'imposer */
+  .page-contact { min-height: calc(var(--ecran) - var(--hauteur-entete) - 53px); }
+  .page-contact__droite { gap: 8px; padding-block: 10px; }
+  .page-contact .presentation-contact .titre { font-size: 44px; line-height: 46px; }
+  .page-contact .presentation-contact__lieu { margin-top: 4px; }
+  .page-contact .presentation-contact__email { margin-top: 0; }
+  .page-contact .champ { min-height: 38px; padding-block: 5px; }
+  .page-contact textarea.champ { min-height: 0; height: 56px; }
+  .page-contact .case { font-size: 13px; line-height: 19px; }
+  .pied--mentions .pied__bas { padding-top: 12px; }
+  .pied--mentions { padding-bottom: 12px; }
+}

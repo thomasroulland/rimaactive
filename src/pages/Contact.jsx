@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import photoMarie from '../assets/heros-squat-nb.jpg'
+import photoMarie from '../assets/portrait-contact.jpg'
 import PresentationContact from '../components/AppelContact.jsx'
 import useTitre from '../components/useTitre.js'
 
@@ -23,7 +23,7 @@ export default function Contact() {
     // Page M'écrire (maquette 2) : la photo de Marie sur la moitié gauche ; à droite « Contactez-moi »,
     // la phrase, l'e-mail, puis le formulaire
     <section className="page-contact" aria-labelledby="contact-titre">
-      <img className="page-contact__photo" src={photoMarie} alt="Marie Sillas à l’entraînement" />
+      <img className="page-contact__photo" src={photoMarie} alt="Marie Sillas, bras croisés" />
       <div className="page-contact__droite">
         <PresentationContact titre="h1" avecEmail />
 
