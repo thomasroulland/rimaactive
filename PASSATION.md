@@ -57,13 +57,17 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
 **Accueil** (`src/pages/Accueil.jsx`), dans l'ordre :
 1. Haut de page : photo du squat (`heros-squat-nb.jpg`) en plein écran sous la barre, calée en haut
    (tête jamais coupée). « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) » en jaune, « Marie Sillas » en grand,
-   accroche en italique, boutons « Mon approche » (blanc) et « M'écrire » (jaune). Plus de bandeau vermillon.
+   accroche en italique, boutons « Qui je suis » (blanc, vers #approche) et « M'écrire » (jaune). Plus de bandeau vermillon.
    Le « M'écrire » de la barre est caché sur l'accueil jusqu'à la rubrique « Moi c'est Marie » ; « Accueil » ramène en haut.
 2. « Moi c'est Marie » (ancre #approche, novembre 2026) : portrait entier (`portrait-marie.jpg`) et encadré arrondi de
    même hauteur sur fond craie foncé. Dans l'encadré : « Qui je suis », « Moi c'est Marie » (« Marie » souligné vermillon,
    règle MotMisEnAvant de la charte), les 3 paragraphes écrits par Marie (karaté, six ans de salariat, méthode),
    bouton jaune « Mes services » vers #accompagnement. Les pastilles Force/Endurance/Puissance/Mobilité sont retirées.
    Page À propos supprimée : c'est la seule présentation de Marie.
+2 bis. « Ma méthode » (#methode, novembre 2026), fond blanc : « Ma méthode », « Pourquoi ça marche » (« marche » en
+   vermillon), 4 principes numérotés en vermillon (Le mouvement d'abord, Moins mais mieux, Le défi plutôt que la routine,
+   La confiance qui s'installe), puis « Vos objectifs » : les objectifs des formats en bulles jaunes. Marie a préféré
+   le fond blanc au fond noir.
 3. Mes services (titre renommé le 2 novembre 2026, ancre #accompagnement inchangée) : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
    puis le prix et une flèche ronde qui passe en jaune au survol ; toute la carte est le lien) : Entreprises (Locaux · Extérieur),
    Duo et groupes (Domicile · Extérieur), Individuel (Domicile · Salle · En ligne).

@@ -69,10 +69,6 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  // Maquette (?maquette=methode) : rubrique « Ma méthode » sur fond blanc après « Moi c'est Marie »
-  const parametres = new URLSearchParams(window.location.search)
-  const methode = parametres.get('maquette') === 'methode'
-  const fondMethode = parametres.get('fond') === 'noir' ? 'noir' : 'blanc'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -118,7 +114,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      {methode && <Methode fond={fondMethode} />}
+      <Methode />
 
       <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
@@ -161,7 +157,7 @@ function FlecheDiagonale() {
   )
 }
 
-// Quatre principes repris de l'ancien texte « Mon approche » et du contexte de marque (à valider par Marie)
+// Quatre principes repris de l'ancien texte « Mon approche » et du contexte de marque (validés par Marie)
 const PRINCIPES = [
   ['Le mouvement d’abord', 'Des séances construites à partir des mouvements fondamentaux, pour gagner en mobilité, en force et en autonomie.'],
   ['Moins, mais mieux', 'Des séances d’une heure, à la maison, dehors ou en salle, adaptées à votre niveau.'],
@@ -171,9 +167,10 @@ const PRINCIPES = [
 
 const OBJECTIFS = [...new Set(FORMATS.flatMap((f) => f.objectifs))]
 
-function Methode({ fond }) {
+// « Ma méthode » (novembre 2026) : titre centré, quatre principes, objectifs ; fond blanc, « marche » en vermillon
+function Methode() {
   return (
-    <section id="methode" className={`section ecran-plein methode methode--${fond}`} aria-labelledby="methode-titre">
+    <section id="methode" className="section ecran-plein methode" aria-labelledby="methode-titre">
       <div className="conteneur">
         <div className="methode__entete">
           <p className="surtitre">Ma méthode</p>

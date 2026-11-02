@@ -1047,7 +1047,7 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
 /* Mot mis en avant (composant MotMisEnAvant de la charte) : souligné d'un trait vermillon épais sur fond clair */
 .mot-avant { text-decoration: underline; text-decoration-color: var(--vermillon); text-decoration-thickness: 0.12em; text-underline-offset: 0.12em; }
 
-/* ---------- Ma méthode (maquette ?maquette=methode) : titre centré, quatre principes, fond blanc ---------- */
+/* ---------- Ma méthode : titre centré, quatre principes, objectifs, fond blanc ---------- */
 main > section.methode:nth-of-type(n) { --fond-rubrique: var(--blanc); background: var(--blanc); color: var(--encre); }
 .methode__entete { display: grid; justify-items: center; gap: 10px; text-align: center; }
 .methode__entete .surtitre, .methode__entete .titre, .methode__entete .texte { margin: 0; }
@@ -1058,14 +1058,8 @@ main > section.methode:nth-of-type(n) { --fond-rubrique: var(--blanc); backgroun
 .methode__titre { margin: 0; font-weight: 900; font-size: 22px; line-height: 26px; letter-spacing: -0.02em; }
 .methode__principes p { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
 @media (min-width: 900px) { .methode__principes { grid-template-columns: repeat(4, 1fr); } }
-/* Variante fond noir : mot en jaune ; variante fond blanc : mot en vermillon (grand titre, 3,4:1) */
-main > section.methode--noir:nth-of-type(n) { --fond-rubrique: var(--encre); background: var(--encre); color: var(--craie); }
-.methode--noir .surtitre { color: var(--jaune); }
-.methode--noir .titre, .methode--noir .methode__titre { color: var(--craie); }
-.methode--noir .methode__principes li { border-top-color: var(--filet-clair); }
-.methode--noir .methode__principes p { color: rgba(244, 243, 239, 0.75); }
+/* Mot mis en avant en vermillon (grand titre sur blanc, 3,4:1) */
 .methode .mot-avant { text-decoration: none; color: var(--vermillon); }
-.methode--noir .mot-avant { color: var(--jaune); }
 /* Vos objectifs : une ligne de bulles jaunes centrée sous les principes */
 .methode__objectifs { margin-top: 40px; display: grid; justify-items: center; gap: 14px; text-align: center; }
 .methode__objectifs-titre { margin: 0; font-weight: 900; font-size: 22px; line-height: 26px; letter-spacing: -0.02em; }
