@@ -54,6 +54,7 @@ export default function PageService({ page }) {
                     <p className="offre__prix">
                       {t.avant && <span className="offre__avant">{t.avant}</span>}
                       {t.montant}
+                      {t.apres && <span className="offre__apres">{t.apres}</span>}
                     </p>
                     {t.detail && <p className="offre__detail">{t.detail}</p>}
                   </div>
