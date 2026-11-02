@@ -69,8 +69,6 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  // Maquette (?maquette=qui) : l'encadré « Mon approche » devient « Qui je suis / Moi c'est Marie » (même photo, même fond, même encadré)
-  const quiJeSuis = new URLSearchParams(window.location.search).get('maquette') === 'qui'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -87,57 +85,31 @@ export default function Accueil() {
         </div>
       </section>
 
-      {/* Mon approche : le portrait entier (ni coupé ni rapproché) et l'encadré, de même hauteur, centrés ensemble.
-          C'est la seule rubrique qui présente Marie (plus de page « À propos »). */}
+      {/* « Moi c'est Marie » (ancre #approche) : le portrait entier et l'encadré, de même hauteur, centrés ensemble.
+          C'est la seule rubrique qui présente Marie (plus de page « À propos »). Textes de Marie (novembre 2026). */}
       <section id="approche" className="section ecran-plein approche" aria-labelledby="approche-titre">
         <figure className="approche__photo">
           <img src={portraitMarie} alt="Marie Sillas, coach sportive" width="960" height="1200" />
         </figure>
         <div className="approche__panneau">
           <div className="approche__cadre">
-            {quiJeSuis ? (
-              <>
-                <p className="surtitre approche__surtitre">Qui je suis</p>
-                <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
-                <p className="texte">
-                  Passionnée de sport et pratiquante de karaté, je vous aide à atteindre vos objectifs grâce à une
-                  pratique fonctionnelle.
-                </p>
-                <p className="texte">
-                  Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs, qui ne
-                  trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger mais ne savaient pas par où
-                  commencer. C’est ce qui m’a poussée à devenir coach.
-                </p>
-                <p className="texte">
-                  Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite, on
-                  construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien. On
-                  s’entraîne pour gagner en force et en mobilité grâce à des formats qui donnent envie de relever le défi.
-                </p>
-              </>
-            ) : (
-              <h2 id="approche-titre" className="titre titre--section">Mon approche</h2>
-            )}
-            {!quiJeSuis && (
-              <>
-                <p className="texte">
-                  Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
-                  partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
-                </p>
-                <p className="texte">Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.</p>
-              </>
-            )}
-            {quiJeSuis ? (
-              <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
-            ) : (
-              <ol className="approche__points" aria-label="Ce que l’on travaille">
-              {['Force', 'Endurance', 'Puissance', 'Mobilité'].map((point, i) => (
-                <li key={point}>
-                  <span className="approche__numero">{String(i + 1).padStart(2, '0')}</span>
-                  {point}
-                </li>
-              ))}
-            </ol>
-            )}
+            <p className="surtitre approche__surtitre">Qui je suis</p>
+            <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
+            <p className="texte">
+              Passionnée de sport et pratiquante de karaté, je vous aide à atteindre vos objectifs grâce à une
+              pratique fonctionnelle.
+            </p>
+            <p className="texte">
+              Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs, qui ne
+              trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger mais ne savaient pas par où
+              commencer. C’est ce qui m’a poussée à devenir coach.
+            </p>
+            <p className="texte">
+              Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite, on
+              construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien. On
+              s’entraîne pour gagner en force et en mobilité grâce à des formats qui donnent envie de relever le défi.
+            </p>
+            <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
           </div>
         </div>
       </section>

@@ -57,10 +57,12 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
 **Accueil** (`src/pages/Accueil.jsx`), dans l'ordre :
 1. Haut de page : photo du squat (`heros-squat-nb.jpg`) en plein écran sous la barre, calée en haut
    (tête jamais coupée). « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) » en jaune, « Marie Sillas » en grand,
-   accroche en italique, bouton « Mon approche » (jaune) seul. Plus de bandeau vermillon.
-2. Mon approche : portrait entier (`portrait-marie.jpg`, 4:5, ni coupé ni rapproché, sans aplat jaune)
-   et encadré de même hauteur, centrés ensemble. Encadré : titre « Mon approche », texte (sans la citation « Un corps fort et mobile… », déjà sur l'accueil),
-   4 pastilles 01 Force / 02 Endurance / 03 Puissance / 04 Mobilité (bulle vermillon, chiffre encre).
+   accroche en italique, boutons « Mon approche » (blanc) et « M'écrire » (jaune). Plus de bandeau vermillon.
+   Le « M'écrire » de la barre est caché sur l'accueil jusqu'à la rubrique « Moi c'est Marie » ; « Accueil » ramène en haut.
+2. « Moi c'est Marie » (ancre #approche, novembre 2026) : portrait entier (`portrait-marie.jpg`) et encadré arrondi de
+   même hauteur sur fond craie foncé. Dans l'encadré : « Qui je suis », « Moi c'est Marie » (« Marie » souligné vermillon,
+   règle MotMisEnAvant de la charte), les 3 paragraphes écrits par Marie (karaté, six ans de salariat, méthode),
+   bouton jaune « Mes services » vers #accompagnement. Les pastilles Force/Endurance/Puissance/Mobilité sont retirées.
    Page À propos supprimée : c'est la seule présentation de Marie.
 3. Mon accompagnement : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
    puis le prix et une flèche ronde qui passe en jaune au survol ; toute la carte est le lien) : Entreprises (Locaux · Extérieur),
