@@ -708,7 +708,7 @@ main > section.outils:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 @media (min-width: 900px) {
   .page-contact { grid-template-columns: 1fr 1fr; min-height: calc(var(--ecran) - var(--hauteur-entete) - 60px); }
   .page-contact__photo { height: 100%; }
-  .page-contact__droite { padding: 24px max(var(--gouttiere), calc((100vw - var(--largeur)) / 2)) 24px 56px; }
+  .page-contact__droite { padding: 24px max(var(--gouttiere), calc((100 * var(--vw) - var(--largeur)) / 2)) 24px 56px; }
   .page-contact .presentation-contact__lieu { max-width: none; margin-top: 8px; }
   .page-contact .formulaire { gap: 8px 20px; }
   .page-contact .champ-groupe { gap: 4px; }
@@ -841,15 +841,14 @@ textarea.champ { resize: vertical; min-height: 140px; }
 /* voile encre : en haut pour la barre de menu, en bas pour le titre */
 .bandeau-page::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(22, 21, 20, 0.55), rgba(22, 21, 20, 0.15) 35%, rgba(22, 21, 20, 0.8)); }
 .bandeau-page__texte { position: relative; z-index: 2; width: 100%; box-sizing: border-box; padding-bottom: 32px; display: grid; grid-template-columns: 1fr auto; align-items: end; column-gap: 24px; }
-.bandeau-page__texte > .surtitre, .bandeau-page__titre { grid-column: 1; }
-.bandeau-page__texte > .bascule { grid-column: 2; grid-row: 1 / 3; align-self: end; }
-.bandeau-page .surtitre { margin: 0 0 8px; color: var(--jaune); } /* jaune sur photo sombre uniquement */
+.bandeau-page__titre { grid-column: 1; }
+.bandeau-page__texte > .bascule { grid-column: 2; align-self: end; }
 .bandeau-page__titre { margin: 0; color: var(--craie); font-size: 80px; line-height: 80px; letter-spacing: -0.05em; }
 .formules-page__grille { display: grid; gap: 24px; }
 /* ligne d'infos : onglets, liste cochée en ligne, puis les mentions en dessous */
-.formules-page__infos { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; padding-bottom: 20px; border-bottom: 1px solid var(--filet); }
+.formules-page__infos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 32px; text-align: center; }
 .formules-page__infos > .texte { margin: 0; }
-.formules-page__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 32px; }
+.formules-page__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 32px; text-align: left; }
 .formules-page__liste li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 26px; }
 /* la case cochée s'aligne sur la première ligne quand le texte en fait deux */
 .formules-page__liste .picto { flex: none; margin-top: 3px; }
@@ -909,7 +908,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .offre--sombre .bouton--principal:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
 
 @media (min-width: 900px) { .section.formules-page { padding-block: 24px 48px; } }
-@media (max-width: 899px) { .bandeau-page__texte { padding-inline: var(--gouttiere); grid-template-columns: 1fr; } .bandeau-page__texte > .bascule { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 14px; } .bandeau-page { height: 280px; } .bandeau-page__titre { font-size: 44px; line-height: 46px; } .bandeau-page .surtitre { letter-spacing: 0.12em; } }
+@media (max-width: 899px) { .bandeau-page__texte { padding-inline: var(--gouttiere); grid-template-columns: 1fr; } .bandeau-page__texte > .bascule { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 14px; } .bandeau-page { height: 280px; } .bandeau-page__titre { font-size: 44px; line-height: 46px; } }
 @media (min-width: 900px) and (max-width: 1399px) {
   .bandeau-page { height: 260px; }
   .bandeau-page__titre { font-size: 64px; line-height: 64px; }
@@ -974,13 +973,14 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
 /* ---------- Ordinateur : les pages de formules et la page M'écrire tiennent dans un écran ---------- */
 @media (min-width: 900px) {
   /* bandeau plus bas, titre plus petit */
-  .bandeau-page { height: calc(var(--hauteur-entete) + 100px); }
+  .bandeau-page { height: calc(var(--hauteur-entete) + 120px); }
   .bandeau-page__texte { padding-bottom: 18px; }
   .bandeau-page__titre { font-size: 56px; line-height: 56px; }
-  .section.formules-page { padding-block: 12px 16px; }
+  /* bandeau + formules = exactement la hauteur de l'écran : le bloc noir du bas n'apparaît qu'en défilant */
+  .section.formules-page { box-sizing: border-box; min-height: calc(var(--ecran) - var(--hauteur-entete) - 120px); display: flex; flex-direction: column; justify-content: center; padding-block: 12px; }
   .formules-page__grille { gap: 12px; }
   /* ligne d'infos : onglets et liste sur une ligne, mentions en petit dessous */
-  .formules-page__infos { gap: 4px 28px; padding-bottom: 10px; }
+  .formules-page__infos { gap: 2px 28px; }
   .formules-page__infos .bascule button { min-height: 34px; padding: 5px 16px; }
   .formules-page__note { font-size: 13px; line-height: 18px; }
   /* cartes resserrées */

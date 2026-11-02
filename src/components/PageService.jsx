@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import Picto from './Picto.jsx'
 
 // Gabarit commun aux pages Entreprises, Duo et groupes et Individuel :
-// en haut un bandeau avec la photo de la carte de l'accueil, les lieux et le nom de la page ;
-// dessous, sur toute la largeur, une ligne d'infos (onglets, liste cochée, mentions), puis une carte par formule
-// (blanche, ou encre pour celle marquée « sombre »).
+// en haut un bandeau avec la photo de la carte de l'accueil et le nom de la page ;
+// dessous une carte par formule (blanche, ou encre pour celle marquée « sombre »), puis, centrées,
+// la liste cochée et les mentions. Sur ordinateur, bandeau et formules remplissent exactement l'écran.
 // page.onglets : plusieurs jeux de cartes (Présentiel, En ligne) ; sinon page.cartes.
 // Une carte peut avoir un ou deux tarifs (côte à côte : À domicile / En salle, 4 à 8 / 9 à 12 personnes).
 export default function PageService({ page }) {
@@ -21,7 +21,6 @@ export default function PageService({ page }) {
     <header className="bandeau-page">
       <img src={page.image} alt="" />
       <div className="conteneur bandeau-page__texte">
-        <p className="surtitre">{page.lieux}</p>
         <h1 id="page-titre" className="titre bandeau-page__titre">{page.titre}</h1>
         {/* Individuel : le choix Présentiel / En ligne est posé sur la photo, à droite du titre */}
         {page.onglets && (
@@ -38,17 +37,6 @@ export default function PageService({ page }) {
     <section className="section formules-page" aria-labelledby="page-titre">
       {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
       <div className={`conteneur formules-page__grille ${onglets.some((o) => o.cartes.length === 3) ? 'formules-page__grille--large' : ''}`}>
-        {/* Ligne d'infos sur toute la largeur : liste cochée, puis les mentions */}
-        <div className="formules-page__infos">
-          {intro && <p className="texte">{intro}</p>}
-          {liste.length > 0 && (
-            <ul className="formules-page__liste">
-              {liste.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
-            </ul>
-          )}
-          <p className="formules-page__note">{note}</p>
-        </div>
-
         <ul className={`offres offres--${onglet.cartes.length}`}>
           {onglet.cartes.map((f) => (
             <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''}`}>
@@ -87,6 +75,16 @@ export default function PageService({ page }) {
             </li>
           ))}
         </ul>
+        {/* Sous les cartes, centrée : la liste cochée, puis les mentions */}
+        <div className="formules-page__infos">
+          {intro && <p className="texte">{intro}</p>}
+          {liste.length > 0 && (
+            <ul className="formules-page__liste">
+              {liste.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
+            </ul>
+          )}
+          <p className="formules-page__note">{note}</p>
+        </div>
       </div>
     </section>
     </>

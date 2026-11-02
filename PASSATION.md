@@ -81,18 +81,17 @@ Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite le menu, l'e-mail, « Instagr
 **Pages Entreprises / Duo et groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
 `src/components/PageService.jsx`, données dans `src/pages/*.jsx`), refaites le 31 octobre 2026 (mélange des
 maquettes de refonte 2 et 3, couleurs de la 4) :
-- en haut, un **bandeau photo** (la photo de la carte de l'accueil, voile encre), les lieux en jaune et le nom de la
-  page en grand ; la barre de menu est transparente dessus, comme sur l'accueil ;
-- dessous, sur toute la largeur, une **ligne d'infos** : onglets Présentiel / En ligne (Individuel), liste cochée
-  (lieu, « Matériel fourni : tapis, kettlebells, slam balls, etc. », « Déplacement inclus jusqu'à 20 km autour de
-  Houdan (78) »), puis les mentions de tarifs ;
-- puis les **cartes en pleine largeur**, blanches et encre, de même hauteur d'une page et d'un onglet à l'autre ;
+- en haut, un **bandeau photo** (la photo de la carte de l'accueil, voile encre) avec le nom de la page en grand
+  (plus de lieux en jaune) ; sur Individuel, les onglets Présentiel / En ligne sont posés sur la photo à droite ;
+  la barre de menu est transparente dessus, comme sur l'accueil ;
+- dessous, les **cartes en pleine largeur**, blanches et encre, de même hauteur d'une page et d'un onglet à l'autre ;
   un pictogramme de la charte par formule, choisi par Marie : Active 60 entreprise, Active Day lieu, Active Duo
   groupe, Active Group extérieur, Active Solo barre, Active Flex kettlebell (en ligne : Start durée, Progress barre,
-  Plus groupe). Marie veut garder **3 pages distinctes** (mieux pour Google) ; pas d'encart « En ligne » dans
+  Plus groupe). Sous les cartes, **centrées** : la liste cochée (lieu, « Matériel fourni : tapis, kettlebells, slam
+  balls, etc. », « Déplacement inclus jusqu'à 20 km autour de Houdan (78) ») et les mentions de tarifs. Marie veut garder **3 pages distinctes** (mieux pour Google) ; pas d'encart « En ligne » dans
   l'onglet Présentiel (le bouton Présentiel / En ligne suffit).
-- Sur ordinateur, chaque page de formules **tient sur un écran** (demande de Marie du 2 novembre 2026) : bandeau bas,
-  onglets Présentiel / En ligne posés sur la photo à droite du titre, cartes resserrées, liste « Compris » d'Active Flex
+- Sur ordinateur, bandeau + formules **remplissent exactement l'écran** : le bloc noir du bas n'apparaît qu'en
+  défilant (demande de Marie du 2 novembre 2026 ; vérifier aussi en 1900 × 867, son grand écran). Cartes resserrées, liste « Compris » d'Active Flex
   sur deux colonnes. Les min-height des cartes sont en px avant le zoom automatique du site (`index.html`).
 - Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
   « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
