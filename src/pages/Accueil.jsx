@@ -69,8 +69,7 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  // Maquette (?maquette=methode) : rubrique « Ma méthode » sur fond encre après « Moi c'est Marie »,
-  // qui reprend les formats de la boîte à outils (la rubrique Boîte à outils disparaît alors)
+  // Maquette (?maquette=methode) : rubrique « Ma méthode » sur fond blanc après « Moi c'est Marie »
   const methode = new URLSearchParams(window.location.search).get('maquette') === 'methode'
   return (
     <>
@@ -147,7 +146,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      {!methode && <BoiteOutils formats={FORMATS} />}
+      <BoiteOutils formats={FORMATS} />
     </>
   )
 }
@@ -164,7 +163,7 @@ function FlecheDiagonale() {
 const PRINCIPES = [
   ['Le mouvement d’abord', 'Des séances construites à partir des mouvements fondamentaux, pour gagner en mobilité, en force et en autonomie.'],
   ['Moins, mais mieux', 'Des séances d’une heure, à la maison, dehors ou en salle, adaptées à votre niveau.'],
-  ['Le défi plutôt que la routine', 'Du volume global avec des formats qui changent, à l’opposé du « 3 séries de 12 ».'],
+  ['Le défi plutôt que la routine', 'EMOM, AMRAP, density, complex, circuit\u00a0: du volume global, à l’opposé du «\u00a03\u00a0séries de 12\u00a0».'],
   ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.'],
 ]
 
@@ -175,6 +174,7 @@ function Methode() {
         <div className="methode__entete">
           <p className="surtitre">Ma méthode</p>
           <h2 id="methode-titre" className="titre titre--section">Pourquoi ça <span className="mot-avant">marche</span></h2>
+          <p className="texte">Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
         </div>
         <ol className="methode__principes">
           {PRINCIPES.map(([titre, texte], i) => (
@@ -185,20 +185,6 @@ function Methode() {
             </li>
           ))}
         </ol>
-        <div className="methode__outils">
-          <p className="surtitre">Ma boîte à outils</p>
-          <ul className="methode__formats">
-            {FORMATS.map((f) => (
-              <li key={f.nom} className="methode__format">
-                <h3 className="methode__format-nom">{f.nom}</h3>
-                <p>{f.texte}</p>
-                <ul className="methode__objectifs" aria-label="Objectifs">
-                  {f.objectifs.map((o) => <li key={o}>{o}</li>)}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
     </section>
   )

@@ -1047,25 +1047,14 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
 /* Mot mis en avant (composant MotMisEnAvant de la charte) : souligné d'un trait vermillon épais sur fond clair */
 .mot-avant { text-decoration: underline; text-decoration-color: var(--vermillon); text-decoration-thickness: 0.12em; text-underline-offset: 0.12em; }
 
-/* ---------- Ma méthode (maquette ?maquette=methode) : principes et formats sur fond encre ---------- */
-main > section.methode:nth-of-type(n) { --fond-rubrique: var(--encre); background: var(--encre); color: var(--craie); }
-.methode .surtitre { margin: 0; color: var(--jaune); }
-.methode .titre { margin: 8px 0 0; color: var(--craie); }
-.methode .mot-avant { text-decoration: none; color: var(--jaune); } /* sur fond encre, le mot mis en avant passe en jaune */
-.methode__principes { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 24px; }
-.methode__principes li { display: grid; gap: 6px; align-content: start; padding-top: 14px; border-top: 1px solid var(--filet-clair); }
-.methode__numero { color: var(--vermillon); font-weight: 900; font-size: 28px; line-height: 28px; letter-spacing: -0.04em; }
-.methode__titre { margin: 0; font-weight: 900; font-size: 20px; line-height: 24px; letter-spacing: -0.02em; }
-.methode__principes p, .methode__format p { margin: 0; font-size: 14px; line-height: 20px; color: rgba(244, 243, 239, 0.75); }
-.methode__outils { margin-top: 24px; }
-.methode__formats { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; }
-.methode__format { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: var(--arrondi); border: 1px solid var(--filet-clair); transition: border-color var(--duree) ease, background-color var(--duree) ease; }
-@media (hover: hover) { .methode__format:hover { border-color: var(--jaune); background: rgba(244, 243, 239, 0.04); } }
-.methode__format-nom { margin: 0; font-weight: 900; font-size: 20px; line-height: 24px; letter-spacing: -0.02em; }
-/* bulles jaunes l'une sous l'autre, toujours sur une ligne chacune, identiques dans toutes les cartes */
-.methode__objectifs { list-style: none; margin: auto 0 0; padding: 4px 0 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
-.methode__objectifs li { padding: 4px 10px; border-radius: 999px; background: var(--jaune); color: var(--encre); font-weight: 700; font-size: 12px; line-height: 16px; white-space: nowrap; }
-@media (min-width: 900px) {
-  .methode__principes { grid-template-columns: repeat(4, 1fr); }
-  .methode__formats { grid-template-columns: repeat(5, 1fr); }
-}
+/* ---------- Ma méthode (maquette ?maquette=methode) : titre centré, quatre principes, fond blanc ---------- */
+main > section.methode:nth-of-type(n) { --fond-rubrique: var(--blanc); background: var(--blanc); color: var(--encre); }
+.methode__entete { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.methode__entete .surtitre, .methode__entete .titre, .methode__entete .texte { margin: 0; }
+.methode__principes { list-style: none; margin: 48px 0 0; padding: 0; display: grid; gap: 32px; }
+.methode__principes li { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 1px solid var(--filet); }
+/* grands numéros vermillon (grand texte : 3,4:1 sur blanc) */
+.methode__numero { color: var(--vermillon); font-weight: 900; font-size: 36px; line-height: 36px; letter-spacing: -0.04em; }
+.methode__titre { margin: 0; font-weight: 900; font-size: 22px; line-height: 26px; letter-spacing: -0.02em; }
+.methode__principes p { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
+@media (min-width: 900px) { .methode__principes { grid-template-columns: repeat(4, 1fr); } }
