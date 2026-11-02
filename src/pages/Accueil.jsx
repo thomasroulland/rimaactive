@@ -44,11 +44,33 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Maquette (?maquette=heros) : haut de page sur le modèle « accroche + repères », dans la charte
+  const herosV2 = new URLSearchParams(window.location.search).get('maquette') === 'heros'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
       <section className="heros">
         <img className="heros__photo" src={photoHeros} alt="" />
+        {herosV2 ? (
+          <div className="heros__texte heros__texte--v2">
+            <p className="surtitre heros__surtitre">Marie Sillas · Coach sportive diplômée · Houdan (78) &amp; en ligne</p>
+            <h1 className="titre heros__titre heros__titre--v2">
+              Un corps <span className="heros__jaune">fort et mobile</span> <br />grâce à une pratique fonctionnelle
+            </h1>
+            <p className="heros__intro">
+              Des séances d’une heure, à domicile, en salle, en extérieur ou en ligne, pour gagner en force et en mobilité.
+            </p>
+            <div className="actions">
+              <a href="#approche" className="bouton bouton--clair">Qui suis-je</a>
+              <Link to="/contact" className="bouton bouton--vermillon">M’écrire</Link>
+            </div>
+            <ul className="heros__reperes">
+              <li><b>60&nbsp;min</b><span>par séance, matériel fourni</span></li>
+              <li><b>3</b><span>formules : entreprises, duo et groupes, individuel</span></li>
+              <li><b>20&nbsp;km</b><span>de déplacement inclus autour de Houdan</span></li>
+            </ul>
+          </div>
+        ) : (
         <div className="heros__texte">
           <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78)</p>
           <h1 className="titre heros__titre">Marie Sillas</h1>
@@ -58,6 +80,7 @@ export default function Accueil() {
             <Link to="/contact" className="bouton bouton--vermillon">M’écrire</Link>
           </div>
         </div>
+        )}
       </section>
 
       {/* « Moi c'est Marie » (ancre #approche) : le portrait entier et l'encadré, de même hauteur, centrés ensemble.

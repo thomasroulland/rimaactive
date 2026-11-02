@@ -1046,3 +1046,15 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 280px - 56px); }
 }
 .services--v2 .service:hover .titre { color: var(--encre); }
+
+/* ---------- Haut de page, maquette ?maquette=heros : accroche en titre, phrase, boutons, repères ---------- */
+.heros__titre--v2 { font-size: clamp(38px, calc(4.3 * var(--vw)), 66px); line-height: 1.02; letter-spacing: -0.045em; }
+.heros__jaune { color: var(--jaune); } /* mot mis en avant sur photo sombre : jaune (charte) */
+.heros__intro { margin: 16px 0 0; max-width: 46ch; color: rgba(244, 243, 239, 0.88); font-size: 18px; line-height: 28px; }
+.heros__texte--v2 .actions { margin-top: 22px; }
+.heros__reperes { list-style: none; margin: 28px 0 0; padding: 18px 0 0; border-top: 1px solid rgba(244, 243, 239, 0.25); display: grid; gap: 14px; max-width: 900px; }
+.heros__reperes li { display: flex; align-items: baseline; gap: 12px; color: rgba(244, 243, 239, 0.85); font-size: 15px; line-height: 21px; }
+.heros__reperes b { flex: none; color: var(--craie); font-weight: 900; font-size: 30px; line-height: 30px; letter-spacing: -0.03em; }
+@media (min-width: 900px) { .heros__reperes { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+.heros__texte--v2 { padding-bottom: clamp(24px, calc(var(--ecran) * 0.06), 56px); }
+@media (max-width: 899px) { .heros__titre--v2 br { display: none; } }
