@@ -844,7 +844,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .bandeau-page__titre { grid-column: 1; }
 .bandeau-page__texte > .bascule { grid-column: 2; align-self: end; }
 .bandeau-page__titre { margin: 0; color: var(--craie); font-size: 80px; line-height: 80px; letter-spacing: -0.05em; }
-.formules-page__grille { display: grid; gap: 24px; }
+.formules-page__grille { display: grid; gap: 24px; width: 100%; }
 /* ligne d'infos : onglets, liste cochée en ligne, puis les mentions en dessous */
 .formules-page__infos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 32px; text-align: center; }
 .formules-page__infos > .texte { margin: 0; }
@@ -914,6 +914,9 @@ textarea.champ { resize: vertical; min-height: 140px; }
   .offre--sombre:hover .bouton--principal { background: var(--craie); border-color: var(--craie); color: var(--encre); }
 }
 @media (prefers-reduced-motion: reduce) { .offre, .offre__tete .picto { transition: none; } .offre:hover { transform: none; } }
+/* Individuel : formule de l'autre mode (Présentiel / En ligne) grisée, sans survol ni clic */
+.offre { transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease, opacity 0.3s ease, filter 0.3s ease; }
+.offre--grisee { opacity: 0.35; filter: grayscale(1); pointer-events: none; }
 /* Bouton plein encre, pour l'action des cartes claires */
 .bouton--encre { background: var(--encre); border-color: var(--encre); color: var(--craie); }
 .bouton--encre:hover { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
@@ -1005,11 +1008,16 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .offre__points { margin: -4px 0 12px; gap: 2px; }
   /* liste « Compris » d'Active Flex sur deux colonnes */
   /* « Compris » d'Active Flex (5 lignes) sur deux colonnes ; les 3 étapes de séance sur une seule */
-  .offre__points:has(> li:nth-child(4)) { grid-template-columns: 1fr 1fr; column-gap: 16px; margin-bottom: 8px; }
+  .offres--2 .offre__points:has(> li:nth-child(4)) { grid-template-columns: 1fr 1fr; column-gap: 16px; margin-bottom: 8px; }
   .offre__bouton { min-height: 0; height: 44px; }
   /* même hauteur de cartes d'une page à l'autre et d'un onglet à l'autre */
   .offres--2 > .offre { min-height: 374px; } /* valeurs avant le zoom automatique du site */
   .formules-page__grille--large .offre { min-height: 371px; }
+  /* Individuel (trois cartes étroites, listes plus longues) : un peu plus serré pour tenir dans l'écran */
+  .offre { padding-block: 14px; } /* même marge haute sur les trois pages : textes alignés d'une page à l'autre */
+  .formules-page__grille--large .offre__tarifs { margin-bottom: 4px; }
+  .formules-page__grille--large .offre__points { margin-bottom: 8px; }
+  .formules-page__grille--large .offre__points li { line-height: 18px; }
   /* M'écrire */
   .page-contact__photo { height: 0; min-height: 100%; } /* la photo suit la hauteur du formulaire, sans l'imposer */
   .page-contact { min-height: calc(var(--ecran) - var(--hauteur-entete) - 53px); }

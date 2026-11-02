@@ -102,9 +102,13 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
 - Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
   « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
 - Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
-- Individuel, onglet Présentiel : Active Solo 65 € domicile / 55 € salle ; Active Flex 220 € / 180 € par mois
-  (liste « Compris » dans la carte). Offre Bilan postural + correctifs seul **retirée** par Marie. Onglet En ligne (8 semaines) :
-  Active Start 35 €, Active Progress 40 €, Active Plus 160 € (« ou 2 × 80 € · 20 € par semaine » en petit dessous).
+- Individuel (2 novembre 2026) : **trois formules seulement**, toutes sur la page : Active Start (ex-Solo, présentiel,
+  65 € domicile / 55 € salle, « Compris pour chaque session »), Active Progress (ex-Flex, présentiel, 220 € / 180 € par
+  mois, liste « Compris ») et Active Plus (en ligne, 8 semaines, 160 € ou 2 × 80 €). Le bouton Présentiel / En ligne
+  **grise** les formules de l'autre mode (pas de clic). Les anciens programmes en ligne Start 35 € et Progress 40 €
+  sont retirés.
+- Duo et groupes : « 60 min · À domicile ou en extérieur » / « 60 min · En extérieur » ; « 85 € par session » et
+  « 14 € par personne et par session » (plus de « Par séance » ni de « 42,50 € par personne »).
 - Tailles identiques sur les trois pages : prix 56 px (44 px sur petit portable), tout le texte des cartes en 14 px,
   liste cochée 16 px, noms des formules 32 px.
 - Déplacement inclus jusqu'à 20 km autour de Houdan (78). Tarifs valables jusqu'au

@@ -7,7 +7,7 @@ import useTitre from '../components/useTitre.js'
 export default function Contact() {
   useTitre('Contact')
   const [envoye, setEnvoye] = useState(false)
-  // Formule choisie depuis une carte des pages Entreprises, Duo et groupes ou Individuel (ex. « Active Flex · À domicile »)
+  // Formule choisie depuis une carte des pages Entreprises, Duo et groupes ou Individuel (ex. « Active Progress · Présentiel »)
   const [parametres] = useSearchParams()
   const formule = parametres.get('formule') ?? ''
   const contexte = formule.split(' · ')[1] ?? ''

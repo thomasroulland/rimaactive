@@ -6,12 +6,13 @@ import Picto from './Picto.jsx'
 // en haut un bandeau avec la photo de la carte de l'accueil et le nom de la page ;
 // dessous une carte par formule (blanche, ou encre pour celle marquée « sombre »), puis, centrées,
 // la liste cochée et les mentions. Sur ordinateur, bandeau et formules remplissent exactement l'écran.
-// page.onglets : plusieurs jeux de cartes (Présentiel, En ligne) ; sinon page.cartes.
+// page.onglets : boutons Présentiel / En ligne. Les cartes de page.cartes qui ont un « mode » restent toutes affichées ;
+// celles de l'autre mode sont grisées (Individuel). Un onglet peut aussi avoir ses propres cartes.
 // Une carte peut avoir un ou deux tarifs (côte à côte : À domicile / En salle, 4 à 8 / 9 à 12 personnes).
 export default function PageService({ page }) {
   const [actif, setActif] = useState(0)
   const onglets = page.onglets ?? [{ cartes: page.cartes }]
-  const onglet = onglets[actif]
+  const onglet = { cartes: page.cartes, ...onglets[actif] }
   const intro = onglet.intro ?? page.intro
   const liste = onglet.liste ?? page.liste ?? []
   const note = onglet.note ?? page.note
@@ -36,10 +37,10 @@ export default function PageService({ page }) {
     </header>
     <section className="section formules-page" aria-labelledby="page-titre">
       {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
-      <div className={`conteneur formules-page__grille ${onglets.some((o) => o.cartes.length === 3) ? 'formules-page__grille--large' : ''}`}>
+      <div className={`conteneur formules-page__grille ${onglets.some((o) => (o.cartes ?? page.cartes).length === 3) ? 'formules-page__grille--large' : ''}`}>
         <ul className={`offres offres--${onglet.cartes.length}`}>
           {onglet.cartes.map((f) => (
-            <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''}`}>
+            <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''} ${f.mode && f.mode !== onglet.nom ? 'offre--grisee' : ''}`} aria-disabled={f.mode && f.mode !== onglet.nom ? true : undefined}>
               {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
               <div className="offre__tete">
                 <p className="surtitre">{f.surtitre}</p>
@@ -67,7 +68,8 @@ export default function PageService({ page }) {
                 </ul>
               )}
               <Link
-                to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${contexte}`)}`}
+                to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${f.mode ?? contexte}`)}`}
+                tabIndex={f.mode && f.mode !== onglet.nom ? -1 : undefined}
                 className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
                 aria-label={`Choisir ${f.nom}`}
               >
