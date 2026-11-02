@@ -1089,3 +1089,27 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); -
   .question summary { padding: 10px 22px; font-size: 16px; line-height: 22px; }
   .question p { padding: 0 22px 12px; }
 }
+
+/* « M'écrire » du haut de page en vermillon, texte encre (sur-signature, 5,4:1) */
+.bouton--vermillon { background: var(--vermillon); border-color: var(--vermillon); color: var(--encre); }
+.bouton--vermillon:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+/* sauts de ligne choisis par Marie : seulement sur grand écran */
+@media (max-width: 1099px) { br.saut { display: none; } }
+
+/* ---------- Mes services, maquette ?maquette=services ---------- */
+.services--v2 .services__entete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 40px; margin-bottom: 22px; }
+.services--v2 .services__entete .surtitre { margin: 0 0 8px; }
+.services--v2 .services__entete .titre { margin: 0; }
+.services__reperes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 700; font-size: 15px; line-height: 22px; }
+.services__reperes li { display: inline-flex; align-items: center; gap: 8px; }
+.services--v2 .service { border-radius: var(--arrondi); transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease, background-color 0.35s ease; }
+@media (hover: hover) { .services--v2 .service:hover { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .services--v2 .service, .services--v2 .service:hover { transition: none; transform: none; } }
+@media (min-width: 900px) {
+  .services--v2 .services__entete .titre { font-size: 44px; line-height: 46px; }
+  /* l'en-tête est plus haut : les photos des cartes se réduisent d'autant pour que tout tienne dans l'écran */
+  .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 290px - 96px); }
+}
+@media (min-width: 900px) and (max-width: 1399px) {
+  .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 280px - 96px); }
+}

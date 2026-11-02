@@ -5,6 +5,7 @@ import photoGroupes from '../assets/service-groupes.jpg'
 import photoIndividuel from '../assets/service-individuel.jpg'
 import { Link } from 'react-router-dom'
 import { Photo } from '../components/Blocs.jsx'
+import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 
 const FORMATS = [
@@ -40,6 +41,7 @@ const SERVICES = [
     to: '/entreprises',
     titre: 'Entreprises',
     lieux: 'Locaux · Extérieur',
+    pourQui: '4 à 16 personnes',
     prix: 'À partir de 110\u00a0€ la séance',
     photo: 'Rangée de kettlebells sur le sol d’une salle',
     image: photoEntreprises,
@@ -49,6 +51,7 @@ const SERVICES = [
     to: '/communes',
     titre: 'Duo et groupes',
     lieux: 'Domicile · Extérieur',
+    pourQui: '2 à 10 personnes',
     prix: 'Dès 14\u00a0€ par personne',
     photo: 'Kettlebells et barres sur un sol de salle',
     image: photoGroupes,
@@ -58,6 +61,7 @@ const SERVICES = [
     to: '/particuliers',
     titre: 'Individuel',
     lieux: 'Domicile · Salle · En ligne',
+    pourQui: 'Pour vous seul(e)',
     prix: 'Dès 45\u00a0€ la séance',
     photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoIndividuel,
@@ -68,6 +72,8 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Maquette (?maquette=services) : en-tête sur deux lignes, repères, « pour qui » sur chaque carte
+  const servicesV2 = new URLSearchParams(window.location.search).get('maquette') === 'services'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -78,8 +84,8 @@ export default function Accueil() {
           <h1 className="titre heros__titre">Marie Sillas</h1>
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
-            <a href="#approche" className="bouton bouton--clair">Qui je suis</a>
-            <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
+            <a href="#approche" className="bouton bouton--clair">Qui suis-je</a>
+            <Link to="/contact" className="bouton bouton--vermillon">M’écrire</Link>
           </div>
         </div>
       </section>
@@ -92,21 +98,22 @@ export default function Accueil() {
         </figure>
         <div className="approche__panneau">
           <div className="approche__cadre">
-            <p className="surtitre approche__surtitre">Qui je suis</p>
+            <p className="surtitre approche__surtitre">Qui suis-je</p>
             <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
+            {/* sauts de ligne voulus par Marie (ordinateur seulement : sur téléphone, le texte coule librement) */}
             <p className="texte">
-              Passionnée de sport et pratiquante de karaté, je vous aide à atteindre vos objectifs grâce à une
-              pratique fonctionnelle.
+              Passionnée de sport et pratiquante de karaté, je vous aide à atteindre vos objectifs<br className="saut" />
+              grâce à une pratique fonctionnelle.
             </p>
             <p className="texte">
-              Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs, qui ne
-              trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger mais ne savaient pas par où
-              commencer. C’est ce qui m’a poussée à devenir coach.
+              Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs,<br className="saut" />
+              qui ne trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger<br className="saut" />
+              mais ne savaient pas par où commencer. C’est ce qui m’a poussée à devenir coach.
             </p>
             <p className="texte">
               Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite, on
-              construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien. On
-              s’entraîne pour gagner en force et en mobilité grâce à des formats qui donnent envie de relever le défi.
+              construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.<br className="saut" />
+              On s’entraîne pour gagner en force et en mobilité grâce à des formats qui donnent envie de relever le défi.
             </p>
             <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
           </div>
@@ -115,9 +122,23 @@ export default function Accueil() {
 
       <Methode />
 
-      <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
+      <section id="accompagnement" className={`section services ecran-plein ${servicesV2 ? 'services--v2' : ''}`} aria-labelledby="services-titre">
         <div className="conteneur">
-          <h2 id="services-titre" className="titre titre--section">Mes services</h2>
+          {servicesV2 ? (
+            <div className="services__entete">
+              <div>
+                <p className="surtitre">Mes services</p>
+                <h2 id="services-titre" className="titre titre--section">Trois façons de vous<br /><span className="mot-avant">entraîner</span> avec moi</h2>
+              </div>
+              <ul className="services__reperes">
+                <li><Picto nom="clock" taille={22} />60&nbsp;min par séance</li>
+                <li><Picto nom="kettlebell" taille={22} />Matériel fourni</li>
+                <li><Picto nom="map-pin" taille={22} />Déplacement inclus jusqu’à 20&nbsp;km</li>
+              </ul>
+            </div>
+          ) : (
+            <h2 id="services-titre" className="titre titre--section">Mes services</h2>
+          )}
           {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, puis le prix « à partir de »
               (fiche tarifs) et une flèche ronde, qui passe en jaune au survol.
               Sur téléphone et tablette, les cartes sont compactes : petite photo à gauche, sans la phrase. */}
@@ -128,7 +149,7 @@ export default function Accueil() {
                   <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
-                    <p className="surtitre service__lieux">{service.lieux}</p>
+                    <p className="surtitre service__lieux">{servicesV2 ? `${service.pourQui} · ${service.lieux}` : service.lieux}</p>
                     <p className="texte">{service.texte}</p>
                     {/* le prix à gauche, la flèche ronde à droite (toute la carte est le lien) */}
                     <div className="service__bas">
