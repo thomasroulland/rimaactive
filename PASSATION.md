@@ -102,11 +102,16 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
 - Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
   « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
 - Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
-- Individuel (2 novembre 2026) : **trois formules seulement**, toutes sur la page : Active Start (ex-Solo, « Séance à l’unité »,
-  65 € domicile / 55 € salle sans « la séance » dessous, « Compris pour chaque session »), Active Progress (ex-Flex, présentiel, 220 € / 180 € par
-  mois, liste « Compris ») et Active Plus (en ligne, 8 semaines, 160 € ou 2 × 80 €). Le bouton Présentiel / En ligne
-  **grise** les formules de l'autre mode (pas de clic). Les anciens programmes en ligne Start 35 € et Progress 40 €
-  sont retirés.
+- Individuel (2 novembre 2026) : **trois formules seulement**, toutes sur la page ; le bouton Présentiel / En ligne
+  **grise** les formules de l'autre mode (pas de clic). Les anciens programmes en ligne Start 35 € et Progress 40 €,
+  et l'offre Bilan postural seule, sont retirés.
+  - Active Start (« Séance à l'unité », présentiel) : 65 € domicile / 55 € salle, « Compris pour chaque session ».
+  - Active Progress (« Suivi mensuel », présentiel) : 220 € domicile / 180 € salle (prix global, pas de prix par séance) ;
+    Compris : Bilan initial & postural, Programme 100 % personnalisé, 4 sessions de coaching privé, Suivi hebdomadaire
+    sur WhatsApp, Bilan de progression mensuel.
+  - Active Plus (« Suivi trimestriel », en ligne) : 12 semaines, 240 €, « 80 € par mois pendant 3 mois » ; Compris :
+    Bilan initial, Programme 100 % personnalisé, Suivi hebdomadaire sur WhatsApp, Bilan de progression mensuel.
+  - En mode En ligne, pas de liste cochée sous les cartes (seulement les mentions).
 - Duo et groupes : « 60 min · À domicile ou en extérieur » / « 60 min · En extérieur » ; « 85 € par session » et
   « 14 € par personne et par session » (plus de « Par séance » ni de « 42,50 € par personne »).
 - Tailles identiques sur les trois pages : prix 56 px (44 px sur petit portable), tout le texte des cartes en 14 px,

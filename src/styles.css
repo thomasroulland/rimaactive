@@ -996,6 +996,8 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .formules-page__grille { gap: 12px; }
   /* ligne d'infos : onglets et liste sur une ligne, mentions en petit dessous */
   .formules-page__infos { gap: 2px 28px; }
+  /* Individuel : la place de la liste est gardée en mode En ligne (pas de liste) pour que les cartes ne bougent pas */
+  .formules-page__grille--large .formules-page__infos { min-height: 46px; align-content: flex-start; }
   .formules-page__infos .bascule button { min-height: 34px; padding: 5px 16px; }
   .formules-page__note { font-size: 13px; line-height: 18px; }
   /* cartes resserrées */

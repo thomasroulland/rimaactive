@@ -13,7 +13,7 @@ const PAGE = {
   // en ligne Start (35 €) et Progress (40 €) sont retirés.
   onglets: [
     { nom: 'Présentiel', liste: ['En salle ou à domicile', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'] },
-    { nom: 'En ligne', liste: ['Programme en ligne sur 8 semaines'] },
+    { nom: 'En ligne', liste: [] },
   ],
   cartes: [
     {
@@ -32,18 +32,18 @@ const PAGE = {
       nom: 'Active Progress',
       mode: 'Présentiel',
       picto: 'kettlebell',
-      surtitre: '4 séances par mois en présentiel',
+      surtitre: 'Suivi mensuel',
       tarifs: [
-        { libelle: 'À domicile', montant: '220\u00a0€', detail: '55\u00a0€ la séance' },
-        { libelle: 'En salle', montant: '180\u00a0€', detail: '45\u00a0€ la séance' },
+        { libelle: 'À domicile', montant: '220\u00a0€' },
+        { libelle: 'En salle', montant: '180\u00a0€' },
       ],
       titrePoints: 'Compris',
       points: [
-        'Bilan initial + bilan postural + correctifs',
-        'Programme personnalisé',
-        'Suivi hebdomadaire par message',
-        'Bilan mensuel',
-        'Engagement mois par mois',
+        'Bilan initial & postural',
+        'Programme 100\u00a0% personnalisé',
+        '4 sessions de coaching privé',
+        'Suivi hebdomadaire sur WhatsApp',
+        'Bilan de progression mensuel',
       ],
       sombre: true,
     },
@@ -51,10 +51,10 @@ const PAGE = {
       nom: 'Active Plus',
       mode: 'En ligne',
       picto: 'users',
-      surtitre: 'Programme personnalisé en ligne',
-      tarifs: [{ libelle: '8 semaines', montant: '160\u00a0€', detail: 'ou 2 × 80\u00a0€ · 20\u00a0€ par semaine' }],
+      surtitre: 'Suivi trimestriel',
+      tarifs: [{ libelle: '12 semaines', montant: '240\u00a0€', detail: '80\u00a0€ par mois pendant 3 mois' }],
       titrePoints: 'Compris',
-      points: ['Suivi hebdomadaire', 'Bilan initial et bilan à mi-parcours'],
+      points: ['Bilan initial', 'Programme 100\u00a0% personnalisé', 'Suivi hebdomadaire sur WhatsApp', 'Bilan de progression mensuel'],
     },
   ],
 }
