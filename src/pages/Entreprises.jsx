@@ -2,7 +2,7 @@ import photoEntreprises from '../assets/service-entreprises.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Entreprises : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
+// Contenu de la page Entreprises (« Compris pour chaque session » : textes donnés par Marie le 2 novembre 2026) : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
 const PAGE = {
   titre: 'Entreprises',
   lieux: 'Locaux · Extérieur',
@@ -20,6 +20,8 @@ const PAGE = {
       surtitre: '4 à 12 personnes',
       infos: '60\u00a0min · ponctuel ou hebdomadaire',
       tarifs: [{ libelle: 'Par séance', avant: 'À partir de', montant: '110\u00a0€', detail: 'Selon le devis et le nombre de personnes' }],
+      titrePoints: 'Compris pour chaque session',
+      points: ['Échauffement et mobilité : 5 à 10\u00a0min', 'Corps de séance : 30 à 40\u00a0min', 'Retour au calme : 5\u00a0min'],
     },
     {
       nom: 'Active Day',
@@ -27,6 +29,8 @@ const PAGE = {
       surtitre: 'Jusqu’à 16 personnes',
       infos: 'Sur devis · ponctuel',
       tarifs: [{ libelle: 'Par séance', avant: 'À partir de', montant: '180\u00a0€', detail: 'Selon le devis et le nombre de personnes' }],
+      titrePoints: 'Compris pour chaque session',
+      points: ['Échauffement et mobilité : 5 à 10\u00a0min', 'Corps de séance : 30 à 40\u00a0min', 'Retour au calme : 5\u00a0min'],
       sombre: true,
     },
   ],
