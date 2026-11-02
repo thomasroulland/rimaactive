@@ -879,11 +879,10 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .offre { display: flex; flex-direction: column; gap: 10px; padding: 28px; border-radius: var(--arrondi); background: var(--blanc); color: var(--encre); }
 .offre .surtitre { margin: 0; color: var(--gris-chaud); }
 /* surtitre à gauche, pictogramme à droite, sur la même ligne */
-.offre__tete { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.offre__tete { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .offre__tete .picto { flex: none; }
 .offre > .titre { margin: 0; }
 /* trois formules côte à côte : la place de deux lignes de surtitre, pour que les noms restent alignés */
-.formules-page__grille--large .offre__tete { min-height: 32px; align-items: flex-start; }
 .offre__infos { margin: 0; font-size: 14px; line-height: 20px; font-weight: 600; }
 .offre__points { list-style: none; margin: -6px 0 18px; padding: 0; display: grid; gap: 4px; font-size: 14px; line-height: 20px; }
 .offre__titre-points { margin: -6px 0 0; font-size: 14px; line-height: 20px; font-weight: 800; }
@@ -904,6 +903,17 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .offre--sombre { background: var(--encre); color: var(--craie); }
 .offre--sombre .surtitre, .offre--sombre .offre__libelle, .offre--sombre .offre__detail { color: rgba(244, 243, 239, 0.78); }
 .offre--sombre .offre__tarifs { border-top-color: rgba(244, 243, 239, 0.2); }
+/* Survol à la souris (comme les cartes de l'accueil) : la carte se soulève, le pictogramme grossit un peu,
+   le bouton « Choisir » passe en jaune (en craie sur la carte encre, dont le bouton est déjà jaune) */
+.offre { transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease; }
+.offre__tete .picto { transition: transform 0.35s cubic-bezier(.3, .7, .2, 1); }
+@media (hover: hover) {
+  .offre:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(22, 21, 20, 0.14); }
+  .offre:hover .offre__tete .picto { transform: scale(1.15); }
+  .offre:hover .bouton--encre { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
+  .offre--sombre:hover .bouton--principal { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+}
+@media (prefers-reduced-motion: reduce) { .offre, .offre__tete .picto { transition: none; } .offre:hover { transform: none; } }
 /* Bouton plein encre, pour l'action des cartes claires */
 .bouton--encre { background: var(--encre); border-color: var(--encre); color: var(--craie); }
 .bouton--encre:hover { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
@@ -994,7 +1004,8 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .offre__detail { margin-top: 2px; }
   .offre__points { margin: -4px 0 12px; gap: 2px; }
   /* liste « Compris » d'Active Flex sur deux colonnes */
-  .offre__points:has(> li:nth-child(3)) { grid-template-columns: 1fr 1fr; column-gap: 16px; margin-bottom: 8px; }
+  /* « Compris » d'Active Flex (5 lignes) sur deux colonnes ; les 3 étapes de séance sur une seule */
+  .offre__points:has(> li:nth-child(4)) { grid-template-columns: 1fr 1fr; column-gap: 16px; margin-bottom: 8px; }
   .offre__bouton { min-height: 0; height: 44px; }
   /* même hauteur de cartes d'une page à l'autre et d'un onglet à l'autre */
   .offres--2 > .offre { min-height: 374px; } /* valeurs avant le zoom automatique du site */

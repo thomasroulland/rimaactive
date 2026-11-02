@@ -16,7 +16,7 @@ const PAGE = {
       surtitre: '2 personnes',
       infos: '60\u00a0min · à domicile ou en extérieur',
       titrePoints: 'Compris pour chaque session',
-      points: ['Échauffement et mobilité : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
+      points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
       tarifs: [{ libelle: 'Par séance', montant: '85\u00a0€', detail: '42,50\u00a0€ par personne' }],
     },
     {
@@ -25,7 +25,7 @@ const PAGE = {
       surtitre: '4 à 10 personnes',
       infos: '60\u00a0min · en extérieur',
       titrePoints: 'Compris pour chaque session',
-      points: ['Échauffement et mobilité : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
+      points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
       tarifs: [{ libelle: 'Par séance', montant: '14\u00a0€', detail: 'par personne' }],
       sombre: true,
     },

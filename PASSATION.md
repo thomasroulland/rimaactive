@@ -93,10 +93,12 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
 - Sur ordinateur, bandeau + formules **remplissent exactement l'écran** : le bloc noir du bas n'apparaît qu'en
   défilant (demande de Marie du 2 novembre 2026 ; vérifier aussi en 1900 × 867, son grand écran). Cartes resserrées, liste « Compris » d'Active Flex
   sur deux colonnes. Les min-height des cartes sont en px avant le zoom automatique du site (`index.html`).
-- Active 60, Active Day, Active Duo et Active Group ont « Compris pour chaque session » : Échauffement et mobilité :
-  5 à 10 min, Corps de séance : 30 à 45 min, Retour au calme : 5 min (donné par Marie le 2 novembre 2026).
+- Active 60, Active Day, Active Duo et Active Group ont « Compris pour chaque session », sur une colonne :
+  Mobilité & Activation : 5 à 10 min, Corps de séance : 30 à 45 min, Retour au calme : 5 min (Marie, 2 novembre 2026).
+- Survol à la souris des cartes de formules : la carte se soulève avec une ombre, le pictogramme grossit, « Choisir »
+  passe en jaune (en craie sur la carte encre). Textes alignés au pixel près d'une carte et d'une page à l'autre.
 - Entreprises : « 60 min · Ponctuel ou hebdomadaire », « Sur devis · Ponctuel » ; prix « À partir de 110 € par session »
-  (180 € pour Active Day), dessous « Selon le nombre de personnes » ; plus de libellé « Par séance » au-dessus.
+  (180 € pour Active Day) ; plus de « Par séance » au-dessus ni de « Selon le nombre de personnes » dessous.
 - Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
   « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
 - Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
