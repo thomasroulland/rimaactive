@@ -102,8 +102,8 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
 - Entreprises : Active 60 et Active Day ont la même structure : « Par séance / À partir de 110 € » (ou 180 €) /
   « Selon le devis et le nombre de personnes » (les tarifs 110 € de 4 à 8 pers. et 150 € de 9 à 12 ne sont plus affichés).
 - Duo et groupes : Active Duo 85 € la séance (42,50 € par personne), Active Group 14 € par personne.
-- Individuel (2 novembre 2026) : **trois formules seulement**, toutes sur la page : Active Start (ex-Solo, présentiel,
-  65 € domicile / 55 € salle, « Compris pour chaque session »), Active Progress (ex-Flex, présentiel, 220 € / 180 € par
+- Individuel (2 novembre 2026) : **trois formules seulement**, toutes sur la page : Active Start (ex-Solo, « Séance à l’unité »,
+  65 € domicile / 55 € salle sans « la séance » dessous, « Compris pour chaque session »), Active Progress (ex-Flex, présentiel, 220 € / 180 € par
   mois, liste « Compris ») et Active Plus (en ligne, 8 semaines, 160 € ou 2 × 80 €). Le bouton Présentiel / En ligne
   **grise** les formules de l'autre mode (pas de clic). Les anciens programmes en ligne Start 35 € et Progress 40 €
   sont retirés.
@@ -115,7 +115,7 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
   30 avril 2027. TVA non applicable, art. 293 B du CGI.
 
 **Page M'écrire** (`/contact`) (maquette de refonte 2) : le portrait bras croisés de Marie (`portrait-contact.jpg`,
-envoyé le 2 novembre 2026, 1600 × 2000, qualité 90) sur un peu moins de la moitié gauche (0.8fr / 1.2fr) ; à droite
+nouvelle version envoyée le 2 novembre 2026, 1121 × 1403, qualité 92) sur un peu moins de la moitié gauche (0.8fr / 1.2fr) ; à droite
 « Besoin d'en savoir plus ? », « Contactez-moi », la phrase sur les déplacements, l'e-mail, puis le formulaire
 Prénom et nom / E-mail / (Formule choisie) / Vous êtes / Votre message (facultatif) / case d'accord / Envoyer ;
 en bas seulement la ligne des mentions. Tient sur un écran d'ordinateur.

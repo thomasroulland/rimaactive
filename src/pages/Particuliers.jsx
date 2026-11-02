@@ -20,10 +20,10 @@ const PAGE = {
       nom: 'Active Start',
       mode: 'Présentiel',
       picto: 'barbell',
-      surtitre: '1 séance en présentiel',
+      surtitre: 'Séance à l’unité',
       tarifs: [
-        { libelle: 'À domicile', montant: '65\u00a0€', detail: 'la séance' },
-        { libelle: 'En salle', montant: '55\u00a0€', detail: 'la séance' },
+        { libelle: 'À domicile', montant: '65\u00a0€' },
+        { libelle: 'En salle', montant: '55\u00a0€' },
       ],
       titrePoints: 'Compris pour chaque session',
       points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
