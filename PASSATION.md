@@ -57,27 +57,24 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
 **Accueil** (`src/pages/Accueil.jsx`), dans l'ordre :
 1. Haut de page : photo du squat (`heros-squat-nb.jpg`) en plein écran sous la barre, calée en haut
    (tête jamais coupée). « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) » en jaune, « Marie Sillas » en grand,
-   accroche en italique, boutons « Qui je suis » (blanc, vers #approche) et « M'écrire » (jaune). Plus de bandeau vermillon.
+   accroche en italique, boutons « Qui suis-je » (blanc, vers #approche) et « M'écrire » (vermillon, texte encre). Plus de bandeau vermillon.
    Le « M'écrire » de la barre est caché sur l'accueil jusqu'à la rubrique « Moi c'est Marie » ; « Accueil » ramène en haut.
 2. « Moi c'est Marie » (ancre #approche, novembre 2026) : portrait entier (`portrait-marie.jpg`) et encadré arrondi de
-   même hauteur sur fond craie foncé. Dans l'encadré : « Qui je suis », « Moi c'est Marie » (« Marie » souligné vermillon,
-   règle MotMisEnAvant de la charte), les 3 paragraphes écrits par Marie (karaté, six ans de salariat, méthode),
+   même hauteur sur fond craie foncé. Dans l'encadré : « Qui suis-je », « Moi c'est Marie » (« Marie » souligné vermillon,
+   règle MotMisEnAvant de la charte), les 3 paragraphes écrits par Marie (karaté, six ans de salariat, méthode), avec ses sauts de ligne
+   exacts sur grand écran (`<br className="saut" />`, masqués sous 1100 px),
    bouton jaune « Mes services » vers #accompagnement. Les pastilles Force/Endurance/Puissance/Mobilité sont retirées.
    Page À propos supprimée : c'est la seule présentation de Marie.
 2 bis. « Ma méthode » (#methode, novembre 2026), fond blanc : « Ma méthode », « Pourquoi ça marche » (« marche » en
-   vermillon), 4 principes numérotés en vermillon (Le mouvement d'abord, Moins mais mieux, Le défi plutôt que la routine,
-   La confiance qui s'installe), puis « Vos objectifs » : les objectifs des formats en bulles jaunes. Marie a préféré
-   le fond blanc au fond noir.
-3. Mes services (titre renommé le 2 novembre 2026, ancre #accompagnement inchangée) : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
-   puis le prix et une flèche ronde qui passe en jaune au survol ; toute la carte est le lien) : Entreprises (Locaux · Extérieur),
-   Duo et groupes (Domicile · Extérieur), Individuel (Domicile · Salle · En ligne).
-   Sous la phrase, un prix « à partir de » tiré de la fiche : À partir de 110 € la séance /
-   Dès 14 € par personne / Dès 45 € la séance. Sur téléphone et tablette (< 900 px),
-   cartes compactes : petite photo à gauche, sans la phrase.
-4. Ma boîte à outils : carrousel clair (`BoiteOutils.jsx`), cartes blanches toutes de même taille, celle
-   du milieu avec une ombre ; 5 formats (Density Training, Circuit training, EMOM, AMRAP, Complex ;
-   Balistique retiré), bulles jaunes d'objectifs toujours sur une ligne.
-   Rubrique « Ma zone d'intervention » supprimée (Marie va aussi au-delà de 20 km).
+   vermillon), 4 principes numérotés en vermillon, puis « Vos objectifs » en 4 bulles jaunes : Transformation &
+   Silhouette, Performance & Force, Condition physique & Endurance, Mental & Discipline (donnés par Marie).
+3. Mes services (#accompagnement), fond craie foncé : « Mes services » puis « Trois façons de s'entraîner avec moi » sur
+   une ligne, repères (60 min par séance, Matériel fourni, Déplacement inclus jusqu'à 20 km) ; 3 cartes en bulles
+   blanches qui se soulèvent au survol : photo, titre, « 4 à 16 personnes » / « 2 à 10 personnes » / « Domicile · Salle ·
+   En ligne », phrase, prix « à partir de » et flèche ronde. Sur téléphone et tablette, cartes compactes.
+4. « Les questions qu'on me pose » (#questions), fond blanc : « Avant de vous lancer » puis le titre sur une ligne ;
+   6 questions qui s'ouvrent au clic (réponses écrites par Claude à partir du site, à faire relire par Marie).
+   La rubrique « Ma boîte à outils » (carrousel) est supprimée (BoiteOutils.jsx retiré).
 
 **Bloc du bas** (`Pied.jsx` + `AppelContact.jsx`), encre, sur toutes les pages sauf M'écrire :
 à gauche « Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans les

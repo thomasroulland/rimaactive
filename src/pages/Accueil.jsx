@@ -8,34 +8,6 @@ import { Photo } from '../components/Blocs.jsx'
 import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 
-const FORMATS = [
-  {
-    nom: 'Density Training',
-    texte: 'Une séance dans un temps donné à densifier au fil des semaines pour progresser de façon mesurable.',
-    objectifs: ['Prise de masse', 'Force'],
-  },
-  {
-    nom: 'Circuit training',
-    texte: 'Des enchaînements d’exercices qui sollicitent tout le corps pour améliorer votre endurance globale.',
-    objectifs: ['Dépense énergétique', 'Condition physique'],
-  },
-  {
-    nom: 'EMOM',
-    texte: 'Un départ toutes les minutes pour densifier votre séance et apprendre à gérer l’effort face à la fatigue.',
-    objectifs: ['Endurance de force', 'Mental'],
-  },
-  {
-    nom: 'AMRAP',
-    texte: 'Un maximum de tours sur un temps donné pour tester votre mental et apprendre à gérer votre rythme.',
-    objectifs: ['Dépassement de soi', 'Cardio'],
-  },
-  {
-    nom: 'Complex',
-    texte: 'Des combinaisons d’exercices enchaînés avec le même outil pour renforcer votre coordination.',
-    objectifs: ['Puissance', 'Coordination'],
-  },
-]
-
 const SERVICES = [
   {
     to: '/entreprises',
@@ -72,8 +44,6 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
-  // Maquette (?maquette=services) : en-tête sur deux lignes, repères, « pour qui » sur chaque carte
-  const servicesV2 = new URLSearchParams(window.location.search).get('maquette') === 'services'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -122,23 +92,19 @@ export default function Accueil() {
 
       <Methode />
 
-      <section id="accompagnement" className={`section services ecran-plein ${servicesV2 ? 'services--v2' : ''}`} aria-labelledby="services-titre">
+      <section id="accompagnement" className="section services services--v2 ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
-          {servicesV2 ? (
-            <div className="services__entete">
-              <div>
-                <p className="surtitre">Mes services</p>
-                <h2 id="services-titre" className="titre titre--section">Trois façons de s’<span className="mot-avant">entraîner</span> avec moi</h2>
-              </div>
-              <ul className="services__reperes">
-                <li><Picto nom="clock" taille={22} />60&nbsp;min par séance</li>
-                <li><Picto nom="kettlebell" taille={22} />Matériel fourni</li>
-                <li><Picto nom="map-pin" taille={22} />Déplacement inclus jusqu’à 20&nbsp;km</li>
-              </ul>
+          <div className="services__entete">
+            <div>
+              <p className="surtitre">Mes services</p>
+              <h2 id="services-titre" className="titre titre--section">Trois façons de s’<span className="mot-avant">entraîner</span> avec moi</h2>
             </div>
-          ) : (
-            <h2 id="services-titre" className="titre titre--section">Mes services</h2>
-          )}
+            <ul className="services__reperes">
+              <li><Picto nom="clock" taille={22} />60&nbsp;min par séance</li>
+              <li><Picto nom="kettlebell" taille={22} />Matériel fourni</li>
+              <li><Picto nom="map-pin" taille={22} />Déplacement inclus jusqu’à 20&nbsp;km</li>
+            </ul>
+          </div>
           {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, puis le prix « à partir de »
               (fiche tarifs) et une flèche ronde, qui passe en jaune au survol.
               Sur téléphone et tablette, les cartes sont compactes : petite photo à gauche, sans la phrase. */}
@@ -149,7 +115,7 @@ export default function Accueil() {
                   <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
-                    <p className="surtitre service__lieux">{servicesV2 ? service.pourQui : service.lieux}</p>
+                    <p className="surtitre service__lieux">{service.pourQui}</p>
                     <p className="texte">{service.texte}</p>
                     {/* le prix à gauche, la flèche ronde à droite (toute la carte est le lien) */}
                     <div className="service__bas">
@@ -185,7 +151,8 @@ const PRINCIPES = [
   ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.'],
 ]
 
-const OBJECTIFS = [...new Set(FORMATS.flatMap((f) => f.objectifs))]
+// Les objectifs que Marie accompagne (donnés par Marie, novembre 2026)
+const OBJECTIFS = ['Transformation & Silhouette', 'Performance & Force', 'Condition physique & Endurance', 'Mental & Discipline']
 
 // « Ma méthode » (novembre 2026) : titre centré, quatre principes, objectifs ; fond blanc, « marche » en vermillon
 function Methode() {
@@ -205,7 +172,6 @@ function Methode() {
             </li>
           ))}
         </ol>
-        {/* Les objectifs que Marie accompagne (repris des formats de la boîte à outils) */}
         <div className="methode__objectifs">
           <p className="methode__objectifs-titre">Vos objectifs</p>
           <ul>
@@ -231,9 +197,10 @@ function Questions() {
   return (
     <section id="questions" className="section ecran-plein questions" aria-labelledby="questions-titre">
       <div className="conteneur conteneur--etroit">
-        <h2 id="questions-titre" className="titre titre--section questions__titre">
-          Les questions <br />qu’on me <span className="mot-avant">pose</span>
-        </h2>
+        <div className="questions__entete">
+          <p className="surtitre">Avant de vous lancer</p>
+          <h2 id="questions-titre" className="titre titre--section questions__titre">Les questions qu’on me <span className="mot-avant">pose</span></h2>
+        </div>
         <div className="questions__liste">
           {QUESTIONS.map(([q, r]) => (
             <details key={q} className="question">
