@@ -962,12 +962,15 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .approche__cadre { min-height: calc(var(--ecran) - var(--hauteur-entete) - 128px); }
   /* « Qui je suis » (texte plus long) : encadré plus large et plus serré pour garder la hauteur de la photo */
   main > section.approche.section.ecran-plein:has(.approche__bouton) { grid-template-columns: auto minmax(0, 860px); }
-  .approche__cadre:has(.approche__bouton) { max-width: none; gap: 6px; padding-block: 16px; }
-  .approche__cadre:has(.approche__bouton) .titre--section { font-size: 42px; line-height: 44px; margin-bottom: 2px; }
-  .approche__cadre:has(.approche__bouton) .approche__bouton { margin-top: 4px; }
+  /* contenu calé en haut de l'encadré, bouton en bas à gauche, plus d'air entre les blocs */
+  .approche__cadre:has(.approche__bouton) { max-width: none; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding-block: clamp(22px, calc(var(--ecran) * 0.075 - 22px), 44px); justify-content: center; }
+  .approche__cadre:has(.approche__bouton) .surtitre { margin-bottom: 10px; }
+  .approche__cadre:has(.approche__bouton) .titre--section { font-size: 42px; line-height: 44px; margin-bottom: clamp(12px, calc(var(--ecran) * 0.04 - 10px), 26px); }
+  .approche__cadre:has(.approche__bouton) .approche__bouton { align-self: flex-start; }
+  .approche__cadre:has(.approche__bouton) .texte:last-of-type { margin-bottom: clamp(16px, calc(var(--ecran) * 0.045 - 12px), 28px); }
   /* le texte occupe toute la largeur de l'encadré, avec un vrai espace entre les paragraphes */
   .approche__cadre:has(.approche__bouton) .texte { line-height: 24px; max-width: none; }
-  .approche__cadre:has(.approche__bouton) .texte + .texte { margin-top: 10px; }
+  .approche__cadre:has(.approche__bouton) .texte + .texte { margin-top: clamp(10px, calc(var(--ecran) * 0.03 - 8px), 18px); }
 }
 
 /* Les quatre points : pastilles blanches, numéro dans une bulle vermillon (texte encre sur vermillon, voir la charte) */
