@@ -947,6 +947,7 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
 .approche__cadre .surtitre { margin: 0; color: var(--gris-chaud); }
 .approche__cadre .titre--section { margin: 0 0 6px; }
 .approche__cadre .texte { margin: 0; }
+.approche__bouton { justify-self: start; margin-top: 8px; }
 @media (min-width: 900px) {
   main > section.approche.section.ecran-plein {
     display: grid;
@@ -959,6 +960,12 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   /* photo et encadré à la même hauteur : celle de l'écran moins la barre et les marges de la rubrique (2 × 64 px) */
   .approche__photo img { width: auto; height: calc(var(--ecran) - var(--hauteur-entete) - 128px); }
   .approche__cadre { min-height: calc(var(--ecran) - var(--hauteur-entete) - 128px); }
+  /* « Qui je suis » (texte plus long) : encadré plus large et plus serré pour garder la hauteur de la photo */
+  main > section.approche.section.ecran-plein:has(.approche__bouton) { grid-template-columns: auto minmax(0, 860px); }
+  .approche__cadre:has(.approche__bouton) { max-width: none; gap: 6px; padding-block: 16px; }
+  .approche__cadre:has(.approche__bouton) .titre--section { font-size: 42px; line-height: 44px; margin-bottom: 2px; }
+  .approche__cadre:has(.approche__bouton) .approche__bouton { margin-top: 4px; }
+  .approche__cadre:has(.approche__bouton) .texte { line-height: 24px; }
 }
 
 /* Les quatre points : pastilles blanches, numéro dans une bulle vermillon (texte encre sur vermillon, voir la charte) */

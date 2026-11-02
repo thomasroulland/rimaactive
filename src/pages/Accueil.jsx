@@ -101,8 +101,12 @@ export default function Accueil() {
                 <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
                 <p className="texte">
                   Rima, c’est Marie à l’envers. Active, pour mon côté dynamique. Après la danse, la gymnastique et le
-                  karaté, puis six ans de salariat, je suis devenue coach sportive, diplômée en octobre 2026. Ma
-                  spécialité : la force et l’entraînement fonctionnel, avec une grande place pour la mobilité.
+                  karaté, puis six ans de salariat, je suis devenue coach sportive, diplômée en octobre 2026.
+                </p>
+                <p className="texte">
+                  Ma spécialité ? Accompagner celles et ceux qui souhaitent devenir plus forts et mobiles au quotidien.
+                  Plus qu’un coaching, je vous propose un véritable changement, en ancrant dans votre vie de nouvelles
+                  habitudes qui vous aideront à atteindre vos objectifs.
                 </p>
               </>
             ) : (
@@ -113,7 +117,10 @@ export default function Accueil() {
               partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
             </p>
             <p className="texte">Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.</p>
-            <ol className="approche__points" aria-label="Ce que l’on travaille">
+            {quiJeSuis ? (
+              <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
+            ) : (
+              <ol className="approche__points" aria-label="Ce que l’on travaille">
               {['Force', 'Endurance', 'Puissance', 'Mobilité'].map((point, i) => (
                 <li key={point}>
                   <span className="approche__numero">{String(i + 1).padStart(2, '0')}</span>
@@ -121,6 +128,7 @@ export default function Accueil() {
                 </li>
               ))}
             </ol>
+            )}
           </div>
         </div>
       </section>
