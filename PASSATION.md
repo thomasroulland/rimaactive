@@ -59,7 +59,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    (tête jamais coupée). « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) » en jaune, « Marie Sillas » en grand,
    accroche en italique, bouton « Mon approche » (jaune) seul. Plus de bandeau vermillon.
 2. Mon approche : portrait entier (`portrait-marie.jpg`, 4:5, ni coupé ni rapproché, sans aplat jaune)
-   et encadré de même hauteur, centrés ensemble. Encadré : titre « Mon approche », texte, citation,
+   et encadré de même hauteur, centrés ensemble. Encadré : titre « Mon approche », texte (sans la citation « Un corps fort et mobile… », déjà sur l'accueil),
    4 pastilles 01 Force / 02 Endurance / 03 Puissance / 04 Mobilité (bulle vermillon, chiffre encre).
    Page À propos supprimée : c'est la seule présentation de Marie.
 3. Mon accompagnement : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
@@ -110,9 +110,6 @@ en bas seulement la ligne des mentions. Il faut défiler d'environ 110 px sur l'
 ⚠️ Le formulaire **n'envoie rien** pour l'instant (simple message de confirmation) : à brancher
 (Formspree ou autre) si Marie le demande.
 
-**Téléphone et tablette** : bouton « M'écrire » fixe en bas de l'écran (sauf sur la page M'écrire),
-en plus de celui de la barre.
-
 **Aperçu de partage** : image prête dans `public/apercu-partage.jpg` (photo, « Coach sportive diplômée ·
 Houdan (78) », « Marie Sillas »), balises og:title / og:description dans `index.html`. **Manque** og:image
 et og:url, qui demandent l'adresse complète du site : Marie doit d'abord acheter son nom de domaine.
@@ -153,3 +150,5 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 - Les maquettes de refonte complète (4 directions, HTML statique) sont sur la branche `maquettes-refonte`,
   dossier `maquettes/refonte/`. Marie a écarté la 1 ; elle a retenu des morceaux des 2, 3 et 4.
 - Ne jamais enregistrer de captures d'écran dans le dépôt (c'est arrivé une fois).
+
+- Marie a refusé le bouton « M'écrire » fixe en bas de l'écran sur téléphone : ne pas le remettre.

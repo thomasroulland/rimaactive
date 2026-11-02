@@ -98,7 +98,6 @@ export default function Accueil() {
               partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
             </p>
             <p className="texte">Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.</p>
-            <p className="approche__citation">— Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
             <ol className="approche__points" aria-label="Ce que l’on travaille">
               {['Force', 'Endurance', 'Puissance', 'Mobilité'].map((point, i) => (
                 <li key={point}>

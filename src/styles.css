@@ -840,7 +840,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .bandeau-page > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* voile encre : en haut pour la barre de menu, en bas pour le titre */
 .bandeau-page::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(22, 21, 20, 0.55), rgba(22, 21, 20, 0.15) 35%, rgba(22, 21, 20, 0.8)); }
-.bandeau-page__texte { position: relative; z-index: 2; width: 100%; padding-bottom: 32px; }
+.bandeau-page__texte { position: relative; z-index: 2; width: 100%; box-sizing: border-box; padding: 0 var(--gouttiere) 32px; }
 .bandeau-page .surtitre { margin: 0 0 8px; color: var(--jaune); } /* jaune sur photo sombre uniquement */
 .bandeau-page__titre { margin: 0; color: var(--craie); font-size: 80px; line-height: 80px; letter-spacing: -0.05em; }
 .formules-page__grille { display: grid; gap: 24px; }
@@ -907,7 +907,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .offre--sombre .bouton--principal:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
 
 @media (min-width: 900px) { .section.formules-page { padding-block: 24px 48px; } }
-@media (max-width: 899px) { .bandeau-page { height: 240px; } .bandeau-page__titre { font-size: 48px; line-height: 48px; } }
+@media (max-width: 899px) { .bandeau-page { height: 240px; } .bandeau-page__titre { font-size: 44px; line-height: 46px; } .bandeau-page .surtitre { letter-spacing: 0.12em; } }
 @media (min-width: 900px) and (max-width: 1399px) {
   .bandeau-page { height: 260px; }
   .bandeau-page__titre { font-size: 64px; line-height: 64px; }
@@ -929,7 +929,6 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
 .approche__cadre { width: 100%; max-width: 680px; box-sizing: border-box; display: grid; align-content: center; gap: 12px; padding: clamp(26px, calc(2.6 * var(--vw)), 44px); border: 1px solid var(--gris-chaud); border-radius: var(--arrondi); }
 .approche__cadre .surtitre { margin: 0; color: var(--gris-chaud); }
 .approche__cadre .titre--section { margin: 0 0 6px; }
-.approche__citation { margin: 0; font-style: italic; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
 @media (min-width: 900px) {
   main > section.approche.section.ecran-plein {
     display: grid;
@@ -971,9 +970,3 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .service .photo.service__photo { height: 160px; }
 }
 
-/* Téléphone et tablette : « M'écrire » fixe en bas de l'écran ; le pied garde de la place pour lui */
-.ecrire-fixe { display: none; }
-@media (max-width: 899px) {
-  .ecrire-fixe { display: inline-flex; position: fixed; z-index: 40; left: var(--gouttiere); right: var(--gouttiere); bottom: 16px; justify-content: center; box-shadow: 0 10px 30px rgba(22, 21, 20, 0.25); }
-  .pied:not(.pied--mentions) { padding-bottom: 96px; }
-}
