@@ -64,7 +64,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    règle MotMisEnAvant de la charte), les 3 paragraphes écrits par Marie (karaté, six ans de salariat, méthode),
    bouton jaune « Mes services » vers #accompagnement. Les pastilles Force/Endurance/Puissance/Mobilité sont retirées.
    Page À propos supprimée : c'est la seule présentation de Marie.
-3. Mon accompagnement : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
+3. Mes services (titre renommé le 2 novembre 2026, ancre #accompagnement inchangée) : 3 cartes (photo arrondie, titre, lieux en petites capitales, phrase de Marie,
    puis le prix et une flèche ronde qui passe en jaune au survol ; toute la carte est le lien) : Entreprises (Locaux · Extérieur),
    Duo et groupes (Domicile · Extérieur), Individuel (Domicile · Salle · En ligne).
    Sous la phrase, un prix « à partir de » tiré de la fiche : À partir de 110 € la séance /

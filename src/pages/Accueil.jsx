@@ -70,7 +70,9 @@ const SERVICES = [
 export default function Accueil() {
   useTitre('Accueil')
   // Maquette (?maquette=methode) : rubrique « Ma méthode » sur fond blanc après « Moi c'est Marie »
-  const methode = new URLSearchParams(window.location.search).get('maquette') === 'methode'
+  const parametres = new URLSearchParams(window.location.search)
+  const methode = parametres.get('maquette') === 'methode'
+  const fondMethode = parametres.get('fond') === 'noir' ? 'noir' : 'blanc'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -116,11 +118,11 @@ export default function Accueil() {
         </div>
       </section>
 
-      {methode && <Methode />}
+      {methode && <Methode fond={fondMethode} />}
 
       <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
-          <h2 id="services-titre" className="titre titre--section">Mon accompagnement</h2>
+          <h2 id="services-titre" className="titre titre--section">Mes services</h2>
           {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, puis le prix « à partir de »
               (fiche tarifs) et une flèche ronde, qui passe en jaune au survol.
               Sur téléphone et tablette, les cartes sont compactes : petite photo à gauche, sans la phrase. */}
@@ -167,14 +169,15 @@ const PRINCIPES = [
   ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.'],
 ]
 
-function Methode() {
+const OBJECTIFS = [...new Set(FORMATS.flatMap((f) => f.objectifs))]
+
+function Methode({ fond }) {
   return (
-    <section id="methode" className="section ecran-plein methode" aria-labelledby="methode-titre">
+    <section id="methode" className={`section ecran-plein methode methode--${fond}`} aria-labelledby="methode-titre">
       <div className="conteneur">
         <div className="methode__entete">
           <p className="surtitre">Ma méthode</p>
           <h2 id="methode-titre" className="titre titre--section">Pourquoi ça <span className="mot-avant">marche</span></h2>
-          <p className="texte">Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
         </div>
         <ol className="methode__principes">
           {PRINCIPES.map(([titre, texte], i) => (
@@ -185,6 +188,13 @@ function Methode() {
             </li>
           ))}
         </ol>
+        {/* Les objectifs que Marie accompagne (repris des formats de la boîte à outils) */}
+        <div className="methode__objectifs">
+          <p className="methode__objectifs-titre">Vos objectifs</p>
+          <ul>
+            {OBJECTIFS.map((o) => <li key={o}>{o}</li>)}
+          </ul>
+        </div>
       </div>
     </section>
   )
