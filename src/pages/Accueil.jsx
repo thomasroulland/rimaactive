@@ -61,7 +61,7 @@ const SERVICES = [
     to: '/particuliers',
     titre: 'Individuel',
     lieux: 'Domicile · Salle · En ligne',
-    pourQui: 'Pour vous seul(e)',
+    pourQui: 'Domicile · Salle · En ligne',
     prix: 'Dès 45\u00a0€ la séance',
     photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoIndividuel,
@@ -107,12 +107,12 @@ export default function Accueil() {
             </p>
             <p className="texte">
               Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs,<br className="saut" />
-              qui ne trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger<br className="saut" />
-              mais ne savaient pas par où commencer. C’est ce qui m’a poussée à devenir coach.
+              qui ne trouvaient pas le temps de s’occuper d’eux.<br className="saut" />
+              Certains voulaient bouger sans savoir par où commencer. C’est ce qui m’a poussée à devenir coach.
             </p>
             <p className="texte">
-              Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite, on
-              construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.<br className="saut" />
+              Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite,<br className="saut" />
+              on construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.<br className="saut" />
               On s’entraîne pour gagner en force et en mobilité grâce à des formats qui donnent envie de relever le défi.
             </p>
             <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
@@ -128,7 +128,7 @@ export default function Accueil() {
             <div className="services__entete">
               <div>
                 <p className="surtitre">Mes services</p>
-                <h2 id="services-titre" className="titre titre--section">Trois façons de vous<br /><span className="mot-avant">entraîner</span> avec moi</h2>
+                <h2 id="services-titre" className="titre titre--section">Trois façons de s’<span className="mot-avant">entraîner</span> avec moi</h2>
               </div>
               <ul className="services__reperes">
                 <li><Picto nom="clock" taille={22} />60&nbsp;min par séance</li>
@@ -149,7 +149,7 @@ export default function Accueil() {
                   <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">{service.titre}</h3>
-                    <p className="surtitre service__lieux">{servicesV2 ? `${service.pourQui} · ${service.lieux}` : service.lieux}</p>
+                    <p className="surtitre service__lieux">{servicesV2 ? service.pourQui : service.lieux}</p>
                     <p className="texte">{service.texte}</p>
                     {/* le prix à gauche, la flèche ronde à droite (toute la carte est le lien) */}
                     <div className="service__bas">

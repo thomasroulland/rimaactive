@@ -1108,8 +1108,14 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); -
 @media (min-width: 900px) {
   .services--v2 .services__entete .titre { font-size: 44px; line-height: 46px; }
   /* l'en-tête est plus haut : les photos des cartes se réduisent d'autant pour que tout tienne dans l'écran */
-  .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 290px - 96px); }
+  .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 290px - 56px); }
 }
 @media (min-width: 900px) and (max-width: 1399px) {
-  .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 280px - 96px); }
+  .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 280px - 56px); }
 }
+
+/* Alternance des fonds de l'accueil : Qui suis-je (craie foncé) / Ma méthode (blanc) / Mes services (craie foncé) /
+   Les questions (blanc, questions sur cartes craie) */
+main > section.services:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }
+main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); background: var(--blanc); }
+.question { background: var(--craie); }
