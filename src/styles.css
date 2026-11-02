@@ -1035,3 +1035,42 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .pied--mentions .pied__bas { padding-top: 12px; }
   .pied--mentions { padding-bottom: 12px; }
 }
+
+/* ---------- Maquette ?maquette=structure (à valider par Marie) ---------- */
+/* Mot mis en avant (charte) : souligné vermillon épais sur fond clair, jaune sur fond encre */
+.mot-avant { text-decoration: underline; text-decoration-color: var(--vermillon); text-decoration-thickness: 0.12em; text-underline-offset: 0.12em; }
+.maq-methode .mot-avant { color: var(--jaune); text-decoration: none; }
+.maq-centre { text-align: center; display: grid; justify-items: center; gap: 12px; }
+.maq-centre .titre, .maq-centre .surtitre, .maq-centre .texte { margin: 0; }
+.maq-qui__grille { display: grid; gap: 32px; align-items: center; }
+.maq-qui__photo { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 25%; border-radius: var(--arrondi); }
+.maq-qui__texte { display: grid; gap: 16px; justify-items: start; max-width: 60ch; }
+.maq-qui__texte .surtitre, .maq-qui__texte .titre, .maq-qui__texte .texte { margin: 0; }
+.maq-qui__signature { margin: 0; font-style: italic; font-size: 22px; line-height: 30px; }
+main > section.maq-methode:nth-of-type(n) { --fond-rubrique: var(--encre); background: var(--encre); color: var(--craie); }
+.maq-methode .surtitre { color: var(--jaune); }
+.maq-methode .titre { color: var(--craie); }
+.maq-methode .texte { color: rgba(244, 243, 239, 0.78); }
+.maq-methode__liste { list-style: none; margin: 48px 0 0; padding: 0; display: grid; gap: 32px; }
+.maq-methode__liste li { padding-top: 18px; border-top: 1px solid var(--filet-clair); display: grid; gap: 8px; align-content: start; }
+.maq-methode__numero { color: var(--vermillon); font-weight: 900; font-size: 32px; line-height: 32px; letter-spacing: -0.04em; }
+.maq-methode__titre { margin: 0; font-weight: 900; font-size: 22px; line-height: 26px; letter-spacing: -0.02em; }
+.maq-methode__liste p { margin: 0; color: rgba(244, 243, 239, 0.78); }
+.maq-questions__liste { margin-top: 40px; display: grid; gap: 12px; }
+.maq-question { border-radius: var(--arrondi); background: var(--fond-carte); }
+.maq-question summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 22px 28px; font-weight: 800; font-size: 18px; line-height: 26px; cursor: pointer; }
+.maq-question summary::-webkit-details-marker { display: none; }
+.maq-question p { margin: 0; padding: 0 28px 22px; color: var(--gris-chaud); }
+.maq-question__plus { position: relative; flex: none; width: 18px; height: 18px; }
+.maq-question__plus::before, .maq-question__plus::after { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 2px; background: var(--vermillon); transition: transform var(--duree) ease; }
+.maq-question__plus::after { transform: rotate(90deg); }
+.maq-question[open] .maq-question__plus::after { transform: rotate(0); }
+main > section.maq-pret:nth-of-type(n) { --fond-rubrique: var(--vermillon); background: var(--vermillon); color: var(--encre); }
+.maq-pret .titre, .maq-pret .texte { color: var(--encre); }
+.maq-pret__boutons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 12px; }
+.maq-pret__contour { border: 1.5px solid var(--encre); color: var(--encre); background: transparent; }
+@media (min-width: 900px) {
+  .maq-qui__grille { grid-template-columns: 0.8fr 1.2fr; gap: 72px; }
+  .maq-methode__liste { grid-template-columns: repeat(4, 1fr); }
+}
+.maq-questions__titre { white-space: nowrap; } @media (max-width: 599px) { .maq-questions__titre { white-space: normal; } }

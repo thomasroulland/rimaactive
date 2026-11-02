@@ -6,6 +6,7 @@ import photoGroupes from '../assets/service-groupes.jpg'
 import photoIndividuel from '../assets/service-individuel.jpg'
 import { Link } from 'react-router-dom'
 import { Photo } from '../components/Blocs.jsx'
+import { Methode, Pret, Questions, QuiJeSuis } from '../components/MaquetteStructure.jsx'
 import useTitre from '../components/useTitre.js'
 
 const FORMATS = [
@@ -69,6 +70,7 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  const maquette = new URLSearchParams(window.location.search).get('maquette') === 'structure'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -84,6 +86,13 @@ export default function Accueil() {
         </div>
       </section>
 
+      {maquette ? (
+        <>
+          <QuiJeSuis />
+          <Methode />
+        </>
+      ) : (
+        <>
       {/* Mon approche : le portrait entier (ni coupé ni rapproché) et l'encadré, de même hauteur, centrés ensemble.
           C'est la seule rubrique qui présente Marie (plus de page « À propos »). */}
       <section id="approche" className="section ecran-plein approche" aria-labelledby="approche-titre">
@@ -109,6 +118,8 @@ export default function Accueil() {
           </div>
         </div>
       </section>
+        </>
+      )}
 
       <section id="accompagnement" className="section services ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
@@ -139,6 +150,8 @@ export default function Accueil() {
       </section>
 
       <BoiteOutils formats={FORMATS} />
+      {maquette && <Questions />}
+      {maquette && <Pret />}
     </>
   )
 }
