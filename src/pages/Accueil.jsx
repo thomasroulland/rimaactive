@@ -107,8 +107,8 @@ export default function Accueil() {
             </p>
             <p className="texte">
               Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs,<br className="saut" />
-              qui ne trouvaient pas le temps de s’occuper d’eux.<br className="saut" />
-              Certains voulaient bouger sans savoir par où commencer. C’est ce qui m’a poussée à devenir coach.
+              qui ne trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger<br className="saut" />
+              sans savoir par où commencer. C’est ce qui m’a poussée à devenir coach.
             </p>
             <p className="texte">
               Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite,<br className="saut" />
