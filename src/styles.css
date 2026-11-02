@@ -965,7 +965,9 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .approche__cadre:has(.approche__bouton) { max-width: none; gap: 6px; padding-block: 16px; }
   .approche__cadre:has(.approche__bouton) .titre--section { font-size: 42px; line-height: 44px; margin-bottom: 2px; }
   .approche__cadre:has(.approche__bouton) .approche__bouton { margin-top: 4px; }
-  .approche__cadre:has(.approche__bouton) .texte { line-height: 24px; }
+  /* le texte occupe toute la largeur de l'encadré, avec un vrai espace entre les paragraphes */
+  .approche__cadre:has(.approche__bouton) .texte { line-height: 24px; max-width: none; }
+  .approche__cadre:has(.approche__bouton) .texte + .texte { margin-top: 10px; }
 }
 
 /* Les quatre points : pastilles blanches, numéro dans une bulle vermillon (texte encre sur vermillon, voir la charte) */
