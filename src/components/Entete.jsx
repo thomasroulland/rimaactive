@@ -12,6 +12,10 @@ export default function Entete() {
   // pages qui commencent par une photo plein cadre : l'accueil et les trois pages de formules
   const surPhoto = useSurPhoto(['/', '/entreprises', '/communes', '/particuliers'].includes(pathname))
   const [ouvert, setOuvert] = useState(false)
+  // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
+  const ecrireVisible = useEcrireVisible(pathname === '/')
+  // « Accueil » ramène toujours tout en haut de l'accueil, même quand on y est déjà
+  const versLeHaut = (page) => () => { if (page.to === pathname) window.scrollTo({ top: 0, behavior: 'smooth' }) }
   // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
   useEffect(() => setOuvert(false), [pathname])
   useEffect(() => {
@@ -30,13 +34,13 @@ export default function Entete() {
         </div>
         <nav className="nav" aria-label="Menu principal">
           {PAGES_MENU.map((page) => (
-            <NavLink key={page.to} to={page.to} end={page.to === '/'} className="nav__bulle">
+            <NavLink key={page.to} to={page.to} end={page.to === '/'} className="nav__bulle" onClick={versLeHaut(page)}>
               {page.label}
             </NavLink>
           ))}
         </nav>
         <div className="entete__droite">
-          <Link to="/contact" className="entete__ecrire">M’écrire <FlecheDiagonale /></Link>
+          <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>
           <button
             type="button"
             className="menu-bouton"
@@ -50,7 +54,7 @@ export default function Entete() {
       </div>
       <nav id="menu-mobile" className={`menu-mobile ${ouvert ? 'ouvert' : ''}`} aria-label="Menu mobile">
         {PAGES_MENU.map((page) => (
-          <NavLink key={page.to} to={page.to} end={page.to === '/'}>
+          <NavLink key={page.to} to={page.to} end={page.to === '/'} onClick={versLeHaut(page)}>
             {page.label}
             <Fleche />
           </NavLink>
@@ -71,6 +75,23 @@ function useSurPhoto(actif) {
     return () => window.removeEventListener('scroll', suivre)
   }, [actif])
   return actif && enHaut
+}
+
+// Vrai partout, sauf sur l'accueil tant que la rubrique « Mon approche » n'atteint pas le haut de l'écran
+function useEcrireVisible(accueil) {
+  const [visible, setVisible] = useState(!accueil)
+  useEffect(() => {
+    if (!accueil) { setVisible(true); return }
+    const suivre = () => {
+      const approche = document.getElementById('approche')
+      setVisible(!!approche && approche.getBoundingClientRect().top < window.innerHeight * 0.5)
+    }
+    suivre()
+    window.addEventListener('scroll', suivre, { passive: true })
+    window.addEventListener('resize', suivre)
+    return () => { window.removeEventListener('scroll', suivre); window.removeEventListener('resize', suivre) }
+  }, [accueil])
+  return visible
 }
 
 function FlecheDiagonale() {

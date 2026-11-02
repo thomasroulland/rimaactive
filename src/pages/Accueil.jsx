@@ -69,6 +69,8 @@ const SERVICES = [
 
 export default function Accueil() {
   useTitre('Accueil')
+  // Maquette (?maquette=qui) : l'encadré « Mon approche » devient « Qui je suis / Moi c'est Marie » (même photo, même fond, même encadré)
+  const quiJeSuis = new URLSearchParams(window.location.search).get('maquette') === 'qui'
   return (
     <>
       {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
@@ -79,7 +81,8 @@ export default function Accueil() {
           <h1 className="titre heros__titre">Marie Sillas</h1>
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
-            <a href="#approche" className="bouton bouton--principal">Mon approche</a>
+            <a href="#approche" className="bouton bouton--clair">Mon approche</a>
+            <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
           </div>
         </div>
       </section>
@@ -92,7 +95,19 @@ export default function Accueil() {
         </figure>
         <div className="approche__panneau">
           <div className="approche__cadre">
-            <h2 id="approche-titre" className="titre titre--section">Mon approche</h2>
+            {quiJeSuis ? (
+              <>
+                <p className="surtitre approche__surtitre">Qui je suis</p>
+                <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
+                <p className="texte">
+                  Rima, c’est Marie à l’envers. Active, pour mon côté dynamique. Après la danse, la gymnastique et le
+                  karaté, puis six ans de salariat, je suis devenue coach sportive, diplômée en octobre 2026. Ma
+                  spécialité : la force et l’entraînement fonctionnel, avec une grande place pour la mobilité.
+                </p>
+              </>
+            ) : (
+              <h2 id="approche-titre" className="titre titre--section">Mon approche</h2>
+            )}
             <p className="texte">
               Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
               partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
