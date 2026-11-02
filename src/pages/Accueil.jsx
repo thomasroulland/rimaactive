@@ -1,4 +1,3 @@
-import BoiteOutils from '../components/BoiteOutils.jsx'
 import photoHeros from '../assets/heros-squat-nb.jpg'
 import portraitMarie from '../assets/portrait-marie.jpg'
 import photoEntreprises from '../assets/service-entreprises.jpg'
@@ -144,7 +143,7 @@ export default function Accueil() {
         </div>
       </section>
 
-      <BoiteOutils formats={FORMATS} />
+      <Questions />
     </>
   )
 }
@@ -191,6 +190,36 @@ function Methode() {
           <ul>
             {OBJECTIFS.map((o) => <li key={o}>{o}</li>)}
           </ul>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// « Les questions qu'on me pose » : réponses tirées des formules et des infos du site (à relire par Marie)
+const QUESTIONS = [
+  ['Je débute complètement, est-ce pour moi\u00a0?', 'Oui. Les séances sont adaptées à votre niveau et partent des mouvements fondamentaux.'],
+  ['Faut-il du matériel ou une salle\u00a0?', 'Non. Le matériel est fourni\u00a0: tapis, kettlebells, slam balls, etc. Les séances ont lieu à domicile, en extérieur, dans vos locaux ou en salle.'],
+  ['Comment se déroule une séance\u00a0?', 'Mobilité & Activation\u00a0: 5 à 10\u00a0min. Corps de séance\u00a0: 30 à 45\u00a0min. Retour au calme\u00a0: 5\u00a0min.'],
+  ['Où vous déplacez-vous\u00a0?', 'Je suis basée à Houdan (78). Le déplacement est inclus jusqu’à 20\u00a0km autour de Houdan.'],
+  ['Et si je préfère un suivi à distance\u00a0?', 'Active Plus est un suivi en ligne de 12\u00a0semaines, avec un programme 100\u00a0% personnalisé et un suivi hebdomadaire sur WhatsApp.'],
+  ['Comment réserver\u00a0?', 'Écrivez-moi avec le formulaire de contact ou par e-mail, et je vous réponds pour choisir la formule qui vous convient.'],
+]
+
+function Questions() {
+  return (
+    <section id="questions" className="section ecran-plein questions" aria-labelledby="questions-titre">
+      <div className="conteneur conteneur--etroit">
+        <h2 id="questions-titre" className="titre titre--section questions__titre">
+          Les questions <br />qu’on me <span className="mot-avant">pose</span>
+        </h2>
+        <div className="questions__liste">
+          {QUESTIONS.map(([q, r]) => (
+            <details key={q} className="question">
+              <summary>{q}<span className="question__plus" aria-hidden="true" /></summary>
+              <p>{r}</p>
+            </details>
+          ))}
         </div>
       </div>
     </section>
