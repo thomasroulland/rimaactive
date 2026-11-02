@@ -100,23 +100,32 @@ export default function Accueil() {
                 <p className="surtitre approche__surtitre">Qui je suis</p>
                 <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
                 <p className="texte">
-                  Rima, c’est Marie à l’envers. Active, pour mon côté dynamique. Après la danse, la gymnastique et le
-                  karaté, puis six ans de salariat, je suis devenue coach sportive, diplômée en octobre 2026.
+                  Passionnée de sport et pratiquante de karaté, je vous aide à atteindre vos objectifs grâce à une
+                  pratique fonctionnelle.
                 </p>
                 <p className="texte">
-                  Ma spécialité ? Accompagner celles et ceux qui souhaitent devenir plus forts et mobiles au quotidien.
-                  Plus qu’un coaching, je vous propose un véritable changement, en ancrant dans votre vie de nouvelles
-                  habitudes qui vous aideront à atteindre vos objectifs.
+                  Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs, qui ne
+                  trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger mais ne savaient pas par où
+                  commencer. C’est ce qui m’a poussée à devenir coach.
+                </p>
+                <p className="texte">
+                  Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite, on
+                  construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien. On
+                  s’entraîne pour gagner en force et en mobilité grâce à des formats qui donnent envie de relever le défi.
                 </p>
               </>
             ) : (
               <h2 id="approche-titre" className="titre titre--section">Mon approche</h2>
             )}
-            <p className="texte">
-              Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
-              partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
-            </p>
-            <p className="texte">Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.</p>
+            {!quiJeSuis && (
+              <>
+                <p className="texte">
+                  Je vous propose des séances à domicile ou en salle, adaptées à votre niveau. Ensemble, on travaille à
+                  partir des mouvements fondamentaux pour gagner en mobilité, en force et en autonomie.
+                </p>
+                <p className="texte">Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.</p>
+              </>
+            )}
             {quiJeSuis ? (
               <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
             ) : (
