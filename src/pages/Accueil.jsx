@@ -53,13 +53,9 @@ export default function Accueil() {
         <img className="heros__photo" src={photoHeros} alt="" />
         {herosV2 ? (
           <div className="heros__texte heros__texte--v2">
-            <p className="surtitre heros__surtitre">Marie Sillas · Coach sportive diplômée · Houdan (78) &amp; en ligne</p>
-            <h1 className="titre heros__titre heros__titre--v2">
-              Un corps <span className="heros__jaune">fort et mobile</span> <br />grâce à une pratique fonctionnelle
-            </h1>
-            <p className="heros__intro">
-              Des séances d’une heure, à domicile, en salle, en extérieur ou en ligne, pour gagner en force et en mobilité.
-            </p>
+            <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; en ligne</p>
+            <h1 className="titre heros__titre">Coach <span className="heros__jaune">Marie</span></h1>
+            <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
             <div className="actions">
               <a href="#approche" className="bouton bouton--clair">Qui suis-je</a>
               <Link to="/contact" className="bouton bouton--vermillon">M’écrire</Link>
