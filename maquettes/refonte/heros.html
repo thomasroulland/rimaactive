@@ -73,6 +73,49 @@ body { min-height: 100vh; }
   .v4 .corps { min-height: 700px; }
   .reperes { gap: 18px; }
 }
+
+/* Variantes inspirées des gabarits 1 et 4 */
+.bulles-rep { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.bulles-rep li { background: var(--blanc); border-radius: 999px; padding: 9px 16px; font-weight: 700; font-size: 14px; line-height: 20px; display: inline-flex; gap: 8px; align-items: center; box-shadow: 0 1px 2px rgba(22,21,20,.06); }
+/* 5 · Photo arrondie à gauche, texte à droite, repères en bulles */
+.v5 { background: var(--craie); }
+.v5 .corps { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; padding: 12px var(--g) 28px; align-items: stretch; }
+.v5 .ph { border-radius: 24px; }
+.v5 .texte { display: grid; gap: 22px; align-content: center; justify-items: start; }
+.v5 h1 { font-size: clamp(64px, 7.5vw, 120px); line-height: .9; letter-spacing: -.055em; }
+/* 6 · Moitié / moitié, photo en cadre arrondi avec les repères posés dessus */
+.v6 { background: var(--craie); }
+.v6 .corps { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 12px var(--g) 28px; }
+.v6 .texte { display: grid; gap: 22px; align-content: center; justify-items: start; }
+.v6 h1 { font-size: clamp(64px, 8vw, 128px); line-height: .9; letter-spacing: -.055em; }
+.v6 .cadre { position: relative; border-radius: 24px; overflow: hidden; display: grid; }
+.v6 .cadre .ph { position: absolute; inset: 0; }
+.v6 .cadre .bulles-rep { position: relative; align-self: end; margin: 20px; flex-direction: column; align-items: flex-start; }
+/* 7 · Grande carte arrondie, texte dans une carte encre à droite */
+.v7 { background: var(--craie); }
+.v7 .corps { flex: 1; position: relative; margin: 8px var(--g) 24px; border-radius: 24px; overflow: hidden; display: grid; }
+.v7 .ph { position: absolute; inset: 0; }
+.v7 .carte { position: relative; justify-self: end; align-self: center; margin: 24px; width: min(560px, 100%); background: var(--encre); color: var(--craie); border-radius: var(--arrondi); padding: 30px; display: grid; gap: 14px; justify-items: start; }
+.v7 .carte .surtitre { color: var(--jaune); }
+.v7 h1 { font-size: clamp(54px, 6vw, 92px); line-height: .92; letter-spacing: -.05em; }
+.v7 .reperes { padding-top: 16px; border-top: 1px solid rgba(244,243,239,.2); align-self: stretch; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.v7 .reperes b { font-size: 24px; line-height: 26px; }
+.v7 .reperes span { color: rgba(244,243,239,.72); }
+/* 8 · Photo en bandeau arrondi en haut, texte sur deux colonnes dessous */
+.v8 { background: var(--craie); }
+.v8 .corps { flex: 1; display: grid; grid-template-rows: 1fr auto; gap: 24px; padding: 8px var(--g) 28px; }
+.v8 .ph { border-radius: 24px; min-height: 260px; }
+.v8 .bas { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: end; }
+.v8 h1 { font-size: clamp(60px, 7vw, 112px); line-height: .9; letter-spacing: -.055em; margin-top: 8px; }
+.v8 .droite { display: grid; gap: 18px; justify-items: start; }
+@media (max-width: 899px) {
+  .v5 .corps, .v6 .corps, .v8 .bas { grid-template-columns: 1fr; }
+  .v5 .ph { min-height: 320px; }
+  .v6 .cadre { min-height: 380px; }
+  .v7 .carte { margin: 12px; padding: 22px; align-self: end; }
+  .v7 .corps { min-height: 720px; }
+  .v7 .reperes { grid-template-columns: 1fr; }
+}
 </style></head>
 <body>
 <script src="pictos.js"></script><script src="commun.js"></script>
@@ -83,11 +126,16 @@ const boutons = `<div class="actions"><a class="bouton bouton--clair" style="bor
 const boutonsSombre = `<div class="actions"><a class="bouton bouton--clair">Qui suis-je</a><a class="bouton bouton--vermillon">M’écrire</a></div>`;
 const reperes = `<ul class="reperes"><li><b>60 min</b><span>par séance, matériel fourni</span></li><li><b>3</b><span>formules : entreprises, duo et groupes, individuel</span></li><li><b>20 km</b><span>de déplacement inclus autour de Houdan</span></li></ul>`;
 const ph = (t, sombre) => `<div class="ph ${sombre ? 'ph--sombre' : ''}"><span>${t}</span></div>`;
+const bullesRep = `<ul class="bulles-rep"><li>${picto('clock',18)}60 min par séance</li><li>${picto('kettlebell',18)}Matériel fourni</li><li>${picto('map-pin',18)}Déplacement inclus jusqu’à 20 km</li></ul>`;
 const v = new URLSearchParams(location.search).get('v') || '1';
 document.body.innerHTML = {
   1: `${barre('Accueil')}<section class="v1"><div class="g"><div class="corps"><p class="surtitre">${sur}</p><h1 class="titre">Coach<br><span class="mot--clair">Marie</span></h1><p class="accroche">${acc}</p>${boutons}${reperes}</div></div>${ph('Emplacement photo')}</section>`,
   2: `<section class="v v2">${barre('Accueil')}<div class="corps"><div class="haut"><p class="surtitre">${sur}</p><p class="accroche" style="max-width:30ch;text-align:right">${acc}</p></div><div class="centre"><h1 class="titre">Coach <span class="mot--clair">Marie</span></h1><div class="vignette ph"><span>Emplacement photo</span></div></div><div class="bas">${reperes}${boutons}</div></div></section>`,
   3: `<section class="v v3">${barre('Accueil', true)}<div class="corps"><div class="texte"><p class="surtitre">${sur}</p><h1 class="titre">Coach <span class="mot">Marie</span></h1><p class="accroche">${acc}</p>${boutonsSombre}${reperes}</div><div class="mosaique">${ph('Photo 1', true)}${ph('Photo 2', true)}${ph('Photo 3', true)}</div></div></section>`,
   4: `<section class="v v4">${barre('Accueil')}<div class="corps">${ph('Emplacement photo · plein cadre')}<div class="reperes-flottants"><ul><li>${picto('clock',20)}60 min par séance</li><li>${picto('kettlebell',20)}Matériel fourni</li><li>${picto('map-pin',20)}Déplacement inclus jusqu’à 20 km</li></ul></div><div class="carte"><p class="surtitre">${sur}</p><h1 class="titre">Coach <span class="mot--clair">Marie</span></h1><p class="accroche">${acc}</p>${boutons}</div></div></section>`,
+  5: `<section class="v v5">${barre('Accueil')}<div class="corps">${ph('Emplacement photo')}<div class="texte"><p class="surtitre">${sur}</p><h1 class="titre">Coach<br><span class="mot--clair">Marie</span></h1><p class="accroche">${acc}</p>${boutons}${bullesRep}</div></div></section>`,
+  6: `<section class="v v6">${barre('Accueil')}<div class="corps"><div class="texte"><p class="surtitre">${sur}</p><h1 class="titre">Coach<br><span class="mot--clair">Marie</span></h1><p class="accroche">${acc}</p>${boutons}</div><div class="cadre">${ph('Emplacement photo')}${bullesRep}</div></div></section>`,
+  7: `<section class="v v7">${barre('Accueil')}<div class="corps">${ph('Emplacement photo · plein cadre')}<div class="carte"><p class="surtitre">${sur}</p><h1 class="titre">Coach <span class="mot">Marie</span></h1><p class="accroche">${acc}</p>${boutonsSombre}${reperes}</div></div></section>`,
+  8: `<section class="v v8">${barre('Accueil')}<div class="corps">${ph('Emplacement photo · bandeau')}<div class="bas"><div><p class="surtitre">${sur}</p><h1 class="titre">Coach <span class="mot--clair">Marie</span></h1></div><div class="droite"><p class="accroche">${acc}</p>${boutons}${bullesRep}</div></div></div></section>`,
 }[v];
 </script></body></html>
