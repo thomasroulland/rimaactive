@@ -61,7 +61,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    Le « M'écrire » de la barre est caché sur l'accueil jusqu'à la rubrique « Moi c'est Marie » ; « Accueil » ramène en haut.
 2. « Moi c'est Marie » (ancre #approche, novembre 2026) : portrait entier (`portrait-marie.jpg`) et encadré arrondi de
    même hauteur sur fond craie foncé. Dans l'encadré : « Qui suis-je », « Moi c'est Marie » (« Marie » souligné vermillon,
-   règle MotMisEnAvant de la charte), les 3 paragraphes écrits par Marie (karaté, six ans de salariat, méthode), avec ses sauts de ligne
+   règle MotMisEnAvant de la charte), les 3 paragraphes écrits par Marie (version du 3 novembre 2026 : karaté, six années de salariat, « Mon objectif ? »), avec ses sauts de ligne
    exacts sur grand écran (`<br className="saut" />`, masqués sous 1100 px),
    bouton jaune « Mes services » vers #accompagnement. Les pastilles Force/Endurance/Puissance/Mobilité sont retirées.
    Page À propos supprimée : c'est la seule présentation de Marie.

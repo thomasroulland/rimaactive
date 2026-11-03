@@ -92,17 +92,17 @@ export default function Accueil() {
             {/* sauts de ligne voulus par Marie (ordinateur seulement : sur téléphone, le texte coule librement) */}
             <p className="texte">
               Passionnée de sport et pratiquante de karaté, je vous aide à atteindre vos objectifs<br className="saut" />
-              grâce à une pratique fonctionnelle.
+              grâce à une pratique fonctionnelle adaptée à votre quotidien.
             </p>
             <p className="texte">
-              Après six ans de salariat, j’ai vu autour de moi des collègues fatigués, avec des douleurs,<br className="saut" />
-              qui ne trouvaient pas le temps de s’occuper d’eux. Certains voulaient bouger<br className="saut" />
-              sans savoir par où commencer. C’est ce qui m’a poussée à devenir coach.
+              Pendant mes six années de salariat, j’ai côtoyé des collègues fatigués qui ne trouvaient pas le temps de
+              prendre soin d’eux. Certains voulaient bouger, sans savoir par où commencer. C’est ce qui m’a poussée à
+              devenir coach.
             </p>
             <p className="texte">
-              Avec moi, on commence par discuter de vos envies, de vos attentes et de vos contraintes. Ensuite,<br className="saut" />
-              on construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.<br className="saut" />
-              On s’entraîne pour gagner en force et en mobilité grâce à des formats qui donnent envie de relever le défi.
+              Avec moi, tout commence par un échange sur vos envies et vos contraintes.<br className="saut" />
+              Ensemble, on construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.
+              Mon objectif&nbsp;? Vous aider à gagner en force et en mobilité avec le plaisir de relever de nouveaux défis.
             </p>
             <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
           </div>
