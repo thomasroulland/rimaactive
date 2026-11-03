@@ -57,7 +57,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
 **Accueil** (`src/pages/Accueil.jsx`), dans l'ordre :
 1. Haut de page (choisi par Marie, novembre 2026) : sur craie, « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) & EN LIGNE »
    en gris, « Coach / Marie » en grand (Marie souligné vermillon), accroche en italique, boutons « Qui suis-je »
-   (contour encre, vers #approche) et « M'écrire » (vermillon). À droite, la photo bras croisés (`portrait-contact.jpg`)
+   (contour encre, vers #approche) et « M'écrire » (jaune). À droite, la photo bras croisés (`portrait-contact.jpg`)
    dans un cadre arrondi, avec trois bulles blanches (60 min par séance, Matériel fourni, Déplacement inclus jusqu'à 20 km)
    en bas à gauche ; sur téléphone, les bulles passent sous la photo. La barre de menu reste craie sur l'accueil.
    Le « M'écrire » de la barre est caché sur l'accueil jusqu'à la rubrique « Moi c'est Marie » ; « Accueil » ramène en haut.

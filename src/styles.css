@@ -341,7 +341,6 @@ main > section:nth-of-type(even):not(.page-contact) {
 .heros__surtitre { color: var(--gris-chaud); margin-bottom: 18px; } /* jamais de jaune en texte sur fond clair */
 .heros__ligne { margin: 22px 0 0; }
 .heros .actions { margin-top: 28px; gap: 16px; }
-.heros .bouton--vermillon:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); } /* sur craie, le survol passe en encre */
 .heros__cadre { position: relative; border-radius: var(--arrondi-grand); overflow: hidden; display: grid; min-height: 360px; background: var(--encre); }
 .heros__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; }
 .heros__bulles { position: relative; align-self: end; margin: 20px; padding: 0; list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }

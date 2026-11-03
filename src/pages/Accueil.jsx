@@ -55,7 +55,7 @@ export default function Accueil() {
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
             <a href="#approche" className="bouton bouton--secondaire">Qui suis-je</a>
-            <Link to="/contact" className="bouton bouton--vermillon">M’écrire</Link>
+            <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
           </div>
         </div>
         <div className="heros__cadre">
