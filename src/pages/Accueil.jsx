@@ -1,4 +1,4 @@
-import photoHeros from '../assets/heros-squat-nb.jpg'
+import photoHeros from '../assets/portrait-contact.jpg'
 import portraitMarie from '../assets/portrait-marie.jpg'
 import photoEntreprises from '../assets/service-entreprises.jpg'
 import photoGroupes from '../assets/service-groupes.jpg'
@@ -46,17 +46,25 @@ export default function Accueil() {
   useTitre('Accueil')
   return (
     <>
-      {/* Haut de page : la photo de Marie en squat, en plein écran sous la barre de menu (transparente au-dessus) */}
-      <section className="heros">
-        <img className="heros__photo" src={photoHeros} alt="" />
+      {/* Haut de page : « Coach Marie » sur craie à gauche, la photo de Marie bras croisés à droite,
+          avec trois repères en bulles blanches posés en bas de la photo (sous la photo sur téléphone) */}
+      <section className="heros" aria-labelledby="heros-titre">
         <div className="heros__texte">
-          <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78)</p>
-          <h1 className="titre heros__titre">Marie Sillas</h1>
+          <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; en ligne</p>
+          <h1 id="heros-titre" className="titre heros__titre">Coach<br /><span className="mot-avant">Marie</span></h1>
           <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
           <div className="actions">
-            <a href="#approche" className="bouton bouton--clair">Qui suis-je</a>
+            <a href="#approche" className="bouton bouton--secondaire">Qui suis-je</a>
             <Link to="/contact" className="bouton bouton--vermillon">M’écrire</Link>
           </div>
+        </div>
+        <div className="heros__cadre">
+          <img className="heros__photo" src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
+          <ul className="heros__bulles">
+            <li><Picto nom="clock" taille={18} />60&nbsp;min par séance</li>
+            <li><Picto nom="kettlebell" taille={18} />Matériel fourni</li>
+            <li><Picto nom="map-pin" taille={18} />Déplacement inclus jusqu’à 20&nbsp;km</li>
+          </ul>
         </div>
       </section>
 

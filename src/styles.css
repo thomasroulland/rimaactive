@@ -200,7 +200,7 @@ main > section:nth-of-type(even):not(.page-contact) {
 /* clair : craie, sur une photo ou un fond encre */
 .bouton--clair { background: var(--craie); border-color: var(--craie); color: var(--encre); }
 .bouton--clair:hover { background: transparent; color: var(--craie); }
-.sur-encre .bouton--principal:hover, .heros .bouton--principal:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+.sur-encre .bouton--principal:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
 .bouton--compact { min-height: 42px; padding: 10px 22px; font-size: 15px; }
 
 .lien-fleche {
@@ -322,54 +322,36 @@ main > section:nth-of-type(even):not(.page-contact) {
 }
 
 /* ---------- Héros de l'accueil ---------- */
-/* La photo de Marie en plein écran, sous la barre de menu (qui est transparente au-dessus) ;
-   le texte en bas à gauche sur un voile encre. Le tout occupe exactement l'écran. */
+/* Sur craie : « Coach Marie » à gauche, la photo de Marie dans un cadre arrondi à droite, avec trois repères
+   en bulles blanches posés en bas à gauche de la photo. Le tout tient dans l'écran, sous la barre de menu. */
 .heros {
-  position: relative;
-  margin-top: calc(-1 * var(--hauteur-entete));
-  min-height: var(--ecran);
-  display: grid;
-  background: var(--encre);
-  overflow: hidden;
-}
-.heros__photo {
-  /* photo paysage en plein écran, calée en haut : la tête n'est jamais coupée */
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 0%;
-}
-/* Voile encre à gauche sous le texte, et en haut sous la barre de menu */
-.heros::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(22, 21, 20, 0.55), transparent 18%),
-    linear-gradient(90deg, rgba(22, 21, 20, 0.82) 0 22%, rgba(22, 21, 20, 0.35) 50%, transparent 68%);
-}
-.heros__texte {
-  position: relative;
-  z-index: 2;
-  align-self: end;
   box-sizing: border-box;
-  width: 100%;
+  min-height: calc(var(--ecran) - var(--hauteur-entete));
   max-width: calc(var(--largeur) + 2 * var(--gouttiere));
   margin: 0 auto;
-  padding: calc(var(--hauteur-entete) + 32px) var(--gouttiere) clamp(40px, calc(6 * var(--vw)), 72px);
+  padding: 12px var(--gouttiere) 28px;
+  display: grid;
+  gap: 40px;
 }
-.heros__titre { margin: 0; color: var(--craie); font-size: clamp(56px, calc(8.4 * var(--vw)), 120px); line-height: 0.95; letter-spacing: -0.045em; }
-.heros__surtitre { color: var(--jaune); margin-bottom: 14px; } /* jaune sur la photo sombre uniquement, jamais sur fond clair */
-.heros__ligne { margin: 20px 0 0; color: var(--craie); opacity: 0.92; }
-.heros .actions { margin-top: 32px; gap: 16px; }
-/* Téléphone : la photo est cadrée sur Marie, le voile passe du haut vers le bas */
-@media (max-width: 699px) {
-  .heros::before { background: linear-gradient(180deg, rgba(22, 21, 20, 0.5), rgba(22, 21, 20, 0.2) 35%, var(--voile-encre) 70%); }
-  .heros__photo { object-position: 40% 0%; }
+@media (min-width: 900px) {
+  .heros { grid-template-columns: 1fr 1fr; }
+}
+.heros__texte { display: grid; align-content: center; justify-items: start; }
+.heros__titre { margin: 0; font-size: clamp(64px, calc(8 * var(--vw)), 128px); line-height: 0.92; letter-spacing: -0.055em; }
+.heros__surtitre { color: var(--gris-chaud); margin-bottom: 18px; } /* jamais de jaune en texte sur fond clair */
+.heros__ligne { margin: 22px 0 0; }
+.heros .actions { margin-top: 28px; gap: 16px; }
+.heros .bouton--vermillon:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); } /* sur craie, le survol passe en encre */
+.heros__cadre { position: relative; border-radius: var(--arrondi-grand); overflow: hidden; display: grid; min-height: 360px; background: var(--encre); }
+.heros__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; }
+.heros__bulles { position: relative; align-self: end; margin: 20px; padding: 0; list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.heros__bulles li { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: var(--blanc); color: var(--encre); font-weight: 700; font-size: 14px; line-height: 20px; box-shadow: 0 1px 2px rgba(22, 21, 20, 0.06); }
+/* Téléphone : texte, puis photo, puis les bulles sous la photo pour ne pas cacher Marie */
+@media (max-width: 899px) {
+  .heros { min-height: 0; gap: 32px; padding-top: 24px; }
+  .heros__cadre { min-height: 0; overflow: visible; border-radius: 0; background: none; gap: 14px; }
+  .heros__photo { position: relative; inset: auto; height: 400px; border-radius: var(--arrondi-grand); }
+  .heros__bulles { margin: 0; }
 }
 
 /* ---------- Héros des pages ---------- */

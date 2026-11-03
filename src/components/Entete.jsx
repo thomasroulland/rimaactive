@@ -9,8 +9,8 @@ import { PAGES_MENU } from './liens.js'
 // clairs) ; dès qu'on défile, et sur les autres pages, elle passe en craie. Seules les couleurs changent.
 export default function Entete() {
   const { pathname } = useLocation()
-  // pages qui commencent par une photo plein cadre : l'accueil et les trois pages de formules
-  const surPhoto = useSurPhoto(['/', '/entreprises', '/communes', '/particuliers'].includes(pathname))
+  // pages qui commencent par une photo plein cadre : les trois pages de formules
+  const surPhoto = useSurPhoto(['/entreprises', '/communes', '/particuliers'].includes(pathname))
   const [ouvert, setOuvert] = useState(false)
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
   const ecrireVisible = useEcrireVisible(pathname === '/')
