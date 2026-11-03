@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hauts de page · 4 gabarits</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* Quatre gabarits de haut de page, dans la charte Rimaactive, avec des emplacements photo (fond gris) */
+body { min-height: 100vh; }
+.ph { position: relative; background: #b9b5ad; color: #57534E; display: grid; place-items: center; overflow: hidden; }
+.ph span { font: 700 12px/16px "Hanken Grotesk"; letter-spacing: .18em; text-transform: uppercase; padding: 8px 12px; border: 1px dashed #57534E; border-radius: 8px; }
+.ph--sombre { background: #3a3734; color: #c9c4ba; }
+.ph--sombre span { border-color: #c9c4ba; }
+.mot { color: var(--jaune); }
+.mot--clair { text-decoration: underline; text-decoration-color: var(--vermillon); text-decoration-thickness: .1em; text-underline-offset: .12em; }
+.bouton--vermillon { background: var(--vermillon); border-color: var(--vermillon); color: var(--encre); }
+.reperes { list-style: none; margin: 0; padding: 0; display: flex; gap: 32px; flex-wrap: wrap; }
+.reperes li { display: grid; gap: 2px; }
+.reperes b { font-weight: 900; font-size: 30px; line-height: 32px; letter-spacing: -.03em; }
+.reperes span { font-size: 14px; line-height: 20px; color: var(--gris); }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.bouton--clair { color: var(--encre); }
+.v { min-height: calc(100vh); display: flex; flex-direction: column; }
+
+/* 1 · Moitié / moitié : texte sur craie à gauche, grande photo à droite */
+.v1 { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 45px); }
+.v1 .g { display: flex; flex-direction: column; }
+
+.v1 .corps { margin: auto 0; padding: 32px var(--g); display: grid; gap: 22px; justify-items: start; }
+.v1 h1 { font-size: clamp(64px, 8vw, 128px); line-height: .9; letter-spacing: -.055em; }
+.v1 .ph { min-height: 100%; }
+.v1 .reperes { padding-top: 20px; border-top: 1px solid var(--filet); align-self: stretch; }
+
+/* 2 · Typographie géante : le nom en très grand sur toute la largeur, photo en vignette au centre */
+.v2 { background: var(--craie); }
+.v2 .corps { flex: 1; display: grid; grid-template-rows: auto 1fr auto; padding: 24px var(--g) 32px; gap: 20px; }
+.v2 .haut { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
+.v2 h1 { font-size: clamp(90px, 15.5vw, 280px); line-height: .82; letter-spacing: -.06em; text-align: center; position: relative; z-index: 1; }
+.v2 .centre { position: relative; display: grid; place-items: center; }
+.v2 .vignette { position: absolute; width: min(300px, 26vw); aspect-ratio: 4/5; border-radius: var(--arrondi); z-index: 2; transform: rotate(0deg); box-shadow: 0 20px 50px rgba(22,21,20,.2); }
+.v2 .bas { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+
+/* 3 · Fond encre et mosaïque : texte à gauche, trois emplacements photo en colonne à droite */
+.v3 { background: var(--encre); color: var(--craie); }
+.v3 .corps { flex: 1; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; padding: 24px var(--g) 40px; align-items: center; }
+.v3 .texte { display: grid; gap: 22px; justify-items: start; }
+.v3 h1 { font-size: clamp(60px, 7.5vw, 120px); line-height: .92; letter-spacing: -.055em; }
+.v3 .surtitre { color: var(--jaune); }
+.v3 .reperes span { color: rgba(244,243,239,.72); }
+.v3 .reperes { padding-top: 20px; border-top: 1px solid rgba(244,243,239,.2); align-self: stretch; }
+.v3 .mosaique { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: min(72vh, 620px); }
+.v3 .mosaique .ph { border-radius: var(--arrondi); }
+.v3 .mosaique .ph:first-child { grid-row: span 2; }
+
+/* 4 · Grande carte arrondie : la photo dans un cadre arrondi avec marge, le texte dans une carte craie posée dessus */
+.v4 { background: var(--craie); }
+.v4 .corps { flex: 1; position: relative; margin: 8px var(--g) 24px; border-radius: 24px; overflow: hidden; display: grid; }
+.v4 .ph { position: absolute; inset: 0; place-items: start center; padding-top: 28px; }
+.v4 .carte { position: relative; align-self: end; margin: 28px; max-width: 640px; background: var(--craie); border-radius: var(--arrondi); padding: 32px; display: grid; gap: 18px; justify-items: start; }
+.v4 h1 { font-size: clamp(54px, 6vw, 92px); line-height: .92; letter-spacing: -.05em; }
+.v4 .reperes-flottants { position: absolute; right: 28px; top: 28px; display: grid; gap: 10px; }
+.v4 .reperes-flottants li { list-style: none; background: var(--blanc); border-radius: 999px; padding: 10px 18px; font-weight: 700; font-size: 15px; display: flex; gap: 10px; align-items: center; }
+.v4 .reperes-flottants ul { margin: 0; padding: 0; display: grid; gap: 10px; }
+
+@media (max-width: 899px) {
+  .v1, .v3 .corps { grid-template-columns: 1fr; }
+  .v4 .ph { place-items: center; padding-top: 0; }
+  .v1 .ph { min-height: 320px; order: 2; }
+  .v2 .haut, .v2 .bas { flex-direction: column; align-items: start; }
+  .v2 .vignette { position: static; width: 70%; margin: -20px auto 0; }
+  .v2 .centre { display: block; }
+  .v3 .mosaique { height: 360px; }
+  .v4 .carte { margin: 12px; padding: 22px; }
+  .v4 .reperes-flottants { display: none; }
+  .v4 .corps { min-height: 700px; }
+  .reperes { gap: 18px; }
+}
+</style></head>
+<body>
+<script src="pictos.js"></script><script src="commun.js"></script>
+<script>
+const sur = 'Coach sportive diplômée · Houdan (78) &amp; en ligne';
+const acc = 'Un corps fort et mobile grâce à une pratique fonctionnelle';
+const boutons = `<div class="actions"><a class="bouton bouton--clair" style="border-color:var(--encre)">Qui suis-je</a><a class="bouton bouton--vermillon">M’écrire</a></div>`;
+const boutonsSombre = `<div class="actions"><a class="bouton bouton--clair">Qui suis-je</a><a class="bouton bouton--vermillon">M’écrire</a></div>`;
+const reperes = `<ul class="reperes"><li><b>60 min</b><span>par séance, matériel fourni</span></li><li><b>3</b><span>formules : entreprises, duo et groupes, individuel</span></li><li><b>20 km</b><span>de déplacement inclus autour de Houdan</span></li></ul>`;
+const ph = (t, sombre) => `<div class="ph ${sombre ? 'ph--sombre' : ''}"><span>${t}</span></div>`;
+const v = new URLSearchParams(location.search).get('v') || '1';
+document.body.innerHTML = {
+  1: `${barre('Accueil')}<section class="v1"><div class="g"><div class="corps"><p class="surtitre">${sur}</p><h1 class="titre">Coach<br><span class="mot--clair">Marie</span></h1><p class="accroche">${acc}</p>${boutons}${reperes}</div></div>${ph('Emplacement photo')}</section>`,
+  2: `<section class="v v2">${barre('Accueil')}<div class="corps"><div class="haut"><p class="surtitre">${sur}</p><p class="accroche" style="max-width:30ch;text-align:right">${acc}</p></div><div class="centre"><h1 class="titre">Coach <span class="mot--clair">Marie</span></h1><div class="vignette ph"><span>Emplacement photo</span></div></div><div class="bas">${reperes}${boutons}</div></div></section>`,
+  3: `<section class="v v3">${barre('Accueil', true)}<div class="corps"><div class="texte"><p class="surtitre">${sur}</p><h1 class="titre">Coach <span class="mot">Marie</span></h1><p class="accroche">${acc}</p>${boutonsSombre}${reperes}</div><div class="mosaique">${ph('Photo 1', true)}${ph('Photo 2', true)}${ph('Photo 3', true)}</div></div></section>`,
+  4: `<section class="v v4">${barre('Accueil')}<div class="corps">${ph('Emplacement photo · plein cadre')}<div class="reperes-flottants"><ul><li>${picto('clock',20)}60 min par séance</li><li>${picto('kettlebell',20)}Matériel fourni</li><li>${picto('map-pin',20)}Déplacement inclus jusqu’à 20 km</li></ul></div><div class="carte"><p class="surtitre">${sur}</p><h1 class="titre">Coach <span class="mot--clair">Marie</span></h1><p class="accroche">${acc}</p>${boutons}</div></div></section>`,
+}[v];
+</script></body></html>

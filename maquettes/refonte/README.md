@@ -10,3 +10,4 @@ Ce sont des maquettes statiques, hors du site : elles chargent les polices et le
 - `m4.html` Mosaïque : accueil en grille de tuiles, tuile jaune « Contactez-moi ».
 
 Chaque maquette a trois pages : `?p=accueil`, `?p=formules`, `?p=contact`.
+- `heros.html?v=1…4` : quatre gabarits de haut de page (novembre 2026), emplacements photo gris.
