@@ -79,7 +79,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    La rubrique « Ma boîte à outils » (carrousel) est supprimée (BoiteOutils.jsx retiré).
 
 **Bloc du bas** (`Pied.jsx`), encre, sur toutes les pages sauf M'écrire : sur une seule ligne
-« Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans / les Yvelines (78),
+« Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan, je me déplace dans les Yvelines (78), /
 l'Eure-et-Loir (28) et l'Eure (27). », l'e-mail, puis Instagram / Facebook / TikTok en bulles (voir `RESEAUX` dans `liens.js`) ; sous un filet,
 le logo, « © année Rimaactive », Mentions légales, Confidentialité. Ni menu des pages ni bouton « M'écrire »
 (à la demande de Marie : ils sont déjà en haut). Sur ordinateur, « Basée à… », l'e-mail et le texte des bulles

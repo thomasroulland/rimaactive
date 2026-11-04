@@ -17,8 +17,8 @@ export default function Pied({ seulementMentions = false }) {
               <h2 id="contact-titre" className="titre titre--section">Contactez-moi</h2>
             </div>
             <p className="pied__lieu">
-              Basée à Houdan (78), je me déplace dans{' '}<br className="saut" />
-              les Yvelines (78), l’Eure-et-Loir (28) et l’Eure (27).
+              Basée à Houdan, je me déplace dans les Yvelines (78),{' '}<br className="saut" />
+              l’Eure-et-Loir (28) et l’Eure (27).
             </p>
             <p className="mention pied__m-email">E-mail</p>
             <a className="pied__email" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
