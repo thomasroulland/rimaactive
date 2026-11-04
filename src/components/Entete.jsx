@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import logoCraie from '../assets/rimaactive-mot-craie.svg'
 import logoEncre from '../assets/rimaactive-mot-encre.svg'
 import { PAGES_MENU } from './liens.js'
+import Picto from './Picto.jsx'
 
 // Barre de menu : logo « rimaactive » à gauche, les pages en bulles au centre, « M'écrire » à droite.
 // Sur l'accueil et les pages de formules, tant qu'on n'a pas défilé, elle se fond dans la photo (logo et textes
@@ -41,6 +42,11 @@ export default function Entete() {
         </nav>
         <div className="entete__droite">
           <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>
+          {/* Espace de connexion (futurs coachings : tableau de bord, programme) ; sur ordinateur il se place dans
+              la marge à droite de « M'écrire », qui garde ainsi sa place */}
+          <Link to="/espace" className="entete__compte" aria-label="Mon espace" title="Mon espace">
+            <Picto nom="user-circle" taille={22} />
+          </Link>
           <button
             type="button"
             className="menu-bouton"

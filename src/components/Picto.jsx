@@ -26,6 +26,16 @@ export default function Picto({ nom, taille = 24 }) {
       </svg>
     )
   }
+  // silhouette dans un rond (espace de connexion), au trait, même épaisseur que Phosphor Light
+  if (nom === 'user-circle') {
+    return (
+      <svg className="picto" width={taille} height={taille} viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="128" cy="128" r="96" />
+        <circle cx="128" cy="120" r="40" />
+        <path d="M63.8 199.4a72 72 0 0 1 128.4 0" />
+      </svg>
+    )
+  }
   // ordinateur portable au trait (présentiel & en ligne), même épaisseur que Phosphor Light
   if (nom === 'laptop') {
     return (

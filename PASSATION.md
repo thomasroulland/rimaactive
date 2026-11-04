@@ -79,10 +79,16 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    La rubrique « Ma boîte à outils » (carrousel) est supprimée (BoiteOutils.jsx retiré).
 
 **Bloc du bas** (`Pied.jsx`), encre, sur toutes les pages sauf M'écrire : sur une seule ligne
-« Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans les Yvelines, l'Eure-et-Loir
-et l'Eure. », l'e-mail, puis Instagram / Facebook / TikTok en bulles (voir `RESEAUX` dans `liens.js`) ; sous un filet,
+« Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans / les Yvelines (78),
+l'Eure-et-Loir (28) et l'Eure (27). », l'e-mail, puis Instagram / Facebook / TikTok en bulles (voir `RESEAUX` dans `liens.js`) ; sous un filet,
 le logo, « © année Rimaactive », Mentions légales, Confidentialité. Ni menu des pages ni bouton « M'écrire »
-(à la demande de Marie : ils sont déjà en haut).
+(à la demande de Marie : ils sont déjà en haut). Sur ordinateur, « Basée à… », l'e-mail et le texte des bulles
+sont alignés sur la même ligne.
+
+**Mon espace** (`/espace`, `Espace.jsx`) : icône ronde (silhouette) en haut à droite, dans la marge à droite de
+« M'écrire » sur ordinateur (« M'écrire » ne bouge pas), à côté de « Menu » sur téléphone. Pour l'instant, page
+d'attente « Bientôt disponible » (texte de Claude, à valider) : l'espace de coaching (connexion, tableau de bord,
+programme) reste à construire.
 
 **Pages Entreprises / Duo et groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
 `src/components/PageService.jsx`, données dans `src/pages/*.jsx`), refaites le 31 octobre 2026 (mélange des

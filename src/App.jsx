@@ -8,6 +8,7 @@ import Particuliers from './pages/Particuliers.jsx'
 import Contact from './pages/Contact.jsx'
 import MentionsLegales from './pages/MentionsLegales.jsx'
 import Confidentialite from './pages/Confidentialite.jsx'
+import Espace from './pages/Espace.jsx'
 
 function RemonterEnHaut() {
   const { pathname } = useLocation()
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="mentions-legales" element={<MentionsLegales />} />
           <Route path="confidentialite" element={<Confidentialite />} />
+          <Route path="espace" element={<Espace />} />
           <Route path="*" element={<Accueil />} />
         </Route>
       </Routes>

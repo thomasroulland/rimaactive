@@ -12,25 +12,24 @@ export default function Pied({ seulementMentions = false }) {
       <div className="conteneur">
         {!seulementMentions && (
           <div className="pied__ligne">
-            <div>
+            <div className="pied__tete">
               <p className="surtitre">Besoin d’en savoir plus ?</p>
               <h2 id="contact-titre" className="titre titre--section">Contactez-moi</h2>
-              <p className="pied__lieu">Basée à Houdan (78), je me déplace dans les Yvelines, l’Eure-et-Loir et l’Eure.</p>
             </div>
-            <div>
-              <p className="mention">E-mail</p>
-              <a className="pied__email" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-            </div>
-            <div>
-              <p className="mention">Suivez-moi</p>
-              <ul className="pied__reseaux">
-                {RESEAUX.map((reseau) => (
-                  <li key={reseau.label}>
-                    <a href={reseau.href} target="_blank" rel="noopener noreferrer">{reseau.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <p className="pied__lieu">
+              Basée à Houdan (78), je me déplace dans{' '}<br className="saut" />
+              les Yvelines (78), l’Eure-et-Loir (28) et l’Eure (27).
+            </p>
+            <p className="mention pied__m-email">E-mail</p>
+            <a className="pied__email" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+            <p className="mention pied__m-reseaux">Suivez-moi</p>
+            <ul className="pied__reseaux">
+              {RESEAUX.map((reseau) => (
+                <li key={reseau.label}>
+                  <a href={reseau.href} target="_blank" rel="noopener noreferrer">{reseau.label}</a>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         <div className="pied__bas">
