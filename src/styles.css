@@ -978,8 +978,13 @@ main > section.methode:nth-of-type(n) { --fond-rubrique: var(--blanc); backgroun
 /* grands numéros vermillon (grand texte : 3,4:1 sur blanc) */
 .methode__numero { color: var(--vermillon); font-weight: 900; font-size: 36px; line-height: 36px; letter-spacing: -0.04em; }
 .methode__titre { margin: 0; font-weight: 900; font-size: 22px; line-height: 26px; letter-spacing: -0.02em; }
+/* Chaque titre tient sur une seule ligne : la taille suit la largeur de la colonne (22 px au plus, la même pour les quatre) */
+.methode__principes li { container-type: inline-size; }
+.methode__titre { white-space: nowrap; font-size: min(22px, 7.9cqi); }
 .methode__principes p { margin: 0; font-size: 16px; line-height: 26px; color: var(--gris-chaud); }
-@media (min-width: 900px) { .methode__principes { grid-template-columns: repeat(4, 1fr); } }
+/* quatre colonnes sur grand écran ; deux sur tablette, pour que les titres gardent une taille lisible */
+@media (min-width: 640px) { .methode__principes { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1200px) { .methode__principes { grid-template-columns: repeat(4, 1fr); } }
 /* Mot mis en avant en vermillon (grand titre sur blanc, 3,4:1) */
 .methode .mot-avant { text-decoration: none; color: var(--vermillon); }
 /* Vos objectifs : une ligne de bulles jaunes centrée sous les principes */
