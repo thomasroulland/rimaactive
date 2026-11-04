@@ -336,7 +336,7 @@ main > section:nth-of-type(even):not(.page-contact) {
 @media (min-width: 900px) {
   .heros { grid-template-columns: 1fr 1fr; }
 }
-.heros__texte { display: grid; align-content: center; justify-items: start; }
+.heros__texte { display: grid; align-content: center; justify-items: start; padding-top: calc(var(--ecran) * 0.08); } /* un peu plus bas que le centre */
 .heros__titre { margin: 0; font-size: clamp(52px, calc(5.6 * var(--vw)), 92px); line-height: 0.95; letter-spacing: -0.05em; }
 .heros__surtitre { color: var(--gris-chaud); margin-bottom: 18px; } /* jamais de jaune en texte sur fond clair */
 .heros__ligne { margin: 22px 0 0; }
@@ -565,14 +565,11 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .pied a:hover { color: var(--jaune); }
 .pied .surtitre { color: var(--jaune); }
 .pied .titre { color: var(--craie); }
-.pied__appel { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 48px; padding-bottom: clamp(28px, calc(3.5 * var(--vw)), 48px); }
-.pied__appel .titre { margin: 4px 0 0; }
+.pied__ligne { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px 48px; padding-bottom: clamp(28px, calc(3.5 * var(--vw)), 48px); }
+.pied__ligne .titre { margin: 4px 0 0; }
 .pied__lieu { margin: 12px 0 0; max-width: 46ch; color: rgba(244, 243, 239, 0.78); }
-.pied .pied__bouton, .pied .pied__bouton:hover { color: var(--encre); }
-.pied .pied__bouton:hover { background: var(--craie); border-color: var(--craie); }
-.pied__contacts { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 48px; padding-block: clamp(24px, calc(3 * var(--vw)), 40px); border-top: 1px solid var(--filet-clair); }
-.pied__contacts .mention { color: rgba(244, 243, 239, 0.72); margin-bottom: 10px; }
-.pied__email { font-weight: 700; font-size: 20px; line-height: 28px; overflow-wrap: anywhere; }
+.pied__ligne .mention { color: rgba(244, 243, 239, 0.72); margin-bottom: 10px; }
+.pied__email { font-weight: 700; font-size: 18px; line-height: 26px; overflow-wrap: anywhere; }
 .pied__reseaux { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .pied__reseaux a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 1px solid rgba(244, 243, 239, 0.4); border-radius: 999px; font-weight: 700; font-size: 15px; transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
 .pied .pied__reseaux a:hover { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }

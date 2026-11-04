@@ -55,10 +55,10 @@ En haut de l'accueil, la barre est transparente sur la photo ; dès qu'on défil
 elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs changent. Téléphone : bouton « Menu ».
 
 **Accueil** (`src/pages/Accueil.jsx`), dans l'ordre :
-1. Haut de page (choisi par Marie, novembre 2026) : sur craie, « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) & EN LIGNE »
+1. Haut de page (choisi par Marie, novembre 2026) : sur craie, « COACH SPORTIVE DIPLÔMÉE · HOUDAN (78) & ALENTOURS »
    en gris, « Coach / Marie » en grand (Marie souligné vermillon), accroche en italique, boutons « Qui suis-je »
    (contour encre, vers #approche) et « M'écrire » (jaune). À droite, la photo bras croisés (`portrait-contact.jpg`)
-   dans un cadre arrondi, avec trois bulles blanches (60 min par séance, Matériel fourni, Déplacement inclus jusqu'à 20 km)
+   dans un cadre arrondi, avec trois bulles blanches (Session de 60 min, Matériel fourni, Présentiel & en ligne)
    en bas à gauche ; sur téléphone, les bulles passent sous la photo. La barre de menu reste craie sur l'accueil.
    Le « M'écrire » de la barre est caché sur l'accueil jusqu'à la rubrique « Moi c'est Marie » ; « Accueil » ramène en haut.
 2. « Moi c'est Marie » (ancre #approche, novembre 2026) : portrait entier (`portrait-marie.jpg`) et encadré arrondi de
@@ -71,17 +71,18 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    vermillon), 4 principes numérotés en vermillon, puis « Vos objectifs » en 4 bulles jaunes : Transformation &
    Silhouette, Performance & Force, Condition physique & Endurance, Mental & Discipline (donnés par Marie).
 3. Mes services (#accompagnement), fond craie foncé : « Mes services » puis « Trois façons de s'entraîner avec moi » sur
-   une ligne, repères (60 min par séance, Matériel fourni, Déplacement inclus jusqu'à 20 km) ; 3 cartes en bulles
+   une ligne, repères (Session de 60 min, Matériel fourni, Présentiel & en ligne) ; 3 cartes en bulles
    blanches qui se soulèvent au survol : photo, titre, « 4 à 16 personnes » / « 2 à 10 personnes » / « Domicile · Salle ·
    En ligne », phrase, prix « à partir de » et flèche ronde. Sur téléphone et tablette, cartes compactes.
 4. « Les questions qu'on me pose » (#questions), fond blanc : « Avant de vous lancer » puis le titre sur une ligne ;
    6 questions qui s'ouvrent au clic (réponses écrites par Claude à partir du site, à faire relire par Marie).
    La rubrique « Ma boîte à outils » (carrousel) est supprimée (BoiteOutils.jsx retiré).
 
-**Bloc du bas** (`Pied.jsx` + `AppelContact.jsx`), encre, sur toutes les pages sauf M'écrire :
-à gauche « Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans les
-Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite l'e-mail et « Instagram / Facebook / TikTok » (voir `RESEAUX` dans `liens.js`) ;
-puis les mentions. Plus de menu des pages dans le bas (retiré à la demande de Marie, il est déjà en haut).
+**Bloc du bas** (`Pied.jsx`), encre, sur toutes les pages sauf M'écrire : sur une seule ligne
+« Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans les Yvelines, l'Eure-et-Loir
+et l'Eure. », l'e-mail, puis Instagram / Facebook / TikTok en bulles (voir `RESEAUX` dans `liens.js`) ; sous un filet,
+le logo, « © année Rimaactive », Mentions légales, Confidentialité. Ni menu des pages ni bouton « M'écrire »
+(à la demande de Marie : ils sont déjà en haut).
 
 **Pages Entreprises / Duo et groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
 `src/components/PageService.jsx`, données dans `src/pages/*.jsx`), refaites le 31 octobre 2026 (mélange des

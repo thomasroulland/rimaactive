@@ -50,9 +50,9 @@ export default function Accueil() {
           avec trois repères en bulles blanches posés en bas de la photo (sous la photo sur téléphone) */}
       <section className="heros" aria-labelledby="heros-titre">
         <div className="heros__texte">
-          <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; en ligne</p>
+          <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
           <h1 id="heros-titre" className="titre heros__titre">Coach<br /><span className="mot-avant">Marie</span></h1>
-          <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle</p>
+          <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
           <div className="actions">
             <a href="#approche" className="bouton bouton--secondaire">Qui suis-je</a>
             <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
