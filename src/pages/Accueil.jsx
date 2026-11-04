@@ -148,7 +148,7 @@ function FlecheDiagonale() {
 
 // Quatre principes repris de l'ancien texte « Mon approche » et du contexte de marque (validés par Marie)
 const PRINCIPES = [
-  ['Le mouvement d’abord', 'Des séances construites à partir des mouvements fondamentaux, pour gagner en mobilité, en force et en autonomie.'],
+  ['Le mouvement d’abord', 'Je décompose les mouvements et vous donne des repères simples pour bien les réaliser.\nLes exercices sont adaptés à vos capacités pour vous aider à gagner en aisance.'],
   ['Moins, mais mieux', 'Des séances d’une heure, à la maison, dehors ou en salle, adaptées à votre niveau.'],
   ['Le défi plutôt que la routine', 'EMOM, AMRAP, density, complex, circuit\u00a0: du volume global, à l’opposé du «\u00a03\u00a0séries de 12\u00a0».'],
   ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et le plaisir de bouger s’installe.'],
@@ -171,7 +171,7 @@ function Methode() {
             <li key={titre}>
               <span className="methode__numero">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="methode__titre">{titre}</h3>
-              <p>{texte}</p>
+              <p className="methode__texte">{texte}</p>
             </li>
           ))}
         </ol>

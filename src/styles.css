@@ -1060,3 +1060,6 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 }
 .services--v2 .service:hover .titre { color: var(--encre); }
 .espace__bouton { margin-top: 24px; }
+
+/* Ma méthode : le texte d'un principe peut passer à la ligne là où Marie l'a voulu (\n) */
+.methode__texte { white-space: pre-line; }
