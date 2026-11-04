@@ -26,6 +26,15 @@ export default function Picto({ nom, taille = 24 }) {
       </svg>
     )
   }
+  // ordinateur portable au trait (présentiel & en ligne), même épaisseur que Phosphor Light
+  if (nom === 'laptop') {
+    return (
+      <svg className="picto" width={taille} height={taille} viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="46" y="56" width="164" height="112" rx="10" />
+        <path d="M22 200h212" />
+      </svg>
+    )
+  }
   return (
     <svg className="picto" width={taille} height={taille} viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
       <path d={TRACES[nom]} />

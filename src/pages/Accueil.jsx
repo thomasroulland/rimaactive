@@ -61,9 +61,9 @@ export default function Accueil() {
         <div className="heros__cadre">
           <img className="heros__photo" src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
           <ul className="heros__bulles">
-            <li><Picto nom="clock" taille={18} />60&nbsp;min par séance</li>
+            <li><Picto nom="clock" taille={18} />Session de 60&nbsp;min</li>
             <li><Picto nom="kettlebell" taille={18} />Matériel fourni</li>
-            <li><Picto nom="map-pin" taille={18} />Déplacement inclus jusqu’à 20&nbsp;km</li>
+            <li><Picto nom="laptop" taille={18} />Présentiel &amp; en ligne</li>
           </ul>
         </div>
       </section>
@@ -89,8 +89,8 @@ export default function Accueil() {
               devenir coach.
             </p>
             <p className="texte">
-              Avec moi, tout commence par un échange sur vos envies et vos contraintes.<br className="saut" />
-              Ensemble, on construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.
+              Avec moi, tout commence par un échange sur vos envies et vos contraintes. Ensemble,<br className="saut" />
+              on construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.
               Mon objectif&nbsp;? Vous aider à gagner en force et en mobilité avec le plaisir de relever de nouveaux défis.
             </p>
             <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
@@ -107,11 +107,6 @@ export default function Accueil() {
               <p className="surtitre">Mes services</p>
               <h2 id="services-titre" className="titre titre--section">Trois façons de s’<span className="mot-avant">entraîner</span> avec moi</h2>
             </div>
-            <ul className="services__reperes">
-              <li><Picto nom="clock" taille={22} />60&nbsp;min par séance</li>
-              <li><Picto nom="kettlebell" taille={22} />Matériel fourni</li>
-              <li><Picto nom="map-pin" taille={22} />Déplacement inclus jusqu’à 20&nbsp;km</li>
-            </ul>
           </div>
           {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, puis le prix « à partir de »
               (fiche tarifs) et une flèche ronde, qui passe en jaune au survol.
@@ -169,7 +164,7 @@ function Methode() {
       <div className="conteneur">
         <div className="methode__entete">
           <p className="surtitre">Ma méthode</p>
-          <h2 id="methode-titre" className="titre titre--section">Pourquoi ça <span className="mot-avant">marche</span></h2>
+          <h2 id="methode-titre" className="titre titre--section">Pourquoi ça <span className="mot-avant">marche</span>&nbsp;?</h2>
         </div>
         <ol className="methode__principes">
           {PRINCIPES.map(([titre, texte], i) => (
@@ -207,7 +202,7 @@ function Questions() {
       <div className="conteneur conteneur--etroit">
         <div className="questions__entete">
           <p className="surtitre">Avant de vous lancer</p>
-          <h2 id="questions-titre" className="titre titre--section questions__titre">Les questions qu’on me <span className="mot-avant">pose</span></h2>
+          <h2 id="questions-titre" className="titre titre--section questions__titre">Les <span className="mot-avant">questions</span> qu’on me pose</h2>
         </div>
         <div className="questions__liste">
           {QUESTIONS.map(([q, r]) => (

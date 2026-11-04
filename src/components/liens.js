@@ -14,10 +14,10 @@ export const CONTACT = {
   email: 'marie.sillas.coaching@outlook.com',
 }
 
-// Réseaux sociaux (Instagram @rimaactive ; Facebook et LinkedIn demandés par Marie le 30 octobre 2026).
-// Sans adresse (href: null), le nom s'affiche sans lien en attendant que Marie la donne.
+// Réseaux sociaux de Rimaactive (Instagram, Facebook et TikTok @rimaactive, demandés par Marie le 4 novembre 2026 ;
+// LinkedIn retiré à sa demande). Adresses à confirmer par Marie : elles n'ont pas pu être ouvertes pour vérification.
 export const RESEAUX = [
   { label: 'Instagram', href: 'https://www.instagram.com/rimaactive/' },
-  { label: 'Facebook', href: null },
-  { label: 'LinkedIn', href: null },
+  { label: 'Facebook', href: 'https://www.facebook.com/rimaactive' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@rimaactive' },
 ]

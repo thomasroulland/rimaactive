@@ -337,7 +337,7 @@ main > section:nth-of-type(even):not(.page-contact) {
   .heros { grid-template-columns: 1fr 1fr; }
 }
 .heros__texte { display: grid; align-content: center; justify-items: start; }
-.heros__titre { margin: 0; font-size: clamp(64px, calc(8 * var(--vw)), 128px); line-height: 0.92; letter-spacing: -0.055em; }
+.heros__titre { margin: 0; font-size: clamp(52px, calc(5.6 * var(--vw)), 92px); line-height: 0.95; letter-spacing: -0.05em; }
 .heros__surtitre { color: var(--gris-chaud); margin-bottom: 18px; } /* jamais de jaune en texte sur fond clair */
 .heros__ligne { margin: 22px 0 0; }
 .heros .actions { margin-top: 28px; gap: 16px; }
@@ -989,12 +989,10 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); -
 /* sauts de ligne choisis par Marie : seulement sur grand écran */
 @media (max-width: 1099px) { br.saut { display: none; } }
 
-/* ---------- Mes services : en-tête, repères, cartes en bulles blanches ---------- */
+/* ---------- Mes services : en-tête, cartes en bulles blanches ---------- */
 .services--v2 .services__entete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 40px; margin-bottom: 22px; }
 .services--v2 .services__entete .surtitre { margin: 0 0 8px; }
 .services--v2 .services__entete .titre { margin: 0; }
-.services__reperes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 700; font-size: 15px; line-height: 22px; }
-.services__reperes li { display: inline-flex; align-items: center; gap: 8px; }
 .services--v2 .service { border-radius: var(--arrondi); transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease, background-color 0.35s ease; }
 @media (hover: hover) { .services--v2 .service:hover { transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { .services--v2 .service, .services--v2 .service:hover { transition: none; transform: none; } }
@@ -1012,6 +1010,10 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); -
 main > section.services:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); background: var(--craie-fonce); }
 main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); background: var(--blanc); }
 .question { background: var(--craie); }
+/* Les questions se soulèvent au survol, comme les cartes de Mes services */
+.question { transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease; }
+@media (hover: hover) { .question:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(22, 21, 20, 0.12); } }
+@media (prefers-reduced-motion: reduce) { .question, .question:hover { transition: none; transform: none; } }
 
 /* Mes services (maquette) : chaque carte dans une bulle blanche qui se soulève au survol */
 .services--v2 .service { padding: 12px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.06); }

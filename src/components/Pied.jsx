@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 import PresentationContact from './AppelContact.jsx'
-import { PAGES, CONTACT, RESEAUX } from './liens.js'
+import { CONTACT, RESEAUX } from './liens.js'
 
 // Bloc encre en bas de chaque page : « Contactez-moi » à gauche,
-// le menu, l'e-mail et Instagram à droite, puis les mentions. Sur la page M'écrire, qui reprend
+// l'e-mail et les réseaux à droite, puis les mentions. Sur la page M'écrire, qui reprend
 // déjà « Contactez-moi », il ne reste que la ligne des mentions.
 export default function Pied({ seulementMentions = false }) {
   return (
@@ -13,11 +13,6 @@ export default function Pied({ seulementMentions = false }) {
           <div className="pied__grille">
             <PresentationContact />
             <div className="pied__infos">
-              <nav className="pied__menu" aria-label="Pied de page">
-                {PAGES.map((page) => (
-                  <Link key={page.to} to={page.to}>{page.label}</Link>
-                ))}
-              </nav>
               <div>
                 <p className="mention">E-mail</p>
                 <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>

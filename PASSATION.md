@@ -16,7 +16,7 @@ Mis à jour le 31 octobre 2026 (pages de formules et page M'écrire refaites, mi
 ## 2. Règles à ne jamais enfreindre
 
 - **Aucun numéro de téléphone** de Marie sur le site.
-- E-mail : **marie.sillas.coaching@outlook.com**. Réseaux : **Instagram @rimaactive, Facebook, LinkedIn** (ajoutés par Marie le 30 octobre 2026 ; adresses Facebook et LinkedIn à demander). Pas de TikTok.
+- E-mail : **marie.sillas.coaching@outlook.com**. Réseaux : **Instagram, Facebook et TikTok, tous @rimaactive** (4 novembre 2026 ; LinkedIn retiré à la demande de Marie ; adresses Facebook et TikTok à confirmer par Marie).
 - **Vouvoiement** partout sur le site.
 - **Ne rien inventer** : ni prix, ni témoignage, ni chiffre, ni diplôme. Les textes écrits par Claude sont signalés à Marie pour validation.
 - Une majuscule au début des titres, c'est tout (pas de titres tout en capitales). Pas d'émoji.
@@ -80,8 +80,8 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
 
 **Bloc du bas** (`Pied.jsx` + `AppelContact.jsx`), encre, sur toutes les pages sauf M'écrire :
 à gauche « Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan (78), je me déplace dans les
-Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite le menu, l'e-mail, « Instagram / Facebook / LinkedIn »
-(Facebook et LinkedIn sans lien en attendant leurs adresses, voir `RESEAUX` dans `liens.js`) ; puis les mentions.
+Yvelines, l'Eure-et-Loir et l'Eure. » ; à droite l'e-mail et « Instagram / Facebook / TikTok » (voir `RESEAUX` dans `liens.js`) ;
+puis les mentions. Plus de menu des pages dans le bas (retiré à la demande de Marie, il est déjà en haut).
 
 **Pages Entreprises / Duo et groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
 `src/components/PageService.jsx`, données dans `src/pages/*.jsx`), refaites le 31 octobre 2026 (mélange des
@@ -146,7 +146,7 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 ## 7. Questions ouvertes à reposer à Marie
 
 1. **Nom de domaine** (Marie doit l'acheter) : ensuite ajouter og:image et og:url dans `index.html`.
-2. Adresses de ses pages **Facebook** et **LinkedIn** (à mettre dans `RESEAUX`, `src/components/liens.js`).
+2. Confirmer les adresses **Facebook** et **TikTok** @rimaactive (dans `RESEAUX`, `src/components/liens.js`).
 3. Brancher l'envoi du formulaire de contact (Formspree ou autre) ?
 4. Textes repris de sa maquette, à confirmer : phrase de la case d'accord du formulaire.
 5. Courte présentation « qui je suis » : elle n'a pas encore donné de texte (diplôme, parcours).
