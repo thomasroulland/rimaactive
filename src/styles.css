@@ -554,7 +554,7 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .presentation-contact__email a { color: var(--encre); font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
 .presentation-contact__email a:hover { text-decoration: underline; }
 
-/* ---------- Pied de page (encre) : « Contactez-moi » à gauche, menu et contacts à droite, puis les mentions ---------- */
+/* ---------- Pied de page (encre) : Contactez-moi + bouton, puis e-mail et réseaux, puis logo et mentions ---------- */
 .pied {
   background: var(--encre);
   color: var(--craie);
@@ -565,31 +565,35 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .pied a:hover { color: var(--jaune); }
 .pied .surtitre { color: var(--jaune); }
 .pied .titre { color: var(--craie); }
-.pied__grille { display: grid; gap: 48px 64px; }
-@media (min-width: 900px) { .pied__grille { grid-template-columns: 1fr 1fr; align-items: start; } }
-.pied__infos { display: grid; gap: 28px; align-content: start; }
-.pied__infos .mention { color: rgba(244, 243, 239, 0.72); margin-bottom: 6px; }
-.pied__infos a { font-weight: 700; overflow-wrap: anywhere; }
-.pied__menu { display: flex; flex-wrap: wrap; gap: 8px 28px; padding-bottom: 24px; border-bottom: 1px solid var(--filet-clair); }
-.pied__menu a { font-weight: 500; }
-.pied__reseaux { margin: 0; font-weight: 700; }
-.pied__reseau-attente { color: rgba(244, 243, 239, 0.72); }
+.pied__appel { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 48px; padding-bottom: clamp(28px, calc(3.5 * var(--vw)), 48px); }
+.pied__appel .titre { margin: 4px 0 0; }
+.pied__lieu { margin: 12px 0 0; max-width: 46ch; color: rgba(244, 243, 239, 0.78); }
+.pied .pied__bouton, .pied .pied__bouton:hover { color: var(--encre); }
+.pied .pied__bouton:hover { background: var(--craie); border-color: var(--craie); }
+.pied__contacts { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 48px; padding-block: clamp(24px, calc(3 * var(--vw)), 40px); border-top: 1px solid var(--filet-clair); }
+.pied__contacts .mention { color: rgba(244, 243, 239, 0.72); margin-bottom: 10px; }
+.pied__email { font-weight: 700; font-size: 20px; line-height: 28px; overflow-wrap: anywhere; }
+.pied__reseaux { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.pied__reseaux a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 1px solid rgba(244, 243, 239, 0.4); border-radius: 999px; font-weight: 700; font-size: 15px; transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
+.pied .pied__reseaux a:hover { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
 .pied__bas {
-  margin-top: clamp(40px, calc(5 * var(--vw)), 64px);
   border-top: 1px solid var(--filet-clair);
   padding-top: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: center;
   gap: 8px 24px;
   font-size: 14px;
   color: rgba(244, 243, 239, 0.72);
 }
+.pied__logo { height: 18px; width: auto; display: block; }
+.pied__bas nav { margin-left: auto; }
 .pied__bas nav { display: flex; gap: 24px; }
 /* Page M'écrire : seulement la ligne des mentions, sur craie */
 .pied--mentions { background: var(--craie); color: var(--gris-chaud); padding-top: 0; }
 .pied--mentions a { color: var(--gris-chaud); }
 .pied--mentions a:hover { color: var(--encre); }
+.pied--mentions .pied__bas nav { margin-left: 0; }
 .pied--mentions .pied__bas { margin-top: 0; border-top-color: var(--filet); color: var(--gris-chaud); justify-content: center; }
 
 /* ---------- Page M'écrire (maquette 2) : la photo de Marie à gauche ; « Contactez-moi », l'e-mail et le formulaire à droite ---------- */
@@ -716,7 +720,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 @media (min-width: 900px) {
   .pied { padding-block: clamp(40px, calc(var(--ecran) * 0.08), 72px) 20px; }
   .pied--mentions { padding-top: 0; }
-  .pied__bas { margin-top: clamp(28px, calc(var(--ecran) * 0.05), 48px); padding-top: 16px; }
+  .pied__bas { padding-top: 16px; }
 }
 
 /* Petits portables : la photo des cartes « Mon accompagnement » se réduit un peu pour que la rubrique tienne dans un écran */
