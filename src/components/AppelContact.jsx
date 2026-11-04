@@ -6,7 +6,7 @@ export default function PresentationContact({ titre: Titre = 'h2', avecEmail = f
     <div className="presentation-contact">
       <p className="surtitre">Besoin d’en savoir plus ?</p>
       <Titre id="contact-titre" className="titre titre--section">Contactez-moi</Titre>
-      <p className="texte presentation-contact__lieu">Basée à Houdan (78), je me déplace dans les Yvelines, l’Eure-et-Loir et l’Eure.</p>
+      <p className="texte presentation-contact__lieu">Basée à Houdan, je me déplace dans les Yvelines (78), l’Eure-et-Loir (28) et l’Eure (27).</p>
       {avecEmail && (
         <div className="presentation-contact__email">
           <p className="mention">E-mail</p>
