@@ -38,7 +38,7 @@ export default function Contact() {
     <section className="page-contact" aria-labelledby="contact-titre">
       <img className="page-contact__photo" src={photoMarie} alt="Marie Sillas, bras croisés" />
       <div className="page-contact__droite">
-        <PresentationContact titre="h1" avecEmail />
+        <PresentationContact titre="h1" />
 
         {envoye ? (
           <div role="status" className="confirmation">

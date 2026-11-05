@@ -135,7 +135,9 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
 
 **Page M'écrire** (`/contact`) (maquette de refonte 2) : le portrait bras croisés de Marie (`portrait-contact.jpg`,
 nouvelle version envoyée le 2 novembre 2026, 1121 × 1403, qualité 92) sur un peu moins de la moitié gauche (0.8fr / 1.2fr) ; à droite
-« Besoin d'en savoir plus ? », « Contactez-moi », la phrase sur les déplacements, l'e-mail, puis le formulaire
+« Besoin d'en savoir plus ? », « Contactez-moi » (« moi » souligné vermillon), la phrase sur les déplacements (plus
+l'e-mail, retiré à la demande de Marie le 5 novembre 2026), puis le formulaire (message plus haut) ; le « M'écrire »
+jaune de la barre est caché sur cette page
 (5 novembre 2026, demandé par Marie) Prénom et nom / E-mail / Téléphone (obligatoires) / Nom de l'entreprise (seulement
 si « Entreprises » est choisi) / « Vous êtes intéressé(e) par » Entreprises · Duo et groupes · Individuel (bulles) /
 Formule (facultatif, liste des formules de l'offre choisie, prise dans les pages) / Votre message (facultatif) /

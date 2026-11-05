@@ -15,7 +15,8 @@ export default function Entete() {
   const [ouvert, setOuvert] = useState(false)
   const refConstruction = useRef(null)
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
-  const ecrireVisible = useEcrireVisible(pathname === '/')
+  // Sur la page M'écrire elle-même, il est caché aussi (on y est déjà) ; sa place est gardée pour que rien ne bouge
+  const ecrireVisible = useEcrireVisible(pathname === '/') && pathname !== '/contact'
   // « Accueil » ramène toujours tout en haut de l'accueil, même quand on y est déjà
   const versLeHaut = (page) => () => { if (page.to === pathname) window.scrollTo({ top: 0, behavior: 'smooth' }) }
   // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
@@ -30,10 +31,11 @@ export default function Entete() {
   return (
     <header className={`entete ${surPhoto && !ouvert ? 'entete--sur-photo' : ''}`}>
       <div className="entete__barre">
-        {/* Simple logo, pas un lien : « Accueil » est dans le menu */}
-        <div className="entete__logo">
+        {/* Le logo ramène en haut de l'accueil (utile surtout sur téléphone, où le menu est replié) */}
+        <Link to="/" className="entete__logo" aria-label="Rimaactive, retour à l’accueil"
+          onClick={() => { setOuvert(false); if (pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
           <img src={surPhoto && !ouvert ? logoCraie : logoEncre} alt="Rimaactive, Marie Sillas coach sportive" width="104" height="21" />
-        </div>
+        </Link>
         <nav className="nav" aria-label="Menu principal">
           {PAGES_MENU.map((page) => (
             <NavLink key={page.to} to={page.to} end={page.to === '/'} className="nav__bulle" onClick={versLeHaut(page)}>

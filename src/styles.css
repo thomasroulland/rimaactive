@@ -1100,7 +1100,8 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .page-contact__droite { gap: 6px; }
   .page-contact .champ-groupe legend { margin-bottom: 2px; }
   .page-contact .champ { min-height: 34px; padding-block: 3px; line-height: 24px; }
-  .page-contact textarea.champ { height: 44px; }
+  /* plus de place pour le message : il prend la hauteur libérée par l'e-mail retiré */
+  .page-contact textarea.champ { height: clamp(68px, calc(var(--ecran) * 0.16 - 24px), 140px); }
   /* les trois offres en petites bulles sur une seule ligne, à côté de la formule */
   .page-contact .choix { flex-wrap: nowrap; gap: 6px; }
   .page-contact .choix span { min-height: 34px; padding: 0 14px; font-size: 14px; white-space: nowrap; }
