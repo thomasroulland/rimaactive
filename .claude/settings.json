@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git -c user.name=\"Marie Sillas\":*)",
+      "Bash(npm run build:*)",
+      "Bash(npx vite preview:*)",
+      "Bash(node .apercus/*)"
+    ]
+  }
+}
