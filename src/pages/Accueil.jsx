@@ -149,8 +149,8 @@ function FlecheDiagonale() {
 // Quatre principes repris de l'ancien texte « Mon approche » et du contexte de marque (validés par Marie)
 const PRINCIPES = [
   ['Le mouvement d’abord', 'Je décompose les mouvements et vous donne des repères simples pour bien les réaliser.'],
-  ['Des séances qui ont du sens', 'Des séances d’une heure, à la maison, dehors ou en salle, adaptées à votre niveau.'],
-  ['Des progrès mesurables', 'EMOM, AMRAP, density, complex, circuit\u00a0: du volume global, à l’opposé du «\u00a03\u00a0séries de 12\u00a0».'],
+  ['Des séances qui ont du sens', 'Exercices, format, intensité\u00a0: chaque séance est construite pour atteindre votre objectif.'],
+  ['Des progrès mesurables', 'On suit vos charges, votre exécution et votre forme générale. Le vrai progrès, c’est de vous sentir mieux au quotidien.'],
   ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et découvrez le plaisir de progresser.'],
 ]
 
