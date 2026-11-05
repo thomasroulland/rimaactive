@@ -1106,3 +1106,4 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .page-contact .choix { flex-wrap: nowrap; gap: 6px; }
   .page-contact .choix span { min-height: 34px; padding: 0 14px; font-size: 14px; white-space: nowrap; }
 }
+.question p a { color: var(--encre); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
