@@ -79,7 +79,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    La rubrique « Ma boîte à outils » (carrousel) est supprimée (BoiteOutils.jsx retiré).
 
 **Bloc du bas** (`Pied.jsx`), encre, discret (5 novembre 2026, demandé par Marie : plus minimaliste) : sur une ligne
-le logo et « Basée à Houdan, je me déplace dans les Yvelines (78), / l'Eure-et-Loir (28) et l'Eure (27). », l'e-mail,
+le logo, l'e-mail (la phrase « Basée à Houdan… » retirée à la demande de Marie),
 Instagram / Facebook / TikTok en petites bulles ; sous un filet, « © année Rimaactive » et le lien « Mentions légales et
 politique de confidentialité ». Ni menu des pages, ni bouton « M'écrire », ni grand titre « Contactez-moi ».
 
