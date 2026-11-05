@@ -20,7 +20,7 @@ export default function PageService({ page }) {
   return (
     <>
     <header className="bandeau-page">
-      <img src={page.image} alt="" style={{ '--cadrage': page.cadrage, '--largeur-photo': page.largeurPhoto }} />
+      <img src={page.image} alt="" style={{ '--cadrage': page.cadrage }} />
       <div className="conteneur bandeau-page__texte">
         <h1 id="page-titre" className="titre bandeau-page__titre">{page.titre}</h1>
         {/* Individuel : le choix Présentiel / En ligne est posé sur la photo, à droite du titre */}

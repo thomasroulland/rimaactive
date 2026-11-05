@@ -744,7 +744,7 @@ textarea.champ { resize: vertical; min-height: 140px; }
 /* Ordinateur : la photo occupe la partie droite du bandeau, moins agrandie, pour qu'on voie mieux les kettlebells ;
    elle se fond dans l'encre à gauche, sous le titre */
 @media (min-width: 900px) {
-  .bandeau-page > img { left: auto; width: var(--largeur-photo, 62%); object-position: var(--cadrage, 50% 50%);
+  .bandeau-page > img { left: auto; width: 62%; object-position: var(--cadrage, 50% 50%);
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%); mask-image: linear-gradient(90deg, transparent, #000 16%); }
 }
 /* voile encre : en haut pour la barre de menu, en bas pour le titre */
