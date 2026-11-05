@@ -3,7 +3,7 @@ import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
 // Contenu de la page Groupes : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
-const PAGE = {
+export const PAGE = {
   titre: 'Duo et groupes',
   lieux: 'Domicile · Extérieur',
   image: photoGroupes,

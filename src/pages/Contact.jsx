@@ -3,15 +3,28 @@ import { Link, useSearchParams } from 'react-router-dom'
 import photoMarie from '../assets/portrait-contact.jpg'
 import PresentationContact from '../components/AppelContact.jsx'
 import useTitre from '../components/useTitre.js'
+import { PAGE as ENTREPRISES } from './Entreprises.jsx'
+import { PAGE as GROUPES } from './Communes.jsx'
+import { PAGE as INDIVIDUEL } from './Particuliers.jsx'
+
+// Les trois offres et leurs formules, reprises des pages (« Active Progress · Présentiel », « Active 60 · Entreprises »…) :
+// la même écriture que celle envoyée par le bouton « Choisir » d'une carte
+const OFFRES = [ENTREPRISES, GROUPES, INDIVIDUEL].map((page) => ({
+  nom: page.titre,
+  formules: page.cartes.map((f) => `${f.nom} · ${f.mode ?? page.titre}`),
+}))
 
 export default function Contact() {
   useTitre('Contact')
   const [envoye, setEnvoye] = useState(false)
-  // Formule choisie depuis une carte des pages Entreprises, Duo et groupes ou Individuel (ex. « Active Progress · Présentiel »)
+  // Formule choisie depuis une carte des pages Entreprises, Duo et groupes ou Individuel (ex. « Active Progress · Présentiel ») :
+  // l'offre et la formule sont alors déjà cochées
   const [parametres] = useSearchParams()
-  const formule = parametres.get('formule') ?? ''
-  const contexte = formule.split(' · ')[1] ?? ''
-  const profilChoisi = contexte === 'Entreprises' ? 'entreprise' : contexte === 'Duo et groupes' ? 'groupe' : formule ? 'particulier' : undefined
+  const formuleVenue = parametres.get('formule') ?? ''
+  const offreVenue = OFFRES.find((o) => o.formules.includes(formuleVenue))
+  const [offre, setOffre] = useState(offreVenue?.nom ?? '')
+  const [formule, setFormule] = useState(offreVenue ? formuleVenue : '')
+  const formulesOffre = OFFRES.find((o) => o.nom === offre)?.formules ?? []
 
   // Envoi à brancher (Formspree, Resend, fonction Vercel…) : pour l'instant on affiche la confirmation
   function envoyer(event) {
@@ -43,19 +56,37 @@ export default function Contact() {
               <label htmlFor="email">E-mail</label>
               <input id="email" name="email" className="champ" type="email" autoComplete="email" placeholder="vous@exemple.fr" required />
             </div>
-            {formule && (
+            <div className={`champ-groupe ${offre === 'Entreprises' ? '' : 'pleine'}`}>
+              <label htmlFor="telephone">Téléphone</label>
+              <input id="telephone" name="telephone" className="champ" type="tel" autoComplete="tel" placeholder="06 12 34 56 78" required />
+            </div>
+            {/* seulement pour une entreprise */}
+            {offre === 'Entreprises' && (
               <div className="champ-groupe">
-                <label htmlFor="formule">Formule choisie</label>
-                <input id="formule" name="formule" className="champ" type="text" defaultValue={formule} />
+                <label htmlFor="entreprise">Nom de l’entreprise</label>
+                <input id="entreprise" name="entreprise" className="champ" type="text" autoComplete="organization" placeholder="Nom de l’entreprise" required />
               </div>
             )}
-            {/* à côté de la formule choisie quand il y en a une, sur toute la largeur sinon */}
-            <div className={`champ-groupe ${formule ? '' : 'pleine'}`}>
-              <label htmlFor="profil">Vous êtes</label>
-              <select id="profil" name="profil" className="champ" defaultValue={profilChoisi ?? 'particulier'}>
-                <option value="particulier">Particulier</option>
-                <option value="entreprise">Entreprise</option>
-                <option value="groupe">Duo ou groupe</option>
+            <fieldset className="champ-groupe">
+              <legend>Vous êtes intéressé(e) par</legend>
+              <div className="choix">
+                {OFFRES.map((o) => (
+                  <label key={o.nom}>
+                    <input type="radio" name="offre" value={o.nom} checked={offre === o.nom} required
+                      onChange={() => { setOffre(o.nom); setFormule('') }} />
+                    <span>{o.nom}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <div className="champ-groupe">
+              <label htmlFor="formule">
+                Formule <span className="optionnel">(facultatif)</span>
+              </label>
+              <select id="formule" name="formule" className="champ" value={formule} disabled={!offre}
+                onChange={(e) => setFormule(e.target.value)}>
+                <option value="">{offre ? 'Je ne sais pas encore' : 'Choisissez d’abord une offre'}</option>
+                {formulesOffre.map((f) => <option key={f} value={f}>{f.replace(` · ${offre}`, '')}</option>)}
               </select>
             </div>
             <div className="champ-groupe pleine">

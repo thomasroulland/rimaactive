@@ -1092,3 +1092,16 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .pied__ligne { display: grid; grid-template-columns: 1fr auto 1fr; }
   .pied__reseaux { justify-self: end; }
 }
+
+/* M'écrire (5 novembre 2026) : formulaire plus complet (téléphone, entreprise, offre, formule) resserré pour tenir dans l'écran */
+@media (min-width: 900px) {
+  .page-contact .formulaire { gap: 4px 20px; }
+  .page-contact .champ-groupe { gap: 2px; }
+  .page-contact__droite { gap: 6px; }
+  .page-contact .champ-groupe legend { margin-bottom: 2px; }
+  .page-contact .champ { min-height: 34px; padding-block: 3px; line-height: 24px; }
+  .page-contact textarea.champ { height: 44px; }
+  /* les trois offres en petites bulles sur une seule ligne, à côté de la formule */
+  .page-contact .choix { flex-wrap: nowrap; gap: 6px; }
+  .page-contact .choix span { min-height: 34px; padding: 0 14px; font-size: 14px; white-space: nowrap; }
+}

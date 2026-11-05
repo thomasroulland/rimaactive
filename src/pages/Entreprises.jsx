@@ -3,7 +3,7 @@ import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
 // Contenu de la page Entreprises (« Compris pour chaque session » : textes donnés par Marie le 2 novembre 2026) : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
-const PAGE = {
+export const PAGE = {
   titre: 'Entreprises',
   lieux: 'Locaux · Extérieur',
   image: photoEntreprises,
