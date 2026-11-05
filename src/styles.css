@@ -1023,8 +1023,9 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); -
 /* Ordinateur : la rubrique tient dans l'écran, même avec une question ouverte */
 @media (min-width: 900px) {
   .section.ecran-plein.questions { padding-block: 20px; }
-  .section.ecran-plein.questions { justify-content: flex-start; padding-top: clamp(24px, calc(var(--ecran) * 0.08), 72px); }
-  .questions__liste { margin-top: clamp(14px, calc(var(--ecran) * 0.03), 24px); gap: 6px; }
+  /* questions centrées dans l'écran comme les autres rubriques */
+  .section.ecran-plein.questions { justify-content: center; }
+  .questions__liste { margin-top: clamp(18px, calc(var(--ecran) * 0.045), 40px); gap: clamp(6px, calc(var(--ecran) * 0.012), 12px); }
   .question summary { padding: 10px 22px; }
   .question p { padding: 0 22px 12px; }
 }
@@ -1081,3 +1082,18 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 .methode__texte { white-space: pre-line; }
 /* Qui suis-je : pas de mot seul sur la dernière ligne d'un paragraphe */
 .approche__cadre .texte { text-wrap: pretty; }
+
+/* Ordinateur : plus d'air entre les blocs des rubriques de l'accueil, proportionnel à la hauteur de l'écran */
+@media (min-width: 900px) {
+  .methode__principes { margin-top: clamp(40px, calc(var(--ecran) * 0.08), 88px); }
+  .methode__objectifs { margin-top: clamp(32px, calc(var(--ecran) * 0.075), 80px); }
+  .services--v2 .services__entete { margin-bottom: clamp(22px, calc(var(--ecran) * 0.045), 44px); }
+}
+/* Cartes des formules : la liste « Compris » est plus aérée (lignes plus espacées, un peu d'air sous son titre) */
+@media (min-width: 900px) {
+  .offre .offre__points { margin-top: 2px; gap: 6px; }
+  .offre .offre__points li { line-height: 20px; }
+  /* Individuel : trois cartes avec des listes plus longues, un peu moins d'écart pour tenir dans l'écran */
+  .formules-page__grille--large .offre .offre__points { gap: 5px; }
+  .formules-page__grille--large .offre .offre__points li { line-height: 19px; }
+}
