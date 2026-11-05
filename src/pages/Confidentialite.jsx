@@ -1,11 +1,9 @@
-import { Link } from 'react-router-dom'
-import PageJuridique, { ACompleter } from '../components/PageJuridique.jsx'
+import { ACompleter } from '../components/PageJuridique.jsx'
 import { CONTACT } from '../components/liens.js'
-import useTitre from '../components/useTitre.js'
 
 const Email = () => <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
 
-const SECTIONS = [
+export const SECTIONS_CONFIDENTIALITE = [
   {
     id: 'essentiel',
     titre: "L’essentiel",
@@ -166,21 +164,8 @@ const SECTIONS = [
     contenu: (
       <p>
         Cette politique peut évoluer, par exemple si un nouvel outil est ajouté au site. La date de mise à jour en haut
-        de page fait foi. Voir aussi les <Link to="/mentions-legales">mentions légales</Link>.
+        de page fait foi. Voir aussi les <a href="#mentions">mentions légales</a>.
       </p>
     ),
   },
 ]
-
-export default function Confidentialite() {
-  useTitre('Confidentialité')
-  return (
-    <PageJuridique
-      fil="Confidentialité"
-      titre="Confidentialité"
-      miseAJour="16 octobre 2026"
-      intro="Ce que deviennent les informations que vous me confiez, et comment garder la main dessus."
-      sections={SECTIONS}
-    />
-  )
-}

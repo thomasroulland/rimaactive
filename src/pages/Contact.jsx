@@ -68,7 +68,7 @@ export default function Contact() {
               <input type="checkbox" name="accord" required />
               <span>
                 J’accepte d’être recontacté(e) au sujet de ma demande. Mes informations restent privées
-                (<Link to="/confidentialite">politique de confidentialité</Link>).
+                (<Link to="/mentions-legales#confidentialite">politique de confidentialité</Link>).
               </span>
             </label>
             <div className="pleine">

@@ -1,9 +1,7 @@
-import { Link } from 'react-router-dom'
-import PageJuridique, { ACompleter } from '../components/PageJuridique.jsx'
+import { ACompleter } from '../components/PageJuridique.jsx'
 import { CONTACT } from '../components/liens.js'
-import useTitre from '../components/useTitre.js'
 
-const SECTIONS = [
+export const SECTIONS_MENTIONS = [
   {
     id: 'editeur',
     titre: 'Éditrice du site',
@@ -102,7 +100,7 @@ const SECTIONS = [
     contenu: (
       <p>
         Le traitement de vos données et vos droits sont détaillés dans la{' '}
-        <Link to="/confidentialite">politique de confidentialité</Link>.
+        <a href="#confidentialite">politique de confidentialité</a>.
       </p>
     ),
   },
@@ -123,16 +121,3 @@ const SECTIONS = [
     ),
   },
 ]
-
-export default function MentionsLegales() {
-  useTitre('Mentions légales')
-  return (
-    <PageJuridique
-      fil="Mentions légales"
-      titre="Mentions légales"
-      miseAJour="16 octobre 2026"
-      intro="Qui édite ce site, qui l'héberge, et ce que vous pouvez en faire."
-      sections={SECTIONS}
-    />
-  )
-}

@@ -186,7 +186,7 @@ function Methode() {
 const QUESTIONS = [
   ['Je débute complètement, est-ce pour moi\u00a0?', 'Oui. Les séances sont adaptées à votre niveau et partent des mouvements fondamentaux.'],
   ['Faut-il du matériel ou une salle\u00a0?', 'Non. Le matériel est fourni\u00a0: tapis, kettlebells, slam balls, etc. Les séances ont lieu à domicile, en extérieur, dans vos locaux ou en salle.'],
-  ['Comment se déroule une séance\u00a0?', 'Mobilité & Activation\u00a0: 5 à 10\u00a0min. Corps de séance\u00a0: 30 à 45\u00a0min. Retour au calme\u00a0: 5\u00a0min.'],
+  ['Comment se déroule une séance\u00a0?', 'Mobilité & Activation\u00a0: 7 à 10\u00a0min. Corps de séance\u00a0: 40 à 50\u00a0min. Retour au calme\u00a0: 3 à 5\u00a0min.'],
   ['Où vous déplacez-vous\u00a0?', 'Je suis basée à Houdan (78). Le déplacement est inclus jusqu’à 20\u00a0km autour de Houdan.'],
   ['Et si je préfère un suivi à distance\u00a0?', 'Active Plus est un suivi en ligne de 12\u00a0semaines, avec un programme 100\u00a0% personnalisé et un suivi hebdomadaire sur WhatsApp.'],
   ['Comment réserver\u00a0?', 'Écrivez-moi avec le formulaire de contact ou par e-mail, et je vous réponds pour choisir la formule qui vous convient.'],

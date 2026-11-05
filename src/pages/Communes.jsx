@@ -7,7 +7,8 @@ const PAGE = {
   titre: 'Duo et groupes',
   lieux: 'Domicile · Extérieur',
   image: photoGroupes,
-  cadrage: '50% 68%', // partie de la photo montrée dans le bandeau (les kettlebells)
+  cadrage: '50% 72%', // partie de la photo montrée dans le bandeau (les kettlebells)
+  largeurPhoto: '50%', // photo moins agrandie : les trois kettlebells du premier plan se voient
   liste: ['À domicile ou en extérieur', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
@@ -17,7 +18,7 @@ const PAGE = {
       surtitre: '2 personnes',
       infos: '60\u00a0min · À domicile ou en extérieur',
       titrePoints: 'Compris pour chaque session',
-      points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
+      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
       tarifs: [{ montant: '85\u00a0€', apres: 'par session' }],
     },
     {
@@ -26,7 +27,7 @@ const PAGE = {
       surtitre: '4 à 10 personnes',
       infos: '60\u00a0min · En extérieur',
       titrePoints: 'Compris pour chaque session',
-      points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
+      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
       tarifs: [{ montant: '14\u00a0€', apres: 'par personne et par session' }],
       sombre: true,
     },

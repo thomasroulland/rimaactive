@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logoCraie from '../assets/rimaactive-mot-craie.svg'
 import logoEncre from '../assets/rimaactive-mot-encre.svg'
@@ -13,6 +13,7 @@ export default function Entete() {
   // pages qui commencent par une photo plein cadre : les trois pages de formules
   const surPhoto = useSurPhoto(['/entreprises', '/communes', '/particuliers'].includes(pathname))
   const [ouvert, setOuvert] = useState(false)
+  const refConstruction = useRef(null)
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
   const ecrireVisible = useEcrireVisible(pathname === '/')
   // « Accueil » ramène toujours tout en haut de l'accueil, même quand on y est déjà
@@ -42,11 +43,11 @@ export default function Entete() {
         </nav>
         <div className="entete__droite">
           <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>
-          {/* Espace de connexion (futurs coachings : tableau de bord, programme) ; sur ordinateur il se place dans
-              la marge à droite de « M'écrire », qui garde ainsi sa place */}
-          <Link to="/espace" className="entete__compte" aria-label="Mon espace" title="Mon espace">
+          {/* Espace de connexion (futurs coachings) : pour l'instant, un message « En construction » au centre de l'écran.
+              Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}
+          <button type="button" className="entete__compte" aria-label="Mon espace" title="Mon espace" onClick={() => refConstruction.current?.showModal()}>
             <Picto nom="user-circle" taille={22} />
-          </Link>
+          </button>
           <button
             type="button"
             className="menu-bouton"
@@ -66,6 +67,12 @@ export default function Entete() {
           </NavLink>
         ))}
       </nav>
+      <dialog ref={refConstruction} className="construction" aria-labelledby="construction-titre"
+        onClick={(e) => { if (e.target === e.currentTarget) e.currentTarget.close() }}>
+        <p id="construction-titre" className="construction__titre">En construction</p>
+        <p className="construction__texte">Pour l’instant, rien n’est accessible ici.</p>
+        <form method="dialog"><button className="bouton bouton--principal">Fermer</button></form>
+      </dialog>
     </header>
   )
 }

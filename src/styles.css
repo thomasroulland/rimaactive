@@ -246,7 +246,7 @@ main > section:nth-of-type(even):not(.page-contact) {
 .entete__logo img { display: block; height: 21px; width: auto; }
 .entete__droite { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
 /* Icône « Mon espace » : rond de 30 px comme les bulles ; sur ordinateur, dans la marge à droite de « M'écrire » */
-.entete__compte { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--filet); background: var(--blanc); color: var(--encre); transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
+.entete__compte { padding: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--filet); background: var(--blanc); color: var(--encre); transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
 .entete__compte:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
 .entete__compte[aria-current="page"] { border-color: var(--encre); box-shadow: inset 0 0 0 1px var(--encre); }
 .entete--sur-photo .entete__compte { background: rgba(244, 243, 239, 0.12); border-color: rgba(244, 243, 239, 0.28); color: var(--craie); }
@@ -569,58 +569,42 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .pied {
   background: var(--encre);
   color: var(--craie);
-  padding: clamp(56px, calc(7 * var(--vw)), 88px) var(--gouttiere) 28px;
-  font-size: 16px;
+  padding: 28px var(--gouttiere) 16px;
+  font-size: 14px;
+  line-height: 22px;
 }
 .pied a { color: var(--craie); text-decoration: none; }
 .pied a:hover { color: var(--jaune); }
-.pied .surtitre { color: var(--jaune); }
-.pied .titre { color: var(--craie); }
-.pied__ligne { display: grid; gap: 10px 0; padding-bottom: clamp(28px, calc(3.5 * var(--vw)), 48px); }
-.pied__tete .titre { margin: 4px 0 0; }
-.pied__lieu { margin: 2px 0 14px; max-width: 46ch; font-size: 16px; line-height: 26px; color: rgba(244, 243, 239, 0.78); }
-.pied__ligne .mention { color: rgba(244, 243, 239, 0.72); margin: 18px 0 0; }
-.pied__email { font-weight: 700; font-size: 18px; line-height: 26px; overflow-wrap: anywhere; }
-/* Ordinateur : trois colonnes ; « Basée à… », l'e-mail et le texte des bulles sur la même ligne */
-@media (min-width: 900px) {
-  .pied__ligne {
-    grid-template-columns: auto auto auto;
-    justify-content: space-between;
-    grid-template-areas: "tete m-email m-reseaux" "lieu email reseaux";
-    column-gap: 48px;
-    row-gap: 0;
-  }
-  .pied__tete { grid-area: tete; }
-  .pied__lieu { grid-area: lieu; margin: 12px 0 0; }
-  .pied__m-email { grid-area: m-email; align-self: end; }
-  .pied__m-reseaux { grid-area: m-reseaux; align-self: end; }
-  .pied__ligne .mention { margin: 0 0 6px; }
-  /* le haut de chaque contenu s'aligne sur la première ligne de « Basée à… » (lignes de 26 px) */
-  .pied__email { grid-area: email; margin-top: 12px; line-height: 26px; align-self: start; }
-  .pied .pied__reseaux { grid-area: reseaux; margin-top: 3px; align-self: start; }
-}
-.pied__reseaux { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.pied__reseaux a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 1px solid rgba(244, 243, 239, 0.4); border-radius: 999px; font-weight: 700; font-size: 15px; transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
+/* une ligne : logo et lieu à gauche, e-mail au centre, réseaux à droite */
+.pied__ligne { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 40px; padding-bottom: 20px; }
+.pied__marque { display: flex; align-items: center; gap: 20px; }
+.pied__logo { height: 18px; width: auto; display: block; flex: none; }
+.pied__lieu { margin: 0; color: rgba(244, 243, 239, 0.72); }
+.pied__email { font-weight: 700; overflow-wrap: anywhere; }
+.pied__reseaux { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pied__reseaux a { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border: 1px solid rgba(244, 243, 239, 0.3); border-radius: 999px; font-weight: 700; font-size: 13px; transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
 .pied .pied__reseaux a:hover { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
 .pied__bas {
   border-top: 1px solid var(--filet-clair);
-  padding-top: 20px;
+  padding-top: 14px;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline; /* le bas des lettres du logo sur la même ligne que « © … » et les mentions */
-  gap: 8px 24px;
-  font-size: 14px;
-  color: rgba(244, 243, 239, 0.72);
+  justify-content: space-between;
+  gap: 6px 24px;
+  font-size: 13px;
+  color: rgba(244, 243, 239, 0.6);
 }
-.pied__logo { height: 18px; width: auto; display: block; }
-.pied__bas nav { margin-left: auto; display: flex; align-items: baseline; }
-.pied__bas nav { display: flex; gap: 24px; }
+.pied__bas a { color: rgba(244, 243, 239, 0.72); }
+@media (max-width: 899px) {
+  .pied__ligne { flex-direction: column; align-items: flex-start; }
+  .pied__marque { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
 /* Page M'écrire : seulement la ligne des mentions, sur craie */
 .pied--mentions { background: var(--craie); color: var(--gris-chaud); padding-top: 0; }
 .pied--mentions a { color: var(--gris-chaud); }
 .pied--mentions a:hover { color: var(--encre); }
-.pied--mentions .pied__bas nav { margin-left: 0; }
 .pied--mentions .pied__bas { margin-top: 0; border-top-color: var(--filet); color: var(--gris-chaud); justify-content: center; }
+.pied--mentions .pied__bas a { color: var(--gris-chaud); }
 
 /* ---------- Page M'écrire (maquette 2) : la photo de Marie à gauche ; « Contactez-moi », l'e-mail et le formulaire à droite ---------- */
 .page-contact { display: grid; }
@@ -743,12 +727,6 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .case input { flex: none; width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--encre); }
 .case a { color: var(--encre); }
 
-/* Ordinateur : le bloc « Contactez-moi » et le pied de page tiennent ensemble dans un écran */
-@media (min-width: 900px) {
-  .pied { padding-block: clamp(40px, calc(var(--ecran) * 0.08), 72px) 20px; }
-  .pied--mentions { padding-top: 0; }
-  .pied__bas { padding-top: 16px; }
-}
 
 /* Petits portables : la photo des cartes « Mon accompagnement » se réduit un peu pour que la rubrique tienne dans un écran */
 @media (min-width: 900px) and (max-width: 1399px) {
@@ -766,8 +744,8 @@ textarea.champ { resize: vertical; min-height: 140px; }
 /* Ordinateur : la photo occupe la partie droite du bandeau, moins agrandie, pour qu'on voie mieux les kettlebells ;
    elle se fond dans l'encre à gauche, sous le titre */
 @media (min-width: 900px) {
-  .bandeau-page > img { left: auto; width: 62%; object-position: var(--cadrage, 50% 50%);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%); mask-image: linear-gradient(90deg, transparent, #000 30%); }
+  .bandeau-page > img { left: auto; width: var(--largeur-photo, 62%); object-position: var(--cadrage, 50% 50%);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%); mask-image: linear-gradient(90deg, transparent, #000 16%); }
 }
 /* voile encre : en haut pour la barre de menu, en bas pour le titre */
 .bandeau-page::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(22, 21, 20, 0.55), rgba(22, 21, 20, 0.15) 35%, rgba(22, 21, 20, 0.8)); }
@@ -940,7 +918,7 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   /* cartes resserrées */
   .offre { padding: 18px 24px; gap: 4px; }
   .offre__tete { min-height: 0; }
-  .offre__tarifs { margin: 2px 0 8px; padding-top: 8px; gap: 12px; }
+  .offre__tarifs { margin: 2px 0 8px; padding-top: 18px; gap: 12px; } /* le prix un peu plus bas sous le filet */
   .offre__libelle { margin-bottom: 2px; }
   .offre__prix { font-size: 40px; line-height: 42px; }
   .offre__detail { margin-top: 2px; }
@@ -954,7 +932,7 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .formules-page__grille--large .offre { min-height: 371px; }
   /* Individuel (trois cartes étroites, listes plus longues) : un peu plus serré pour tenir dans l'écran */
   .offre { padding-block: 14px; } /* même marge haute sur les trois pages : textes alignés d'une page à l'autre */
-  .formules-page__grille--large .offre__tarifs { margin-bottom: 4px; }
+  .formules-page__grille--large .offre__tarifs { margin-bottom: 4px; padding-top: 13px; }
   .formules-page__grille--large .offre__points { margin-bottom: 8px; }
   .formules-page__grille--large .offre__points li { line-height: 18px; }
   /* l'espace libre de la carte se répartit à parts égales entre les blocs (titre / tarifs / « Compris » / bouton),
@@ -1076,7 +1054,6 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .services--v2 .services__liste > li { height: calc(var(--ecran) * 0.22 + 280px - 56px); }
 }
 .services--v2 .service:hover .titre { color: var(--encre); }
-.espace__bouton { margin-top: 24px; }
 
 /* Ma méthode : le texte d'un principe peut passer à la ligne là où Marie l'a voulu (\n) */
 .methode__texte { white-space: pre-line; }
@@ -1097,3 +1074,14 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .formules-page__grille--large .offre .offre__points { gap: 5px; }
   .formules-page__grille--large .offre .offre__points li { line-height: 19px; }
 }
+
+/* Page des informations légales : sous-parties de chaque partie */
+.juridique__sous-partie h3 { margin-top: 24px; }
+.juridique__sous-partie:first-child h3 { margin-top: 0; }
+
+/* Message « En construction » de l'espace de connexion, au centre de l'écran */
+.construction { border: 0; border-radius: var(--arrondi); padding: 36px 40px; background: var(--craie); color: var(--encre); text-align: center; max-width: min(420px, calc(100vw - 40px)); box-shadow: 0 24px 60px rgba(22, 21, 20, 0.25); }
+.construction::backdrop { background: rgba(22, 21, 20, 0.55); }
+.construction__titre { margin: 0; font-weight: 900; font-size: 32px; line-height: 34px; letter-spacing: -0.04em; }
+.construction__texte { margin: 10px 0 24px; color: var(--gris-chaud); }
+.construction form { margin: 0; }

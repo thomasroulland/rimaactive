@@ -7,7 +7,7 @@ const PAGE = {
   titre: 'Individuel',
   lieux: 'Domicile · Salle · En ligne',
   image: photoIndividuel,
-  cadrage: '50% 76%', // partie de la photo montrée dans le bandeau (les kettlebells)
+  cadrage: '50% 30%', // partie de la photo montrée dans le bandeau (les kettlebells)
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   // Trois formules sur la même page ; le bouton Présentiel / En ligne grise celles de l'autre mode (Marie, 2 novembre 2026).
   // Active Start et Active Progress (présentiel) remplacent Active Solo et Active Flex ; les anciens programmes
@@ -27,7 +27,7 @@ const PAGE = {
         { libelle: 'En salle', montant: '55\u00a0€' },
       ],
       titrePoints: 'Compris pour chaque session',
-      points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
+      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
     },
     {
       nom: 'Active Progress',

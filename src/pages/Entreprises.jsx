@@ -22,7 +22,7 @@ const PAGE = {
       infos: '60\u00a0min · Ponctuel ou hebdomadaire',
       tarifs: [{ avant: 'À partir de', montant: '110\u00a0€', apres: 'par session' }],
       titrePoints: 'Compris pour chaque session',
-      points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
+      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
     },
     {
       nom: 'Active Day',
@@ -31,7 +31,7 @@ const PAGE = {
       infos: 'Sur devis · Ponctuel',
       tarifs: [{ avant: 'À partir de', montant: '180\u00a0€', apres: 'par session' }],
       titrePoints: 'Compris pour chaque session',
-      points: ['Mobilité & Activation : 5 à 10\u00a0min', 'Corps de séance : 30 à 45\u00a0min', 'Retour au calme : 5\u00a0min'],
+      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
       sombre: true,
     },
   ],

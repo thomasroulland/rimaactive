@@ -78,17 +78,19 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    6 questions qui s'ouvrent au clic (réponses écrites par Claude à partir du site, à faire relire par Marie).
    La rubrique « Ma boîte à outils » (carrousel) est supprimée (BoiteOutils.jsx retiré).
 
-**Bloc du bas** (`Pied.jsx`), encre, sur toutes les pages sauf M'écrire : sur une seule ligne
-« Besoin d'en savoir plus ? / Contactez-moi / Basée à Houdan, je me déplace dans les Yvelines (78), /
-l'Eure-et-Loir (28) et l'Eure (27). », l'e-mail, puis Instagram / Facebook / TikTok en bulles (voir `RESEAUX` dans `liens.js`) ; sous un filet,
-le logo, « © année Rimaactive », Mentions légales, Confidentialité. Ni menu des pages ni bouton « M'écrire »
-(à la demande de Marie : ils sont déjà en haut). Sur ordinateur, « Basée à… », l'e-mail et le texte des bulles
-sont alignés sur la même ligne.
+**Bloc du bas** (`Pied.jsx`), encre, discret (5 novembre 2026, demandé par Marie : plus minimaliste) : sur une ligne
+le logo et « Basée à Houdan, je me déplace dans les Yvelines (78), / l'Eure-et-Loir (28) et l'Eure (27). », l'e-mail,
+Instagram / Facebook / TikTok en petites bulles ; sous un filet, « © année Rimaactive » et le lien « Mentions légales et
+politique de confidentialité ». Ni menu des pages, ni bouton « M'écrire », ni grand titre « Contactez-moi ».
 
-**Mon espace** (`/espace`, `Espace.jsx`) : icône ronde (silhouette) en haut à droite, dans la marge à droite de
-« M'écrire » sur ordinateur (« M'écrire » ne bouge pas), à côté de « Menu » sur téléphone. Pour l'instant, page
-d'attente « Bientôt disponible » (texte de Claude, à valider) : l'espace de coaching (connexion, tableau de bord,
-programme) reste à construire.
+**Informations légales** (`/mentions-legales`, `InformationsLegales.jsx`) : une seule page en trois parties, Mentions
+légales (#mentions), Politique de confidentialité (#confidentialite), Conditions générales de vente (#cgv). Les textes
+des deux premières sont dans `MentionsLegales.jsx` et `Confidentialite.jsx` ; `/confidentialite` redirige vers
+`#confidentialite`. Les CGV sont une trame : paiement, annulation, rétractation, certificat médical… sont « À compléter »
+par Marie (ne rien inventer).
+
+**Icône « Mon espace »** (haut à droite) : ouvre un message « En construction / Pour l'instant, rien n'est accessible
+ici. » au centre de l'écran. Plus de page `/espace`.
 
 **Pages Entreprises / Duo et groupes / Individuel** (`/entreprises`, `/communes`, `/particuliers`, gabarit
 `src/components/PageService.jsx`, données dans `src/pages/*.jsx`), refaites le 31 octobre 2026 (mélange des
@@ -106,7 +108,7 @@ maquettes de refonte 2 et 3, couleurs de la 4) :
   défilant (demande de Marie du 2 novembre 2026 ; vérifier aussi en 1900 × 867, son grand écran). Cartes resserrées, liste « Compris » d'Active Flex
   sur deux colonnes. Les min-height des cartes sont en px avant le zoom automatique du site (`index.html`).
 - Active 60, Active Day, Active Duo et Active Group ont « Compris pour chaque session », sur une colonne :
-  Mobilité & Activation : 5 à 10 min, Corps de séance : 30 à 45 min, Retour au calme : 5 min (Marie, 2 novembre 2026).
+  Mobilité & Activation : 7 à 10 min, Corps de séance : 40 à 50 min, Retour au calme : 3 à 5 min (Marie, 5 novembre 2026).
 - Survol à la souris des cartes de formules : la carte se soulève avec une ombre, le pictogramme grossit, « Choisir »
   passe en jaune (en craie sur la carte encre). Textes alignés au pixel près d'une carte et d'une page à l'autre.
 - Entreprises : « 60 min · Ponctuel ou hebdomadaire », « Sur devis · Ponctuel » ; prix « À partir de 110 € par session »
