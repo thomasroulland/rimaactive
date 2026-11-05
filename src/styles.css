@@ -607,13 +607,13 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
   padding-top: 20px;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline; /* le bas des lettres du logo sur la même ligne que « © … » et les mentions */
   gap: 8px 24px;
   font-size: 14px;
   color: rgba(244, 243, 239, 0.72);
 }
 .pied__logo { height: 18px; width: auto; display: block; }
-.pied__bas nav { margin-left: auto; }
+.pied__bas nav { margin-left: auto; display: flex; align-items: baseline; }
 .pied__bas nav { display: flex; gap: 24px; }
 /* Page M'écrire : seulement la ligne des mentions, sur craie */
 .pied--mentions { background: var(--craie); color: var(--gris-chaud); padding-top: 0; }
@@ -763,6 +763,12 @@ textarea.champ { resize: vertical; min-height: 140px; }
    craie foncé (onglets, liste, « M'écrire », mentions) et une carte par formule, blanche ou encre */
 .bandeau-page { position: relative; margin-top: calc(-1 * var(--hauteur-entete)); height: 300px; display: flex; align-items: flex-end; background: var(--encre); overflow: hidden; }
 .bandeau-page > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Ordinateur : la photo occupe la partie droite du bandeau, moins agrandie, pour qu'on voie mieux les kettlebells ;
+   elle se fond dans l'encre à gauche, sous le titre */
+@media (min-width: 900px) {
+  .bandeau-page > img { left: auto; width: 62%; object-position: var(--cadrage, 50% 50%);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%); mask-image: linear-gradient(90deg, transparent, #000 30%); }
+}
 /* voile encre : en haut pour la barre de menu, en bas pour le titre */
 .bandeau-page::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(22, 21, 20, 0.55), rgba(22, 21, 20, 0.15) 35%, rgba(22, 21, 20, 0.8)); }
 .bandeau-page__texte { position: relative; z-index: 2; width: 100%; box-sizing: border-box; padding-bottom: 32px; display: grid; grid-template-columns: 1fr auto; align-items: end; column-gap: 24px; }
@@ -887,9 +893,10 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   /* contenu calé en haut de l'encadré, bouton en bas à gauche, plus d'air entre les blocs */
   .approche__cadre { max-width: none; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding-block: clamp(22px, calc(var(--ecran) * 0.075 - 22px), 44px); justify-content: center; }
   .approche__cadre .surtitre { margin-bottom: 10px; }
-  .approche__cadre .titre--section { margin-bottom: clamp(12px, calc(var(--ecran) * 0.04 - 10px), 26px); }
+  /* plus d'air : le titre remonte un peu, le bouton « Mes services » descend un peu */
+  .approche__cadre .titre--section { margin-bottom: clamp(20px, calc(var(--ecran) * 0.05 - 6px), 40px); }
   .approche__cadre .approche__bouton { align-self: flex-start; }
-  .approche__cadre .texte:last-of-type { margin-bottom: clamp(16px, calc(var(--ecran) * 0.045 - 12px), 28px); }
+  .approche__cadre .texte:last-of-type { margin-bottom: clamp(26px, calc(var(--ecran) * 0.06 - 8px), 48px); }
   /* le texte occupe toute la largeur de l'encadré, avec un vrai espace entre les paragraphes */
   .approche__cadre .texte { max-width: none; }
   .approche__cadre .texte + .texte { margin-top: clamp(10px, calc(var(--ecran) * 0.03 - 8px), 18px); }
@@ -950,6 +957,10 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .formules-page__grille--large .offre__tarifs { margin-bottom: 4px; }
   .formules-page__grille--large .offre__points { margin-bottom: 8px; }
   .formules-page__grille--large .offre__points li { line-height: 18px; }
+  /* l'espace libre de la carte se répartit à parts égales entre les blocs (titre / tarifs / « Compris » / bouton),
+     au lieu de s'accumuler au-dessus du bouton ; la taille des cartes ne change pas */
+  .offre .offre__tarifs, .offre .offre__titre-points { margin-top: auto; }
+  .offre .offre__tarifs + .offre__points { margin-top: auto; }
   /* M'écrire */
   .page-contact__photo { height: 0; min-height: 100%; } /* la photo suit la hauteur du formulaire, sans l'imposer */
   .page-contact { min-height: calc(var(--ecran) - var(--hauteur-entete) - 53px); }

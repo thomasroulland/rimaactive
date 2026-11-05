@@ -7,6 +7,7 @@ const PAGE = {
   titre: 'Individuel',
   lieux: 'Domicile · Salle · En ligne',
   image: photoIndividuel,
+  cadrage: '50% 76%', // partie de la photo montrée dans le bandeau (les kettlebells)
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   // Trois formules sur la même page ; le bouton Présentiel / En ligne grise celles de l'autre mode (Marie, 2 novembre 2026).
   // Active Start et Active Progress (présentiel) remplacent Active Solo et Active Flex ; les anciens programmes

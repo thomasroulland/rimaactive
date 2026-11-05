@@ -7,6 +7,7 @@ const PAGE = {
   titre: 'Duo et groupes',
   lieux: 'Domicile · Extérieur',
   image: photoGroupes,
+  cadrage: '50% 68%', // partie de la photo montrée dans le bandeau (les kettlebells)
   liste: ['À domicile ou en extérieur', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)'],
   note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [

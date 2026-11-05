@@ -7,6 +7,7 @@ const PAGE = {
   titre: 'Entreprises',
   lieux: 'Locaux · Extérieur',
   image: photoEntreprises,
+  cadrage: '50% 70%', // partie de la photo montrée dans le bandeau (les kettlebells)
   liste: [
     'Dans vos locaux ou en extérieur',
     'Matériel fourni : tapis, kettlebells, slam balls, etc.',
