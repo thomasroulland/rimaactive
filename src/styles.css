@@ -928,8 +928,8 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .offres--2 .offre__points:has(> li:nth-child(4)) { grid-template-columns: 1fr 1fr; column-gap: 16px; margin-bottom: 8px; }
   .offre__bouton { min-height: 0; height: 44px; }
   /* même hauteur de cartes d'une page à l'autre et d'un onglet à l'autre */
-  .offres--2 > .offre { min-height: 374px; } /* valeurs avant le zoom automatique du site */
-  .formules-page__grille--large .offre { min-height: 371px; }
+  .offres--2 > .offre { min-height: 375px; } /* valeurs avant le zoom automatique du site */
+  .formules-page__grille--large .offre { min-height: 375px; } /* même hauteur de carte sur les trois pages */
   /* Individuel (trois cartes étroites, listes plus longues) : un peu plus serré pour tenir dans l'écran */
   .offre { padding-block: 14px; } /* même marge haute sur les trois pages : textes alignés d'une page à l'autre */
   .formules-page__grille--large .offre__tarifs { margin-bottom: 4px; padding-top: 13px; }
@@ -1107,3 +1107,20 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .page-contact .choix span { min-height: 34px; padding: 0 14px; font-size: 14px; white-space: nowrap; }
 }
 .question p a { color: var(--encre); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+
+/* Harmonisation des tailles (6 novembre 2026) */
+/* numéros du sommaire des pages légales : même petite mention partout */
+.juridique__texte p.mention { font-size: 12px; line-height: 16px; }
+.juridique__texte h3 { line-height: 26px; }
+/* bulles de texte : 14 px partout (haut de page, formulaire, réseaux du bas de page) */
+.pied__reseaux a { font-size: 14px; }
+/* Téléphone : mêmes tailles d'une page à l'autre (titres de cartes, prix, bulles du formulaire) */
+@media (max-width: 899px) {
+  .titre--tuile, .offre .titre--tuile { font-size: 24px; line-height: 28px; }
+  .offre__prix { font-size: 40px; line-height: 42px; }
+  .page-contact .choix span { min-height: 40px; padding: 0 16px; font-size: 14px; }
+}
+/* Téléphone : la liste cochée sous les cartes, alignée à gauche (une ligne par point) */
+@media (max-width: 899px) {
+  .formules-page__liste { flex-direction: column; align-items: flex-start; width: 100%; }
+}
