@@ -1062,8 +1062,10 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 
 /* Ordinateur : plus d'air entre les blocs des rubriques de l'accueil, proportionnel à la hauteur de l'écran */
 @media (min-width: 900px) {
-  .methode__principes { margin-top: clamp(40px, calc(var(--ecran) * 0.08), 88px); }
-  .methode__objectifs { margin-top: clamp(32px, calc(var(--ecran) * 0.075), 80px); }
+  .methode__principes { margin-top: clamp(40px, calc(var(--ecran) * 0.1), 104px); }
+  .methode__objectifs { margin-top: clamp(32px, calc(var(--ecran) * 0.1), 104px); gap: clamp(14px, calc(var(--ecran) * 0.025), 24px); }
+  /* plus d'air entre le numéro, le titre et le texte de chaque principe */
+  .methode__principes li { gap: clamp(10px, calc(var(--ecran) * 0.02), 18px); padding-top: clamp(20px, calc(var(--ecran) * 0.03), 30px); }
   .services--v2 .services__entete { margin-bottom: clamp(22px, calc(var(--ecran) * 0.045), 44px); }
 }
 /* Cartes des formules : la liste « Compris » est plus aérée (lignes plus espacées, un peu d'air sous son titre) */
