@@ -78,20 +78,16 @@ export default function Accueil() {
           <div className="approche__cadre">
             <p className="surtitre approche__surtitre">Qui suis-je</p>
             <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
-            {/* sauts de ligne voulus par Marie (ordinateur seulement : sur téléphone, le texte coule librement) */}
             <p className="texte">
-              Passionnée de sport et pratiquante de karaté, je vous aide à atteindre vos objectifs<br className="saut" />
-              grâce à une pratique fonctionnelle adaptée à votre quotidien.
+              Passionnée de sport, je vous aide à atteindre vos objectifs grâce à une pratique adaptée à votre rythme de vie.
             </p>
             <p className="texte">
-              Pendant mes six années de salariat, j’ai côtoyé des collègues fatigués qui ne trouvaient pas le temps de
-              prendre soin d’eux. Certains voulaient bouger, sans savoir par où commencer. C’est ce qui m’a poussée à
-              devenir coach.
+              Durant mes 6&nbsp;années de salariat, j’ai constaté que beaucoup de mes collègues manquaient de temps pour prendre
+              soin d’eux ou se sentaient perdus face au sport. C’est ce qui m’a poussée à devenir coach.
             </p>
             <p className="texte">
-              Avec moi, tout commence par un échange sur vos envies et vos contraintes. Ensemble,<br className="saut" />
-              on construit des séances qui vous ressemblent et qui trouvent leur place dans votre quotidien.
-              Mon objectif&nbsp;? Vous aider à gagner en force et en mobilité avec le plaisir de relever de nouveaux défis.
+              Ensemble, nous construisons un programme sur mesure qui trouve sa place dans votre emploi du temps.
+              Mon objectif&nbsp;? Vous faire gagner en force et en mobilité, tout en retrouvant le plaisir de vous dépasser.
             </p>
             <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
           </div>

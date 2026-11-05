@@ -1068,3 +1068,5 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 
 /* Ma méthode : le texte d'un principe peut passer à la ligne là où Marie l'a voulu (\n) */
 .methode__texte { white-space: pre-line; }
+/* Qui suis-je : pas de mot seul sur la dernière ligne d'un paragraphe */
+.approche__cadre .texte { text-wrap: pretty; }
