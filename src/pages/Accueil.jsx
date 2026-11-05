@@ -150,7 +150,7 @@ function FlecheDiagonale() {
 const PRINCIPES = [
   ['Le mouvement d’abord', 'Je décompose les mouvements et vous donne des repères simples pour bien les réaliser.'],
   ['Des séances qui ont du sens', 'Exercices, format, intensité\u00a0: chaque séance est construite pour atteindre votre objectif.'],
-  ['Des progrès mesurables', 'On suit vos charges, votre exécution et votre forme générale. Le vrai progrès, c’est de vous sentir mieux au quotidien.'],
+  ['Des progrès mesurables', 'On suit vos charges et votre exécution. Le vrai progrès, c’est de vous sentir mieux au quotidien.'],
   ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et découvrez le plaisir de progresser.'],
 ]
 
