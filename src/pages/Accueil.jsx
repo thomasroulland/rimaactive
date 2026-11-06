@@ -15,8 +15,7 @@ const SERVICES = [
     titre: 'Entreprises',
     lieux: 'Locaux · Extérieur',
     pourQui: '4 à 16 personnes',
-    prix: 'À partir de 110\u00a0€ la séance',
-    photo: 'Rangée de kettlebells sur le sol d’une salle',
+        photo: 'Rangée de kettlebells sur le sol d’une salle',
     image: photoEntreprises,
     texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
   },
@@ -25,8 +24,7 @@ const SERVICES = [
     titre: 'Duo et groupes',
     lieux: 'Domicile · Extérieur',
     pourQui: '2 à 10 personnes',
-    prix: 'Dès 14\u00a0€ par personne',
-    photo: 'Kettlebells et barres sur un sol de salle',
+        photo: 'Kettlebells et barres sur un sol de salle',
     image: photoGroupes,
     texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
   },
@@ -35,8 +33,7 @@ const SERVICES = [
     titre: 'Individuel',
     lieux: 'Domicile · Salle · En ligne',
     pourQui: 'Domicile · Salle · En ligne',
-    prix: 'Dès 45\u00a0€ la séance',
-    photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
+        photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoIndividuel,
     texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',
   },
@@ -116,19 +113,22 @@ export default function Accueil() {
           <ul className="services__liste">
             {SERVICES.map((service) => (
               <li key={service.to}>
-                <Link to={service.to} className="service" aria-label={`${service.titre} : voir les formules`}>
+                {/* Toute la carte mène à la page de l'offre (lien du titre étendu à la carte) ;
+                    « Me contacter » (vermillon) mène au formulaire, l'offre déjà cochée. Plus de prix sur l'accueil. */}
+                <div className="service">
                   <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
                   <div className="service__corps">
-                    <h3 className="titre titre--tuile">{service.titre}</h3>
+                    <h3 className="titre titre--tuile">
+                      <Link to={service.to} className="service__lien" aria-label={`${service.titre} : voir les formules`}>{service.titre}</Link>
+                    </h3>
                     <p className="surtitre service__lieux">{service.pourQui}</p>
                     <p className="texte">{service.texte}</p>
-                    {/* le prix à gauche, la flèche ronde à droite (toute la carte est le lien) */}
-                    <div className="service__bas">
-                      <p className="service__prix">{service.prix}</p>
+                    <Link to={`/contact?offre=${encodeURIComponent(service.titre)}`} className="service__bas" aria-label={`Me contacter au sujet de l’offre ${service.titre}`}>
+                      <span className="service__contact">Me contacter</span>
                       <span className="service__fleche" aria-hidden="true"><FlecheDiagonale /></span>
-                    </div>
+                    </Link>
                   </div>
-                </Link>
+                </div>
               </li>
             ))}
           </ul>

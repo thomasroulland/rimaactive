@@ -1201,3 +1201,18 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .approche__cadre .titre--section { white-space: nowrap; font-size: min(36px, calc((100vw - 2 * var(--gouttiere) - 40px) / 7.6)); }
   .approche__bouton { align-self: flex-start; }
 }
+
+/* Accueil, Mes services (sans prix) : la carte entière mène à la page de l'offre ; « Me contacter » en vermillon,
+   en 19 px gras (grand texte : contraste suffisant du vermillon sur blanc), mène au formulaire */
+.service { position: relative; }
+.service__lien { color: inherit; text-decoration: none; }
+.service__lien::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.service__lien:focus-visible { outline: none; }
+.service:has(.service__lien:focus-visible) { outline: 2px solid var(--encre); outline-offset: 3px; }
+.service__bas { position: relative; z-index: 1; color: var(--vermillon); text-decoration: none; }
+.service__contact { font-weight: 800; font-size: 19px; line-height: 26px; }
+.service__bas .service__fleche { border-color: var(--vermillon); color: var(--vermillon); }
+@media (hover: hover) { .service__bas:hover .service__fleche { background: var(--vermillon); color: var(--encre); } .service__bas:hover .service__contact { text-decoration: underline; text-underline-offset: 3px; } }
+.service__bas:focus-visible { outline: 2px solid var(--encre); outline-offset: 3px; border-radius: 999px; }
+@media (max-width: 899px) { .service__contact { font-size: 19px; line-height: 24px; } }
+@media (hover: hover) { .service:hover .service__bas .service__fleche { background: var(--vermillon); border-color: var(--vermillon); color: var(--encre); } }

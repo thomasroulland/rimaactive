@@ -84,6 +84,10 @@ le logo, l'e-mail (la phrase « Basée à Houdan… » retirée à la demande de
 Instagram / Facebook / TikTok en petites bulles ; sous un filet, « © année Rimaactive » et le lien « Mentions légales et
 politique de confidentialité ». Ni menu des pages, ni bouton « M'écrire », ni grand titre « Contactez-moi ».
 
+**Mes services (accueil, 6 novembre 2026)** : plus de prix (choix de Marie, crédit d'impôt services à la personne envisagé) ;
+chaque carte mène à sa page, « Me contacter » (vermillon, 19 px gras) mène au formulaire avec l'offre cochée
+(`/contact?offre=Entreprises`). Les prix des pages Entreprises / Duo et groupes / Individuel restent, en attente de décision.
+
 **Informations légales** (`/mentions-legales`, `InformationsLegales.jsx`) : une seule page en trois parties, Mentions
 légales (#mentions), Politique de confidentialité (#confidentialite), Conditions générales de vente (#cgv). Les textes
 des deux premières sont dans `MentionsLegales.jsx` et `Confidentialite.jsx` ; `/confidentialite` redirige vers

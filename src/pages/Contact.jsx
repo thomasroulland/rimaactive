@@ -22,7 +22,9 @@ export default function Contact() {
   const [parametres] = useSearchParams()
   const formuleVenue = parametres.get('formule') ?? ''
   const offreVenue = OFFRES.find((o) => o.formules.includes(formuleVenue))
-  const [offre, setOffre] = useState(offreVenue?.nom ?? '')
+  // depuis une carte de l'accueil (« Me contacter ») : seulement l'offre (?offre=Entreprises)
+  const offreSeule = OFFRES.find((o) => o.nom === parametres.get('offre'))?.nom
+  const [offre, setOffre] = useState(offreVenue?.nom ?? offreSeule ?? '')
   const [formule, setFormule] = useState(offreVenue ? formuleVenue : '')
   const formulesOffre = OFFRES.find((o) => o.nom === offre)?.formules ?? []
 
