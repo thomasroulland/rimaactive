@@ -76,7 +76,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    En ligne », phrase, prix « à partir de » et flèche ronde. Sur téléphone et tablette, cartes compactes.
 4. « Les questions qu'on me pose » (#questions), fond blanc : « Avant de vous lancer » puis le titre sur une ligne ;
    6 questions qui s'ouvrent au clic : questions et réponses écrites par Marie (5 novembre 2026), reprises telles quelles.
-   Réponse 2 : « retour au calme de 5 minutes » alors que les cartes disent « 3 à 5 min » (à faire trancher par Marie).
+   Réponse 2 : « …avant un retour au calme. » (durée retirée à la demande de Marie).
    La rubrique « Ma boîte à outils » (carrousel) est supprimée (BoiteOutils.jsx retiré).
 
 **Bloc du bas** (`Pied.jsx`), encre, discret (5 novembre 2026, demandé par Marie : plus minimaliste) : sur une ligne

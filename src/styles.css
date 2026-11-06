@@ -1124,3 +1124,52 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 @media (max-width: 899px) {
   .formules-page__liste { flex-direction: column; align-items: flex-start; width: 100%; }
 }
+
+/* ---------- Téléphone (6 novembre 2026) : chaque rubrique de l'accueil tient dans un écran ---------- */
+@media (max-width: 899px) {
+  /* chaque rubrique occupe au moins un écran sous l'en-tête, contenu centré, marges réduites */
+  .section.ecran-plein { box-sizing: border-box; min-height: calc(100svh - var(--hauteur-entete)); display: flex; flex-direction: column; justify-content: center; padding-block: 24px; }
+  .ecran-plein > .conteneur { width: 100%; }
+  html:has(.ecran-plein) { scroll-snap-type: y proximity; scroll-padding-top: var(--hauteur-entete); }
+  main > section { scroll-snap-align: start; }
+
+  /* haut de page : titre un peu plus petit, photo moins haute, repères en bulles sur deux lignes */
+  .heros { box-sizing: border-box; min-height: calc(100svh - var(--hauteur-entete)); padding-top: 12px; padding-bottom: 16px; gap: 14px; align-content: center; }
+  .heros__titre { font-size: 44px; }
+  .heros__surtitre { margin-bottom: 10px; }
+  .heros__ligne { margin-top: 12px; font-size: 18px; line-height: 26px; }
+  .heros .actions { margin-top: 18px; }
+  .heros__cadre { gap: 10px; }
+  .heros__photo { height: min(240px, 30svh); }
+  .heros__bulles { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .heros__bulles li { padding: 6px 12px; font-size: 13px; }
+
+  /* Qui suis-je : le portrait en entier (non recadré), en petit dans le coin de l'encadré, à côté du titre */
+  main > section.approche.section.ecran-plein { display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; }
+  .approche__photo, .approche__panneau { grid-area: 1 / 1; }
+  .approche__photo { justify-self: end; align-self: start; margin: 16px 16px 0 0; z-index: 1; }
+  .approche__photo img { width: auto; height: 72px; border-radius: 12px; }
+  .approche__cadre .surtitre, .approche__cadre .titre--section { padding-right: 66px; }
+  .approche__cadre { padding: 18px; gap: 8px; }
+  .approche__cadre .titre--section { margin-bottom: 0; }
+  .approche__cadre .texte { line-height: 24px; }
+
+  /* Pourquoi ça marche : le numéro à côté du titre, points plus serrés, objectifs en petites bulles */
+  .methode__principes { margin-top: 12px; gap: 10px; }
+  .methode__principes li { grid-template-columns: auto 1fr; column-gap: 12px; row-gap: 2px; padding-top: 10px; align-items: baseline; }
+  .methode__texte { line-height: 24px; }
+  .methode__numero { font-size: 26px; line-height: 26px; }
+  .methode__principes li > p { grid-column: 1 / -1; }
+  .methode__objectifs { margin-top: 10px; gap: 6px; }
+  .methode__objectifs ul { gap: 6px; }
+  .methode__objectifs li { padding: 4px 12px; font-size: 13px; }
+
+  main > section.methode.section.ecran-plein { padding-block: 12px; }
+  .methode__entete { gap: 4px; }
+  /* Mes services et questions : marges réduites */
+  .services--v2 .services__entete { margin-bottom: 14px; }
+  .services__liste { gap: 12px; }
+  .questions__liste { margin-top: 16px; gap: 6px; }
+  .question summary { padding: 12px 18px; }
+  .question p { padding: 0 18px 12px; }
+}

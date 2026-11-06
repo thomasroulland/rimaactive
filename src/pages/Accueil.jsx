@@ -186,7 +186,7 @@ function Methode() {
 // « Les questions qu'on me pose » : questions et réponses de Marie (5 novembre 2026), reprises telles quelles
 const QUESTIONS = [
   ['Je débute ou je reprends le sport après une longue pause, est-ce pour moi\u00a0?', 'Bien sûr. Chaque séance est adaptée à votre niveau et à vos objectifs. Que vous débutiez ou repreniez après une pause, vous progressez à votre rythme.'],
-  ['Comment se déroule une séance\u00a0?', 'Chaque séance commence par un échauffement associant mobilité dynamique et activation des muscles qui seront sollicités. Le corps de séance dure ensuite 40 à 50\u00a0minutes avant un retour au calme de 5\u00a0minutes.'],
+  ['Comment se déroule une séance\u00a0?', 'Chaque séance commence par un échauffement associant mobilité dynamique et activation des muscles qui seront sollicités. Le corps de séance dure ensuite 40 à 50\u00a0minutes avant un retour au calme.'],
   ['Faut-il prévoir du matériel ou un espace particulier\u00a0?', 'À domicile, dans vos locaux ou en extérieur, il suffit d’un espace permettant de bouger en toute sécurité. J’apporte tout le matériel nécessaire\u00a0: tapis, kettlebells, slam balls, etc.'],
   ['Dans quel secteur vous déplacez-vous\u00a0?', 'Basée à Houdan (78), je me déplace dans les Yvelines (78), l’Eure-et-Loir (28) et l’Eure (27). Le déplacement est inclus jusqu’à 20\u00a0km autour de Houdan.'],
   ['Peut-on s’entraîner à deux ou en groupe avec des niveaux différents\u00a0?', 'Totalement. Les exercices sont adaptés au niveau de chaque personne. J’ajuste les charges et propose différentes variantes pour que chacun puisse progresser avec une difficulté adaptée.'],
