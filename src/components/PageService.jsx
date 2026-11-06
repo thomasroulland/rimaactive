@@ -9,6 +9,9 @@ import Picto from './Picto.jsx'
 // page.onglets : boutons Présentiel / En ligne. Les cartes de page.cartes qui ont un « mode » restent toutes affichées ;
 // celles de l'autre mode sont grisées (Individuel). Un onglet peut aussi avoir ses propres cartes.
 // Une carte peut avoir un ou deux tarifs (côte à côte : À domicile / En salle, 4 à 8 / 9 à 12 personnes).
+// Les prix sont gardés dans les pages (tarifs des cartes) mais ne s'affichent pas tant que c'est false
+const AFFICHER_TARIFS = false
+
 export default function PageService({ page }) {
   const [actif, setActif] = useState(0)
   const onglets = page.onglets ?? [{ cartes: page.cartes }]
@@ -48,7 +51,8 @@ export default function PageService({ page }) {
               </div>
               <h2 className="titre titre--tuile">{f.nom}</h2>
               {f.infos && <p className="offre__infos">{f.infos}</p>}
-              <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
+              {/* Tarifs masqués pour le moment (Marie, 6 novembre 2026) : remettre AFFICHER_TARIFS à true pour les réafficher */}
+              {AFFICHER_TARIFS && <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
                 {f.tarifs.map((t) => (
                   <div key={t.libelle ?? t.montant} className="offre__tarif">
                     {t.libelle && <p className="offre__libelle">{t.libelle}</p>}
@@ -60,7 +64,7 @@ export default function PageService({ page }) {
                     {t.detail && <p className="offre__detail">{t.detail}</p>}
                   </div>
                 ))}
-              </div>
+              </div>}
               {f.titrePoints && <p className="offre__titre-points">{f.titrePoints}</p>}
               {f.points && (
                 <ul className="offre__points">
@@ -86,7 +90,7 @@ export default function PageService({ page }) {
               {liste.map((point) => <li key={point}><Picto nom="check-square" taille={20} />{point}</li>)}
             </ul>
           )}
-          <p className="formules-page__note">{note}</p>
+          {note && <p className="formules-page__note">{note}</p>}
         </div>
       </div>
     </section>

@@ -1216,3 +1216,16 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 .service__bas:focus-visible { outline: 2px solid var(--encre); outline-offset: 3px; border-radius: 999px; }
 @media (max-width: 899px) { .service__contact { font-size: 19px; line-height: 24px; } }
 @media (hover: hover) { .service:hover .service__bas .service__fleche { background: var(--vermillon); border-color: var(--vermillon); color: var(--encre); } }
+
+/* Tarifs masqués (6 novembre 2026) : cartes plus compactes, blocs rapprochés au lieu de trous à la place des prix */
+@media (min-width: 900px) {
+  .offres--2 > .offre, .formules-page__grille--large .offre { min-height: 0; }
+  .offre .offre__titre-points, .offre .offre__tarifs + .offre__points { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--filet); }
+  .offre--sombre .offre__titre-points { border-top-color: rgba(244, 243, 239, 0.2); }
+  .offre .offre__points { margin-bottom: 22px; }
+  .offre .offre__bouton { margin-top: auto; } /* boutons alignés en bas des cartes */
+}
+@media (max-width: 899px) {
+  .offre .offre__titre-points { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--filet); }
+  .offre--sombre .offre__titre-points { border-top-color: rgba(244, 243, 239, 0.2); }
+}

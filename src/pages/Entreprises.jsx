@@ -13,7 +13,6 @@ export const PAGE = {
     'Matériel fourni : tapis, kettlebells, slam balls, etc.',
     'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)',
   ],
-  note: 'Tarifs valables jusqu’au 30 avril 2027. TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
       nom: 'Active 60',

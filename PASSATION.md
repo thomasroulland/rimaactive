@@ -86,7 +86,9 @@ politique de confidentialité ». Ni menu des pages, ni bouton « M'écrire », 
 
 **Mes services (accueil, 6 novembre 2026)** : plus de prix (choix de Marie, crédit d'impôt services à la personne envisagé) ;
 chaque carte mène à sa page, « Me contacter » (vermillon, 19 px gras) mène au formulaire avec l'offre cochée
-(`/contact?offre=Entreprises`). Les prix des pages Entreprises / Duo et groupes / Individuel restent, en attente de décision.
+(`/contact?offre=Entreprises`). Les prix des pages Entreprises / Duo et groupes / Individuel sont aussi masqués (6 novembre 2026, avec la mention
+« Tarifs valables jusqu'au 30 avril 2027. TVA non applicable… ») : ils restent dans le code (`tarifs` des cartes),
+il suffit de remettre `AFFICHER_TARIFS = true` dans `PageService.jsx` (et la mention `note`) pour les réafficher.
 
 **Informations légales** (`/mentions-legales`, `InformationsLegales.jsx`) : une seule page en trois parties, Mentions
 légales (#mentions), Politique de confidentialité (#confidentialite), Conditions générales de vente (#cgv). Les textes

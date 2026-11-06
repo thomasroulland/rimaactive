@@ -25,8 +25,8 @@ const SECTIONS_CGV = [
     contenu: (
       <>
         <p>
-          Le contenu et le prix de chaque formule sont indiqués sur les pages Entreprises, Duo et groupes et Individuel.
-          Les tarifs sont valables jusqu'au 30 avril 2027. TVA non applicable, art. 293 B du CGI.
+          Le contenu de chaque formule est indiqué sur les pages Entreprises, Duo et groupes et Individuel.
+          Les tarifs sont communiqués sur demande.
         </p>
         <p>Les formules sur devis font l'objet d'une proposition écrite avant toute séance.</p>
       </>
