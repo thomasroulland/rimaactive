@@ -1148,11 +1148,12 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .heros__bulles li { padding: 6px 12px; font-size: 13px; }
 
   /* Qui suis-je : le portrait en entier (non recadré), en petit dans le coin de l'encadré, à côté du titre */
-  main > section.approche.section.ecran-plein { display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; }
-  .approche__photo, .approche__panneau { grid-area: 1 / 1; }
-  .approche__photo { justify-self: end; align-self: start; margin: 16px 16px 0 0; z-index: 1; }
-  .approche__photo img { width: auto; height: 72px; border-radius: 12px; }
-  .approche__cadre .surtitre, .approche__cadre .titre--section { padding-right: 66px; }
+  /* Qui suis-je : le portrait en haut prend toute la place libre de l'écran (cadré sur le visage), l'encadré dessous */
+  main > section.approche.section.ecran-plein { display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; padding-block: 16px; }
+  .approche__photo { flex: 1 1 0; min-height: 110px; margin: 0; display: flex; justify-content: center; }
+  /* le portrait entier, jamais recadré : il prend toute la hauteur libre et se centre */
+  .approche__photo img { width: auto; max-width: 100%; height: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--arrondi); }
+  .approche__panneau { flex: none; }
   .approche__cadre { padding: 18px; gap: 8px; }
   .approche__cadre .titre--section { margin-bottom: 0; }
   .approche__cadre .texte { line-height: 24px; }
@@ -1189,3 +1190,11 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 /* l'accroche tient en deux lignes exactement : la première ne repasse jamais à la ligne */
 .heros__ligne { white-space: nowrap; }
 @media (max-width: 899px) { .heros__ligne { font-size: min(18px, calc((100vw - 2 * var(--gouttiere)) / 17)); } }
+/* Téléphones peu hauts : pas la place pour un grand portrait, il passe en petit dans le coin de l'encadré */
+@media (max-width: 899px) and (max-height: 759px) {
+  main > section.approche.section.ecran-plein { display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; }
+  .approche__photo, .approche__panneau { grid-area: 1 / 1; }
+  .approche__photo { flex: none; min-height: 0; display: block; justify-self: end; align-self: start; margin: 16px 16px 0 0; z-index: 1; }
+  .approche__photo img { width: auto; height: 72px; border-radius: 12px; }
+  .approche__cadre .surtitre, .approche__cadre .titre--section { padding-right: 66px; }
+}
