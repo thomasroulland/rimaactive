@@ -78,9 +78,11 @@ export default function Accueil() {
         </figure>
         <div className="approche__panneau">
           <div className="approche__cadre">
-            {/* sur téléphone, le portrait est dans l'encadré (voir styles.css) */}
-            <figure className="approche__photo--cadre" aria-hidden="true"><img src={portraitMarie} alt="" width="960" height="1200" /></figure>
-            <p className="surtitre approche__surtitre">Qui suis-je</p>
+            {/* sur téléphone, le portrait est dans l'encadré, contre « Qui suis-je » (voir styles.css) */}
+            <div className="approche__entete">
+              <p className="surtitre approche__surtitre">Qui suis-je</p>
+              <figure className="approche__photo--cadre" aria-hidden="true"><img src={portraitMarie} alt="" width="960" height="1200" /></figure>
+            </div>
             <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
             <p className="texte">
               Passionnée de sport, je vous aide à atteindre vos objectifs grâce à une pratique adaptée à votre rythme de vie.

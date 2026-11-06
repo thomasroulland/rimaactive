@@ -1185,20 +1185,19 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 .heros__ligne { white-space: nowrap; }
 @media (max-width: 899px) { .heros__ligne { font-size: min(18px, calc((100vw - 2 * var(--gouttiere)) / 17)); } }
 
-/* Qui suis-je, téléphone : tout dans l'encadré, qui remplit l'écran ; le portrait (entier) en haut de l'encadré
-   prend toute la hauteur libre, il grandit avec la taille du téléphone */
+/* Qui suis-je, téléphone : tout dans l'encadré, qui remplit l'écran. Le portrait (entier) est contre « Qui suis-je »,
+   à sa droite, jamais au-dessus ni en dessous ; il grandit avec la place libre. « Moi c'est Marie » sur une ligne. */
 .approche__photo--cadre { display: none; }
+.approche__entete { display: contents; }
 @media (max-width: 899px) {
   main > section.approche.section.ecran-plein { display: flex; flex-direction: column; padding-block: 16px; }
   .approche > .approche__photo { display: none; }
   .approche__panneau { flex: 1; display: flex; }
-  .approche__cadre { flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
-  .approche__photo--cadre { display: flex; justify-content: center; align-self: stretch; flex: 1 1 0; min-height: 96px; margin: 0 0 6px; }
-  .approche__photo--cadre img { display: block; width: auto; max-width: 100%; height: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
-}
-/* Téléphones peu hauts : pas la place pour un grand portrait, il reste dans l'encadré mais en petit, à côté du titre */
-@media (max-width: 899px) and (max-height: 719px) {
-  .approche__cadre { position: relative; justify-content: center; }
-  .approche__photo--cadre { position: absolute; top: 16px; right: 16px; flex: none; min-height: 0; height: 72px; margin: 0; }
-  .approche__cadre .surtitre, .approche__cadre .titre--section { padding-right: 66px; }
+  .approche__cadre { flex: 1; display: flex; flex-direction: column; align-items: stretch; }
+  .approche__entete { display: flex; align-items: flex-end; gap: 12px; flex: 1 1 0; min-height: 52px; max-height: 240px; }
+  .approche__entete .surtitre { margin: 0; }
+  .approche__photo--cadre { display: block; height: 100%; margin: 0; flex: none; }
+  .approche__photo--cadre img { display: block; height: 100%; width: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
+  .approche__cadre .titre--section { white-space: nowrap; font-size: min(36px, calc((100vw - 2 * var(--gouttiere) - 40px) / 7.6)); }
+  .approche__bouton { align-self: flex-start; }
 }
