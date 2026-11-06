@@ -53,7 +53,8 @@ export default function Accueil() {
         <div className="heros__texte">
           <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
           <h1 id="heros-titre" className="titre heros__titre">Coach<br /><span className="mot-avant">Marie</span></h1>
-          <p className="accroche heros__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
+          {/* retour à la ligne voulu par Marie après « grâce à une », sur tous les écrans */}
+          <p className="accroche heros__ligne">Un corps fort et mobile grâce à une<br />pratique fonctionnelle.</p>
           <div className="actions">
             <a href="#approche" className="bouton bouton--secondaire">Qui suis-je</a>
             <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>

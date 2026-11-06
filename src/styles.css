@@ -1186,3 +1186,6 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 }
 /* Téléphone : le numéro est à côté du titre, le titre a donc moins de largeur pour tenir sur une ligne */
 @media (max-width: 899px) { .methode__titre { font-size: min(22px, 6.6cqi); } }
+/* l'accroche tient en deux lignes exactement : la première ne repasse jamais à la ligne */
+.heros__ligne { white-space: nowrap; }
+@media (max-width: 899px) { .heros__ligne { font-size: min(18px, calc((100vw - 2 * var(--gouttiere)) / 17)); } }
