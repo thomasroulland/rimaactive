@@ -1176,3 +1176,13 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   .question summary { padding: 12px 18px; }
   .question p { padding: 0 18px 12px; }
 }
+/* Téléphone : « Coach sportive diplômée · Houdan (78) & alentours » sur une seule ligne ;
+   les trois bulles côte à côte en bas de la photo pour ne pas cacher le visage */
+@media (max-width: 899px) {
+  .heros__surtitre { white-space: nowrap; font-size: min(12px, calc((100vw - 2 * var(--gouttiere)) / 32)); letter-spacing: 0.08em; }
+  .heros__bulles { flex-direction: row; flex-wrap: wrap; margin: 10px; gap: 5px; }
+  .heros__bulles li { padding: 5px 10px; font-size: 12px; gap: 6px; }
+  .heros__photo { object-position: 50% 20%; }
+}
+/* Téléphone : le numéro est à côté du titre, le titre a donc moins de largeur pour tenir sur une ligne */
+@media (max-width: 899px) { .methode__titre { font-size: min(22px, 6.6cqi); } }
