@@ -1134,14 +1134,17 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
   main > section { scroll-snap-align: start; }
 
   /* haut de page : titre un peu plus petit, photo moins haute, repères en bulles sur deux lignes */
-  .heros { box-sizing: border-box; min-height: calc(100svh - var(--hauteur-entete)); padding-top: 12px; padding-bottom: 16px; gap: 14px; align-content: center; }
+  /* le texte juste sous le logo ; la photo prend toute la place qui reste jusqu'en bas de l'écran */
+  .heros { box-sizing: border-box; height: calc(100svh - var(--hauteur-entete)); min-height: 560px; padding-top: 12px; padding-bottom: 16px; gap: 14px; display: flex; flex-direction: column; }
+  .heros__texte { flex: none; padding-top: 0; }
   .heros__titre { font-size: 44px; }
   .heros__surtitre { margin-bottom: 10px; }
   .heros__ligne { margin-top: 12px; font-size: 18px; line-height: 26px; }
   .heros .actions { margin-top: 18px; }
-  .heros__cadre { gap: 10px; }
-  .heros__photo { height: min(240px, 30svh); }
-  .heros__bulles { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  /* les trois bulles posées en bas de la photo, comme sur ordinateur */
+  .heros__cadre { flex: 1; min-height: 240px; position: relative; overflow: hidden; border-radius: var(--arrondi-grand); background: var(--encre); display: grid; }
+  .heros__photo { position: absolute; inset: 0; height: 100%; border-radius: 0; object-position: 50% 25%; }
+  .heros__bulles { align-self: end; margin: 12px; flex-direction: column; align-items: flex-start; gap: 6px; }
   .heros__bulles li { padding: 6px 12px; font-size: 13px; }
 
   /* Qui suis-je : le portrait en entier (non recadré), en petit dans le coin de l'encadré, à côté du titre */
