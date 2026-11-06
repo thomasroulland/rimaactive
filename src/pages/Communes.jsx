@@ -23,7 +23,7 @@ export const PAGE = {
     {
       nom: 'Active Group',
       picto: 'tree',
-      surtitre: '4 à 10 personnes',
+      surtitre: '4 à 8 personnes',
       infos: '60\u00a0min · En extérieur',
       titrePoints: 'Compris pour chaque session',
       points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],

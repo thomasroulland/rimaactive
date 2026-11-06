@@ -72,7 +72,7 @@ elle passe en craie. « M'écrire » reste toujours jaune. Seules les couleurs c
    Silhouette, Performance & Force, Condition physique & Endurance, Mental & Discipline (donnés par Marie).
 3. Mes services (#accompagnement), fond craie foncé : « Mes services » puis « Trois façons de s'entraîner avec moi » sur
    une ligne, repères (Session de 60 min, Matériel fourni, Présentiel & en ligne) ; 3 cartes en bulles
-   blanches qui se soulèvent au survol : photo, titre, « 4 à 16 personnes » / « 2 à 10 personnes » / « Domicile · Salle ·
+   blanches qui se soulèvent au survol : photo, titre, « 4 à 16 personnes » / « 2 à 8 personnes » / « Domicile · Salle ·
    En ligne », phrase, prix « à partir de » et flèche ronde. Sur téléphone et tablette, cartes compactes.
 4. « Les questions qu'on me pose » (#questions), fond blanc : « Avant de vous lancer » puis le titre sur une ligne ;
    6 questions qui s'ouvrent au clic : questions et réponses écrites par Marie (5 novembre 2026), reprises telles quelles.

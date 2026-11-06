@@ -23,7 +23,7 @@ const SERVICES = [
     to: '/communes',
     titre: 'Duo et groupes',
     lieux: 'Domicile · Extérieur',
-    pourQui: '2 à 10 personnes',
+    pourQui: '2 à 8 personnes',
         photo: 'Kettlebells et barres sur un sol de salle',
     image: photoGroupes,
     texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
