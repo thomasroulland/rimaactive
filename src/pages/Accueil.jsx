@@ -1,19 +1,55 @@
 import photoHeros from '../assets/portrait-contact.jpg'
 import portraitMarie from '../assets/portrait-marie.jpg'
+import photoEntreprises from '../assets/service-entreprises.jpg'
+import photoGroupes from '../assets/service-groupes.jpg'
+import photoIndividuel from '../assets/service-individuel.jpg'
+import photoEnLigne from '../assets/service-en-ligne.jpg'
 import { Link } from 'react-router-dom'
+import { Photo } from '../components/Blocs.jsx'
 import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 import { CONTACT } from '../components/liens.js'
 
-// « Mes services et tarifs » : prix et contenus donnés par Marie (7 novembre 2026), repris tels quels
-const TARIFS = [
-  { sur: 'Individuel', titre: 'À domicile', prix: '70\u00a0€', unite: 'la séance', details: 'Séance de 60\u00a0min chez vous.', to: '/particuliers', bouton: 'Voir la formule' },
-  { sur: 'Individuel à domicile', titre: 'Suivi mensuel', prix: '260\u00a0€', unite: 'par mois', details: '4 séances à domicile, programme personnalisé et suivi inclus.', to: '/particuliers', bouton: 'Voir la formule', sombre: true },
-  { sur: 'Individuel', titre: 'En salle', prix: '60\u00a0€', unite: 'la séance', details: 'Séance de 60\u00a0min en salle.', to: '/particuliers', bouton: 'Voir la formule' },
-  { sur: 'Groupes · 2 à 8 personnes', titre: 'En groupe', prix: '70\u00a0€', unite: 'la séance', details: 'Séance de 60\u00a0min, à domicile ou en extérieur.', to: '/groupes', bouton: 'Voir la formule' },
-  { sur: 'Entreprises · jusqu’à 16 personnes', titre: 'En entreprise', avant: 'À partir de', prix: '120\u00a0€', unite: 'la séance', details: 'Devis gratuit sous 48\u00a0h.', to: '/contact?offre=Entreprises', bouton: 'Demander un devis' },
-  { sur: 'En ligne · 12 semaines', titre: 'Active Plus', prix: '240\u00a0€', unite: 'ou 3 × 80\u00a0€', details: 'Programme personnalisé, suivi hebdomadaire et bilans.', to: '/en-ligne', bouton: 'Voir la formule' },
+const SERVICES = [
+  {
+    to: '/entreprises',
+    titre: 'Entreprises',
+    lieux: 'Locaux · Extérieur',
+    pourQui: '4 à 16 personnes',
+        photo: 'Rangée de kettlebells sur le sol d’une salle',
+    image: photoEntreprises,
+    texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
+  },
+  {
+    to: '/groupes',
+    titre: 'Groupes',
+    lieux: 'Domicile · Extérieur',
+    pourQui: '2 à 8 personnes',
+        photo: 'Kettlebells et barres sur un sol de salle',
+    image: photoGroupes,
+    texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
+  },
+  {
+    to: '/particuliers',
+    titre: 'Individuel',
+    lieux: 'Domicile · Salle',
+    pourQui: 'Domicile · Salle',
+        photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
+    image: photoIndividuel,
+    texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',
+  },
+  // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie ; texte repris de la formule Active Plus
+  {
+    to: '/en-ligne',
+    titre: 'En ligne',
+    lieux: '12 semaines',
+    pourQui: '12 semaines',
+    photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
+    image: photoEnLigne,
+    texte: 'Active Plus : un programme personnalisé, un suivi hebdomadaire et des bilans, sur 12 semaines.',
+  },
 ]
+
 
 export default function Accueil() {
   useTitre('Accueil')
@@ -74,34 +110,39 @@ export default function Accueil() {
 
       <Methode />
 
-      {/* « Mes services et tarifs » (Marie, 7 novembre 2026) : six cartes avec les prix, chacune vers sa page
-          (Entreprises : vers le formulaire, pour un devis), puis la ligne des déplacements et de la TVA */}
-      <section id="accompagnement" className="section tarifs ecran-plein" aria-labelledby="services-titre">
+      <section id="accompagnement" className="section services services--v2 ecran-plein" aria-labelledby="services-titre">
         <div className="conteneur">
-          <div className="tarifs__entete">
-            <p className="surtitre">Individuel · Groupes · Entreprises · En ligne</p>
-            <h2 id="services-titre" className="titre titre--section">Mes services et <span className="mot-avant">tarifs</span></h2>
+          <div className="services__entete">
+            <div>
+              <p className="surtitre">Mes services</p>
+              <h2 id="services-titre" className="titre titre--section">Quatre façons de s’<span className="mot-avant">entraîner</span> avec moi</h2>
+            </div>
           </div>
-          <ul className="tarifs__liste">
-            {TARIFS.map((t) => (
-              <li key={t.titre} className={`tarif ${t.sombre ? 'tarif--sombre' : ''}`}>
-                <p className="surtitre tarif__sur">{t.sur}</p>
-                <h3 className="tarif__titre">{t.titre}</h3>
-                <p className="tarif__prix">
-                  {t.avant && <span className="tarif__petit">{t.avant} </span>}
-                  {t.prix}
-                  <span className="tarif__petit"> {t.unite}</span>
-                </p>
-                <p className="tarif__details">{t.details}</p>
-                <Link to={t.to} className={`bouton ${t.sombre ? 'bouton--principal' : 'bouton--encre'} tarif__bouton`}>
-                  {t.bouton} <FlecheDiagonale />
-                </Link>
+          {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, puis le prix « à partir de »
+              (fiche tarifs) et une flèche ronde, qui passe en jaune au survol.
+              Sur téléphone et tablette, les cartes sont compactes : petite photo à gauche, sans la phrase. */}
+          <ul className="services__liste">
+            {SERVICES.map((service) => (
+              <li key={service.to}>
+                {/* Toute la carte mène à la page de l'offre (lien du titre étendu à la carte) ;
+                    « Me contacter » (vermillon) mène au formulaire, l'offre déjà cochée. Plus de prix sur l'accueil. */}
+                <div className="service">
+                  <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
+                  <div className="service__corps">
+                    <h3 className="titre titre--tuile">
+                      <Link to={service.to} className="service__lien" aria-label={`${service.titre} : voir les formules`}>{service.titre}</Link>
+                    </h3>
+                    <p className="surtitre service__lieux">{service.pourQui}</p>
+                    <p className="texte">{service.texte}</p>
+                    <Link to={`/contact?offre=${encodeURIComponent(service.titre)}`} className="service__bas" aria-label={`Me contacter au sujet de l’offre ${service.titre}`}>
+                      <span className="service__contact">Me contacter</span>
+                      <span className="service__fleche" aria-hidden="true"><FlecheDiagonale /></span>
+                    </Link>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
-          <p className="tarifs__note">
-            Déplacements compris jusqu’à 20&nbsp;km autour de Houdan, au-delà sur devis. TVA non applicable, art.&nbsp;293&nbsp;B du CGI.
-          </p>
         </div>
       </section>
 

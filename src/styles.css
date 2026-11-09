@@ -1310,3 +1310,27 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   .page-contact .choix { gap: 4px; flex-wrap: wrap; }
   .page-contact .choix span { padding: 0 9px; font-size: 13px; letter-spacing: -0.01em; }
 }
+
+/* Accueil, Mes services : quatre tuiles (En ligne ajoutée le 9 novembre 2026) */
+@media (min-width: 900px) { .services__liste { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 640px) and (max-width: 899px) { .services__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.service__photo--en-ligne img { object-position: 50% 55%; }
+/* quatre tuiles plus étroites : le texte entier (4 lignes), en 15 px */
+@media (min-width: 900px) {
+  .services--v2 .service .texte { -webkit-line-clamp: unset; display: block; overflow: visible; font-size: 15px; line-height: 23px; }
+}
+/* écrans moyens (900 à 1199 px) : les quatre tuiles en compact, comme sur tablette (photo à gauche, 2 × 2) */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .services__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .services--v2 .services__liste > li { height: auto; }
+  .services--v2 .service { display: grid; grid-template-columns: 140px 1fr; gap: 0 16px; align-items: center; }
+  .services--v2 .service .photo.service__photo { height: 140px; }
+  .services--v2 .service .texte { display: none; }
+}
+/* téléphone : tuiles un peu plus compactes, pour que les quatre tiennent dans l'écran */
+@media (max-width: 639px) {
+  .services--v2 .services__liste { gap: 8px; }
+  .services--v2 .service { grid-template-columns: 96px 1fr; padding: 8px; }
+  .services--v2 .service .photo.service__photo { height: 96px; }
+  .services--v2 .service__corps { padding: 2px 4px; }
+}
