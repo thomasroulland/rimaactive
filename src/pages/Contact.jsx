@@ -3,13 +3,14 @@ import { Link, useSearchParams } from 'react-router-dom'
 import photoMarie from '../assets/portrait-contact.jpg'
 import PresentationContact from '../components/AppelContact.jsx'
 import useTitre from '../components/useTitre.js'
-import { PAGE as ENTREPRISES } from './Entreprises.jsx'
-import { PAGE as GROUPES } from './Communes.jsx'
 import { PAGE as INDIVIDUEL } from './Particuliers.jsx'
+import { PAGE as GROUPES } from './Groupes.jsx'
+import { PAGE as ENTREPRISES } from './Entreprises.jsx'
+import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 
-// Les trois offres et leurs formules, reprises des pages (« Active Progress · Présentiel », « Active 60 · Entreprises »…) :
+// Les quatre offres et leurs formules, reprises des pages (« Suivi mensuel · Individuel », « Active Plus · En ligne »…) :
 // la même écriture que celle envoyée par le bouton « Choisir » d'une carte
-const OFFRES = [ENTREPRISES, GROUPES, INDIVIDUEL].map((page) => ({
+const OFFRES = [INDIVIDUEL, GROUPES, ENTREPRISES, EN_LIGNE].map((page) => ({
   nom: page.titre,
   formules: page.cartes.map((f) => `${f.nom} · ${f.mode ?? page.titre}`),
 }))
@@ -17,7 +18,7 @@ const OFFRES = [ENTREPRISES, GROUPES, INDIVIDUEL].map((page) => ({
 export default function Contact() {
   useTitre('Contact')
   const [envoye, setEnvoye] = useState(false)
-  // Formule choisie depuis une carte des pages Entreprises, Duo et groupes ou Individuel (ex. « Active Progress · Présentiel ») :
+  // Formule choisie depuis une carte des pages Individuel, Groupes, Entreprises ou En ligne (ex. « Suivi mensuel · Individuel ») :
   // l'offre et la formule sont alors déjà cochées
   const [parametres] = useSearchParams()
   const formuleVenue = parametres.get('formule') ?? ''

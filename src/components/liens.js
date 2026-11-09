@@ -1,8 +1,10 @@
+// Ordre du menu demandé par Marie (7 novembre 2026)
 export const PAGES = [
   { to: '/', label: 'Accueil' },
-  { to: '/entreprises', label: 'Entreprises' },
-  { to: '/communes', label: 'Duo et groupes' },
   { to: '/particuliers', label: 'Individuel' },
+  { to: '/groupes', label: 'Groupes' },
+  { to: '/entreprises', label: 'Entreprises' },
+  { to: '/en-ligne', label: 'En ligne' },
   { to: '/contact', label: 'Contact' },
 ]
 

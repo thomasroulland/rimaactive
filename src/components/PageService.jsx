@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Picto from './Picto.jsx'
 
-// Gabarit commun aux pages Entreprises, Duo et groupes et Individuel :
+// Gabarit commun aux pages Individuel, Groupes, Entreprises et En ligne :
 // en haut un bandeau avec la photo de la carte de l'accueil et le nom de la page ;
 // dessous une carte par formule (blanche, ou encre pour celle marquée « sombre »), puis, centrées,
 // la liste cochée et les mentions. Sur ordinateur, bandeau et formules remplissent exactement l'écran.
@@ -10,7 +10,7 @@ import Picto from './Picto.jsx'
 // celles de l'autre mode sont grisées (Individuel). Un onglet peut aussi avoir ses propres cartes.
 // Une carte peut avoir un ou deux tarifs (côte à côte : À domicile / En salle, 4 à 8 / 9 à 12 personnes).
 // Les prix sont gardés dans les pages (tarifs des cartes) mais ne s'affichent pas tant que c'est false
-const AFFICHER_TARIFS = false
+const AFFICHER_TARIFS = true
 
 export default function PageService({ page }) {
   const [actif, setActif] = useState(0)
@@ -77,7 +77,7 @@ export default function PageService({ page }) {
                 className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
                 aria-label={`Choisir ${f.nom}`}
               >
-                Choisir <FlecheDiagonale />
+                {f.bouton ?? 'Choisir'} <FlecheDiagonale />
               </Link>
             </li>
           ))}

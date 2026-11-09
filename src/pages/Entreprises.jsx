@@ -2,36 +2,23 @@ import photoEntreprises from '../assets/service-entreprises.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Contenu de la page Entreprises (« Compris pour chaque session » : textes donnés par Marie le 2 novembre 2026) : fiche « Formules et tarifs » de Marie (octobre 2026), repris tel quel
+// Page Entreprises (jusqu'à 16 personnes) : prix donné par Marie (7 novembre 2026)
 export const PAGE = {
   titre: 'Entreprises',
-  lieux: 'Locaux · Extérieur',
   image: photoEntreprises,
   cadrage: '50% 70%', // partie de la photo montrée dans le bandeau (les kettlebells)
-  liste: [
-    'Dans vos locaux ou en extérieur',
-    'Matériel fourni : tapis, kettlebells, slam balls, etc.',
-    'Déplacement inclus jusqu’à 20\u00a0km autour de Houdan (78)',
-  ],
+  liste: ['Dans vos locaux ou en extérieur', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan, au-delà sur devis'],
+  note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
-      nom: 'Active 60',
+      nom: 'Séance en entreprise',
       picto: 'buildings',
-      surtitre: '4 à 12 personnes',
-      infos: '60\u00a0min · Ponctuel ou hebdomadaire',
-      tarifs: [{ avant: 'À partir de', montant: '110\u00a0€', apres: 'par session' }],
-      titrePoints: 'Compris pour chaque session',
-      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
-    },
-    {
-      nom: 'Active Day',
-      picto: 'map-pin',
       surtitre: 'Jusqu’à 16 personnes',
-      infos: 'Sur devis · Ponctuel',
-      tarifs: [{ avant: 'À partir de', montant: '180\u00a0€', apres: 'par session' }],
-      titrePoints: 'Compris pour chaque session',
+      infos: '60\u00a0min · Devis gratuit sous 48\u00a0h',
+      tarifs: [{ avant: 'À partir de', montant: '120\u00a0€', apres: 'la séance' }],
+      titrePoints: 'Compris pour chaque séance',
       points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
-      sombre: true,
+      bouton: 'Demander un devis',
     },
   ],
 }

@@ -24,7 +24,10 @@ export default function Pied({ seulementMentions = false }) {
         )}
         <div className="pied__bas">
           <span>© {new Date().getFullYear()} Rimaactive</span>
-          <Link to="/mentions-legales">Mentions légales et politique de confidentialité</Link>
+          <nav className="pied__legal" aria-label="Informations légales">
+            <Link to="/mentions-legales">Mentions légales</Link>
+            <Link to="/cgv">CGV</Link>
+          </nav>
         </div>
       </div>
     </footer>
