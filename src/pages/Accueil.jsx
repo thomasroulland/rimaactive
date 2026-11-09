@@ -35,7 +35,7 @@ const SERVICES = [
     pourQui: 'Domicile · Salle',
         photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoIndividuel,
-    texte: 'Je vous accompagne en présentiel ou à distance avec des séances construites autour de vos objectifs et de votre niveau.',
+    texte: 'Je vous accompagne en présentiel avec des séances construites autour de vos objectifs et de votre niveau.',
   },
   // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie ; texte repris de la formule Active Plus
   {
@@ -45,7 +45,7 @@ const SERVICES = [
     pourQui: '12 semaines',
     photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
     image: photoEnLigne,
-    texte: 'Active Plus : un programme personnalisé, un suivi hebdomadaire et des bilans, sur 12 semaines.',
+    texte: 'Je vous accompagne à distance avec un programme personnalisé, un suivi hebdomadaire et des bilans, sur 12 semaines.',
   },
 ]
 
