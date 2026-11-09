@@ -45,7 +45,7 @@ const SERVICES = [
     pourQui: '12 semaines',
     photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
     image: photoEnLigne,
-    texte: 'Je vous accompagne à distance avec un programme personnalisé, un suivi hebdomadaire et des bilans, sur 12 semaines.',
+    texte: 'Je vous accompagne à distance avec un programme personnalisé et un suivi hebdomadaire.',
   },
 ]
 

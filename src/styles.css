@@ -1401,3 +1401,6 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 }
 @media (max-width: 899px) { .service__contact { font-size: 14px; line-height: 20px; } }
 .service__lien:hover { color: inherit; } /* le titre de la tuile reste encre au survol */
+/* les quatre tuiles identiques : même hauteur de photo et de texte (place réservée pour 4 lignes) */
+@media (min-width: 1200px) { .services--v2 .service .texte { min-height: calc(4 * 23px); } }
+.service__photo--groupes img { object-position: 50% 100%; }
