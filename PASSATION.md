@@ -196,3 +196,19 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 - Ne jamais enregistrer de captures d'écran dans le dépôt (c'est arrivé une fois).
 
 - Marie a refusé le bouton « M'écrire » fixe en bas de l'écran sur téléphone : ne pas le remettre.
+
+
+## Réorganisation du 9 novembre 2026 (demandée par Marie)
+
+- **Menu** : Accueil · Individuel (`/particuliers`) · Groupes (`/groupes`, ancien `/communes` redirigé) · Entreprises · En ligne (`/en-ligne`).
+- **Accueil** : inchangé, sans prix ; « Mes services » a 4 tuiles (Entreprises, Groupes 2 à 8 personnes, Individuel « Domicile · Salle »,
+  En ligne avec la photo `service-en-ligne.jpg` envoyée par Marie) ; titre « Quatre façons de s'entraîner avec moi ».
+- **Pages de service avec prix** (`AFFICHER_TARIFS = true` dans `PageService.jsx`) :
+  Individuel : À domicile 70 € la séance, Suivi mensuel 260 €/mois (4 séances à domicile, programme personnalisé, suivi inclus),
+  En salle 60 € ; Groupes : 70 € la séance (2 à 8 pers.) ; Entreprises : à partir de 120 € la séance, devis gratuit sous 48 h
+  (bouton « Demander un devis ») ; En ligne : Active Plus 240 € les 12 semaines ou 3 × 80 € (programme, suivi hebdo, bilans).
+  Sous les cartes : déplacements compris jusqu'à 20 km autour de Houdan, au-delà sur devis ; TVA non applicable, art. 293 B du CGI.
+- **Supprimés** : Active Day, Duo, Active Start, Active Flex, Active Progress et tous les anciens prix. Aucune mention de crédit d'impôt.
+- **Bas de page** : « Mentions légales » (mentions + confidentialité) et « CGV » (`/cgv`, page vide « en cours de rédaction »).
+- **Maquette en attente** (`.apercus/heros-outil.cjs`, non publiée) : haut de l'accueil avec la photo de Marie à gauche (tête au centre,
+  texte à gauche dessus) et, à droite, les captures de son outil de suivi qui défilent une par une. Attend les captures de Marie.
