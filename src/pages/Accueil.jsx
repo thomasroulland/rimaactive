@@ -83,36 +83,6 @@ export default function Accueil() {
         </div>
       </section>
 
-      {/* « Moi c'est Marie » (ancre #approche) : le portrait entier et l'encadré, de même hauteur, centrés ensemble.
-          C'est la seule rubrique qui présente Marie (plus de page « À propos »). Textes de Marie (novembre 2026). */}
-      <section id="approche" className="section ecran-plein approche" aria-labelledby="approche-titre">
-        <figure className="approche__photo">
-          <img src={portraitMarie} alt="Marie Sillas, coach sportive" width="960" height="1200" />
-        </figure>
-        <div className="approche__panneau">
-          <div className="approche__cadre">
-            {/* sur téléphone, le portrait est dans l'encadré, contre « Qui suis-je » (voir styles.css) */}
-            <div className="approche__entete">
-              <p className="surtitre approche__surtitre">Qui suis-je</p>
-              <figure className="approche__photo--cadre" aria-hidden="true"><img src={portraitMarie} alt="" width="960" height="1200" /></figure>
-            </div>
-            <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
-            <p className="texte">
-              Passionnée de sport, je vous aide à atteindre vos objectifs grâce à une pratique adaptée à votre rythme de vie.
-            </p>
-            <p className="texte">
-              Durant mes 6&nbsp;années de salariat, j’ai constaté que beaucoup de mes collègues manquaient de temps pour prendre
-              soin d’eux ou se sentaient perdus face au sport. C’est ce qui m’a poussée à devenir coach.
-            </p>
-            <p className="texte">
-              Ensemble, nous construisons un programme sur mesure qui trouve sa place dans votre emploi du temps.
-              Mon objectif&nbsp;? Vous faire gagner en force et en mobilité, tout en retrouvant le plaisir de vous dépasser.
-            </p>
-            <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
-          </div>
-        </div>
-      </section>
-
       <Methode />
 
       <section id="accompagnement" className="section services services--v2 ecran-plein" aria-labelledby="services-titre">
@@ -152,6 +122,36 @@ export default function Accueil() {
       </section>
 
       <Questions />
+
+      {/* « Moi c'est Marie » (ancre #approche), en dernier depuis le 9 novembre 2026 à la demande de Marie : le portrait entier et l'encadré, de même hauteur, centrés ensemble.
+          C'est la seule rubrique qui présente Marie (plus de page « À propos »). Textes de Marie (novembre 2026). */}
+      <section id="approche" className="section ecran-plein approche" aria-labelledby="approche-titre">
+        <figure className="approche__photo">
+          <img src={portraitMarie} alt="Marie Sillas, coach sportive" width="960" height="1200" />
+        </figure>
+        <div className="approche__panneau">
+          <div className="approche__cadre">
+            {/* sur téléphone, le portrait est dans l'encadré, contre « Qui suis-je » (voir styles.css) */}
+            <div className="approche__entete">
+              <p className="surtitre approche__surtitre">Qui suis-je</p>
+              <figure className="approche__photo--cadre" aria-hidden="true"><img src={portraitMarie} alt="" width="960" height="1200" /></figure>
+            </div>
+            <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
+            <p className="texte">
+              Passionnée de sport, je vous aide à atteindre vos objectifs grâce à une pratique adaptée à votre rythme de vie.
+            </p>
+            <p className="texte">
+              Durant mes 6&nbsp;années de salariat, j’ai constaté que beaucoup de mes collègues manquaient de temps pour prendre
+              soin d’eux ou se sentaient perdus face au sport. C’est ce qui m’a poussée à devenir coach.
+            </p>
+            <p className="texte">
+              Ensemble, nous construisons un programme sur mesure qui trouve sa place dans votre emploi du temps.
+              Mon objectif&nbsp;? Vous faire gagner en force et en mobilité, tout en retrouvant le plaisir de vous dépasser.
+            </p>
+            <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
+          </div>
+        </div>
+      </section>
     </>
   )
 }

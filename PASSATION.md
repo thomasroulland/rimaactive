@@ -213,3 +213,6 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 - **Haut de l'accueil (publié le 9 novembre 2026)** : photo de Marie entière contre le bord gauche (sans bulles), texte posé dessus
   à gauche ; à droite les captures de son outil de suivi, une à la fois, qui glissent vers la gauche (`CAPTURES` dans `Accueil.jsx`,
   styles `.heros--v3`). Pour l'instant des emplacements gris : remplacer par les images de Marie quand elle les envoie.
+
+- **Ordre de l’accueil (9 novembre 2026)** : haut de page, Pourquoi ça marche, Mes services (4 tuiles), Les questions, Qui suis-je (en dernier).
+  « Me contacter » des tuiles en encre (plus de vermillon). Le « M’écrire » de la barre apparaît dès qu’on quitte le haut de page.

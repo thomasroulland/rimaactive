@@ -92,14 +92,15 @@ function useSurPhoto(actif) {
   return actif && enHaut
 }
 
-// Vrai partout, sauf sur l'accueil tant que la rubrique « Mon approche » n'atteint pas le haut de l'écran
+// Vrai partout, sauf sur l'accueil tant qu'on est encore sur le haut de page
 function useEcrireVisible(accueil) {
   const [visible, setVisible] = useState(!accueil)
   useEffect(() => {
     if (!accueil) { setVisible(true); return }
     const suivre = () => {
-      const approche = document.getElementById('approche')
-      setVisible(!!approche && approche.getBoundingClientRect().top < window.innerHeight * 0.5)
+      // visible dès qu'on a quitté le haut de page (qui a déjà son bouton « M'écrire »)
+      const heros = document.querySelector('.heros')
+      setVisible(!!heros && heros.getBoundingClientRect().bottom < window.innerHeight * 0.5)
     }
     suivre()
     window.addEventListener('scroll', suivre, { passive: true })
