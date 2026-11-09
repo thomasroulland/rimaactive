@@ -1391,3 +1391,13 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   }
 /* ordinateur : « Coach Marie » sur une seule ligne, pour moins cacher le visage (Marie, 9 novembre) */
 @media (min-width: 900px) { .heros.heros--v3 .heros__saut { display: none; } }
+/* « Me contacter » des tuiles de l'accueil : retour à l'ancien style, sans rouge (Marie, 9 novembre) :
+   texte encre gras comme l'ancien prix, flèche ronde cernée d'encre qui passe en jaune au survol */
+.service__bas { color: var(--encre); }
+.service__contact { font-weight: 800; font-size: 16px; line-height: 26px; }
+.service__bas .service__fleche { border-color: var(--encre); color: var(--encre); }
+@media (hover: hover) {
+  .service__bas:hover .service__fleche, .service:hover .service__bas .service__fleche { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
+}
+@media (max-width: 899px) { .service__contact { font-size: 14px; line-height: 20px; } }
+.service__lien:hover { color: inherit; } /* le titre de la tuile reste encre au survol */
