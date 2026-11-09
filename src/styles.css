@@ -1349,7 +1349,7 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
     .heros.heros--v3 { grid-template-columns: auto 1fr !important; column-gap: 40px; }
     .heros.heros--v3 .heros__cadre { background: none; height: 100%; aspect-ratio: 0.9; }
     .heros.heros--v3 .heros__surtitre { white-space: nowrap; font-size: 11px; letter-spacing: 0.1em; }
-    .heros.heros--v3 .heros__photo { inset: 0 !important; width: 100% !important; height: 100% !important; transform: none; object-fit: cover; object-position: 50% 22% !important; }
+    .heros.heros--v3 .heros__photo { inset: -10% 0 0 0 !important; width: 100% !important; height: 110% !important; transform: none; object-fit: cover; object-position: 50% 30% !important; } /* photo remontée (Marie, 9 novembre) */
     /* le texte centré, sous le visage : Marie au centre, la tête au-dessus de la ligne jaune */
     /* texte aligné à gauche, comme avant ; seule la photo est centrée (tête au milieu, au-dessus de la ligne jaune) */
     .heros.heros--v3 .heros__texte { padding: 0 24px 28px var(--gouttiere) !important; }
@@ -1389,3 +1389,5 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
     .heros__outil { height: 420px; margin: 0 var(--gouttiere); padding: 0; }
 
   }
+/* ordinateur : « Coach Marie » sur une seule ligne, pour moins cacher le visage (Marie, 9 novembre) */
+@media (min-width: 900px) { .heros.heros--v3 .heros__saut { display: none; } }
