@@ -45,7 +45,7 @@ const SERVICES = [
     pourQui: '12 semaines',
     photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
     image: photoEnLigne,
-    texte: 'Je vous accompagne à distance avec un programme personnalisé et un suivi hebdomadaire.',
+    texte: 'Je vous accompagne à distance avec un programme personnalisé avec un suivi hebdomadaire.',
   },
 ]
 
@@ -100,7 +100,7 @@ export default function Accueil() {
             {SERVICES.map((service) => (
               <li key={service.to}>
                 {/* Toute la carte mène à la page de l'offre (lien du titre étendu à la carte) ;
-                    « Me contacter » (vermillon) mène au formulaire, l'offre déjà cochée. Plus de prix sur l'accueil. */}
+                    « Voir les offres » mène aussi à la page de l'offre, en haut. Plus de prix sur l'accueil. */}
                 <div className="service">
                   <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
                   <div className="service__corps">
@@ -109,8 +109,8 @@ export default function Accueil() {
                     </h3>
                     <p className="surtitre service__lieux">{service.pourQui}</p>
                     <p className="texte">{service.texte}</p>
-                    <Link to={`/contact?offre=${encodeURIComponent(service.titre)}`} className="service__bas" aria-label={`Me contacter au sujet de l’offre ${service.titre}`}>
-                      <span className="service__contact">Me contacter</span>
+                    <Link to={service.to} className="service__bas" aria-label={`${service.titre} : voir les offres`}>
+                      <span className="service__contact">Voir les offres</span>
                       <span className="service__fleche" aria-hidden="true"><FlecheDiagonale /></span>
                     </Link>
                   </div>
