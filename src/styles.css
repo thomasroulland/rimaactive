@@ -1334,3 +1334,58 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   .services--v2 .service .photo.service__photo { height: 96px; }
   .services--v2 .service__corps { padding: 2px 4px; }
 }
+
+/* ---------- Haut de l'accueil (9 novembre 2026) : la photo de Marie à gauche, contre le bord, avec le texte posé dessus ;
+   à droite les captures de l'outil de suivi, une à la fois, qui glissent vers la gauche (emplacements gris en attendant) ---------- */
+  .heros.heros--v3 { grid-template-columns: 1fr 1fr !important; }
+  .heros.heros--v3 { padding-left: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important; max-width: none !important;
+    padding-right: var(--gouttiere) !important; align-items: center; }
+  /* la photo va jusqu'au bord gauche et en haut de l'écran, sans arrondi, et se fond dans le fond craie à droite */
+  .heros.heros--v3 .heros__cadre { order: 0; position: relative; display: block; min-height: 0; height: 100%; border-radius: 0; background: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent); mask-image: linear-gradient(90deg, #000 84%, transparent); }
+  .heros.heros--v3 .heros__photo { border-radius: 0; }
+  @media (min-width: 900px) {
+    /* la photo entière, à sa taille, contre le bord gauche : plus de bandes noires floues sur les côtés */
+    .heros.heros--v3 { grid-template-columns: auto 1fr !important; column-gap: 40px; }
+    .heros.heros--v3 .heros__cadre { background: none; height: 100%; aspect-ratio: 0.9; }
+    .heros.heros--v3 .heros__surtitre { white-space: nowrap; font-size: 11px; letter-spacing: 0.1em; }
+    .heros.heros--v3 .heros__photo { inset: 0 !important; width: 100% !important; height: 100% !important; transform: none; object-fit: cover; object-position: 50% 22% !important; }
+    /* le texte centré, sous le visage : Marie au centre, la tête au-dessus de la ligne jaune */
+    /* texte aligné à gauche, comme avant ; seule la photo est centrée (tête au milieu, au-dessus de la ligne jaune) */
+    .heros.heros--v3 .heros__texte { padding: 0 24px 28px var(--gouttiere) !important; }
+    .heros.heros--v3 .heros__titre { font-size: clamp(44px, calc(4 * var(--vw)), 64px) !important; line-height: 0.95; }
+    .heros.heros--v3 .heros__ligne { font-size: clamp(16px, calc(1.3 * var(--vw)), 20px) !important; line-height: 1.4; margin-top: 12px; }
+    .heros.heros--v3 .heros__surtitre { margin-bottom: 10px; }
+    .heros.heros--v3 .actions { margin-top: 18px; }
+    .heros.heros--v3 .heros__cadre::after { background: linear-gradient(0deg, rgba(22,21,20,.92) 0%, rgba(22,21,20,.7) 38%, rgba(22,21,20,0) 58%) !important; }
+    .heros.heros--v3 .heros__cadre { -webkit-mask-image: linear-gradient(90deg, #000 96%, transparent) !important; mask-image: linear-gradient(90deg, #000 96%, transparent) !important; }
+  }
+  @media (min-width: 900px) { .heros.heros--v3 .heros__titre { font-size: clamp(48px, calc(4.6 * var(--vw)), 76px); } .heros.heros--v3 .heros__texte { padding-bottom: 32px; } }
+
+  .heros.heros--v3 .heros__photo { object-position: 50% 30%; }
+  .heros.heros--v3 .heros__cadre::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(22,21,20,.88) 0%, rgba(22,21,20,.55) 45%, rgba(22,21,20,0) 75%); }
+  .heros.heros--v3 .heros__texte { position: absolute; z-index: 2; left: 0; bottom: 0; padding: 40px 36px 40px var(--gouttiere); width: 100%; box-sizing: border-box; }
+  .heros.heros--v3 .heros__surtitre { color: var(--jaune); }
+  .heros.heros--v3 .heros__titre, .heros.heros--v3 .heros__ligne { color: var(--craie); }
+  .heros.heros--v3 .bouton--secondaire { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+  .heros__outil { overflow: hidden; align-self: stretch; margin: 28px 0; border-radius: var(--arrondi-grand); }
+  .heros__piste { display: flex; height: 100%; width: 600%; animation: heros-defile 25s cubic-bezier(.6, 0, .2, 1) infinite; }
+  .heros__piste .heros__capture { width: calc(100% / 6); flex: none; box-sizing: border-box; border-radius: var(--arrondi-grand); }
+  @keyframes heros-defile {
+    0%, 16% { transform: translateX(0); } 20%, 36% { transform: translateX(calc(-100% / 6)); } 40%, 56% { transform: translateX(calc(-200% / 6)); }
+    60%, 76% { transform: translateX(calc(-300% / 6)); } 80%, 96% { transform: translateX(calc(-400% / 6)); } 100% { transform: translateX(calc(-500% / 6)); } }
+  @media (prefers-reduced-motion: reduce) { .heros__piste { animation: none; } }
+  .heros__capture { background: #c9c5bd; border-radius: var(--arrondi-grand); display: grid; place-items: center; text-align: center; padding: 16px;
+    font: 700 12px/16px "Hanken Grotesk"; letter-spacing: .14em; text-transform: uppercase; color: #57534E; border: 1px dashed #8a857c; }
+  @media (max-width: 899px) {
+    .heros.heros--v3 { display: flex !important; flex-direction: column; height: auto !important; }
+    .heros.heros--v3 { padding: 0 0 20px !important; align-items: stretch; }
+    .heros.heros--v3 .heros__cadre { flex: none; height: calc(100svh - 56px); min-height: 520px; border-radius: 0; overflow: hidden;
+      -webkit-mask-image: linear-gradient(180deg, #000 88%, transparent); mask-image: linear-gradient(180deg, #000 88%, transparent); }
+
+    .heros.heros--v3 .heros__texte { padding: 20px var(--gouttiere) 84px; }
+    .heros.heros--v3 .heros__surtitre { font-size: min(11px, calc((100vw - 2 * var(--gouttiere) - 40px) / 32)); }
+    .heros.heros--v3 .heros__ligne { font-size: min(18px, calc((100vw - 2 * var(--gouttiere) - 40px) / 17)); }
+    .heros__outil { height: 420px; margin: 0 var(--gouttiere); padding: 0; }
+
+  }

@@ -6,7 +6,6 @@ import photoIndividuel from '../assets/service-individuel.jpg'
 import photoEnLigne from '../assets/service-en-ligne.jpg'
 import { Link } from 'react-router-dom'
 import { Photo } from '../components/Blocs.jsx'
-import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 import { CONTACT } from '../components/liens.js'
 
@@ -51,30 +50,38 @@ const SERVICES = [
 ]
 
 
+// Captures de l'outil de suivi, dans l'ordre du défilement (à remplacer par les images de Marie)
+const CAPTURES = ['Tableau de bord', 'Programme', 'Séance du jour', 'Suivi', 'Bilans']
+
 export default function Accueil() {
   useTitre('Accueil')
   return (
     <>
       {/* Haut de page : « Coach Marie » sur craie à gauche, la photo de Marie bras croisés à droite,
           avec trois repères en bulles blanches posés en bas de la photo (sous la photo sur téléphone) */}
-      <section className="heros" aria-labelledby="heros-titre">
-        <div className="heros__texte">
-          <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
-          <h1 id="heros-titre" className="titre heros__titre">Coach<br /><span className="mot-avant">Marie</span></h1>
-          {/* retour à la ligne voulu par Marie après « grâce à une », sur tous les écrans */}
-          <p className="accroche heros__ligne">Un corps fort et mobile grâce à une<br />pratique fonctionnelle.</p>
-          <div className="actions">
-            <a href="#approche" className="bouton bouton--secondaire">Qui suis-je</a>
-            <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
-          </div>
-        </div>
+      <section className="heros heros--v3" aria-labelledby="heros-titre">
         <div className="heros__cadre">
           <img className="heros__photo" src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
-          <ul className="heros__bulles">
-            <li><Picto nom="clock" taille={18} />Session de 60&nbsp;min</li>
-            <li><Picto nom="kettlebell" taille={18} />Matériel fourni</li>
-            <li><Picto nom="laptop" taille={18} />Présentiel &amp; en ligne</li>
-          </ul>
+          <div className="heros__texte">
+            <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
+            <h1 id="heros-titre" className="titre heros__titre">Coach<br /><span className="mot-avant">Marie</span></h1>
+            {/* retour à la ligne voulu par Marie après « grâce à une », sur tous les écrans */}
+            <p className="accroche heros__ligne">Un corps fort et mobile grâce à une<br />pratique fonctionnelle.</p>
+            <div className="actions">
+              <a href="#approche" className="bouton bouton--secondaire">Qui suis-je</a>
+              <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
+            </div>
+          </div>
+        </div>
+        {/* Captures de l'outil de suivi de coaching : emplacements en attendant les images de Marie */}
+        <div className="heros__outil" aria-label="Aperçu de l’outil de suivi">
+          <div className="heros__piste">
+            {[...CAPTURES, CAPTURES[0]].map((c, i) => (
+              <div key={i} className="heros__capture" aria-hidden={i === CAPTURES.length ? true : undefined}>
+                Capture d’écran {(i % CAPTURES.length) + 1} / {CAPTURES.length}<br />{c}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

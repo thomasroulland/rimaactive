@@ -210,5 +210,6 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
   Sous les cartes : déplacements compris jusqu'à 20 km autour de Houdan, au-delà sur devis ; TVA non applicable, art. 293 B du CGI.
 - **Supprimés** : Active Day, Duo, Active Start, Active Flex, Active Progress et tous les anciens prix. Aucune mention de crédit d'impôt.
 - **Bas de page** : « Mentions légales » (mentions + confidentialité) et « CGV » (`/cgv`, page vide « en cours de rédaction »).
-- **Maquette en attente** (`.apercus/heros-outil.cjs`, non publiée) : haut de l'accueil avec la photo de Marie à gauche (tête au centre,
-  texte à gauche dessus) et, à droite, les captures de son outil de suivi qui défilent une par une. Attend les captures de Marie.
+- **Haut de l'accueil (publié le 9 novembre 2026)** : photo de Marie entière contre le bord gauche (sans bulles), texte posé dessus
+  à gauche ; à droite les captures de son outil de suivi, une à la fois, qui glissent vers la gauche (`CAPTURES` dans `Accueil.jsx`,
+  styles `.heros--v3`). Pour l'instant des emplacements gris : remplacer par les images de Marie quand elle les envoie.
