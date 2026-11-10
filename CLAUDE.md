@@ -1,6 +1,11 @@
 # Consignes pour Claude — site Rimaactive
 
 Lire `PASSATION.md` en entier avant de toucher au site : règles, charte, état du site et façon de travailler.
+
+**La charte graphique est dans le design system Rimaactive** (Marie, 10 novembre 2026) :
+artefact https://claude.ai/artifact/4svx69gTGF2WhNCJc2r5eP. C'est la référence pour les couleurs,
+les polices, les tailles, les pictogrammes et les photos ; la consulter (lecture seule) avant toute
+question de style. `DESIGN.md` en est le résumé pour les outils de design.
 Répondre à Marie en français, simplement, sans jargon.
 
 ## Toujours utiliser les skills
