@@ -216,3 +216,6 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 
 - **Ordre de l’accueil (9 novembre 2026)** : haut de page, Pourquoi ça marche, Mes services (4 tuiles), Les questions, Qui suis-je (en dernier).
   « Me contacter » des tuiles en encre (plus de vermillon). Le « M’écrire » de la barre apparaît dès qu’on quitte le haut de page.
+
+- **Détail des formules (10 novembre 2026)** : un clic sur une carte (ou « Voir le détail + ») ouvre la formule en grand, fond blanc
+  (`dialog.detail` dans `PageService.jsx`). Pour ajouter des rubriques : `detail: [[titre, texte], …]` dans la carte.

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Picto from './Picto.jsx'
 
@@ -14,6 +14,11 @@ const AFFICHER_TARIFS = true
 
 export default function PageService({ page }) {
   const [actif, setActif] = useState(0)
+  // carte ouverte en grand (détail), au clic sur la carte ou sur « Voir le détail »
+  const [ouverte, setOuverte] = useState(null)
+  const refDetail = useRef(null)
+  useEffect(() => { if (ouverte) refDetail.current?.showModal() }, [ouverte])
+  const ouvrir = (f) => (e) => { if (!e.target.closest('a')) setOuverte(f) }
   const onglets = page.onglets ?? [{ cartes: page.cartes }]
   const choisi = onglets[actif]
   // un onglet peut nommer les formules à montrer (noms), ou avoir ses propres cartes
@@ -47,7 +52,7 @@ export default function PageService({ page }) {
         {/* Individuel : une carte seule (En salle) garde la même structure que les deux cartes À domicile (prix à droite du nom) */}
         <ul className={`offres offres--${page.onglets && onglet.cartes.length === 1 ? '2 offres--seule' : onglet.cartes.length}`}>
           {onglet.cartes.map((f) => (
-            <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''} ${f.mode && f.mode !== onglet.nom ? 'offre--grisee' : ''}`} aria-disabled={f.mode && f.mode !== onglet.nom ? true : undefined}>
+            <li key={f.nom} onClick={ouvrir(f)} className={`offre offre--cliquable ${f.sombre ? 'offre--sombre' : ''} ${f.mode && f.mode !== onglet.nom ? 'offre--grisee' : ''}`} aria-disabled={f.mode && f.mode !== onglet.nom ? true : undefined}>
               {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
               <div className="offre__tete">
                 <p className="surtitre">{f.surtitre}</p>
@@ -55,6 +60,7 @@ export default function PageService({ page }) {
               </div>
               <h2 className="titre titre--tuile">{f.titre ?? f.nom}</h2>
               {f.infos && <p className="offre__infos">{f.infos}</p>}
+              <button type="button" className="offre__voir" aria-haspopup="dialog">Voir le détail +</button>
               {/* Tarifs masqués pour le moment (Marie, 6 novembre 2026) : remettre AFFICHER_TARIFS à true pour les réafficher */}
               {AFFICHER_TARIFS && <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
                 {f.tarifs.map((t) => (
@@ -103,6 +109,48 @@ export default function PageService({ page }) {
         </div>
       </div>
     </section>
+    {/* Détail d'une formule, en grand au centre de l'écran (fond blanc) ; fermé par la croix, Échap ou un clic à côté */}
+    <dialog ref={refDetail} className="detail" aria-labelledby="detail-titre" onClose={() => setOuverte(null)}
+      onClick={(e) => { if (e.target === e.currentTarget) e.currentTarget.close() }}>
+      {ouverte && (
+        <div className="detail__corps">
+          <form method="dialog"><button className="detail__fermer" aria-label="Fermer">×</button></form>
+          <div className="detail__gauche">
+            <p className="surtitre">{ouverte.surtitre}</p>
+            <h2 id="detail-titre" className="titre detail__titre">{ouverte.titre ?? ouverte.nom}</h2>
+            {ouverte.infos && <p className="detail__infos">{ouverte.infos}</p>}
+            {ouverte.tarifs.map((t) => (
+              <p key={t.montant} className="detail__prix">
+                {t.avant && <span className="detail__petit">{t.avant} </span>}{t.montant}
+                {t.apres && <span className="detail__petit"> {t.apres}</span>}
+                {t.detail && <span className="detail__petit detail__sous"> {t.detail}</span>}
+              </p>
+            ))}
+            <Link to={`/contact?formule=${encodeURIComponent(`${ouverte.nom} · ${ouverte.mode ?? contexte}`)}`} className="bouton bouton--principal detail__bouton">
+              {ouverte.bouton ?? 'Choisir cette formule'} <FlecheDiagonale />
+            </Link>
+          </div>
+          <div className="detail__droite">
+            {ouverte.titrePoints && <h3 className="detail__h3">{ouverte.titrePoints}</h3>}
+            <ul className="detail__points">
+              {ouverte.points.map((point) => (
+                <li key={String(point)}>
+                  <Picto nom="check-square" taille={20} />
+                  {Array.isArray(point) ? <span><b>{point[0]}</b><br />{point[1]}</span> : point}
+                </li>
+              ))}
+            </ul>
+            {/* rubriques supplémentaires écrites par Marie (detail: [[titre, texte], …]) */}
+            {ouverte.detail?.map(([titre, texte]) => (
+              <div key={titre} className="detail__rubrique"><h3 className="detail__h3">{titre}</h3><p>{texte}</p></div>
+            ))}
+            {liste.length > 0 && (
+              <ul className="detail__liste">{liste.map((point) => <li key={point}>{point}</li>)}</ul>
+            )}
+          </div>
+        </div>
+      )}
+    </dialog>
     </>
   )
 }

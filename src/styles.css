@@ -1449,3 +1449,42 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 }
 @media (min-width: 900px) { .offres--1 .offre .offre__points { align-content: start; align-self: start; } }
 @media (min-width: 900px) { .offres--seule { grid-template-columns: minmax(0, 1fr); width: calc(50% - 10px); margin-inline: auto; } }
+
+/* ---------- Détail d'une formule (10 novembre 2026) : la carte s'ouvre en grand, fond blanc ---------- */
+.offre--cliquable { cursor: pointer; }
+.offre__voir { justify-self: start; align-self: start; margin: 2px 0 0; padding: 0; border: 0; background: none; font: inherit; font-weight: 700; font-size: 14px; line-height: 20px;
+  color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.offre__voir:hover { color: var(--vermillon); }
+.offre--sombre .offre__voir:hover { color: var(--jaune); }
+.offres--2 > .offre > .offre__voir, .offres--1 > .offre > .offre__voir { grid-column: 1; }
+.detail { border: 0; padding: 0; border-radius: 20px; background: var(--blanc); color: var(--encre); width: min(880px, calc(100vw - 32px)); max-height: calc(100dvh - 32px);
+  box-shadow: 0 30px 80px rgba(22, 21, 20, 0.3); }
+.detail[open] { animation: detail-ouvre 0.35s cubic-bezier(.2, .8, .2, 1); }
+@keyframes detail-ouvre { from { transform: scale(0.9); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .detail[open] { animation: none; } }
+.detail::backdrop { background: rgba(22, 21, 20, 0.6); }
+.detail__corps { position: relative; display: grid; gap: 20px 44px; padding: 36px 40px; }
+@media (min-width: 760px) { .detail__corps { grid-template-columns: 1fr 1.35fr; } }
+.detail__fermer { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--filet); background: var(--blanc);
+  font-size: 22px; line-height: 1; cursor: pointer; color: var(--encre); }
+.detail__fermer:hover { border-color: var(--encre); }
+.detail__gauche { display: flex; flex-direction: column; align-items: flex-start; }
+.detail__gauche .surtitre { margin: 0; color: var(--gris-chaud); }
+.detail__titre { margin: 6px 0 0; font-size: 36px; line-height: 38px; letter-spacing: -0.04em; }
+.detail__infos { margin: 6px 0 0; font-weight: 600; font-size: 15px; color: var(--gris-chaud); }
+.detail__prix { margin: 18px 0 0; font-weight: 900; font-size: 44px; line-height: 46px; letter-spacing: -0.04em; }
+.detail__petit { font-weight: 600; font-size: 15px; line-height: 20px; letter-spacing: 0; }
+.detail__sous { display: block; color: var(--gris-chaud); }
+.detail__bouton { margin-top: 26px; }
+.detail__h3 { margin: 0 0 10px; font-weight: 800; font-size: 16px; line-height: 22px; }
+.detail__points { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 12px; }
+.detail__points li { display: flex; gap: 10px; font-size: 16px; line-height: 24px; color: var(--gris-chaud); }
+.detail__points li b { color: var(--encre); }
+.detail__points .picto { flex: none; margin-top: 2px; color: var(--encre); }
+.detail__rubrique { margin-bottom: 18px; }
+.detail__rubrique p { margin: 0; color: var(--gris-chaud); font-size: 16px; line-height: 26px; }
+.detail__liste { margin: 0; padding: 16px 0 0; border-top: 1px solid var(--filet); list-style: none; display: grid; gap: 4px; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+@media (max-width: 759px) { .detail__corps { padding: 28px 22px; } .detail__titre { font-size: 30px; line-height: 32px; } .detail__prix { font-size: 36px; line-height: 40px; } }
+/* deux cartes (Individuel) : « Voir le détail » sur la ligne de la durée, pour ne pas allonger la carte */
+@media (min-width: 900px) { .offres--2 > .offre > .offre__voir { grid-row: 3; grid-column: 1; justify-self: end; align-self: center; margin: 0; } }
+.detail__corps > form { position: absolute; top: 14px; right: 14px; margin: 0; z-index: 1; } .detail__fermer { position: static; }
