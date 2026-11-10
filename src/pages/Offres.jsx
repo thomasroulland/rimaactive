@@ -91,9 +91,9 @@ function Rubrique({ id, page, sous, fonce }) {
             <p className="offres-page__sous">{sous}</p>
           </div>
           {onglets && (
-            <div className="bascule" role="tablist" aria-label={`Choisir : ${onglets.map((o) => o.nom).join(' ou ')}`}>
+            <div className="bascule" role="group" aria-label={`Choisir : ${onglets.map((o) => o.nom).join(' ou ')}`}>
               {onglets.map((o, i) => (
-                <button key={o.nom} type="button" role="tab" aria-selected={i === actif} onClick={() => setActif(i)}>{o.nom}</button>
+                <button key={o.nom} type="button" aria-pressed={i === actif} onClick={() => setActif(i)}>{o.nom}</button>
               ))}
             </div>
           )}

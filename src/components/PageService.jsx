@@ -80,7 +80,7 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte }) {
         <p className="surtitre">{f.surtitre}</p>
         <Picto nom={f.picto} taille={24} />
       </div>
-      <h2 className="titre titre--tuile">{f.titre ?? f.nom}</h2>
+      <h3 className="titre titre--tuile">{f.titre ?? f.nom}</h3>
       {f.infos && <p className="offre__infos">{f.infos}</p>}
       {/* Tarifs masqués pour le moment (Marie, 6 novembre 2026) : remettre AFFICHER_TARIFS à true pour les réafficher */}
       {AFFICHER_TARIFS && <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
@@ -153,7 +153,7 @@ export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] 
             {ouverte.tarifs.map((t) => (
               <p key={t.montant} className="detail__prix">
                 {t.avant && <span className="detail__petit">{t.avant} </span>}{t.montant}
-                {t.apres && <span className="detail__petit"> {t.apres}</span>}
+                {t.apres && <span className="detail__petit detail__apres"> {t.apres}</span>}
                 {t.detail && <span className="detail__petit detail__sous"> {t.detail}</span>}
               </p>
             ))}
