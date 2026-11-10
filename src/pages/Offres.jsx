@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import photoMarie from '../assets/portrait-contact.jpg'
 import { CarteOffre, DetailOffre } from '../components/PageService.jsx'
 import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
@@ -56,7 +57,20 @@ export default function Offres() {
         </div>
       </nav>
       {RUBRIQUES.map((r, i) => <Rubrique key={r.id} {...r} fonce={i % 2 === 1} />)}
-      <p className="offres-page__note conteneur">TVA non applicable, art.&nbsp;293&nbsp;B du CGI.</p>
+      {/* Fin de page : Marie en personne, pour celles et ceux qui hésitent (maquette, texte écrit par Claude, à valider par Marie) */}
+      <section className="offres-page__fin" aria-labelledby="fin-titre">
+        <div className="conteneur offres-page__fin-grille">
+          <img className="offres-page__fin-photo" src={photoMarie} alt="Marie Sillas, coach sportive" />
+          <div>
+            <h2 id="fin-titre" className="titre titre--section">Vous hésitez entre deux formules&nbsp;?</h2>
+            <p className="texte">Dites-moi où vous en êtes et ce que vous cherchez. Je vous aide à choisir la formule qui vous convient, que vous débutiez ou que vous repreniez le sport.</p>
+            <div className="actions">
+              <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
+            </div>
+            <p className="offres-page__note">TVA non applicable, art.&nbsp;293&nbsp;B du CGI.</p>
+          </div>
+        </div>
+      </section>
     </>
   )
 }
@@ -87,7 +101,7 @@ function Rubrique({ id, page, sous, fonce }) {
         <div className={`offres-page__corps ${onglets ? '' : 'offres-page__corps--photo'}`}>
           {!onglets && <img className="offres-page__photo" src={page.image} alt="" style={{ objectPosition: page.cadrage }} />}
           <ul className={`offres offres--${cartes.length === 1 ? '1' : '2'}`}>
-            {cartes.map((f) => <CarteOffre key={f.nom} f={f} onOuvrir={() => setOuverte(f)} />)}
+            {cartes.map((f) => <CarteOffre key={f.nom} f={f} contexte={page.titre} onOuvrir={() => setOuverte(f)} />)}
           </ul>
         </div>
         {liste.length > 0 && (

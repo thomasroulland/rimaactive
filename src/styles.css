@@ -1625,3 +1625,41 @@ main > section.offres-page__haut:nth-of-type(n) { background: var(--craie); }
   .offres-page__liens { gap: 20px; width: 100%; }
   .offres-page__liens a, .offres-page__liens a:hover { font-size: 15px; }
 }
+
+/* ---------- Maquette « Mes offres » (10 novembre 2026, critique) ---------- */
+/* 1. Les onglets passent sous « MES OFFRES » sur ordinateur, comme sur téléphone */
+@media (min-width: 900px) {
+  :root { --hauteur-bulles: 76px; }
+  .offres-page__bulles .conteneur { flex-direction: column; align-items: flex-start; gap: 4px; }
+  /* chaque rubrique est calée en haut : le titre est au même endroit dans les quatre rubriques */
+  .offres-page__rubrique { justify-content: flex-start; padding-block: clamp(20px, calc(var(--ecran) * 0.045), 44px) 16px; }
+}
+@media (min-width: 900px) and (max-height: 760px) {
+  .offres-page__rubrique { padding-block: 16px 12px; }
+}
+/* une seule taille pour les listes des cartes : 14 / 20, normal */
+.offres-page__rubrique .offre__points,
+.offres-page__rubrique .offre__point--long,
+.offres--1 .offres-page__rubrique .offre__point--long { font-size: 14px !important; line-height: 20px !important; }
+.offres-page__rubrique .offre__point--long b { font-weight: 400; }
+/* 3. « Choisir » directement sur la carte ; « Voir le détail » devient un lien discret dessous */
+.offre__actions { margin-top: auto; display: grid; justify-items: center; gap: 8px; }
+.offre__actions .offre__bouton { width: 100%; margin: 0 !important; grid-area: auto !important; align-self: auto; }
+.offre__actions .offre__voir { justify-self: center; margin: 0; padding: 6px 4px; color: inherit; }
+.offre__actions .offre__voir:hover, .offre--sombre .offre__actions .offre__voir:hover { color: inherit; text-decoration-thickness: 2px; }
+/* 2. Fin de page : Marie en personne */
+.offres-page__fin { background: var(--blanc); padding: clamp(40px, calc(var(--ecran) * 0.08), 80px) var(--gouttiere) 24px; }
+.offres-page__fin-grille { display: grid; gap: 28px; align-items: center; }
+.offres-page__fin-photo { width: 100%; max-width: 360px; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; border-radius: var(--arrondi); }
+.offres-page__fin .texte { margin-top: 16px; }
+.offres-page__fin .actions { margin-top: 24px; }
+.offres-page__fin .offres-page__note { margin: 40px 0 0; padding: 0; text-align: left; }
+@media (min-width: 900px) {
+  .offres-page__fin { box-sizing: border-box; min-height: calc(var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles)); display: flex; align-items: center; scroll-snap-align: start; }
+  .offres-page__fin > .conteneur { width: 100%; }
+  .offres-page__fin-grille { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 64px; }
+  .offres-page__fin-photo { max-height: calc(var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles) - 120px); width: auto; justify-self: start; }
+}
+@media (max-width: 899px) {
+  .offres-page__fin-photo { max-width: 240px; }
+}

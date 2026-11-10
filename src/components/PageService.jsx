@@ -72,7 +72,7 @@ export default function PageService({ page }) {
 }
 
 // Une carte de formule (pages de formules et page « Mes offres ») ; un clic l'ouvre en grand
-export function CarteOffre({ f, grisee, onOuvrir }) {
+export function CarteOffre({ f, grisee, onOuvrir, contexte }) {
   return (
     <li onClick={onOuvrir} className={`offre offre--cliquable ${f.sombre ? 'offre--sombre' : ''} ${grisee ? 'offre--grisee' : ''}`} aria-disabled={grisee ? true : undefined}>
       {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
@@ -108,15 +108,31 @@ export function CarteOffre({ f, grisee, onOuvrir }) {
         </ul>
       )}
       {/* le bouton de la carte ouvre le détail ; « Choisir » est dans le détail (Marie, 10 novembre 2026) */}
-      <button
-        type="button"
-        aria-haspopup="dialog"
-        tabIndex={grisee ? -1 : undefined}
-        className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
-        aria-label={`Voir le détail de ${f.titre ?? f.nom}`}
-      >
-        Voir le détail
-      </button>
+      {/* page « Mes offres » (maquette du 10 novembre 2026) : « Choisir » directement sur la carte, le détail devient un lien */}
+      {contexte ? (
+        <div className="offre__actions">
+          <Link
+            to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${f.mode ?? contexte}`)}`}
+            onClick={(e) => e.stopPropagation()}
+            className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
+          >
+            {f.bouton ?? 'Choisir cette formule'} <FlecheDiagonale />
+          </Link>
+          <button type="button" aria-haspopup="dialog" className="offre__voir" aria-label={`Voir le détail de ${f.titre ?? f.nom}`}>
+            Voir le détail
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          tabIndex={grisee ? -1 : undefined}
+          className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
+          aria-label={`Voir le détail de ${f.titre ?? f.nom}`}
+        >
+          Voir le détail
+        </button>
+      )}
     </li>
   )
 }
