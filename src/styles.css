@@ -1537,7 +1537,7 @@ main > section.offres-page__haut:nth-of-type(n) { background: var(--craie); }
 @media (min-width: 900px) {
   :root { --hauteur-bulles: 58px; }
   .offres-page__bulles { padding-block: 10px; }
-  .offres-page__rubrique { box-sizing: border-box; min-height: calc(var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles)); display: flex; flex-direction: column; justify-content: center;
+  .offres-page__rubrique { box-sizing: border-box; min-height: calc(var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles) - 2px); display: flex; flex-direction: column; justify-content: center;
     padding-block: clamp(14px, calc(var(--ecran) * 0.03), 32px); }
   .offres-page__rubrique > .conteneur { width: 100%; }
   .offres-page__entete { margin-bottom: clamp(10px, calc(var(--ecran) * 0.02), 18px); }
@@ -1599,3 +1599,10 @@ main > section.offres-page__haut:nth-of-type(n) { background: var(--craie); }
   .detail__corps { gap: 6px; padding-top: 12px; }
 }
 @media (max-width: 759px) and (max-height: 600px) { .detail__presentation, .detail__infos { font-size: 13px; } .detail__corps { padding: 10px 12px; } .detail__bas .bouton { min-height: 36px; } }
+/* « Mes offres » : comme sur l'accueil, le défilement s'aimante sur le haut de chaque rubrique, juste sous la barre des bulles */
+@media (min-width: 900px) {
+  html:has(.offres-page__rubrique) { scroll-snap-type: y proximity; scroll-padding-top: calc(var(--hauteur-entete) + var(--hauteur-bulles)); }
+  .offres-page__rubrique { scroll-snap-align: start; }
+  .offres-page__bulles { box-sizing: border-box; height: var(--hauteur-bulles); padding-block: 0; display: flex; align-items: center; }
+  .offres-page__bulles .conteneur { width: 100%; }
+}
