@@ -1448,3 +1448,4 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   .offres--1 .offre .offre__points { grid-area: 2 / 2 / 6 / 3; }
 }
 @media (min-width: 900px) { .offres--1 .offre .offre__points { align-content: start; align-self: start; } }
+@media (min-width: 900px) { .offres--seule { grid-template-columns: minmax(0, 1fr); width: calc(50% - 10px); margin-inline: auto; } }

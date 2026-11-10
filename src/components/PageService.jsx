@@ -44,7 +44,8 @@ export default function PageService({ page }) {
     <section className="section formules-page" aria-labelledby="page-titre">
       {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
       <div className={`conteneur formules-page__grille ${onglets.some((o) => (o.noms ?? o.cartes ?? page.cartes).length === 3) ? 'formules-page__grille--large' : ''}`}>
-        <ul className={`offres offres--${onglet.cartes.length}`}>
+        {/* Individuel : une carte seule (En salle) garde la même structure que les deux cartes À domicile (prix à droite du nom) */}
+        <ul className={`offres offres--${page.onglets && onglet.cartes.length === 1 ? '2 offres--seule' : onglet.cartes.length}`}>
           {onglet.cartes.map((f) => (
             <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''} ${f.mode && f.mode !== onglet.nom ? 'offre--grisee' : ''}`} aria-disabled={f.mode && f.mode !== onglet.nom ? true : undefined}>
               {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
@@ -52,7 +53,7 @@ export default function PageService({ page }) {
                 <p className="surtitre">{f.surtitre}</p>
                 <Picto nom={f.picto} taille={24} />
               </div>
-              <h2 className="titre titre--tuile">{f.nom}</h2>
+              <h2 className="titre titre--tuile">{f.titre ?? f.nom}</h2>
               {f.infos && <p className="offre__infos">{f.infos}</p>}
               {/* Tarifs masqués pour le moment (Marie, 6 novembre 2026) : remettre AFFICHER_TARIFS à true pour les réafficher */}
               {AFFICHER_TARIFS && <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>

@@ -12,7 +12,7 @@ export const PAGE = {
   // page.cartes garde toutes les formules (le formulaire de contact s'en sert)
   onglets: [
     { nom: 'À domicile', noms: ['Séance à l’unité', 'Suivi mensuel'] },
-    { nom: 'En salle', noms: ['En salle'] },
+    { nom: 'En salle', noms: ['Séance à l’unité en salle'] },
   ],
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
@@ -41,9 +41,10 @@ export const PAGE = {
       sombre: true,
     },
     {
-      nom: 'En salle',
+      nom: 'Séance à l’unité en salle',
+      titre: 'Séance à l’unité',
       picto: 'barbell',
-      surtitre: 'Séance individuelle',
+      surtitre: 'En salle',
       infos: '60\u00a0min',
       tarifs: [{ montant: '60\u00a0€', apres: 'la séance' }],
       titrePoints: 'Compris pour chaque séance',
