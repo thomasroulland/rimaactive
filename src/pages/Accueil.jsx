@@ -11,13 +11,13 @@ import { CONTACT } from '../components/liens.js'
 
 const SERVICES = [
   {
-    to: '/offres#entreprises',
-    titre: 'Entreprises',
-    lieux: 'Locaux · Extérieur',
-    pourQui: '4 à 16 personnes',
-        photo: 'Rangée de kettlebells sur le sol d’une salle',
-    image: photoEntreprises,
-    texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
+    to: '/offres#individuel',
+    titre: 'Individuel',
+    lieux: 'Domicile · Salle',
+    pourQui: 'Domicile · Salle',
+        photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
+    image: photoEnLigne,
+    texte: 'Je vous accompagne en présentiel avec des séances construites autour de vos objectifs et de votre niveau.',
   },
   {
     to: '/offres#groupes',
@@ -29,13 +29,13 @@ const SERVICES = [
     texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
   },
   {
-    to: '/offres#individuel',
-    titre: 'Individuel',
-    lieux: 'Domicile · Salle',
-    pourQui: 'Domicile · Salle',
-        photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
-    image: photoEnLigne,
-    texte: 'Je vous accompagne en présentiel avec des séances construites autour de vos objectifs et de votre niveau.',
+    to: '/offres#entreprises',
+    titre: 'Entreprises',
+    lieux: 'Locaux · Extérieur',
+    pourQui: '4 à 16 personnes',
+        photo: 'Rangée de kettlebells sur le sol d’une salle',
+    image: photoEntreprises,
+    texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
   },
   // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie
   {
@@ -47,6 +47,7 @@ const SERVICES = [
     image: photoIndividuel,
     texte: 'Je vous accompagne à distance avec un programme personnalisé avec un suivi hebdomadaire.',
   },
+
 ]
 
 
