@@ -1679,3 +1679,7 @@ html:has(.offres-page__rubrique) { scroll-padding-top: calc(var(--hauteur-entete
 }
 /* fenêtre de détail : un vrai espace entre le prix et « par mois » */
 .detail__prix .detail__apres { margin-left: 6px; }
+/* la zone de toucher des onglets reste dans leur cadre : pas de barre de défilement (Marie, 10 novembre 2026) */
+.offres-page__liens { padding-block: 5px; margin-block: -5px; scrollbar-width: none; }
+.offres-page__liens::-webkit-scrollbar { display: none; }
+.offres-page__liens a::after { inset: -5px 0; }
