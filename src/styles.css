@@ -1406,6 +1406,6 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 .service__photo--groupes img { object-position: 50% 100%; }
 /* Haut de l'accueil, sur la photo sombre : au survol les boutons passent en clair (blanc), jamais en noir (Marie, 10 novembre) */
 @media (min-width: 0px) {
-  .heros.heros--v3 .bouton--principal:hover { background: var(--blanc); border-color: var(--blanc); color: var(--encre); }
+  .heros.heros--v3 .bouton--principal:hover { background: transparent; border-color: var(--jaune); color: var(--jaune); }
   .heros.heros--v3 .bouton--secondaire:hover { background: transparent; border-color: var(--craie); color: var(--craie); }
 }
