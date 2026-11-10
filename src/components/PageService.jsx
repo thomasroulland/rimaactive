@@ -93,7 +93,7 @@ export default function PageService({ page }) {
                 className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
                 aria-label={`Voir le détail de ${f.titre ?? f.nom}`}
               >
-                Voir le détail <span aria-hidden="true">+</span>
+                Voir le détail
               </button>
             </li>
           ))}
