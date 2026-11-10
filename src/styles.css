@@ -1314,7 +1314,7 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 /* Accueil, Mes services : quatre tuiles (En ligne ajoutée le 9 novembre 2026) */
 @media (min-width: 900px) { .services__liste { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; } }
 @media (min-width: 640px) and (max-width: 899px) { .services__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.service__photo--en-ligne img { object-position: 50% 55%; }
+.service__photo--individuel img { object-position: 50% 55%; }
 /* quatre tuiles plus étroites : le texte entier (4 lignes), en 15 px */
 @media (min-width: 900px) {
   .services--v2 .service .texte { -webkit-line-clamp: unset; display: block; overflow: visible; font-size: 15px; line-height: 23px; }
@@ -1524,3 +1524,66 @@ main > section.offres-page__haut:nth-of-type(n) { background: var(--craie); }
 .offres-page__note { margin: 0 auto; padding: 18px var(--gouttiere) 36px; text-align: center; font-size: 14px; color: var(--gris-chaud); }
 /* sur la page « Mes offres », les cartes ne gardent que l'intitulé des longs textes : le texte complet est dans le détail */
 .offres-page__rubrique .offre__suite { display: none; }
+/* « Mes offres et tarifs » (10 novembre) : titre et bulles sur une ligne, collés en haut ; chaque rubrique tient dans un écran */
+.offres-page__bulles .conteneur { align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; overflow: visible; }
+.offres-page__titre { margin: 0; font-size: 28px; line-height: 32px; letter-spacing: -0.035em; }
+.offres-page__liens { display: flex; gap: 8px; overflow-x: auto; }
+.offres-page__liens a { flex: none; padding: 7px 16px; border-radius: 999px; border: 1px solid var(--filet); background: var(--blanc); color: var(--encre);
+  font-weight: 700; font-size: 14px; line-height: 20px; text-decoration: none; transition: background-color var(--duree) ease, border-color var(--duree) ease; }
+.offres-page__liens a:hover { background: var(--jaune); border-color: var(--jaune); }
+.detail__presentation { margin: 16px 0 0; color: var(--gris-chaud); font-size: 16px; line-height: 24px; }
+.detail__texte { margin: 0 0 12px; color: var(--gris-chaud); font-size: 16px; line-height: 24px; }
+.detail__droite .detail__h3 + .detail__points { margin-top: 2px; }
+@media (min-width: 900px) {
+  :root { --hauteur-bulles: 58px; }
+  .offres-page__bulles { padding-block: 10px; }
+  .offres-page__rubrique { box-sizing: border-box; min-height: calc(var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles)); display: flex; flex-direction: column; justify-content: center;
+    padding-block: clamp(14px, calc(var(--ecran) * 0.03), 32px); }
+  .offres-page__rubrique > .conteneur { width: 100%; }
+  .offres-page__entete { margin-bottom: clamp(10px, calc(var(--ecran) * 0.02), 18px); }
+  .offres-page__entete .titre--section { font-size: 36px; line-height: 38px; }
+  .offres-page__sous { margin-top: 2px; font-size: 15px; }
+  .offres-page__liste { margin-top: 10px; }
+  .offres-page__photo { min-height: 0; max-height: calc(var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles) - 180px); }
+  .offres-page__corps--photo { align-items: start; }
+  .offres-page__rubrique .offre { padding: 18px 24px !important; }
+  .offres-page__note { padding-block: 10px 24px; }
+}
+@media (min-width: 900px) {
+  .offres-page__corps--photo { align-items: stretch; }
+  .offres-page__corps--photo .offres-page__photo { height: 0; min-height: 100%; max-height: none; } /* la photo suit la hauteur de la carte, sans l’imposer */
+  .offres-page__corps--photo .offres--1 .offre .offre__points { margin-bottom: 18px !important; }
+  .offres-page__corps--photo .offres--1 .offre .offre__bouton { margin-top: auto !important; }
+}
+@media (min-width: 900px) and (max-height: 640px) {
+  .offres-page__corps--photo .offres--1 .offre .offre__points { margin-bottom: 8px !important; }
+  .offres-page__liste { margin-top: 6px; }
+  .offres-page__rubrique { padding-block: 10px; }
+}
+/* Détail sur téléphone : compact pour tenir sur un écran (prix à droite du nom, textes un peu plus petits, bouton en bas) */
+@media (max-width: 759px) {
+  .detail { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); }
+  .detail__corps { display: flex; flex-direction: column; padding: 18px 18px 16px; gap: 10px; }
+  .detail__gauche { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; align-items: end; }
+  .detail__gauche > .surtitre, .detail__gauche > .detail__presentation { grid-column: 1 / -1; }
+  .detail__titre { font-size: 24px; line-height: 26px; padding-right: 40px; }
+  .detail__infos { grid-column: 1; margin-top: 2px; font-size: 14px; }
+  .detail__prix { grid-column: 2; grid-row: 2 / 4; margin: 0; font-size: 28px; line-height: 30px; text-align: right; }
+  .detail__prix .detail__petit { font-size: 12px; }
+  .detail__presentation { margin-top: 8px; font-size: 14px; line-height: 20px; }
+  .detail__gauche .detail__bouton { display: none; }
+  .detail__droite .detail__h3 { font-size: 15px; margin-bottom: 6px; }
+  .detail__points { gap: 6px; margin-bottom: 8px; }
+  .detail__points li, .detail__texte { font-size: 14px; line-height: 20px; }
+  .detail__points .picto { width: 16px; height: 16px; }
+  .detail__bas { display: flex; }
+}
+@media (min-width: 760px) { .detail__bas { display: none; } }
+.detail__bas .bouton { width: 100%; justify-content: center; }
+@media (max-width: 759px) and (max-height: 600px) {
+  .detail__corps { padding: 14px 14px 12px; gap: 8px; }
+  .detail__points li, .detail__texte { font-size: 13px; line-height: 18px; }
+  .detail__titre { font-size: 22px; line-height: 24px; }
+  .detail__prix { font-size: 24px; line-height: 26px; }
+  .detail__bas .bouton { min-height: 40px; padding-block: 8px; }
+}

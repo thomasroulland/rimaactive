@@ -1,4 +1,5 @@
-import photoIndividuel from '../assets/service-individuel.jpg'
+// photo échangée avec celle d'En ligne (Marie, 10 novembre 2026)
+import photoIndividuel from '../assets/service-en-ligne.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
@@ -6,7 +7,7 @@ import useTitre from '../components/useTitre.js'
 export const PAGE = {
   titre: 'Individuel',
   image: photoIndividuel,
-  cadrage: '50% 30%', // partie de la photo montrée dans le bandeau (la barre)
+  cadrage: '50% 45%',
   liste: ['Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan, au-delà sur devis'],
   // deux boutons sur la photo pour choisir À domicile / En salle (Marie, 10 novembre 2026) ;
   // page.cartes garde toutes les formules (le formulaire de contact s'en sert)

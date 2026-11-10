@@ -141,12 +141,15 @@ export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] 
                 {t.detail && <span className="detail__petit detail__sous"> {t.detail}</span>}
               </p>
             ))}
+            {ouverte.presentation && <p className="detail__presentation">{ouverte.presentation}</p>}
             <Link to={`/contact?formule=${encodeURIComponent(`${ouverte.nom} · ${ouverte.mode ?? contexte}`)}`} className="bouton bouton--principal detail__bouton">
               {ouverte.bouton ?? 'Choisir cette formule'} <FlecheDiagonale />
             </Link>
           </div>
+          {/* à droite, pour toutes les formules : « Comment ça se passe » (le contenu de la séance) et « Pour qui ? » (texte de Marie, s'il existe) */}
           <div className="detail__droite">
-            {ouverte.titrePoints && <h3 className="detail__h3">{ouverte.titrePoints}</h3>}
+            <h3 className="detail__h3">Comment ça se passe</h3>
+            {ouverte.commentCaSePasse && <p className="detail__texte">{ouverte.commentCaSePasse}</p>}
             <ul className="detail__points">
               {ouverte.points.map((point) => (
                 <li key={String(point)}>
@@ -155,13 +158,18 @@ export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] 
                 </li>
               ))}
             </ul>
-            {/* rubriques supplémentaires écrites par Marie (detail: [[titre, texte], …]) */}
-            {ouverte.detail?.map(([titre, texte]) => (
-              <div key={titre} className="detail__rubrique"><h3 className="detail__h3">{titre}</h3><p>{texte}</p></div>
-            ))}
-            {liste.length > 0 && (
-              <ul className="detail__liste">{liste.map((point) => <li key={point}>{point}</li>)}</ul>
+            {ouverte.pourQui && (
+              <>
+                <h3 className="detail__h3">Pour qui ?</h3>
+                <p className="detail__texte">{ouverte.pourQui}</p>
+              </>
             )}
+          </div>
+          {/* sur téléphone, le bouton passe en bas du détail */}
+          <div className="detail__bas">
+            <Link to={`/contact?formule=${encodeURIComponent(`${ouverte.nom} · ${ouverte.mode ?? contexte}`)}`} className="bouton bouton--principal">
+              {ouverte.bouton ?? 'Choisir cette formule'} <FlecheDiagonale />
+            </Link>
           </div>
         </div>
       )}

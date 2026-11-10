@@ -34,7 +34,7 @@ const SERVICES = [
     lieux: 'Domicile · Salle',
     pourQui: 'Domicile · Salle',
         photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
-    image: photoIndividuel,
+    image: photoEnLigne,
     texte: 'Je vous accompagne en présentiel avec des séances construites autour de vos objectifs et de votre niveau.',
   },
   // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie
@@ -44,7 +44,7 @@ const SERVICES = [
     lieux: '3 mois',
     pourQui: '3 mois',
     photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
-    image: photoEnLigne,
+    image: photoIndividuel,
     texte: 'Je vous accompagne à distance avec un programme personnalisé avec un suivi hebdomadaire.',
   },
 ]
