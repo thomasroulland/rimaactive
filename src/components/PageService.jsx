@@ -148,7 +148,7 @@ export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] 
           </div>
           {/* à droite, pour toutes les formules : « Comment ça se passe » (le contenu de la séance) et « Pour qui ? » (texte de Marie, s'il existe) */}
           <div className="detail__droite">
-            <h3 className="detail__h3">Comment ça se passe</h3>
+            <h3 className="detail__h3">Comment ça se passe ?</h3>
             {ouverte.commentCaSePasse && <p className="detail__texte">{ouverte.commentCaSePasse}</p>}
             <ul className="detail__points">
               {ouverte.points.map((point) => (
@@ -158,12 +158,8 @@ export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] 
                 </li>
               ))}
             </ul>
-            {ouverte.pourQui && (
-              <>
-                <h3 className="detail__h3">Pour qui ?</h3>
-                <p className="detail__texte">{ouverte.pourQui}</p>
-              </>
-            )}
+            <h3 className="detail__h3 detail__h3--suite">Pour qui ?</h3>
+            <p className="detail__texte">{ouverte.pourQui}</p>
           </div>
           {/* sur téléphone, le bouton passe en bas du détail */}
           <div className="detail__bas">

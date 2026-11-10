@@ -1,7 +1,7 @@
 // Menu : toutes les offres sur une seule page depuis le 10 novembre 2026
 export const PAGES = [
   { to: '/', label: 'Accueil' },
-  { to: '/offres', label: 'Mes offres et tarifs' },
+  { to: '/offres', label: 'Mes offres' },
   { to: '/contact', label: 'Contact' },
 ]
 

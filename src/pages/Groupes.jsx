@@ -12,6 +12,8 @@ export const PAGE = {
   cartes: [
     {
       nom: 'Séance en groupe',
+      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
+      pourQui: 'De 2 à 8 personnes, à domicile ou en extérieur, même avec des niveaux différents.',
       picto: 'users',
       surtitre: '2 à 8 personnes',
       infos: '60\u00a0min',

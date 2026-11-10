@@ -20,7 +20,7 @@ const RUBRIQUES = [
 ]
 
 export default function Offres() {
-  useTitre('Mes offres et tarifs')
+  useTitre('Mes offres')
   const { hash } = useLocation()
   // un lien vers une rubrique (/offres#groupes) y amène directement
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Offres() {
       {/* en haut, toujours visibles : le titre et les bulles des rubriques, sur une seule ligne */}
       <nav className="offres-page__bulles" aria-labelledby="offres-titre">
         <div className="conteneur">
-          <h1 id="offres-titre" className="titre offres-page__titre">Mes offres et tarifs</h1>
+          <h1 id="offres-titre" className="titre offres-page__titre">Mes offres</h1>
           <div className="offres-page__liens">
             {RUBRIQUES.map((r) => <a key={r.id} href={`#${r.id}`}>{r.page.titre}</a>)}
           </div>

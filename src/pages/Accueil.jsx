@@ -32,7 +32,7 @@ const SERVICES = [
     to: '/offres#entreprises',
     titre: 'Entreprises',
     lieux: 'Locaux · Extérieur',
-    pourQui: '4 à 16 personnes',
+    pourQui: 'Jusqu’à 16 personnes',
         photo: 'Rangée de kettlebells sur le sol d’une salle',
     image: photoEntreprises,
     texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
@@ -65,7 +65,7 @@ export default function Accueil() {
           <img className="heros__photo" src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
           <div className="heros__texte">
             <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
-            <h1 id="heros-titre" className="titre heros__titre">Coach{' '}<br className="heros__saut" /><span className="mot-avant">Marie</span></h1>
+            <h1 id="heros-titre" className="titre heros__titre"><span className="mot-avant">Marie</span>{' '}<br className="heros__saut" />Sillas</h1>
             {/* retour à la ligne voulu par Marie après « grâce à une », sur tous les écrans */}
             <p className="accroche heros__ligne">Un corps fort et mobile grâce à une<br />pratique fonctionnelle.</p>
             <div className="actions">

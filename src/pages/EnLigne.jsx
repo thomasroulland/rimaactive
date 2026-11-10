@@ -12,6 +12,8 @@ export const PAGE = {
   cartes: [
     {
       nom: 'Suivi mensuel en ligne',
+      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
+      pourQui: 'Une personne qui veut s’entraîner à distance, avec un programme personnalisé et un suivi hebdomadaire.',
       titre: 'Suivi mensuel',
       picto: 'laptop',
       surtitre: 'En ligne',

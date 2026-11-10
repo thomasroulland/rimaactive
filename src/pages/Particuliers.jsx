@@ -19,6 +19,8 @@ export const PAGE = {
   cartes: [
     {
       nom: 'Séance à l’unité à domicile',
+      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
+      pourQui: 'Une personne, chez vous, quel que soit votre niveau.',
       titre: 'Séance à l’unité',
       picto: 'house',
       surtitre: 'À domicile',
@@ -34,6 +36,8 @@ export const PAGE = {
     },
     {
       nom: 'Suivi mensuel à domicile',
+      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
+      pourQui: 'Une personne, chez vous, qui veut un suivi régulier : 4 séances par mois.',
       titre: 'Suivi mensuel',
       picto: 'kettlebell',
       surtitre: 'À domicile',
@@ -45,6 +49,8 @@ export const PAGE = {
     },
     {
       nom: 'Séance à l’unité en salle',
+      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
+      pourQui: 'Une personne, en salle, quel que soit votre niveau.',
       titre: 'Séance à l’unité',
       picto: 'barbell',
       surtitre: 'En salle',
@@ -56,6 +62,8 @@ export const PAGE = {
     {
       // ajouté le 10 novembre 2026 (prix de Marie) ; « Compris » repris du Suivi mensuel à domicile, en salle
       nom: 'Suivi mensuel en salle',
+      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
+      pourQui: 'Une personne, en salle, qui veut un suivi régulier : 4 séances par mois.',
       titre: 'Suivi mensuel',
       picto: 'kettlebell',
       surtitre: 'En salle',

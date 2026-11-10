@@ -12,6 +12,8 @@ export const PAGE = {
   cartes: [
     {
       nom: 'Séance en entreprise',
+      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
+      pourQui: 'Vos équipes, jusqu’à 16 personnes, dans vos locaux ou en extérieur.',
       picto: 'buildings',
       surtitre: 'Jusqu’à 16 personnes',
       infos: '60\u00a0min · Devis gratuit sous 48\u00a0h',
