@@ -18,7 +18,7 @@ export default function PageService({ page }) {
   const [ouverte, setOuverte] = useState(null)
   const refDetail = useRef(null)
   useEffect(() => { if (ouverte) refDetail.current?.showModal() }, [ouverte])
-  const ouvrir = (f) => (e) => { if (!e.target.closest('a')) setOuverte(f) }
+  const ouvrir = (f) => () => setOuverte(f)
   const onglets = page.onglets ?? [{ cartes: page.cartes }]
   const choisi = onglets[actif]
   // un onglet peut nommer les formules à montrer (noms), ou avoir ses propres cartes
@@ -60,7 +60,6 @@ export default function PageService({ page }) {
               </div>
               <h2 className="titre titre--tuile">{f.titre ?? f.nom}</h2>
               {f.infos && <p className="offre__infos">{f.infos}</p>}
-              <button type="button" className="offre__voir" aria-haspopup="dialog">Voir le détail +</button>
               {/* Tarifs masqués pour le moment (Marie, 6 novembre 2026) : remettre AFFICHER_TARIFS à true pour les réafficher */}
               {AFFICHER_TARIFS && <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
                 {f.tarifs.map((t) => (
@@ -86,14 +85,16 @@ export default function PageService({ page }) {
                   ))}
                 </ul>
               )}
-              <Link
-                to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${f.mode ?? contexte}`)}`}
+              {/* le bouton de la carte ouvre le détail ; « Choisir » est dans le détail (Marie, 10 novembre 2026) */}
+              <button
+                type="button"
+                aria-haspopup="dialog"
                 tabIndex={f.mode && f.mode !== onglet.nom ? -1 : undefined}
                 className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
-                aria-label={`Choisir ${f.nom}`}
+                aria-label={`Voir le détail de ${f.titre ?? f.nom}`}
               >
-                {f.bouton ?? 'Choisir'} <FlecheDiagonale />
-              </Link>
+                Voir le détail <span aria-hidden="true">+</span>
+              </button>
             </li>
           ))}
         </ul>
