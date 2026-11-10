@@ -219,3 +219,6 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 
 - **Détail des formules (10 novembre 2026)** : un clic sur une carte (ou « Voir le détail + ») ouvre la formule en grand, fond blanc
   (`dialog.detail` dans `PageService.jsx`). Pour ajouter des rubriques : `detail: [[titre, texte], …]` dans la carte.
+
+- **Offres au 10 novembre 2026** : À domicile Séance à l’unité 70 € · Suivi mensuel 260 €/mois (soit 65 € la séance) ; En salle Séance à l’unité 60 € ·
+  Suivi mensuel 220 €/mois (soit 55 € la séance) ; Groupes 70 € la séance ; Entreprises sur devis ; En ligne Suivi mensuel 150 € les 3 mois ou 3 × 50 €.

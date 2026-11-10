@@ -8,7 +8,7 @@ import { PAGE as GROUPES } from './Groupes.jsx'
 import { PAGE as ENTREPRISES } from './Entreprises.jsx'
 import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 
-// Les quatre offres et leurs formules, reprises des pages (« Suivi mensuel · Individuel », « Active Plus · En ligne »…) :
+// Les quatre offres et leurs formules, reprises des pages (« Suivi mensuel · Individuel », « Suivi mensuel en ligne · En ligne »…) :
 // la même écriture que celle envoyée par le bouton « Choisir » d'une carte
 const OFFRES = [INDIVIDUEL, GROUPES, ENTREPRISES, EN_LIGNE].map((page) => ({
   nom: page.titre,

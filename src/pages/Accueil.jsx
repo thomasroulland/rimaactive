@@ -37,12 +37,12 @@ const SERVICES = [
     image: photoIndividuel,
     texte: 'Je vous accompagne en présentiel avec des séances construites autour de vos objectifs et de votre niveau.',
   },
-  // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie ; texte repris de la formule Active Plus
+  // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie
   {
     to: '/en-ligne',
     titre: 'En ligne',
-    lieux: '12 semaines',
-    pourQui: '12 semaines',
+    lieux: '3 mois',
+    pourQui: '3 mois',
     photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
     image: photoEnLigne,
     texte: 'Je vous accompagne à distance avec un programme personnalisé avec un suivi hebdomadaire.',

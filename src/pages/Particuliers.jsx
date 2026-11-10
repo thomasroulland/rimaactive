@@ -2,7 +2,7 @@ import photoIndividuel from '../assets/service-individuel.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Page Individuel : formules et prix donnés par Marie (7 novembre 2026)
+// Page Individuel : formules et prix donnés par Marie (mis à jour le 10 novembre 2026)
 export const PAGE = {
   titre: 'Individuel',
   image: photoIndividuel,
@@ -11,13 +11,14 @@ export const PAGE = {
   // deux boutons sur la photo pour choisir À domicile / En salle (Marie, 10 novembre 2026) ;
   // page.cartes garde toutes les formules (le formulaire de contact s'en sert)
   onglets: [
-    { nom: 'À domicile', noms: ['Séance à l’unité', 'Suivi mensuel'] },
-    { nom: 'En salle', noms: ['Séance à l’unité en salle'] },
+    { nom: 'À domicile', noms: ['Séance à l’unité à domicile', 'Suivi mensuel à domicile'] },
+    { nom: 'En salle', noms: ['Séance à l’unité en salle', 'Suivi mensuel en salle'] },
   ],
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
-      nom: 'Séance à l’unité',
+      nom: 'Séance à l’unité à domicile',
+      titre: 'Séance à l’unité',
       picto: 'house',
       surtitre: 'À domicile',
       infos: '60\u00a0min',
@@ -31,11 +32,12 @@ export const PAGE = {
       ],
     },
     {
-      nom: 'Suivi mensuel',
+      nom: 'Suivi mensuel à domicile',
+      titre: 'Suivi mensuel',
       picto: 'kettlebell',
       surtitre: 'À domicile',
       infos: '4 séances par mois',
-      tarifs: [{ montant: '260\u00a0€', apres: 'par mois' }],
+      tarifs: [{ montant: '260\u00a0€', apres: 'par mois', detail: 'soit 65\u00a0€ la séance de 60\u00a0min' }],
       titrePoints: 'Compris',
       points: ['4 séances à domicile', 'Programme personnalisé', 'Suivi inclus'],
       sombre: true,
@@ -49,6 +51,18 @@ export const PAGE = {
       tarifs: [{ montant: '60\u00a0€', apres: 'la séance' }],
       titrePoints: 'Compris pour chaque séance',
       points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
+    },
+    {
+      // ajouté le 10 novembre 2026 (prix de Marie) ; « Compris » repris du Suivi mensuel à domicile, en salle
+      nom: 'Suivi mensuel en salle',
+      titre: 'Suivi mensuel',
+      picto: 'kettlebell',
+      surtitre: 'En salle',
+      infos: '4 séances par mois',
+      tarifs: [{ montant: '220\u00a0€', apres: 'par mois', detail: 'soit 55\u00a0€ la séance de 60\u00a0min' }],
+      titrePoints: 'Compris',
+      points: ['4 séances en salle', 'Programme personnalisé', 'Suivi inclus'],
+      sombre: true,
     },
   ],
 }
