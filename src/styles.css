@@ -1415,3 +1415,20 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   .offres--2 .offre .offre__points { margin-bottom: 12px; gap: 3px; }
   .offres--2 .offre .offre__tarifs { padding-top: 12px; margin-bottom: 2px; }
 }
+.offre__point--long { line-height: 19px !important; } .offre__point--long b { font-weight: 700; color: inherit; }
+/* textes longs du « Compris » (Séance à l'unité à domicile) : un peu plus petits, et le prix sur la ligne du nom pour gagner de la hauteur */
+@media (min-width: 900px) {
+  .offre__point--long { font-size: 13px !important; line-height: 18px !important; }
+  .offres--2 .offre:has(.offre__point--long) .offre__infos { margin-top: -2px; }
+}
+/* deux cartes (Individuel à domicile) : le prix à droite du nom, pour laisser la place aux textes du « Compris » */
+@media (min-width: 900px) {
+  .offres--2 > .offre { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto auto auto 1fr auto; column-gap: 16px; }
+  .offres--2 > .offre > * { grid-column: 1 / -1; }
+  .offres--2 > .offre > .titre--tuile { grid-column: 1; grid-row: 2; }
+  .offres--2 > .offre > .offre__infos { grid-column: 1; grid-row: 3; }
+  .offres--2 > .offre > .offre__tarifs { grid-column: 2; grid-row: 2 / 4; align-self: end; margin: 0; padding: 0; border: 0; }
+  .offres--2 > .offre .offre__titre-points { margin-top: 12px; }
+  .offres--2 > .offre > .offre__bouton { align-self: end; }
+}
+@media (min-width: 900px) { .offres--2 > .offre .offre__points { align-content: start; } }

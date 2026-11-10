@@ -71,7 +71,12 @@ export default function PageService({ page }) {
               {f.titrePoints && <p className="offre__titre-points">{f.titrePoints}</p>}
               {f.points && (
                 <ul className="offre__points">
-                  {f.points.map((point) => <li key={point}><Picto nom="check-square" taille={18} />{point}</li>)}
+                  {f.points.map((point) => (
+                    <li key={String(point)} className={Array.isArray(point) ? 'offre__point--long' : undefined}>
+                      <Picto nom="check-square" taille={18} />
+                      {Array.isArray(point) ? <span><b>{point[0]}&nbsp;:</b> {point[1]}</span> : point}
+                    </li>
+                  ))}
                 </ul>
               )}
               <Link
