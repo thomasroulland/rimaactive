@@ -22,6 +22,19 @@ const RUBRIQUES = [
 export default function Offres() {
   useTitre('Mes offres')
   const { hash } = useLocation()
+  // rubrique affichée (soulignée dans les onglets) : celle qui est sous la barre des onglets
+  const [courante, setCourante] = useState(RUBRIQUES[0].id)
+  useEffect(() => {
+    const suivre = () => {
+      const barre = document.querySelector('.offres-page__bulles')?.getBoundingClientRect().bottom ?? 0
+      let id = RUBRIQUES[0].id
+      for (const r of RUBRIQUES) { const e = document.getElementById(r.id); if (e && e.getBoundingClientRect().top <= barre + 80) id = r.id }
+      setCourante(id)
+    }
+    suivre()
+    window.addEventListener('scroll', suivre, { passive: true })
+    return () => window.removeEventListener('scroll', suivre)
+  }, [])
   // un lien vers une rubrique (/offres#groupes) y amène directement
   useEffect(() => {
     if (!hash) return
@@ -38,7 +51,7 @@ export default function Offres() {
         <div className="conteneur">
           <h1 id="offres-titre" className="titre offres-page__titre">Mes offres</h1>
           <div className="offres-page__liens">
-            {RUBRIQUES.map((r) => <a key={r.id} href={`#${r.id}`}>{r.page.titre}</a>)}
+            {RUBRIQUES.map((r) => <a key={r.id} href={`#${r.id}`} aria-current={r.id === courante ? 'location' : undefined}>{r.page.titre}</a>)}
           </div>
         </div>
       </nav>

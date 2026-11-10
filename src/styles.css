@@ -1610,3 +1610,18 @@ main > section.offres-page__haut:nth-of-type(n) { background: var(--craie); }
   .offres-page__rubrique { padding-block: 12px; }
   .offres-page__corps--photo .offres--1 .offre .offre__points { margin-bottom: 10px !important; }
 }
+
+/* « Mes offres » (11 novembre) : « MES OFFRES » en petites capitales grises, puis des onglets soulignés
+   (texte simple ; la rubrique affichée en encre, soulignée vermillon) — rien à voir avec les bulles du menu */
+.offres-page__bulles .offres-page__titre { font-weight: 700; font-size: 12px; line-height: 16px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gris-chaud); }
+.offres-page__bulles .conteneur { justify-content: flex-start; gap: 8px 32px; flex-wrap: nowrap; }
+.offres-page__liens { gap: 28px; }
+.offres-page__liens a, .offres-page__liens a:hover { border: 0; border-radius: 0; background: none; padding: 6px 0; font-size: 16px; color: var(--gris-chaud);
+  border-bottom: 3px solid transparent; transition: color var(--duree) ease, border-color var(--duree) ease; }
+.offres-page__liens a:hover { color: var(--encre); }
+.offres-page__liens a[aria-current] { color: var(--encre); border-bottom-color: var(--vermillon); }
+@media (max-width: 899px) {
+  .offres-page__bulles .conteneur { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .offres-page__liens { gap: 20px; width: 100%; }
+  .offres-page__liens a, .offres-page__liens a:hover { font-size: 15px; }
+}
