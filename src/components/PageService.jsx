@@ -15,11 +15,14 @@ const AFFICHER_TARIFS = true
 export default function PageService({ page }) {
   const [actif, setActif] = useState(0)
   const onglets = page.onglets ?? [{ cartes: page.cartes }]
-  const onglet = { cartes: page.cartes, ...onglets[actif] }
+  const choisi = onglets[actif]
+  // un onglet peut nommer les formules à montrer (noms), ou avoir ses propres cartes
+  const onglet = { cartes: choisi.noms ? page.cartes.filter((c) => choisi.noms.includes(c.nom)) : page.cartes, ...choisi }
   const intro = onglet.intro ?? page.intro
   const liste = onglet.liste ?? page.liste ?? []
   const note = onglet.note ?? page.note
-  const contexte = onglet.nom ?? page.titre
+  // le formulaire reconnaît « Formule · Page » (ex. « À domicile · Individuel »)
+  const contexte = page.titre
   return (
     <>
     <header className="bandeau-page">
@@ -40,7 +43,7 @@ export default function PageService({ page }) {
     </header>
     <section className="section formules-page" aria-labelledby="page-titre">
       {/* Une page dont un onglet a trois formules (Individuel) garde la même mise en page sur tous ses onglets */}
-      <div className={`conteneur formules-page__grille ${onglets.some((o) => (o.cartes ?? page.cartes).length === 3) ? 'formules-page__grille--large' : ''}`}>
+      <div className={`conteneur formules-page__grille ${onglets.some((o) => (o.noms ?? o.cartes ?? page.cartes).length === 3) ? 'formules-page__grille--large' : ''}`}>
         <ul className={`offres offres--${onglet.cartes.length}`}>
           {onglet.cartes.map((f) => (
             <li key={f.nom} className={`offre ${f.sombre ? 'offre--sombre' : ''} ${f.mode && f.mode !== onglet.nom ? 'offre--grisee' : ''}`} aria-disabled={f.mode && f.mode !== onglet.nom ? true : undefined}>

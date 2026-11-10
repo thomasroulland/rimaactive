@@ -1409,3 +1409,9 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   .heros.heros--v3 .bouton--principal:hover { background: transparent; border-color: var(--jaune); color: var(--jaune); }
   .heros.heros--v3 .bouton--secondaire:hover { background: transparent; border-color: var(--craie); color: var(--craie); }
 }
+/* Individuel « À domicile » (deux cartes) : un peu plus serré pour tenir dans l'écran */
+@media (min-width: 900px) {
+  .offres--2 .offre .offre__titre-points { margin-top: 8px; padding-top: 10px; }
+  .offres--2 .offre .offre__points { margin-bottom: 12px; gap: 3px; }
+  .offres--2 .offre .offre__tarifs { padding-top: 12px; margin-bottom: 2px; }
+}

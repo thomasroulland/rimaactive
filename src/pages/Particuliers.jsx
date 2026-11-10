@@ -7,7 +7,13 @@ export const PAGE = {
   titre: 'Individuel',
   image: photoIndividuel,
   cadrage: '50% 30%', // partie de la photo montrée dans le bandeau (la barre)
-  liste: ['À domicile ou en salle', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan, au-delà sur devis'],
+  liste: ['Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan, au-delà sur devis'],
+  // deux boutons sur la photo pour choisir À domicile / En salle (Marie, 10 novembre 2026) ;
+  // page.cartes garde toutes les formules (le formulaire de contact s'en sert)
+  onglets: [
+    { nom: 'À domicile', noms: ['À domicile', 'Suivi mensuel'] },
+    { nom: 'En salle', noms: ['En salle'] },
+  ],
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
