@@ -1,10 +1,7 @@
-// Ordre du menu demandé par Marie (7 novembre 2026)
+// Menu : toutes les offres sur une seule page depuis le 10 novembre 2026
 export const PAGES = [
   { to: '/', label: 'Accueil' },
-  { to: '/particuliers', label: 'Individuel' },
-  { to: '/groupes', label: 'Groupes' },
-  { to: '/entreprises', label: 'Entreprises' },
-  { to: '/en-ligne', label: 'En ligne' },
+  { to: '/offres', label: 'Mes offres' },
   { to: '/contact', label: 'Contact' },
 ]
 

@@ -11,7 +11,7 @@ import Picto from './Picto.jsx'
 export default function Entete() {
   const { pathname } = useLocation()
   // pages qui commencent par une photo plein cadre : les trois pages de formules
-  const surPhoto = useSurPhoto(['/particuliers', '/groupes', '/entreprises', '/en-ligne'].includes(pathname))
+  const surPhoto = useSurPhoto(false)
   const [ouvert, setOuvert] = useState(false)
   const refConstruction = useRef(null)
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »

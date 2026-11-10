@@ -222,3 +222,8 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 
 - **Offres au 10 novembre 2026** : À domicile Séance à l’unité 70 € · Suivi mensuel 260 €/mois (soit 65 € la séance) ; En salle Séance à l’unité 60 € ·
   Suivi mensuel 220 €/mois (soit 55 € la séance) ; Groupes 70 € la séance ; Entreprises sur devis ; En ligne Suivi mensuel 150 € les 3 mois ou 3 × 50 €.
+
+- **Page unique « Mes offres » (`/offres`, `Offres.jsx`, 10 novembre 2026)** : menu Accueil · Mes offres ; bulles collantes Individuel · Groupes ·
+  Entreprises · En ligne ; Individuel garde les boutons À domicile / En salle (2 cartes) ; les autres rubriques : photo + carte.
+  Les anciennes adresses (/particuliers, /groupes, /entreprises, /en-ligne, /communes) mènent à leur rubrique. Les formules restent
+  dans Particuliers.jsx, Groupes.jsx, Entreprises.jsx, EnLigne.jsx (le formulaire de contact s’en sert aussi).

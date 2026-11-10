@@ -11,7 +11,7 @@ import { CONTACT } from '../components/liens.js'
 
 const SERVICES = [
   {
-    to: '/entreprises',
+    to: '/offres#entreprises',
     titre: 'Entreprises',
     lieux: 'Locaux · Extérieur',
     pourQui: '4 à 16 personnes',
@@ -20,7 +20,7 @@ const SERVICES = [
     texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
   },
   {
-    to: '/groupes',
+    to: '/offres#groupes',
     titre: 'Groupes',
     lieux: 'Domicile · Extérieur',
     pourQui: '2 à 8 personnes',
@@ -29,7 +29,7 @@ const SERVICES = [
     texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
   },
   {
-    to: '/particuliers',
+    to: '/offres#individuel',
     titre: 'Individuel',
     lieux: 'Domicile · Salle',
     pourQui: 'Domicile · Salle',
@@ -39,7 +39,7 @@ const SERVICES = [
   },
   // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie
   {
-    to: '/en-ligne',
+    to: '/offres#en-ligne',
     titre: 'En ligne',
     lieux: '3 mois',
     pourQui: '3 mois',
@@ -102,7 +102,7 @@ export default function Accueil() {
                 {/* Toute la carte mène à la page de l'offre (lien du titre étendu à la carte) ;
                     « Voir les offres » mène aussi à la page de l'offre, en haut. Plus de prix sur l'accueil. */}
                 <div className="service">
-                  <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.slice(1)}`} />
+                  <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.split('#')[1]}`} />
                   <div className="service__corps">
                     <h3 className="titre titre--tuile">
                       <Link to={service.to} className="service__lien" aria-label={`${service.titre} : voir les formules`}>{service.titre}</Link>

@@ -17,7 +17,6 @@ export default function PageService({ page }) {
   // carte ouverte en grand (détail), au clic sur la carte ou sur « Voir le détail »
   const [ouverte, setOuverte] = useState(null)
   const refDetail = useRef(null)
-  useEffect(() => { if (ouverte) refDetail.current?.showModal() }, [ouverte])
   const ouvrir = (f) => () => setOuverte(f)
   const onglets = page.onglets ?? [{ cartes: page.cartes }]
   const choisi = onglets[actif]
@@ -52,50 +51,7 @@ export default function PageService({ page }) {
         {/* Individuel : une carte seule (En salle) garde la même structure que les deux cartes À domicile (prix à droite du nom) */}
         <ul className={`offres offres--${page.onglets && onglet.cartes.length === 1 ? '2 offres--seule' : onglet.cartes.length}`}>
           {onglet.cartes.map((f) => (
-            <li key={f.nom} onClick={ouvrir(f)} className={`offre offre--cliquable ${f.sombre ? 'offre--sombre' : ''} ${f.mode && f.mode !== onglet.nom ? 'offre--grisee' : ''}`} aria-disabled={f.mode && f.mode !== onglet.nom ? true : undefined}>
-              {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
-              <div className="offre__tete">
-                <p className="surtitre">{f.surtitre}</p>
-                <Picto nom={f.picto} taille={24} />
-              </div>
-              <h2 className="titre titre--tuile">{f.titre ?? f.nom}</h2>
-              {f.infos && <p className="offre__infos">{f.infos}</p>}
-              {/* Tarifs masqués pour le moment (Marie, 6 novembre 2026) : remettre AFFICHER_TARIFS à true pour les réafficher */}
-              {AFFICHER_TARIFS && <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
-                {f.tarifs.map((t) => (
-                  <div key={t.libelle ?? t.montant} className="offre__tarif">
-                    {t.libelle && <p className="offre__libelle">{t.libelle}</p>}
-                    <p className="offre__prix">
-                      {t.avant && <span className="offre__avant">{t.avant}</span>}
-                      {t.montant}
-                      {t.apres && <span className="offre__apres">{t.apres}</span>}
-                    </p>
-                    {t.detail && <p className="offre__detail">{t.detail}</p>}
-                  </div>
-                ))}
-              </div>}
-              {f.titrePoints && <p className="offre__titre-points">{f.titrePoints}</p>}
-              {f.points && (
-                <ul className="offre__points">
-                  {f.points.map((point) => (
-                    <li key={String(point)} className={Array.isArray(point) ? 'offre__point--long' : undefined}>
-                      <Picto nom="check-square" taille={18} />
-                      {Array.isArray(point) ? <span><b>{point[0]}&nbsp;:</b> {point[1]}</span> : point}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {/* le bouton de la carte ouvre le détail ; « Choisir » est dans le détail (Marie, 10 novembre 2026) */}
-              <button
-                type="button"
-                aria-haspopup="dialog"
-                tabIndex={f.mode && f.mode !== onglet.nom ? -1 : undefined}
-                className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
-                aria-label={`Voir le détail de ${f.titre ?? f.nom}`}
-              >
-                Voir le détail
-              </button>
-            </li>
+            <CarteOffre key={f.nom} f={f} grisee={f.mode && f.mode !== onglet.nom} onOuvrir={ouvrir(f)} />
           ))}
         </ul>
         {/* Sous les cartes, centrée : la liste cochée, puis les mentions */}
@@ -110,8 +66,66 @@ export default function PageService({ page }) {
         </div>
       </div>
     </section>
-    {/* Détail d'une formule, en grand au centre de l'écran (fond blanc) ; fermé par la croix, Échap ou un clic à côté */}
-    <dialog ref={refDetail} className="detail" aria-labelledby="detail-titre" onClose={() => setOuverte(null)}
+    <DetailOffre refDetail={refDetail} ouverte={ouverte} onClose={() => setOuverte(null)} contexte={contexte} liste={liste} />
+    </>
+  )
+}
+
+// Une carte de formule (pages de formules et page « Mes offres ») ; un clic l'ouvre en grand
+export function CarteOffre({ f, grisee, onOuvrir }) {
+  return (
+    <li onClick={onOuvrir} className={`offre offre--cliquable ${f.sombre ? 'offre--sombre' : ''} ${grisee ? 'offre--grisee' : ''}`} aria-disabled={grisee ? true : undefined}>
+      {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
+      <div className="offre__tete">
+        <p className="surtitre">{f.surtitre}</p>
+        <Picto nom={f.picto} taille={24} />
+      </div>
+      <h2 className="titre titre--tuile">{f.titre ?? f.nom}</h2>
+      {f.infos && <p className="offre__infos">{f.infos}</p>}
+      {/* Tarifs masqués pour le moment (Marie, 6 novembre 2026) : remettre AFFICHER_TARIFS à true pour les réafficher */}
+      {AFFICHER_TARIFS && <div className={`offre__tarifs offre__tarifs--${f.tarifs.length}`}>
+        {f.tarifs.map((t) => (
+          <div key={t.libelle ?? t.montant} className="offre__tarif">
+            {t.libelle && <p className="offre__libelle">{t.libelle}</p>}
+            <p className="offre__prix">
+              {t.avant && <span className="offre__avant">{t.avant}</span>}
+              {t.montant}
+              {t.apres && <span className="offre__apres">{t.apres}</span>}
+            </p>
+            {t.detail && <p className="offre__detail">{t.detail}</p>}
+          </div>
+        ))}
+      </div>}
+      {f.titrePoints && <p className="offre__titre-points">{f.titrePoints}</p>}
+      {f.points && (
+        <ul className="offre__points">
+          {f.points.map((point) => (
+            <li key={String(point)} className={Array.isArray(point) ? 'offre__point--long' : undefined}>
+              <Picto nom="check-square" taille={18} />
+              {Array.isArray(point) ? <span><b>{point[0]}<span className="offre__suite">&nbsp;:</span></b><span className="offre__suite"> {point[1]}</span></span> : point}
+            </li>
+          ))}
+        </ul>
+      )}
+      {/* le bouton de la carte ouvre le détail ; « Choisir » est dans le détail (Marie, 10 novembre 2026) */}
+      <button
+        type="button"
+        aria-haspopup="dialog"
+        tabIndex={grisee ? -1 : undefined}
+        className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}
+        aria-label={`Voir le détail de ${f.titre ?? f.nom}`}
+      >
+        Voir le détail
+      </button>
+    </li>
+  )
+}
+
+// Détail d'une formule, en grand au centre de l'écran (fond blanc) ; fermé par la croix, Échap ou un clic à côté
+export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] }) {
+  useEffect(() => { if (ouverte) refDetail.current?.showModal() }, [ouverte, refDetail])
+  return (
+    <dialog ref={refDetail} className="detail" aria-labelledby="detail-titre" onClose={onClose}
       onClick={(e) => { if (e.target === e.currentTarget) e.currentTarget.close() }}>
       {ouverte && (
         <div className="detail__corps">
@@ -152,7 +166,6 @@ export default function PageService({ page }) {
         </div>
       )}
     </dialog>
-    </>
   )
 }
 

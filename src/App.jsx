@@ -2,11 +2,8 @@ import { useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import Accueil from './pages/Accueil.jsx'
-import Entreprises from './pages/Entreprises.jsx'
-import Groupes from './pages/Groupes.jsx'
-import EnLigne from './pages/EnLigne.jsx'
 import Cgv from './pages/Cgv.jsx'
-import Particuliers from './pages/Particuliers.jsx'
+import Offres from './pages/Offres.jsx'
 import Contact from './pages/Contact.jsx'
 import InformationsLegales from './pages/InformationsLegales.jsx'
 
@@ -25,11 +22,13 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Accueil />} />
-          <Route path="entreprises" element={<Entreprises />} />
-          <Route path="groupes" element={<Groupes />} />
-          <Route path="communes" element={<Navigate to="/groupes" replace />} />
-          <Route path="en-ligne" element={<EnLigne />} />
-          <Route path="particuliers" element={<Particuliers />} />
+          {/* toutes les offres sur une seule page (10 novembre 2026) ; les anciennes adresses mènent à leur rubrique */}
+          <Route path="offres" element={<Offres />} />
+          <Route path="particuliers" element={<Navigate to="/offres#individuel" replace />} />
+          <Route path="groupes" element={<Navigate to="/offres#groupes" replace />} />
+          <Route path="communes" element={<Navigate to="/offres#groupes" replace />} />
+          <Route path="entreprises" element={<Navigate to="/offres#entreprises" replace />} />
+          <Route path="en-ligne" element={<Navigate to="/offres#en-ligne" replace />} />
           <Route path="contact" element={<Contact />} />
           {/* mentions légales et confidentialité sur une page ; CGV à part (en cours de rédaction) */}
           <Route path="mentions-legales" element={<InformationsLegales />} />

@@ -1488,3 +1488,39 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 /* deux cartes (Individuel) : « Voir le détail » sur la ligne de la durée, pour ne pas allonger la carte */
 @media (min-width: 900px) { .offres--2 > .offre > .offre__voir { grid-row: 3; grid-column: 1; justify-self: end; align-self: center; margin: 0; } }
 .detail__corps > form { position: absolute; top: 14px; right: 14px; margin: 0; z-index: 1; } .detail__fermer { position: static; }
+
+/* ---------- Page unique « Mes offres » (10 novembre 2026) ---------- */
+.offres-page__haut { padding: clamp(24px, calc(var(--ecran) * 0.05), 48px) var(--gouttiere) 12px; }
+.offres-page__haut .titre { margin: 0; }
+/* bulles des rubriques, toujours visibles sous la barre du haut */
+.offres-page__bulles { position: sticky; top: var(--hauteur-entete); z-index: 20; background: var(--craie); border-bottom: 1px solid var(--filet); padding: 10px var(--gouttiere); }
+.offres-page__bulles .conteneur { display: flex; gap: 8px; overflow-x: auto; }
+.offres-page__bulles a { flex: none; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--filet); background: var(--blanc); color: var(--encre);
+  font-weight: 700; font-size: 14px; line-height: 20px; text-decoration: none; transition: background-color var(--duree) ease, border-color var(--duree) ease; }
+.offres-page__bulles a:hover { background: var(--jaune); border-color: var(--jaune); }
+.offres-page__rubrique { padding: clamp(28px, calc(var(--ecran) * 0.06), 56px) var(--gouttiere); scroll-margin-top: 0; }
+main > section.offres-page__rubrique:nth-of-type(n) { background: var(--craie); }
+main > section.offres-page__rubrique--fonce:nth-of-type(n) { background: var(--craie-fonce); }
+main > section.offres-page__haut:nth-of-type(n) { background: var(--craie); }
+.offres-page__entete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px 24px; margin-bottom: 18px; }
+.offres-page__entete .titre { margin: 0; }
+.offres-page__sous { margin: 6px 0 0; color: var(--gris-chaud); }
+.offres-page__entete .bascule { border-color: var(--filet); }
+.offres-page__corps--photo { display: grid; gap: 16px; }
+.offres-page__photo { width: 100%; height: 200px; object-fit: cover; border-radius: var(--arrondi); display: block; }
+@media (min-width: 900px) {
+  .offres-page__corps--photo { grid-template-columns: 1fr 1fr; align-items: stretch; }
+  .offres-page__photo { height: 100%; min-height: 300px; }
+  .offres-page__corps--photo .offres--1 { max-width: none; margin: 0; }
+  /* la carte unique à côté de la photo : en colonne (nom, prix, détail, bouton) plutôt qu'en deux colonnes */
+  .offres-page__corps--photo .offres--1 > .offre { display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
+  .offres-page__corps--photo .offres--1 .offre__tarifs { align-self: stretch !important; margin: 14px 0 6px !important; padding-top: 12px !important; border-top: 1px solid var(--filet) !important; }
+  .offres-page__corps--photo .offres--1 .offre--sombre .offre__tarifs { border-top-color: rgba(244, 243, 239, 0.2) !important; }
+  .offres-page__corps--photo .offres--1 .offre .offre__bouton { margin-top: auto !important; }
+}
+.offres-page__liste { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 28px; color: var(--gris-chaud); font-size: 14px; line-height: 22px; }
+.offres-page__liste li { display: inline-flex; gap: 8px; align-items: flex-start; }
+.offres-page__liste .picto { flex: none; margin-top: 2px; }
+.offres-page__note { margin: 0 auto; padding: 18px var(--gouttiere) 36px; text-align: center; font-size: 14px; color: var(--gris-chaud); }
+/* sur la page « Mes offres », les cartes ne gardent que l'intitulé des longs textes : le texte complet est dans le détail */
+.offres-page__rubrique .offre__suite { display: none; }
