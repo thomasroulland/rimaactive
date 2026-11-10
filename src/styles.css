@@ -1440,3 +1440,11 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
   .offres--1 .offre__tarifs { grid-area: 4 / 1 / 6 / 2 !important; align-self: end; }
   .offres--1 .offre .offre__bouton { grid-area: 5 / 2; }
 }
+/* carte unique (Groupes, Entreprises, En ligne, En salle) : nom, prix et bouton « Choisir » à gauche ; le détail de la séance à droite (Marie, 10 novembre) */
+@media (min-width: 900px) {
+  .offres--1 > .offre { grid-template-rows: auto auto auto 1fr auto; }
+  .offres--1 .offre__tarifs { grid-area: 4 / 1 / 5 / 2 !important; align-self: end; }
+  .offres--1 .offre .offre__bouton { grid-area: 5 / 1 / 6 / 2; margin-top: 16px; }
+  .offres--1 .offre .offre__points { grid-area: 2 / 2 / 6 / 3; }
+}
+@media (min-width: 900px) { .offres--1 .offre .offre__points { align-content: start; align-self: start; } }
