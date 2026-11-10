@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-10T12:00:00Z",
+  "title": "Design System: Rimaactive",
+  "extensions": {
+    "colorMeta": {
+      "jaune-signal": { "role": "primary", "displayName": "Jaune signal", "canonical": "#F2C230", "tonalRamp": ["#3d2f05", "#5e4908", "#87690c", "#b38c12", "#dcac1c", "#f2c230", "#f7d978", "#fcefc6"] },
+      "vermillon": { "role": "secondary", "displayName": "Vermillon", "canonical": "#FF4A1C", "tonalRamp": ["#3f0f03", "#661906", "#932409", "#c3300c", "#ec3d12", "#ff4a1c", "#ff9478", "#ffd8cd"] },
+      "craie": { "role": "neutral", "displayName": "Craie", "canonical": "#F4F3EF", "tonalRamp": ["#262522", "#3f3d39", "#5d5a54", "#7f7b74", "#a4a099", "#cbc8c1", "#e8e5de", "#f4f3ef"] },
+      "blanc": { "role": "neutral", "displayName": "Blanc", "canonical": "#FFFFFF" },
+      "craie-fonce": { "role": "neutral", "displayName": "Craie foncé", "canonical": "#E8E5DE" },
+      "encre": { "role": "neutral", "displayName": "Encre", "canonical": "#161514" },
+      "gris-chaud": { "role": "neutral", "displayName": "Gris chaud", "canonical": "#57534E" },
+      "filet": { "role": "neutral", "displayName": "Filet", "canonical": "#DCD9D2" },
+      "gris-controle": { "role": "neutral", "displayName": "Gris contrôle", "canonical": "#88837B" },
+      "voile-encre": { "role": "neutral", "displayName": "Voile encre", "canonical": "rgba(22, 21, 20, 0.82)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Titre de page", "purpose": "Page titles; 36/38 on phones." },
+      "headline": { "displayName": "Titre de section", "purpose": "Section titles; 36/38 on phones." },
+      "title": { "displayName": "Titre de carte", "purpose": "Tile and offer card titles." },
+      "accroche": { "displayName": "Accroche", "purpose": "Home tagline only, italic." },
+      "body": { "displayName": "Texte", "purpose": "All reading text, gris chaud, max 65ch." },
+      "small": { "displayName": "Petit", "purpose": "Card infos, captions, price prefixes." },
+      "button": { "displayName": "Bouton", "purpose": "Button labels." },
+      "label": { "displayName": "Surtitre", "purpose": "Spaced capitals: surtitles, menu bubbles, RIMAACTIVE." }
+    },
+    "shadows": [
+      { "name": "repos", "value": "0 1px 2px rgba(22, 21, 20, 0.06)", "purpose": "Resting tiles and hero bubbles." },
+      { "name": "survol-leger", "value": "0 14px 32px rgba(22, 21, 20, 0.12)", "purpose": "FAQ and price tiles on hover, 4px lift." },
+      { "name": "survol", "value": "0 18px 40px rgba(22, 21, 20, 0.14)", "purpose": "Offer cards and service tiles on hover, 6px lift." },
+      { "name": "dialogue", "value": "0 30px 80px rgba(22, 21, 20, 0.3)", "purpose": "Offer detail dialog." }
+    ],
+    "motion": [
+      { "name": "duree", "value": "160ms ease", "purpose": "Colour and border changes on hover." },
+      { "name": "souleve", "value": "0.35s cubic-bezier(.3, .7, .2, 1)", "purpose": "Card lift on hover; disabled under reduced motion." },
+      { "name": "ouverture", "value": "0.35s cubic-bezier(.2, .8, .2, 1)", "purpose": "Offer detail dialog opening." }
+    ],
+    "breakpoints": [
+      { "name": "telephone", "value": "600px" },
+      { "name": "petit", "value": "760px" },
+      { "name": "ordinateur", "value": "900px" },
+      { "name": "large", "value": "1200px" }
+    ]
+  },
+  "components": [
+    { "name": "Bouton principal", "kind": "button", "refersTo": "button-primary", "description": "The one yellow action per screen.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">M'écrire</button>",
+      "css": ".ds-btn { display:inline-flex; align-items:center; min-height:48px; padding:12px 22px; border:2px solid transparent; border-radius:999px; font-family:'Hanken Grotesk',system-ui,sans-serif; font-weight:600; font-size:15px; line-height:20px; cursor:pointer; transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease; } .ds-btn-primary { background:#F2C230; border-color:#F2C230; color:#161514; } .ds-btn-primary:hover { background:#161514; border-color:#161514; color:#F4F3EF; } .ds-btn:focus-visible { outline:2px solid #161514; outline-offset:2px; }" },
+    { "name": "Bouton secondaire", "kind": "button", "refersTo": "button-secondary", "description": "Ink outline on chalk.",
+      "html": "<button class=\"ds-btn2\">Voir mes offres</button>",
+      "css": ".ds-btn2 { display:inline-flex; align-items:center; min-height:48px; padding:12px 22px; border:2px solid #161514; border-radius:999px; background:#F4F3EF; color:#161514; font-family:'Hanken Grotesk',system-ui,sans-serif; font-weight:700; font-size:15px; line-height:20px; cursor:pointer; transition:background-color 160ms ease,color 160ms ease; } .ds-btn2:hover { background:#161514; color:#F4F3EF; } .ds-btn2:focus-visible { outline:2px solid #161514; outline-offset:2px; }" },
+    { "name": "Bulle de menu", "kind": "nav", "refersTo": "nav-bubble", "description": "Header menu bubbles; the current page has a double ink outline.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-bulle\" href=\"#\">Accueil</a><a class=\"ds-bulle\" aria-current=\"page\" href=\"#\">Mes offres</a><a class=\"ds-bulle ds-ecrire\" href=\"#\">M'écrire</a></nav>",
+      "css": ".ds-nav { display:flex; gap:6px; } .ds-bulle { display:inline-flex; align-items:center; height:30px; padding:0 14px; border:1px solid #DCD9D2; border-radius:999px; background:#fff; color:#161514; text-decoration:none; font-family:'Hanken Grotesk',system-ui,sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; transition:border-color 160ms ease,background-color 160ms ease,color 160ms ease; } .ds-bulle:hover { border-color:#161514; } .ds-bulle[aria-current=page] { border-color:#161514; box-shadow:inset 0 0 0 1px #161514; } .ds-ecrire { background:#F2C230; border-color:#F2C230; } .ds-ecrire:hover { background:#161514; border-color:#161514; color:#F4F3EF; }" },
+    { "name": "Onglets Mes offres", "kind": "nav", "refersTo": "tabs", "description": "Section tabs on the offers page, vermilion underline on the current one.",
+      "html": "<nav class=\"ds-onglets\"><a href=\"#\" aria-current=\"true\">Individuel</a><a href=\"#\">Groupes</a><a href=\"#\">Entreprises</a><a href=\"#\">En ligne</a></nav>",
+      "css": ".ds-onglets { display:flex; gap:28px; font-family:'Hanken Grotesk',system-ui,sans-serif; } .ds-onglets a { padding:6px 0; font-size:16px; color:#57534E; text-decoration:none; border-bottom:3px solid transparent; transition:color 160ms ease,border-color 160ms ease; } .ds-onglets a:hover { color:#161514; } .ds-onglets a[aria-current] { color:#161514; border-bottom-color:#FF4A1C; }" },
+    { "name": "Carte d'offre", "kind": "card", "refersTo": "card-offer", "description": "White offer card, flat at rest, lifts on hover.",
+      "html": "<article class=\"ds-offre\"><h3>Séance à l'unité</h3><p class=\"ds-infos\">60 min · à domicile</p><p class=\"ds-prix\">70 €</p><button class=\"ds-voir\">Voir le détail</button></article>",
+      "css": ".ds-offre { display:flex; flex-direction:column; gap:10px; padding:28px; border-radius:16px; background:#fff; color:#161514; font-family:'Hanken Grotesk',system-ui,sans-serif; transition:transform .35s cubic-bezier(.3,.7,.2,1),box-shadow .35s ease; } .ds-offre:hover { transform:translateY(-6px); box-shadow:0 18px 40px rgba(22,21,20,.14); } .ds-offre h3 { margin:0; font-weight:900; font-size:32px; line-height:32px; letter-spacing:-.04em; } .ds-infos { margin:0; font-size:14px; line-height:20px; font-weight:600; } .ds-prix { margin:0; padding-top:14px; border-top:1px solid #DCD9D2; font-weight:900; font-size:56px; line-height:56px; letter-spacing:-.05em; } .ds-voir { align-self:flex-start; min-height:48px; padding:12px 22px; border:2px solid #161514; border-radius:999px; background:#161514; color:#F4F3EF; font:inherit; font-weight:600; font-size:15px; cursor:pointer; transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease; } .ds-offre:hover .ds-voir { background:#F2C230; border-color:#F2C230; color:#161514; } .ds-voir:focus-visible { outline:2px solid #161514; outline-offset:2px; }" },
+    { "name": "Champ", "kind": "input", "refersTo": "input-field", "description": "Contact form field.",
+      "html": "<label class=\"ds-champ-l\">Votre e-mail<input class=\"ds-champ\" type=\"email\"></label>",
+      "css": ".ds-champ-l { display:flex; flex-direction:column; gap:8px; font-family:'Hanken Grotesk',system-ui,sans-serif; font-weight:700; font-size:16px; line-height:26px; color:#161514; } .ds-champ { min-height:52px; padding:12px 16px; border:1.5px solid #88837B; border-radius:8px; background:#fff; font:inherit; font-weight:400; color:#161514; transition:border-color 160ms ease,background-color 160ms ease; } .ds-champ:hover { background:#F4F3EF; } .ds-champ:focus { outline:2px solid #161514; outline-offset:2px; border-color:#161514; }" },
+    { "name": "Surtitre", "kind": "custom", "refersTo": "typography.label", "description": "Spaced capitals label, the only uppercase text.",
+      "html": "<p class=\"ds-surtitre\">Mes offres</p>",
+      "css": ".ds-surtitre { margin:0; font-family:'Hanken Grotesk',system-ui,sans-serif; font-weight:700; font-size:12px; line-height:16px; letter-spacing:.18em; text-transform:uppercase; color:#57534E; }" }
+  ],
+  "narrative": {
+    "northStar": "Le carnet de séance",
+    "overview": "The site reads like a coach's training notebook, kept clean: a chalk-white page, black ink, one vermilion mark where it matters, and a yellow signal for the next action. It is sporty and dynamic in its type and calm and reassuring in everything around it. Every section is built to fit one screen, on a computer and on a phone. Surfaces are flat and crisp at rest; the only movement is a short lift on hover.",
+    "keyCharacteristics": [
+      "Chalk (#F4F3EF) and white grounds, ink text, never a dark full-page theme.",
+      "One loud colour per screen: vermilion is a signature, yellow is an action.",
+      "Hanken Grotesk only on the site: Black for titles, Regular for reading, italic only for the home tagline.",
+      "Pill buttons and bubbles, 16px cards, flat at rest.",
+      "Small spaced capitals only for surtitles, the menu and RIMAACTIVE.",
+      "One section = one screen, desktop and phone."
+    ],
+    "rules": [
+      { "name": "The One Loud Colour Rule", "body": "Only one vivid colour fills a large area on any screen. Vermilion signs, yellow acts; they never compete side by side as surfaces.", "section": "colors" },
+      { "name": "The Yellow Never Reads Rule", "body": "Yellow is never text on chalk or white (1.5:1). As text it only appears on a dark photo or the ink veil.", "section": "colors" },
+      { "name": "The Alternating Ground Rule", "body": "Home sections alternate chalk and white across the full width; cards switch to chalk on white sections so they stay visible.", "section": "colors" },
+      { "name": "The Sentence Case Rule", "body": "Titles take one capital at the start and nothing else (proper names keep theirs). Capitals are reserved for the 12px spaced label style.", "section": "typography" },
+      { "name": "The Same Size Rule", "body": "Text of the same role has the same size and placement everywhere on a page. A section title on \"Mes offres\" never differs from its sibling sections.", "section": "typography" },
+      { "name": "The Flat At Rest Rule", "body": "Nothing floats until it is touched. Lifts use cubic-bezier(.3, .7, .2, 1) over 0.35s and are removed under prefers-reduced-motion.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use only the charter colours: craie #F4F3EF, blanc, craie foncé #E8E5DE, encre #161514, vermillon #FF4A1C, jaune signal #F2C230, gris chaud #57534E.",
+      "Do keep one primary yellow button per screen, with ink text.",
+      "Do make every section fit one screen on computer and phone, and check it at several sizes.",
+      "Do keep the same size and placement for text of the same role across a page.",
+      "Do use real photos of Marie in natural light, colour or clean black and white, with her face fully visible.",
+      "Do write in French, with \"vous\", sentence-case titles and no emoji."
+    ],
+    "donts": [
+      "Don't put yellow text on chalk or white.",
+      "Don't use vermilion text under 24px, or chalk text on vermilion.",
+      "Don't add blue, pink, neon, gradients other than the ink veil, or a second vivid colour on a large surface.",
+      "Don't use capitals outside the 12px spaced label style.",
+      "Don't tilt photos, add coloured filters, stock images, before/after shots or close-ups of bodies.",
+      "Don't use dotted lines, gauges, labels, coloured blocks or coloured icons.",
+      "Don't add a phone number, testimonials, figures or claims that Marie has not given."
+    ]
+  }
+}
