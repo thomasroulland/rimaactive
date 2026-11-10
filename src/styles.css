@@ -255,9 +255,36 @@ main > section:nth-of-type(even):not(.page-contact) {
   .entete__compte { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
 }
 
-/* Bulles : même typographie que les surtitres (12 px, capitales espacées) */
-.nav { display: flex; align-items: center; gap: 6px; }
-.nav__bulle, .entete__ecrire {
+/* Menu en mots simples (choix de Marie, novembre 2026) : la page en cours dans une pilule encre, texte craie
+   (pas de soulignement vermillon : il y en a déjà beaucoup sur le site) */
+.nav { display: flex; align-items: center; gap: 4px; }
+.nav__lien {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--gris-chaud);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  /* au survol, le jaune monte du bas et remplit la pilule */
+  background: linear-gradient(var(--jaune), var(--jaune)) center bottom / 100% 0% no-repeat;
+  transition: background-size 0.45s cubic-bezier(.3, .7, .2, 1), color var(--duree) ease;
+}
+.nav__lien:hover { background-size: 100% 100%; color: var(--encre); }
+.nav__lien[aria-current="page"] { background: var(--encre); color: var(--craie); font-weight: 700; }
+.nav__lien:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+/* au survol, le mot « roule » vers le haut et laisse place à son double (data-texte) */
+.nav__lien .roule { position: relative; display: inline-block; transition: transform 0.45s cubic-bezier(.3, .7, .2, 1); }
+.nav__lien .roule::after { content: attr(data-texte); content: attr(data-texte) / ""; position: absolute; left: 0; top: 100%; padding-top: 8px; }
+.nav__lien:hover .roule { transform: translateY(calc(-100% - 8px)); }
+@media (prefers-reduced-motion: reduce) { .nav__lien:hover .roule { transform: none; } }
+/* « M'écrire » : bulle jaune, même typographie que les surtitres (12 px, capitales espacées) */
+.entete__ecrire {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -275,17 +302,20 @@ main > section:nth-of-type(even):not(.page-contact) {
   white-space: nowrap;
   transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease;
 }
-.nav__bulle:hover { border-color: var(--encre); }
-/* page en cours : bulle cernée d'encre */
-.nav__bulle[aria-current="page"] { border-color: var(--encre); box-shadow: inset 0 0 0 1px var(--encre); }
 .entete__ecrire { background: var(--jaune); border-color: var(--jaune); }
-.entete__ecrire:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
+/* « M'écrire » (choix de Marie, novembre 2026) : même écriture que le menu, la flèche dans une pastille encre au bout ;
+   au survol la pilule se cerne d'encre et la flèche tourne */
+.entete__ecrire { height: 32px; padding: 0 3px 0 14px; gap: 8px; font-size: 14px; letter-spacing: -0.005em; text-transform: none; }
+.entete__ecrire svg { box-sizing: content-box; width: 10px; height: 10px; padding: 7px; border-radius: 50%; background: var(--encre); color: var(--jaune); transition: transform 0.35s cubic-bezier(.3, .7, .2, 1); }
+.entete__ecrire:hover { background: var(--jaune); border-color: var(--encre); color: var(--encre); }
+.entete__ecrire:hover svg { transform: rotate(45deg); }
+.entete__ecrire:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
 /* Accueil : caché tant qu'on n'est pas arrivé sur « Mon approche » (il est déjà dans le haut de page) */
 .entete__ecrire { transition: opacity var(--duree) ease, transform var(--duree) ease, background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
 .entete__ecrire--cache { opacity: 0; transform: translateY(-6px); pointer-events: none; }
-/* Sur la photo : bulles en verre clair, textes craie ; « M'écrire » reste jaune */
-.entete--sur-photo .nav__bulle { background: rgba(244, 243, 239, 0.12); border-color: rgba(244, 243, 239, 0.28); color: var(--craie); }
-.entete--sur-photo .nav__bulle:hover, .entete--sur-photo .nav__bulle[aria-current="page"] { border-color: var(--craie); box-shadow: inset 0 0 0 1px var(--craie); }
+/* Sur la photo : textes craie ; « M'écrire » reste jaune */
+.entete--sur-photo .nav__lien { color: rgba(244, 243, 239, 0.78); }
+.entete--sur-photo .nav__lien:hover, .entete--sur-photo .nav__lien[aria-current="page"] { color: var(--craie); }
 .entete--sur-photo .menu-bouton { color: var(--craie); }
 
 .menu-bouton {
@@ -726,6 +756,21 @@ textarea.champ { resize: vertical; min-height: 140px; }
 .case { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 22px; color: var(--gris-chaud); cursor: pointer; }
 .case input { flex: none; width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--encre); }
 .case a { color: var(--encre); }
+/* Page M'écrire : champs plus doux (choix de Marie, novembre 2026) : contours fins et clairs, intitulés moins appuyés,
+   bulles d'offre sans gros contour noir ; la bulle cochée reste pleine en encre */
+.page-contact .champ { border: 1px solid var(--filet); border-radius: 10px; box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+.page-contact .champ:hover { background: var(--blanc); border-color: var(--gris-controle); }
+.page-contact .champ:focus { border-color: var(--encre); }
+.page-contact .champ-groupe > label, .page-contact .champ-groupe legend { font-weight: 600; }
+.page-contact .choix span { border: 1px solid var(--filet); background: var(--blanc); font-weight: 600; }
+.page-contact .choix input:hover + span { border-color: var(--gris-controle); background: var(--blanc); }
+.page-contact .choix input:checked + span { background: var(--encre); color: var(--craie); border-color: var(--encre); }
+/* E-mail, téléphone (et nom de l'entreprise s'il y a lieu) : sur une ligne, en parts égales ; l'un sous l'autre sur téléphone */
+.coordonnees { display: grid; gap: 18px 20px; }
+@media (min-width: 640px) { .coordonnees { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); } }
+@media (min-width: 900px) {
+  .page-contact .coordonnees { gap: 4px 20px; }
+}
 
 
 /* Petits portables : la photo des cartes « Mon accompagnement » se réduit un peu pour que la rubrique tienne dans un écran */
@@ -1699,3 +1744,35 @@ html:has(.offres-page__rubrique) { scroll-padding-top: calc(var(--hauteur-entete
 }
 @media (min-width: 900px) and (max-height: 640px) { .offres-page__rubrique { padding-top: 10px; } }
 @media (min-width: 900px) and (max-width: 1250px) { .offres-page__corps--photo { grid-template-columns: 4fr 6fr; } }
+
+/* M'écrire (novembre 2026, demandé par Marie) : sur ordinateur, la photo descend jusqu'en bas de l'écran et la page
+   ne défile pas ; la ligne des mentions se pose en bas, sous le formulaire seulement (à droite de la photo) */
+@media (min-width: 900px) {
+  .page-contact { min-height: calc(var(--ecran) - var(--hauteur-entete)); }
+  .page-contact__droite { padding-bottom: 52px; }
+  .pied--mentions { position: fixed; bottom: 0; left: 40%; right: 0; z-index: 1; }
+}
+/* M'écrire (novembre 2026, demandé par Marie) : « Envoyer » sur la même ligne que la case d'accord, calé à droite ;
+   petite pilule jaune toute simple, la flèche n'apparaît qu'au survol, en glissant ; sur téléphone, le bouton passe dessous */
+.formulaire__fin { display: flex; flex-direction: column; align-items: stretch; gap: 16px; }
+.formulaire__envoyer {
+  /* largeur fixe : la flèche apparaît à l'intérieur sans agrandir le bouton (rien ne bouge autour au survol) */
+  justify-content: center; min-height: 0; height: 38px; width: 118px; padding: 0; gap: 0; font-size: 14px; font-weight: 700; white-space: nowrap;
+  transition: gap 0.35s cubic-bezier(.3, .7, .2, 1), background-color var(--duree) ease;
+}
+.formulaire__envoyer svg { width: 0; opacity: 0; transition: width 0.35s cubic-bezier(.3, .7, .2, 1), opacity 0.25s ease; }
+.formulaire__envoyer:hover { gap: 8px; background: var(--jaune); color: var(--encre); border-color: var(--encre); }
+.formulaire__envoyer:hover svg { width: 10px; opacity: 1; }
+@media (max-width: 639px) { .formulaire__envoyer { width: 100%; height: 44px; } }
+@media (min-width: 640px) {
+  .formulaire__fin { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; }
+  .formulaire__fin .case { flex: 1; }
+  .formulaire__envoyer { flex: none; }
+}
+@media (min-width: 900px) {
+  .page-contact .formulaire__fin { margin-top: 6px; }
+}/* petits ordinateurs (900 à 1199 px de large) : la case d'accord passe sur trois lignes, le message est un peu moins haut
+   pour que la page tienne dans l'écran sans défiler */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .page-contact textarea.champ { height: 50px; }
+}

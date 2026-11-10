@@ -36,14 +36,16 @@ export default function Entete() {
           onClick={() => { setOuvert(false); if (pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
           <img src={surPhoto && !ouvert ? logoCraie : logoEncre} alt="Rimaactive, Marie Sillas coach sportive" width="104" height="21" />
         </Link>
+        {/* Menu en mots simples ; la page en cours est dans une pilule encre ; au survol le jaune monte et le mot « roule » vers le haut (choix de Marie, novembre 2026) */}
         <nav className="nav" aria-label="Menu principal">
           {PAGES_MENU.map((page) => (
-            <NavLink key={page.to} to={page.to} end={page.to === '/'} className="nav__bulle" onClick={versLeHaut(page)}>
-              {page.label}
+            <NavLink key={page.to} to={page.to} end={page.to === '/'} className="nav__lien" onClick={versLeHaut(page)}>
+              <span className="roule" data-texte={page.label}>{page.label}</span>
             </NavLink>
           ))}
         </nav>
         <div className="entete__droite">
+          {/* « M'écrire » : pilule jaune, la flèche dans une pastille encre au bout (choix de Marie, novembre 2026) */}
           <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>
           {/* Espace de connexion (futurs coachings) : pour l'instant, un message « En construction » au centre de l'écran.
               Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}

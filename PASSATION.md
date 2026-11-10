@@ -227,3 +227,23 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
   Entreprises · En ligne ; Individuel garde les boutons À domicile / En salle (2 cartes) ; les autres rubriques : photo + carte.
   Les anciennes adresses (/particuliers, /groupes, /entreprises, /en-ligne, /communes) mènent à leur rubrique. Les formules restent
   dans Particuliers.jsx, Groupes.jsx, Entreprises.jsx, EnLigne.jsx (le formulaire de contact s’en sert aussi).
+
+## Barre de menu et page M'écrire (10 novembre 2026, choisis par Marie en mode live)
+
+- **Menu** (`Entete.jsx`, `.nav__lien`) : mots simples, 14 px, en petites pilules de 30 px ; la page en cours est une pilule
+  encre, texte craie ; au survol, le jaune monte du bas et le mot « roule » vers le haut (son double, `data-texte`).
+  Plus de soulignement vermillon dans le menu (Marie trouve qu'il y en a déjà beaucoup sur le site).
+- **« M'écrire »** de la barre (`.entete__ecrire`) : pilule jaune 32 px, minuscules 14 px, la flèche dans une pastille encre
+  qui tourne au survol.
+- **Page M'écrire** (`Contact.jsx`) : l'offre d'abord (bulles), puis Formule | Prénom et nom, puis E-mail | Téléphone
+  (+ Nom de l'entreprise sur la même ligne si « Entreprises » est coché : rien ne bouge). Champs plus doux : contour fin
+  couleur filet, coins 10 px, intitulés en 600 ; bulles d'offre sans gros contour (la cochée en encre).
+  La case d'accord et « Envoyer » sont sur la même ligne ; « Envoyer » : petite pilule jaune de largeur fixe (118 px),
+  la flèche n'apparaît qu'au survol, sans rien décaler. Sur ordinateur, la photo descend jusqu'en bas et la page ne défile
+  pas : la ligne des mentions est posée en bas, à droite de la photo (`.pied--mentions` en position fixe ≥ 900 px).
+- Écart à la charte accepté par Marie : le contour des champs de M'écrire est en filet (plus clair que le gris contrôle).
+
+## Règle de mise en ligne (10 novembre 2026)
+
+Marie a demandé : **rien en ligne ni sur GitHub sans son accord écrit**, et une image avant / après avant toute modification
+définitive. Cette règle remplace « Mise en ligne sans demander » de CLAUDE.md.

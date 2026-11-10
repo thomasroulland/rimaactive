@@ -228,7 +228,8 @@ Confident, round, one primary per screen.
 
 ### Navigation
 - **Header:** 45px chalk bar, vermilion symbol logo on the left. Transparent with chalk outlines over the home photo.
-- **Bubbles:** 30px pills, white with a filet outline, 12px spaced capitals. Hover: ink outline. Current page: double ink outline. The "M'écrire" bubble is yellow.
+- **Links (10 November 2026):** plain 14px semibold words in 30px pills, no outline. Current page: ink pill, chalk text. Hover: yellow rises from the bottom while the word rolls up to its double. No vermilion underline in the menu.
+- **"M'écrire":** 32px yellow pill, 14px sentence-case label, arrow in an ink disc that turns 45° on hover.
 - **Phone:** a menu button opens a full list; the current page reads in vermilion.
 
 ### Tabs ("Mes offres")
@@ -248,6 +249,7 @@ A white `<dialog>` (20px corners, max 880px wide) that must fit one screen on co
 ### Inputs / Fields
 - **Style:** white fill, 1.5px gris contrôle border, 8px corners, 52px min height, 12px 16px padding; bold 16px labels above.
 - **Hover:** chalk fill. **Focus:** 2px ink outline offset 2px and ink border.
+- **Contact page exception (Marie, 10 November 2026):** softer fields, 1px filet border, 10px corners, 600 labels; offer bubbles with a filet outline (checked one in ink). "Envoyer" is a fixed-width 38px yellow pill beside the consent box; its arrow slides in on hover.
 
 ## Do's and Don'ts
 

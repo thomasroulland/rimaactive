@@ -40,6 +40,7 @@ export default function Contact() {
     // la phrase, l'e-mail, puis le formulaire
     <section className="page-contact" aria-labelledby="contact-titre">
       <img className="page-contact__photo" src={photoMarie} alt="Marie Sillas, bras croisés" />
+      {/* Le choix de l'offre vient en premier, puis la formule et les coordonnées (choix de Marie, novembre 2026) */}
       <div className="page-contact__droite">
         <PresentationContact titre="h1" />
 
@@ -51,26 +52,7 @@ export default function Contact() {
           </div>
         ) : (
           <form className="formulaire" onSubmit={envoyer}>
-            <div className="champ-groupe">
-              <label htmlFor="nom">Prénom et nom</label>
-              <input id="nom" name="nom" className="champ" type="text" autoComplete="name" placeholder="Prénom et nom" required />
-            </div>
-            <div className="champ-groupe">
-              <label htmlFor="email">E-mail</label>
-              <input id="email" name="email" className="champ" type="email" autoComplete="email" placeholder="vous@exemple.fr" required />
-            </div>
-            <div className={`champ-groupe ${offre === 'Entreprises' ? '' : 'pleine'}`}>
-              <label htmlFor="telephone">Téléphone</label>
-              <input id="telephone" name="telephone" className="champ" type="tel" autoComplete="tel" placeholder="06 12 34 56 78" required />
-            </div>
-            {/* seulement pour une entreprise */}
-            {offre === 'Entreprises' && (
-              <div className="champ-groupe">
-                <label htmlFor="entreprise">Nom de l’entreprise</label>
-                <input id="entreprise" name="entreprise" className="champ" type="text" autoComplete="organization" placeholder="Nom de l’entreprise" required />
-              </div>
-            )}
-            <fieldset className="champ-groupe">
+            <fieldset className="champ-groupe pleine">
               <legend>Vous êtes intéressé(e) par</legend>
               <div className="choix">
                 {OFFRES.map((o) => (
@@ -92,21 +74,49 @@ export default function Contact() {
                 {formulesOffre.map((f) => <option key={f} value={f}>{f.replace(` · ${offre}`, '')}</option>)}
               </select>
             </div>
+            <div className="champ-groupe">
+              <label htmlFor="nom">Prénom et nom</label>
+              <input id="nom" name="nom" className="champ" type="text" autoComplete="name" placeholder="Prénom et nom" required />
+            </div>
+            {/* E-mail et téléphone sur une ligne ; pour une entreprise, son nom vient se ranger à côté, sur la même ligne :
+                le formulaire garde sa hauteur, rien ne bouge en cochant « Entreprises » */}
+            <div className="coordonnees pleine">
+              <div className="champ-groupe">
+                <label htmlFor="email">E-mail</label>
+                <input id="email" name="email" className="champ" type="email" autoComplete="email" placeholder="vous@exemple.fr" required />
+              </div>
+              <div className="champ-groupe">
+                <label htmlFor="telephone">Téléphone</label>
+                <input id="telephone" name="telephone" className="champ" type="tel" autoComplete="tel" placeholder="06 12 34 56 78" required />
+              </div>
+              {offre === 'Entreprises' && (
+                <div className="champ-groupe">
+                  <label htmlFor="entreprise">Nom de l’entreprise</label>
+                  <input id="entreprise" name="entreprise" className="champ" type="text" autoComplete="organization" placeholder="Nom de l’entreprise" required />
+                </div>
+              )}
+            </div>
             <div className="champ-groupe pleine">
               <label htmlFor="message">
                 Votre message <span className="optionnel">(facultatif)</span>
               </label>
               <textarea id="message" name="message" className="champ" rows="3" placeholder="Vos objectifs, vos disponibilités…" />
             </div>
-            <label className="case pleine">
-              <input type="checkbox" name="accord" required />
-              <span>
-                J’accepte d’être recontacté(e) au sujet de ma demande. Mes informations restent privées
-                (<Link to="/mentions-legales#confidentialite">politique de confidentialité</Link>).
-              </span>
-            </label>
-            <div className="pleine">
-              <button type="submit" className="bouton bouton--principal">Envoyer</button>
+            {/* Fin du formulaire : l'accord à gauche, « Envoyer » à droite sur la même ligne (téléphone : l'un sous l'autre) */}
+            <div className="formulaire__fin pleine">
+              <label className="case">
+                <input type="checkbox" name="accord" required />
+                <span>
+                  J’accepte d’être recontacté(e) au sujet de ma demande. Mes informations restent privées
+                  (<Link to="/mentions-legales#confidentialite">politique de confidentialité</Link>).
+                </span>
+              </label>
+              <button type="submit" className="bouton bouton--principal formulaire__envoyer">
+                Envoyer
+                <svg aria-hidden="true" viewBox="0 0 256 256" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M72 184 184 72M88 72h96v96" />
+                </svg>
+              </button>
             </div>
           </form>
         )}

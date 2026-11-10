@@ -28,8 +28,8 @@ Si un skill n'est pas disponible dans la discussion, le dire et continuer avec l
 ne remplace le design system Rimaactive (voir `PASSATION.md` § 2 et 3). Les skills servent à la mise
 en page, à l'ergonomie, à l'accessibilité, aux textes et aux vérifications.
 
-## Mise en ligne sans demander
+## Mise en ligne : seulement avec l'accord écrit de Marie
 
-Marie travaille en mode automatique (4 novembre 2026) : faire les changements demandés, les vérifier,
-puis les mettre en ligne directement, sans lui redemander son accord. Lui envoyer ensuite une capture.
-Seule exception : quand elle demande une « proposition » ou une « maquette », la montrer d'abord.
+~~Mode automatique du 4 novembre 2026~~ **remplacé le 10 novembre 2026** : ne rien mettre en ligne ni pousser
+sur GitHub sans l'accord écrit de Marie ; avant toute modification définitive, lui montrer une image « avant / après »
+et attendre son OK ; si elle dit non, tout annuler.
