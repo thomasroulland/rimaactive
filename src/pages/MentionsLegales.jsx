@@ -74,7 +74,7 @@ export const SECTIONS_MENTIONS = [
           propriété de Marie Sillas, sauf mention contraire. Toute reproduction, représentation ou adaptation, totale
           ou partielle, sans autorisation écrite préalable est interdite.
         </p>
-        <p>Les polices Hanken Grotesk et Instrument Serif sont distribuées sous licence libre SIL Open Font License.</p>
+        <p>La police Hanken Grotesk est distribuée sous licence libre SIL Open Font License.</p>
       </>
     ),
   },

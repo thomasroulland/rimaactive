@@ -16,7 +16,7 @@ export const PAGE = {
       pourQui: 'Une personne qui veut s’entraîner à distance, avec un programme personnalisé et un suivi hebdomadaire.',
       titre: 'Suivi mensuel',
       picto: 'laptop',
-      surtitre: 'En ligne',
+      surtitre: 'À distance',
       infos: 'Engagement de 3 mois',
       tarifs: [{ montant: '45\u00a0€', apres: 'par mois', detail: 'soit 135\u00a0€ les 3 mois' }],
       titrePoints: 'Compris',

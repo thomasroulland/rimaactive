@@ -14,9 +14,9 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 // Un clic sur une carte (ou « Voir le détail ») l'ouvre en grand. Les formules et prix viennent des fichiers des pages.
 const RUBRIQUES = [
   { id: 'individuel', page: INDIVIDUEL, sous: 'À domicile' },
-  { id: 'groupes', page: GROUPES, sous: '2 à 8 personnes, à domicile ou en extérieur' },
-  { id: 'entreprises', page: ENTREPRISES, sous: 'Jusqu’à 16 personnes, dans vos locaux ou en extérieur' },
-  { id: 'en-ligne', page: EN_LIGNE, sous: 'Un suivi à distance' },
+  { id: 'groupes', page: GROUPES, sous: 'À domicile ou en extérieur' },
+  { id: 'entreprises', page: ENTREPRISES, sous: 'Dans vos locaux ou en extérieur' },
+  { id: 'en-ligne', page: EN_LIGNE, sous: 'À distance' },
 ]
 
 export default function Offres() {

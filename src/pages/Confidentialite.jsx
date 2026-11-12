@@ -114,8 +114,8 @@ export const SECTIONS_CONFIDENTIALITE = [
         </p>
         <p>
           Les polices de caractères sont hébergées sur le site lui-même : aucune requête n'est envoyée à Google ou à un
-          autre service tiers pendant votre visite. Le lien vers Instagram est un simple lien :
-          Instagram ne reçoit rien tant que vous ne cliquez pas.
+          autre service tiers pendant votre visite. Les liens vers Instagram, Facebook et TikTok sont de
+          simples liens : ces réseaux ne reçoivent rien tant que vous ne cliquez pas.
         </p>
       </>
     ),
