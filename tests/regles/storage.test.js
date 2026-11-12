@@ -77,3 +77,23 @@ describe('clients/{uid}/**', () => {
     await assertFails(uploadBytes(ref(coach, 'exercices/E1/gros.jpg'), octets(5 * MO + 1), jpeg))
   })
 })
+
+describe('suppression', () => {
+  it('le coach supprime sous exercices/ et sous clients/A/', async () => {
+    await assertSucceeds(deleteObject(ref(coach, 'exercices/E1/photo.jpg')))
+    await assertSucceeds(deleteObject(ref(coach, 'clients/A/photo.jpg')))
+  })
+  it('le client A supprime son propre fichier', async () => {
+    await assertSucceeds(deleteObject(ref(A, 'clients/A/photo.jpg')))
+  })
+  it('le client B ne supprime pas chez A', async () => {
+    await assertFails(deleteObject(ref(B, 'clients/A/photo.jpg')))
+  })
+  it('un visiteur non connecté ne supprime rien', async () => {
+    await assertFails(deleteObject(ref(anon, 'exercices/E1/photo.jpg')))
+    await assertFails(deleteObject(ref(anon, 'clients/A/photo.jpg')))
+  })
+  it('un client ne supprime pas sous exercices/', async () => {
+    await assertFails(deleteObject(ref(A, 'exercices/E1/photo.jpg')))
+  })
+})
