@@ -311,3 +311,43 @@ a.ec-histo__carte:hover .ec-histo__numero { color: var(--ec-encre); }
 .ec-tableau th:first-child, .ec-tableau td:first-child { padding-left: 16px; }
 .ec-tableau__date { font-weight: 600; white-space: nowrap; }
 .ec-repli .ec-h2 { line-height: 36px; }
+
+/* ---------- Mon programme (maquette « Mon programme ») ---------- */
+.ec-prog { display: flex; flex-direction: column; gap: 36px; }
+.ec-prog__tete { display: flex; flex-direction: column; gap: 12px; }
+.ec-prog__rubrique { display: flex; flex-direction: column; gap: 16px; }
+.ec-prog .ec-h2 { font-weight: 700; line-height: 36px; letter-spacing: -0.02em; }
+.ec-frise { display: flex; gap: 6px; padding: 2px; }
+.ec-etape {
+  flex: 1 1 0; min-width: 0; min-height: 76px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px;
+  padding: 10px 12px; box-sizing: border-box; border: 2px solid var(--ec-encre); border-radius: 16px; background: var(--blanc); color: var(--ec-encre);
+  font-family: var(--font-sans); text-align: left; cursor: pointer; position: relative; overflow-wrap: anywhere;
+}
+.ec-etape.passe { border-color: var(--ec-repli-filet); }
+.ec-etape[aria-pressed="true"] { background: var(--ec-jaune); border-color: var(--ec-jaune); }
+.ec-etape.encours::after { content: ""; position: absolute; top: 10px; right: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--ec-vermillon); }
+.ec-etape:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: 2px; }
+.ec-etape__nom { font: 900 22px/1 var(--font-sans); letter-spacing: -0.03em; }
+.ec-etape__etat { font: 600 13px/18px var(--font-sans); }
+.ec-etape__dates { font: 400 13px/18px var(--font-sans); color: var(--ec-gris); }
+.ec-etape-vide {
+  flex: 1 1 0; min-width: 0; min-height: 76px; margin: 0; box-sizing: border-box; display: flex; align-items: center; padding: 10px 14px;
+  border-radius: 16px; background: var(--blanc); border: 2px solid var(--ec-repli-filet); font: 600 14px/20px var(--font-sans); color: var(--ec-gris);
+}
+.ec-bilan { background: var(--blanc); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.ec-bilan__titre { margin: 0; font: 900 28px/1.1 var(--font-sans); letter-spacing: -0.03em; overflow-wrap: anywhere; }
+.ec-pastilles { display: flex; flex-wrap: wrap; gap: 14px 8px; padding-bottom: 8px; }
+.ec-prog__seances { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 12px; }
+.ec-pcarte {
+  width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 16px; padding: 16px 18px; min-height: 88px;
+  background: var(--blanc); border-radius: 16px; color: var(--ec-encre); text-decoration: none; text-align: left; cursor: pointer;
+}
+.ec-pcarte:hover { background: var(--ec-jaune); color: var(--ec-encre); }
+.ec-pcarte:hover .ec-pcarte__meta, .ec-pcarte:hover .ec-pcarte__statut, .ec-pcarte:hover .ec-pcarte__numero { color: var(--ec-encre); }
+.ec-pcarte:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: 2px; }
+.ec-pcarte__numero { flex: none; min-width: 40px; font: 900 34px/1 var(--font-sans); letter-spacing: -0.03em; color: var(--ec-vermillon); }
+.ec-pcarte__corps { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.ec-pcarte__titre { font: 800 18px/24px var(--font-sans); overflow-wrap: anywhere; }
+.ec-pcarte__num { font: 700 14px/20px var(--font-sans); }
+.ec-pcarte__meta { font: 400 14px/20px var(--font-sans); color: var(--ec-gris); overflow-wrap: anywhere; }
+.ec-pcarte__statut { flex: none; font: 600 14px/20px var(--font-sans); color: var(--ec-gris); }

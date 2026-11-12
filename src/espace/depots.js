@@ -222,9 +222,9 @@ export function ecouterVerrous(programmeId, rappel, erreur) {
 
 // ---------- Espace client (tâche 9) ----------
 
-// Écoute le programme publié le plus récent du client (date de début, puis mise à jour).
-// rappel(programme | null, tousLesProgrammesPublies). La requête doit filtrer client ET statut, sinon les règles la refusent.
-export function ecouterMonProgramme(uid, rappel, erreur) {
+// Écoute tous les programmes publiés du client, du plus récent au plus ancien (date de début, puis mise à jour).
+// La requête doit filtrer client ET statut, sinon les règles la refusent.
+export function ecouterMesProgrammes(uid, rappel, erreur) {
   return onSnapshot(
     query(collection(db, 'programmes'), where('client', '==', uid), where('statut', '==', 'publié')),
     (s) => {
@@ -232,7 +232,7 @@ export function ecouterMonProgramme(uid, rappel, erreur) {
         .map((d) => ({ id: d.id, ...d.data() }))
         .sort((a, b) => (b.debut || '').localeCompare(a.debut || '')
           || (b.majLe?.toMillis?.() ?? 0) - (a.majLe?.toMillis?.() ?? 0))
-      rappel(tous[0] ?? null, tous)
+      rappel(tous)
     },
     erreur,
   )

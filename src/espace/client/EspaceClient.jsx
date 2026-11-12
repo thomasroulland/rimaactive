@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { ecouterMonProgramme, ecouterMesSeances } from '../depots.js'
+import { ecouterMesProgrammes, ecouterMesSeances } from '../depots.js'
 import { aujourdhuiIso } from '../donnees/calculs.js'
 import { programmeAffiche } from '../donnees/progression.js'
 import TableauDeBord from './TableauDeBord.jsx'
-import Programme from './Programme.jsx'
+import MonProgramme from './MonProgramme.jsx'
 import Seance from './Seance.jsx'
 
 // Données du client en direct : programme affiché (en cours, sinon à venir, sinon le dernier), tous ses programmes publiés, ses séances faites.
@@ -15,7 +15,7 @@ function useDonneesClient(uid) {
 
   useEffect(() => {
     const message = () => setErreur('Impossible de charger votre programme. Vérifiez votre connexion.')
-    const a = ecouterMonProgramme(uid, (_recent, programmes) => setProg({ pret: true, programmes }), message)
+    const a = ecouterMesProgrammes(uid, (programmes) => setProg({ pret: true, programmes }), message)
     const b = ecouterMesSeances(uid, setSeances, message)
     return () => { a(); b() }
   }, [uid])
@@ -49,7 +49,7 @@ export default function EspaceClient({ uid, profil }) {
         : (
           <Routes>
             <Route index element={<TableauDeBord uid={uid} profil={profil} {...donnees} />} />
-            <Route path="programme" element={<Programme {...donnees} />} />
+            <Route path="programme" element={<MonProgramme profil={profil} {...donnees} />} />
             <Route path="seance/:programmeId/:seanceId" element={<Seance {...donnees} />} />
             <Route path="*" element={<Navigate to="/espace" replace />} />
           </Routes>
