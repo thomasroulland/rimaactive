@@ -39,6 +39,13 @@ réglages de Vercel (étape 8). Vous pouvez me dire « c'est fait » : cela me s
 2. Dans l'onglet des modes de connexion (« Sign-in method » / « Méthode de connexion »), choisissez **E-mail/Mot de passe** et activez-le.
 3. Laissez désactivée l'option « Lien de connexion par e-mail (sans mot de passe) ».
 4. Enregistrez.
+5. **Fermez l'inscription libre** (important) : par défaut, n'importe qui peut se créer un compte. Seuls les clients que
+   vous invitez doivent en avoir un. Dans **Authentication**, ouvrez l'onglet des **paramètres** (« Settings » /
+   « Paramètres »), puis la rubrique des **actions des utilisateurs** (« User actions »). **Décochez** la case qui autorise
+   la création de compte (« Enable create (sign-up) » / « Activer la création de compte »), puis enregistrez.
+   Vos invitations continuent de marcher : c'est le site qui crée le compte, pas le client. Les règles de sécurité
+   refusent de toute façon tout accès à un compte que vous n'avez pas invité, mais fermer l'inscription évite qu'un
+   inconnu crée des comptes chez vous.
 
 ## 4. Créer la base de données (Firestore) en Europe
 
@@ -75,7 +82,8 @@ Cette clé permet à l'API du site (inviter un client, supprimer un client) d'ag
 ## 8. Renseigner les variables dans Vercel
 
 1. Sur <https://vercel.com>, ouvrez le projet du site, puis **Settings** → **Environment Variables**.
-2. Ajoutez les variables suivantes, une par une (cochez Production, Preview et Development) :
+2. Ajoutez les variables suivantes, une par une. Pour chacune, cochez les environnements **Production** et **Preview**
+   (Development n'est pas utile ici, et Vercel ne le propose pas pour une variable « Sensitive ») :
 
 | Nom | Valeur à coller | Secret ? |
 | --- | --- | --- |
@@ -90,7 +98,7 @@ Cette clé permet à l'API du site (inviter un client, supprimer un client) d'ag
 
 Pour `FIREBASE_SERVICE_ACCOUNT`, ouvrez le fichier `.json` avec un éditeur de texte, sélectionnez tout, copiez, et collez dans la case de Vercel. Une variable « Sensitive » ne peut plus être relue après enregistrement, même par vous : gardez donc le fichier `.json` en lieu sûr.
 
-**Pourquoi `FIREBASE_STORAGE_BUCKET` ?** Sans lui, le site suppose que le bucket s'appelle `<projet>.appspot.com`. Or les projets Firebase récents utilisent `<projet>.firebasestorage.app`. Si le nom est faux, la suppression d'un client n'effacera pas ses photos. Copiez donc le nom affiché dans votre console (étape 6).
+**Pourquoi `FIREBASE_STORAGE_BUCKET` ?** Le site ne devine pas le nom du bucket (les projets récents finissent par `.firebasestorage.app`, les plus anciens par `.appspot.com`) : il faut le lui donner. Si la variable manque, la suppression d'un client s'arrête tout de suite avec une erreur, **sans rien effacer** ; si le nom est faux, pareil. Dans les deux cas, corrigez la variable (copiez le nom affiché dans votre console, étape 6), redéployez, puis relancez la suppression : elle ira jusqu'au bout.
 
 3. Les variables ne sont prises en compte qu'au prochain déploiement du site : **je m'en occupe, avec votre accord**.
 
@@ -121,6 +129,10 @@ et vos séances.
 Pour choisir votre mot de passe et vous connecter, cliquez sur ce lien :
 %LINK%
 
+Ce lien n'est valable que peu de temps. S'il a expiré, allez sur la page de connexion
+de votre espace (l'adresse du site suivie de /espace) et cliquez sur « Mot de passe oublié ? » :
+vous recevrez un nouveau lien.
+
 Si vous n'attendiez pas ce message, ignorez-le simplement : rien ne sera fait.
 
 Sportivement,
@@ -142,14 +154,14 @@ Le rôle « coach » se donne **une seule fois**, à votre compte.
 node scripts/definir-coach.mjs marie.sillas@gmail.com
 ```
 
-Cette commande a besoin de la clé de l'étape 7, que Vercel ne permet plus de relire : il faut la fournir à l'ordinateur qui lance la commande. Deux façons simples :
+Cette commande a besoin de la clé de l'étape 7, que Vercel ne permet plus de relire : il faut la fournir à l'ordinateur qui lance la commande. **C'est vous qui la lancez**, sur votre ordinateur : dans un terminal, placez-vous dans le dossier du site, puis (remplacez le chemin par celui de votre fichier `.json`) :
 
-- **Vous la lancez vous-même** : dans un terminal, placez-vous dans le dossier du site, puis (remplacez le chemin par celui de votre fichier `.json`) :
-  ```
-  export FIREBASE_SERVICE_ACCOUNT="$(cat /chemin/vers/cle.json)"
-  node scripts/definir-coach.mjs marie.sillas@gmail.com
-  ```
-- **Ou je la lance avec vous** : je vous demanderai la clé par un formulaire sécurisé (jamais dans la discussion), et je lance la commande. Ne me collez jamais la clé dans le chat.
+```
+export FIREBASE_SERVICE_ACCOUNT="$(cat /chemin/vers/cle.json)"
+node scripts/definir-coach.mjs marie.sillas@gmail.com
+```
+
+Je peux vous guider pas à pas, mais je ne lance pas cette commande à votre place : la clé ne doit jamais passer par la discussion. Ne me la collez jamais dans le chat.
 
 3. Déconnectez-vous puis reconnectez-vous sur `/espace` : vous arrivez sur « Mes coachés ».
 
@@ -165,6 +177,7 @@ Cette commande a besoin de la clé de l'étape 7, que Vercel ne permet plus de r
 1. Connectez-vous sur `/espace` avec votre compte : vous voyez « Mes coachés ».
 2. Invitez un compte de test (une adresse à vous). Vérifiez qu'il reçoit l'e-mail de l'étape 10, qu'il peut créer son mot de passe, accepter l'accord et voir son accueil.
 3. Créez un petit programme pour ce compte, publiez-le, faites une séance depuis le téléphone.
-4. Supprimez le compte de test depuis sa fiche.
+4. Supprimez le compte de test depuis sa fiche. S'il reste affiché après une erreur, relancez simplement la suppression.
+5. Vérifiez que l'inscription libre est bien fermée (étape 3, point 5).
 
 Si une étape bloque, notez le message exact affiché et envoyez-le-moi.

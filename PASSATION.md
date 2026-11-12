@@ -287,8 +287,13 @@ Pour mettre en route (Firebase, Vercel, rôle coach) : **`docs/espace-mise-en-ro
 - **Vérifier** : `npm test`, `npm run test:fuseaux` (dates sous d'autres fuseaux), `npm run test:regles` (lance les émulateurs tout seul),
   `npm run build`. La CI (`.github/workflows/ci.yml`) fait la même chose, Java 21 compris.
 - **Secrets** : seulement dans Vercel. `VITE_FIREBASE_*` (publiques) et `FIREBASE_SERVICE_ACCOUNT` (JSON secret) ; ajouter
-  `FIREBASE_STORAGE_BUCKET` avec le nom du bucket affiché dans la console (les projets récents finissent par `.firebasestorage.app`,
-  l'API suppose `.appspot.com` sinon). Ne jamais coller une clé dans la discussion.
+  `FIREBASE_STORAGE_BUCKET` (obligatoire) avec le nom du bucket affiché dans la console (les projets récents finissent par
+  `.firebasestorage.app`) : sans lui, la suppression d'un client s'arrête avant d'effacer quoi que ce soit (erreur 500
+  `configuration`). Ne jamais coller une clé dans la discussion.
+- **Sécurité** : les règles n'ouvrent rien à un compte sans rôle (`client` ou `coach`) ; l'inscription libre doit aussi être
+  fermée dans la console (guide, étape 3). Suppression d'un client : photos, puis séances et programmes, puis compte, puis
+  profil (relançable après une panne). Invitation : si l'écriture du rôle ou du profil échoue, le compte créé est supprimé.
+- **Déconnexion** (`seDeconnecter()` dans `src/espace/firebase.js`) : efface la copie hors ligne (IndexedDB) et recharge.
 - **Données** : dates de programme en jours locaux `AAAA-MM-JJ` (chaînes). Une séance faite a l'identifiant `programme_séance` :
   un double appui sur « Fin de séance » ne crée qu'une séance.
 - **Confidentialité** : `src/pages/Confidentialite.jsx` contient un **brouillon** (Google Firebase comme prestataire, données de
@@ -303,7 +308,7 @@ Pour mettre en route (Firebase, Vercel, rôle coach) : **`docs/espace-mise-en-ro
 2. **Vercel Pro** : le forfait gratuit (Hobby) est non commercial ; passer en Pro avant la mise en service.
 3. Créer le projet Firebase (Blaze avec alerte de budget d'abord, puis Firestore et Storage en `europe-west`), renseigner les variables
    Vercel (`FIREBASE_SERVICE_ACCOUNT` en « Sensitive », donc non relisible), déployer les règles et les index, donner le rôle coach
-   (tout est décrit dans le guide). Claude peut déployer les règles ; pour `definir-coach.mjs`, Marie doit fournir la clé à la commande
-   elle-même ou via un formulaire sécurisé, jamais dans la discussion. Firebase Authentication n'a pas de région réglable : le texte
+   (tout est décrit dans le guide). Claude peut déployer les règles ; `definir-coach.mjs` est lancé par Marie elle-même sur son ordinateur
+   (la clé ne passe jamais par la discussion). Firebase Authentication n'a pas de région réglable : le texte
    de confidentialité ne doit affirmer l'hébergement UE que pour Firestore et Storage, une fois la région réellement choisie.
 4. Valider la confidentialité, puis donner son **accord écrit** après avoir vu les captures avant / après.
