@@ -1741,6 +1741,8 @@ html:has(.offres-page__rubrique) { scroll-padding-top: calc(var(--hauteur-entete
   .offres-page__corps--photo .offres--1 > .offre--sombre > .offre__titre-points { border-top-color: rgba(244, 243, 239, 0.2); }
   .offres-page__corps--photo .offres--1 > .offre > .offre__points { grid-row: 5 !important; margin: 8px 0 0 !important; align-self: start; }
   .offres-page__corps--photo .offres--1 > .offre > .offre__actions { grid-row: 6 !important; align-self: end; margin-top: 16px; }
+  /* « Voir le détail » seul (12 novembre 2026) : même place et même espace que les boutons d'avant */
+  .offres-page__corps--photo .offres--1 > .offre > .offre__bouton { grid-row: 6 !important; align-self: end; margin-top: 16px !important; }
 }
 @media (min-width: 900px) and (max-height: 640px) { .offres-page__rubrique { padding-top: 10px; } }
 @media (min-width: 900px) and (max-width: 1250px) { .offres-page__corps--photo { grid-template-columns: 4fr 6fr; } }

@@ -36,7 +36,7 @@ export const PAGE = {
       picto: 'kettlebell',
       surtitre: 'À domicile',
       infos: '4 séances par mois',
-      tarifs: [{ montant: '60\u00a0€', apres: 'la séance', detail: ['soit 30\u00a0€ après crédit d’impôt', '240\u00a0€ par mois, soit 120\u00a0€ après crédit d’impôt'] }],
+      tarifs: [{ montant: '60\u00a0€\u00a0×\u00a04', apres: 'séances', detail: 'soit 30\u00a0€ la séance après crédit d’impôt' }],
       titrePoints: 'Compris',
       points: ['4 séances à domicile', 'Programme personnalisé', 'Suivi inclus'],
       sombre: true,
