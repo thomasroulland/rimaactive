@@ -263,3 +263,9 @@ définitive. Cette règle remplace « Mise en ligne sans demander » de CLAUDE.m
   crédit d'impôt » (plus de total par mois). En ligne : 45 € par mois, « soit 135 € les 3 mois », « Engagement de 3 mois » sous le titre.
   Déplacements compris jusqu'à 20 km autour de Houdan (plus de « au-delà sur devis »). Sur les cartes de « Mes offres », seulement
   « Voir le détail » ; « Choisir cette formule » est dans le détail. Le crédit d'impôt est désormais affiché, à la demande de Marie.
+
+- **Mentions légales complétées (12 novembre 2026, validé par Marie)** : adresse 26 rue d'Epernon 78550 Houdan, SIRET, TVA, diplôme
+  (CQP Instructeur Fitness), carte pro en cours (SDJES des Yvelines, numéro à ajouter à réception), assurance Hiscox, messagerie Outlook.
+  **Exception à la règle « pas de téléphone »** : le numéro de Marie figure uniquement dans les mentions légales, à sa demande.
+  Restent à compléter : médiateur de la consommation ; service d'envoi du formulaire à ajouter dans la confidentialité quand il sera branché.
+  La rubrique « Données personnelles » des mentions (doublon du lien vers la politique) est supprimée.
