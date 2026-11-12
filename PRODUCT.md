@@ -49,7 +49,7 @@ Confirmed by Marie: people choose her because
   - companies (up to 16 people): on quote, free quote within 48 h;
   - online monthly follow-up: 150 € for 3 months, or 3 × 50 €.
   - VAT not applicable, art. 293 B of the CGI.
-- Undecided: tax credit for home services (do not mention it for now), the contact form is not wired to an e-mail service yet, domain name not bought, CGV not written, legal details (SIRET, professional card, insurance, mediator) to complete.
+- Tax credit for home services: shown on Individuel prices since 12 November 2026 at Marie's request (only the amounts she gave). Undecided: the contact form is not wired to an e-mail service yet, domain name not bought, CGV not written, legal details (SIRET, professional card, insurance, mediator) to complete.
 
 ## Brand Commitments
 

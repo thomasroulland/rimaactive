@@ -257,3 +257,9 @@ définitive. Cette règle remplace « Mise en ligne sans demander » de CLAUDE.m
   puis « Qui suis-je » (contour craie, vers #approche).
 - **Mes offres** : la fin de page (photo + « Vous hésitez entre deux formules ? ») est supprimée ; il ne reste que la mention
   « TVA non applicable, art. 293 B du CGI. », discrète.
+
+- **Prix du 12 novembre 2026 (validés et publiés par Marie)** : Individuel (à domicile seulement, « En salle » retiré pour l'instant) :
+  Séance à l'unité 70 € la séance, « soit 35 € après crédit d'impôt » ; Suivi mensuel « 60 € × 4 séances », « soit 30 € la séance après
+  crédit d'impôt » (plus de total par mois). En ligne : 45 € par mois, « soit 135 € les 3 mois », « Engagement de 3 mois » sous le titre.
+  Déplacements compris jusqu'à 20 km autour de Houdan (plus de « au-delà sur devis »). Sur les cartes de « Mes offres », seulement
+  « Voir le détail » ; « Choisir cette formule » est dans le détail. Le crédit d'impôt est désormais affiché, à la demande de Marie.
