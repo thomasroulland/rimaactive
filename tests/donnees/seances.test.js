@@ -30,7 +30,8 @@ describe('prescription', () => {
 describe('contenu écrit dans seancesFaites', () => {
   it('notes : statut en cours, seulement les champs permis, sans undefined', () => {
     const c = contenuNotes(base, { series: { e1: [{ charge: 40, reps: '8' }] } })
-    expect(c).toEqual({ ...base, statut: 'en cours', series: { e1: [{ charge: '40', reps: '8', rpe: '' }] } })
+    expect(c).toEqual({ ...base, statut: 'en cours', series: { e1: [{ charge: '40', reps: '8', rpe: '', fait: true }] } })
+    expect(contenuNotes(base, { series: { e1: [{ charge: '40', reps: '8', fait: false }] } }).series.e1[0].fait).toBe(false)
     expect(contenuNotes(base)).not.toHaveProperty('series')
   })
   it('fin : statut terminée, douleur vidée quand la réponse est non', () => {

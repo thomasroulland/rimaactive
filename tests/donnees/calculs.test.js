@@ -87,6 +87,21 @@ describe('fusionnerNotes', () => {
   it('sans notes', () => expect(fusionnerNotes(s, undefined)).toHaveLength(2))
 })
 
+describe('meilleuresCharges : case « Fait »', () => {
+  const m = new Map([['e1', 'squat']])
+  it('ignore les séries non cochées, compte celles sans le champ (anciennes notes)', () => {
+    const f = [
+      { date: '2026-11-20', statut: 'terminée', series: { e1: [{ charge: '80', reps: '5', fait: false }, { charge: '60', reps: '5', fait: true }] } },
+      { date: '2026-11-22', statut: 'terminée', series: { e1: [{ charge: '90', reps: '3', fait: false }] } },
+      { date: '2026-11-24', statut: 'terminée', series: { e1: [{ charge: '65', reps: '5' }] } },
+    ]
+    expect(meilleuresCharges(f, m, 'squat')).toEqual([
+      { date: '2026-11-20', charge: '60', reps: '5' },
+      { date: '2026-11-24', charge: '65', reps: '5' },
+    ])
+  })
+})
+
 describe('meilleuresCharges', () => {
   const m = new Map([['e1', 'squat'], ['e2', 'squat'], ['e3', 'pompes']])
   const f = [

@@ -60,7 +60,7 @@ const texte = (v) => (v == null ? '' : String(v))
 function seriesPropres(series) {
   const out = {}
   for (const [id, lignes] of Object.entries(series ?? {})) {
-    out[id] = (lignes ?? []).map((l) => ({ charge: texte(l.charge), reps: texte(l.reps), rpe: texte(l.rpe) }))
+    out[id] = (lignes ?? []).map((l) => ({ charge: texte(l.charge), reps: texte(l.reps), rpe: texte(l.rpe), fait: l.fait !== false }))
   }
   return out
 }

@@ -366,3 +366,10 @@ body.avec-barre-client { padding-bottom: calc(64px + env(safe-area-inset-bottom)
   .client-exo { padding: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .client-ligne { transition: none; } .client-ligne:hover { transform: none; } }
+
+/* case « Fait » de chaque série (revue tâche 9) : cible de 44 px, case de 28 px */
+.client-serie { grid-template-columns: 28px repeat(3, minmax(0, 1fr)) 44px; }
+.client-serie__fait { display: flex; align-items: center; justify-content: center; width: 44px; height: 48px; cursor: pointer; }
+.client-serie__fait input { width: 28px; height: 28px; margin: 0; accent-color: var(--encre); cursor: pointer; }
+.client-serie__fait input:disabled { cursor: default; }
+.client-serie__fait input:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }

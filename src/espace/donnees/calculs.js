@@ -93,6 +93,7 @@ export function meilleuresCharges(seancesFaites, exoIdParElement, exoId) {
     for (const [elementId, lignes] of Object.entries(sf.series ?? {})) {
       if (exoIdParElement.get(elementId) !== exoId) continue
       for (const l of lignes) {
+        if (l.fait === false) continue // série non cochée « Fait » (sans le champ : comptée comme faite)
         const c = nombre(l.charge)
         if (Number.isNaN(c)) continue
         if (c > max) { max = c; meilleure = l }

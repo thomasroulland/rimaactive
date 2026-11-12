@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { listeSeances, fusionnerNotes } from '../donnees/calculs.js'
+import { listeSeances, fusionnerNotes, preRemplir } from '../donnees/calculs.js'
 import { dateLongue, resumeFormat } from '../donnees/seances.js'
 import { noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
@@ -68,8 +68,20 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     noterSeance(programmeId, seanceId, { series: { [elementId]: lignes } }).catch(erreurEnvoi)
   }
 
-  // en quittant l'écran, envoyer ce qui attend encore
-  useEffect(() => () => { Object.keys(enAttente.current).forEach(envoyerExercice) }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  // en quittant l'écran, en verrouillant le téléphone ou en fermant l'onglet : envoyer tout de suite ce qui attend
+  const toutEnvoyer = useRef(null)
+  toutEnvoyer.current = () => Object.keys(enAttente.current).forEach(envoyerExercice)
+  useEffect(() => {
+    const vider = () => toutEnvoyer.current()
+    const cache = () => { if (document.visibilityState === 'hidden') vider() }
+    document.addEventListener('visibilitychange', cache)
+    window.addEventListener('pagehide', vider)
+    return () => {
+      document.removeEventListener('visibilitychange', cache)
+      window.removeEventListener('pagehide', vider)
+      vider()
+    }
+  }, [])
 
   if (!item) {
     return (
@@ -86,8 +98,13 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const course = seance.type === 'course'
   const notes = { ...(fait?.series ?? {}), ...modifs }
   const entrees = fusionnerNotes(seance, notes)
-  const parElement = new Map(entrees.filter((e) => e.element).map((e) => [e.element.id, e.lignes]))
-  const retires = entrees.filter((e) => !e.element)
+  // case « Fait » : lignes pré-remplies non cochées ; anciennes notes sans le champ comptées comme faites
+  const avecFait = (lignes) => lignes.map((l) => ({ ...l, fait: l.fait !== false }))
+  const parElement = new Map(entrees.filter((e) => e.element).map((e) => [
+    e.element.id,
+    notes[e.element.id] ? avecFait(notes[e.element.id]) : preRemplir(e.element).map((l) => ({ ...l, fait: false })),
+  ]))
+  const retires = entrees.filter((e) => !e.element).map((e) => ({ ...e, lignes: avecFait(e.lignes) }))
 
   const changer = (elementId, lignes) => {
     setRefus('')

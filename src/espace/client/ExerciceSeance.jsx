@@ -10,8 +10,9 @@ export default function ExerciceSeance({ element, code, enSeries, lignes, change
   const lecture = verrou || !element
   const id = element ? `ex-${element.id}` : `ex-retire-${code}`
 
-  const majLigne = (i, cle, v) => changer(lignes.map((l, j) => (j === i ? { ...l, [cle]: v } : l)))
-  const ajouter = () => changer([...lignes, { ...(lignes[lignes.length - 1] ?? { charge: '', reps: '' }), rpe: '' }])
+  // modifier une valeur coche la série « Fait »
+  const majLigne = (i, cle, v) => changer(lignes.map((l, j) => (j === i ? { ...l, [cle]: v, ...(cle === 'fait' ? {} : { fait: true }) } : l)))
+  const ajouter = () => changer([...lignes, { ...(lignes[lignes.length - 1] ?? { charge: '', reps: '' }), rpe: '', fait: false }])
   const retirer = () => changer(lignes.slice(0, -1))
 
   return (
@@ -40,7 +41,7 @@ export default function ExerciceSeance({ element, code, enSeries, lignes, change
 
       <div className="client-series" role="group" aria-label={`Séries${element ? ` : ${element.nom}` : ' notées'}`}>
         <div className="client-serie client-serie--entete" aria-hidden="true">
-          <span>Série</span><span>Reps</span><span>Charge (kg)</span><span>RPE</span>
+          <span>Série</span><span>Reps</span><span>Charge (kg)</span><span>RPE</span><span>Fait</span>
         </div>
         {lignes.map((l, i) => (
           <LigneSerie key={i} id={`${id}-s${i}`} numero={i + 1} ligne={l} lecture={lecture} changer={(cle, v) => majLigne(i, cle, v)} />
