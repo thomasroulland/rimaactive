@@ -7,7 +7,7 @@ export const PAGE = {
   titre: 'Groupes',
   image: photoGroupes,
   cadrage: '50% 60%', // partie de la photo montrée dans le bandeau (les kettlebells)
-  liste: ['À domicile ou en extérieur', 'Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan'],
+  liste: ['Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan'],
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
