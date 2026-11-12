@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  dateLongue, dateCourte, prescription, resumeFormat, contenuNotes, contenuFin, evolutionCharges, statutSeance,
+  dateLongue, dateCourte, prescription, resumeFormat, contenuNotes, contenuFin, RESSENTIS, evolutionCharges, statutSeance,
   texteSerie, detailSeance, exercicesDe,
 } from '../../src/espace/donnees/seances.js'
 
@@ -39,13 +39,30 @@ describe('contenu écrit dans seancesFaites', () => {
     expect(contenuNotes(base, { series: { e1: [{ charge: '40', reps: '8', fait: false }] } }).series.e1[0].fait).toBe(false)
     expect(contenuNotes(base)).not.toHaveProperty('series')
   })
-  it('fin : statut terminée, douleur vidée quand la réponse est non', () => {
-    const c = contenuFin(base, { effort: 7, ressenti: 'Bien', douleur: { oui: false, endroit: 'genou' } })
+  it('notes et blocs : ajoutés seulement s’ils ne sont pas vides', () => {
+    expect(contenuNotes(base, {})).not.toHaveProperty('notes')
+    expect(contenuNotes(base, {})).not.toHaveProperty('blocs')
+    expect(contenuNotes(base, { notes: { e1: 'Dur' } }).notes).toEqual({ e1: 'Dur' })
+    expect(contenuNotes(base, { notes: {} })).not.toHaveProperty('notes')
+    expect(contenuNotes(base, { blocs: {} })).not.toHaveProperty('blocs')
+    expect(contenuNotes(base, { blocs: { b1: { resultat: '12', fait: true } } }).blocs).toEqual({ b1: { resultat: '12', rpe: '', fait: true, note: '' } })
+    expect(contenuFin(base, { effort: 5, notes: {}, blocs: {} })).not.toHaveProperty('notes')
+    expect(contenuFin(base, { effort: 5, notes: {}, blocs: {} })).not.toHaveProperty('blocs')
+    expect(contenuFin(base, { effort: 5, notes: { e1: 'Dur' } }).notes).toEqual({ e1: 'Dur' })
+  })
+  it('fin : statut terminée, effort 5 à 10, ressenti de la liste, commentaire, plus de douleur', () => {
+    const c = contenuFin(base, { effort: 7, ressenti: 'Bien', commentaire: '  Bonne séance ' })
     expect(c).toEqual({
-      ...base, statut: 'terminée', effort: 7, ressenti: 'Bien', douleur: { oui: false, endroit: '', note: '' }, distance: '', temps: '',
+      ...base, statut: 'terminée', effort: 7, ressenti: 'Bien', commentaire: 'Bonne séance', distance: '', temps: '',
     })
-    expect(contenuFin(base, { douleur: { oui: true, endroit: ' genou ', note: 'x' } }).douleur).toEqual({ oui: true, endroit: 'genou', note: 'x' })
     expect(contenuFin(base, {}).effort).toBeNull()
+    expect(contenuFin(base, { effort: 4 }).effort).toBeNull()
+    expect(contenuFin(base, { effort: 8 }).effort).toBe(8)
+    expect(contenuFin(base, { effort: 11 }).effort).toBeNull()
+    expect(contenuFin(base, { ressenti: 'Moyen' }).ressenti).toBe('Moyen')
+    expect(contenuFin(base, { ressenti: 'Facile' }).ressenti).toBe('')
+    expect('douleur' in contenuFin(base, {})).toBe(false)
+    expect(RESSENTIS).toEqual(['Très bien', 'Bien', 'Moyen', 'Difficile'])
   })
 })
 

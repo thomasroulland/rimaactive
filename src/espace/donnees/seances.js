@@ -57,6 +57,9 @@ export function prescription(element, enSeries = true) {
   return parties.join(' · ')
 }
 
+// Ressentis proposés à la fin de séance (maquette de Marie)
+export const RESSENTIS = ['Très bien', 'Bien', 'Moyen', 'Difficile']
+
 const texte = (v) => (v == null ? '' : String(v))
 
 // Lignes de séries propres à enregistrer (jamais de valeur undefined pour Firestore)
@@ -68,38 +71,55 @@ function seriesPropres(series) {
   return out
 }
 
-// Une carte `series` vide n'est jamais envoyée : avec { merge: true }, Firestore remplacerait tout le champ
+// Notes par exercice : { [elementId]: texte } ; résultats par bloc : { [blocId]: { resultat, rpe, fait, note } }
+function notesPropres(notes) {
+  const out = {}
+  for (const [id, t] of Object.entries(notes ?? {})) out[id] = texte(t)
+  return out
+}
+function blocsPropres(blocs) {
+  const out = {}
+  for (const [id, b] of Object.entries(blocs ?? {})) {
+    out[id] = { resultat: texte(b?.resultat), rpe: texte(b?.rpe), fait: b?.fait === true, note: texte(b?.note) }
+  }
+  return out
+}
+
+// Une carte `series`, `notes` ou `blocs` vide n'est jamais envoyée : avec { merge: true }, Firestore remplacerait tout le champ
 // et effacerait les notes déjà enregistrées (par exemple celles d'exercices que Marie a retirés entre-temps).
 const aDesSeries = (series) => series != null && Object.keys(series).length > 0
+
+// Ajoute les cartes non vides (séries, notes, blocs) au contenu à écrire.
+function ajouterCartes(out, donnees) {
+  if (aDesSeries(donnees.series)) out.series = seriesPropres(donnees.series)
+  if (aDesSeries(donnees.notes)) out.notes = notesPropres(donnees.notes)
+  if (aDesSeries(donnees.blocs)) out.blocs = blocsPropres(donnees.blocs)
+  return out
+}
 
 // Contenu écrit (fusion) pendant la séance : statut « en cours ».
 // `base` = { client, programme, seance, date, majLe } ; `donnees` = { series: { [elementId]: lignes } }
 export function contenuNotes(base, donnees = {}) {
   const out = { client: base.client, programme: base.programme, seance: base.seance, date: base.date, statut: 'en cours', majLe: base.majLe }
-  if (aDesSeries(donnees.series)) out.series = seriesPropres(donnees.series)
-  return out
+  return ajouterCartes(out, donnees)
 }
 
 // Contenu écrit (fusion) à la « Fin de séance » : statut « terminée », bilan du client, séries éventuelles.
 export function contenuFin(base, fin = {}) {
-  const douleur = fin.douleur ?? {}
   const out = {
     client: base.client,
     programme: base.programme,
     seance: base.seance,
     date: base.date,
     statut: 'terminée',
-    effort: Number.isInteger(fin.effort) ? fin.effort : null,
-    ressenti: texte(fin.ressenti),
-    douleur: douleur.oui
-      ? { oui: true, endroit: texte(douleur.endroit).trim(), note: texte(douleur.note).trim() }
-      : { oui: false, endroit: '', note: '' },
+    effort: Number.isInteger(fin.effort) && fin.effort >= 5 && fin.effort <= 10 ? fin.effort : null,
+    ressenti: RESSENTIS.includes(fin.ressenti) ? fin.ressenti : '',
+    commentaire: texte(fin.commentaire).trim(),
     distance: texte(fin.distance).trim(),
     temps: texte(fin.temps).trim(),
     majLe: base.majLe,
   }
-  if (aDesSeries(fin.series)) out.series = seriesPropres(fin.series)
-  return out
+  return ajouterCartes(out, fin)
 }
 
 // Texte d'évolution d'une courbe de charges (maquette validée par Marie)

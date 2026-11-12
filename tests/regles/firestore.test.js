@@ -179,7 +179,7 @@ describe('seancesFaites', () => {
 // Ce qu'écrit l'écran client (depots.js : noterSeance et terminerSeance), sur l'émulateur
 describe('séance du client : écritures de l’écran', () => {
   const base = (seance) => ({ client: 'A', programme: 'P1', seance, date: '2026-11-17', majLe: serverTimestamp() })
-  const fin = { effort: 7, ressenti: 'Bien', douleur: { oui: false }, distance: '', temps: '', series: { e1: [{ charge: '40', reps: '8', rpe: '7' }] } }
+  const fin = { effort: 7, ressenti: 'Bien', commentaire: '', distance: '', temps: '', series: { e1: [{ charge: '40', reps: '8', rpe: '7' }] } }
 
   it('note des séries puis termine la séance (fusion)', async () => {
     await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S3'), contenuNotes(base('S3'), { series: { e1: [{ charge: '40', reps: '8', rpe: '' }] } }), { merge: true }))
@@ -205,6 +205,41 @@ describe('séance du client : écritures de l’écran', () => {
     await assertSucceeds(getDocs(query(collection(A, 'programmes'), where('client', '==', 'A'), where('statut', '==', 'publié'))))
     await assertFails(getDocs(query(collection(A, 'programmes'), where('client', '==', 'A'))))
     await assertSucceeds(getDocs(query(collection(A, 'seancesFaites'), where('client', '==', 'A'))))
+  })
+})
+
+describe('nouvelles informations du coaché', () => {
+  const base = (seance) => ({ client: 'A', programme: 'P1', seance, date: '2026-11-17', majLe: serverTimestamp() })
+  it('crée sa séance avec notes, blocs et commentaire ; refuse douleur', async () => {
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S6'), contenuNotes(base('S6'), { notes: { e1: 'Dur' }, blocs: { b1: { resultat: '12', fait: true } } }), { merge: true }))
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S6'), contenuFin(base('S6'), { effort: 7, ressenti: 'Bien', commentaire: 'Top' }), { merge: true }))
+    await assertFails(setDoc(doc(A, 'seancesFaites/P1_S7'), { ...contenuFin(base('S7'), { effort: 7 }), douleur: { oui: false } }, { merge: true }))
+  })
+  it('avatar : son dossier seulement, seul', async () => {
+    await assertSucceeds(updateDoc(doc(A, 'utilisateurs/A'), { avatar: 'clients/A/profil/p.jpg' }))
+    await assertSucceeds(updateDoc(doc(A, 'utilisateurs/A'), { avatar: null }))
+    await assertFails(updateDoc(doc(A, 'utilisateurs/A'), { avatar: 'clients/B/profil/p.jpg' }))
+    await assertFails(updateDoc(doc(A, 'utilisateurs/A'), { avatar: 12 }))
+    await assertFails(updateDoc(doc(A, 'utilisateurs/A'), { avatar: 'clients/A/profil/p.jpg', statut: 'actif' }))
+    await assertFails(updateDoc(doc(A, 'utilisateurs/B'), { avatar: 'clients/B/profil/p.jpg' }))
+  })
+  it('mesures : créer, lire, supprimer ; pas de mise à jour ; pas celles des autres', async () => {
+    await assertSucceeds(setDoc(doc(A, 'utilisateurs/A/mesures/m1'), { date: '2026-11-17', poids: '72,5' }))
+    await assertSucceeds(getDoc(doc(A, 'utilisateurs/A/mesures/m1')))
+    await assertFails(getDoc(doc(B, 'utilisateurs/A/mesures/m1')))
+    await assertFails(setDoc(doc(B, 'utilisateurs/A/mesures/m2'), { date: '2026-11-17' }))
+    await assertSucceeds(getDoc(doc(coach, 'utilisateurs/A/mesures/m1')))
+    await assertFails(updateDoc(doc(A, 'utilisateurs/A/mesures/m1'), { poids: '70' }))
+    await assertFails(deleteDoc(doc(B, 'utilisateurs/A/mesures/m1')))
+    await assertSucceeds(deleteDoc(doc(A, 'utilisateurs/A/mesures/m1')))
+  })
+  it('photos : chemin dans son dossier ; lecture par la coach', async () => {
+    await assertSucceeds(setDoc(doc(A, 'utilisateurs/A/photos/p1'), { date: '2026-11-17', chemin: 'clients/A/progression/x.jpg' }))
+    await assertFails(setDoc(doc(A, 'utilisateurs/A/photos/p2'), { date: '2026-11-17', chemin: 'clients/B/progression/x.jpg' }))
+    await assertSucceeds(getDoc(doc(coach, 'utilisateurs/A/photos/p1')))
+    await assertFails(getDoc(doc(B, 'utilisateurs/A/photos/p1')))
+    await assertFails(updateDoc(doc(A, 'utilisateurs/A/photos/p1'), { date: '2026-11-18' }))
+    await assertSucceeds(deleteDoc(doc(A, 'utilisateurs/A/photos/p1')))
   })
 })
 

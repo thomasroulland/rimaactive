@@ -25,8 +25,26 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['accordSante', 'statut'])
         && request.resource.data.accordSante == request.time
         && request.resource.data.statut == 'actif';
+      // Le client change sa photo de profil (chemin dans son dossier, ou null pour l'enlever), rien d'autre.
+      allow update: if estMoi(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['avatar'])
+        && (request.resource.data.avatar == null
+          || (request.resource.data.avatar is string
+            && request.resource.data.avatar.matches('clients/' + uid + '/profil/.+')));
       // Le coach modifie le profil (statut, nom…), jamais le rôle.
       allow update: if estCoach() && request.resource.data.role == resource.data.role;
+
+      // Mesures du client : lecture, création, suppression par lui ou la coach ; pas de mise à jour.
+      match /mesures/{id} {
+        allow read, create, delete: if estMoi(uid) || estCoach();
+      }
+      // Photos de progression : le fichier doit être dans le dossier du client.
+      match /photos/{id} {
+        allow read, delete: if estMoi(uid) || estCoach();
+        allow create: if (estMoi(uid) || estCoach())
+          && request.resource.data.chemin is string
+          && request.resource.data.chemin.matches('clients/' + uid + '/progression/.+');
+      }
     }
 
     match /exercices/{id} {
@@ -41,7 +59,7 @@ service cloud.firestore {
 
     // Champs qu'un client peut écrire sur sa séance (jamais commentaireCoach ; client, programme, seance figés après création).
     function champsClient() {
-      return ['client', 'programme', 'seance', 'date', 'statut', 'series', 'effort', 'ressenti', 'douleur', 'distance', 'temps', 'majLe'];
+      return ['client', 'programme', 'seance', 'date', 'statut', 'series', 'notes', 'blocs', 'effort', 'ressenti', 'commentaire', 'distance', 'temps', 'majLe'];
     }
 
     match /seancesFaites/{id} {

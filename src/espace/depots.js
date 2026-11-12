@@ -260,7 +260,7 @@ export function noterSeance(programmeId, seanceId, donnees) {
   return setDoc(refSeance(programmeId, seanceId), contenuNotes(baseSeance(programmeId, seanceId), donnees), { merge: true })
 }
 
-// « Fin de séance » : { effort, ressenti, douleur: { oui, endroit, note }, distance, temps } (+ `series` facultatif,
+// « Fin de séance » : { effort, ressenti, commentaire, distance, temps } (+ `series`, `notes`, `blocs` facultatifs,
 // pour enregistrer d'un coup les séries pré-remplies jamais touchées). Refusée par les règles si la séance est déjà terminée.
 export function terminerSeance(programmeId, seanceId, fin) {
   return setDoc(refSeance(programmeId, seanceId), contenuFin(baseSeance(programmeId, seanceId), fin), { merge: true })

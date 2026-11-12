@@ -11,6 +11,8 @@ async function peupler(c) {
   await db.doc(`utilisateurs/${c.uid}`).set({ role: 'client', prenom: 'X', nom: 'Y' })
   await db.doc(`programmes/p_${c.uid}`).set({ client: c.uid, nom: 'P' })
   await db.doc(`seancesFaites/p_${c.uid}_s1`).set({ client: c.uid })
+  await db.doc(`utilisateurs/${c.uid}/mesures/m1`).set({ date: '2026-11-17', poids: '72,5' })
+  await db.doc(`utilisateurs/${c.uid}/photos/ph1`).set({ date: '2026-11-17', chemin: `clients/${c.uid}/progression/x.jpg` })
   await bucket().file(`clients/${c.uid}/photo.jpg`).save(Buffer.from('x'), { contentType: 'image/jpeg' })
 }
 const existe = async (chemin) => (await app().firestore().doc(chemin).get()).exists
@@ -52,6 +54,8 @@ describe('POST /api/supprimer-client', () => {
     expect(await existe(`utilisateurs/${A.uid}`)).toBe(false)
     expect(await existe(`programmes/p_${A.uid}`)).toBe(false)
     expect(await existe(`seancesFaites/p_${A.uid}_s1`)).toBe(false)
+    expect(await existe(`utilisateurs/${A.uid}/mesures/m1`)).toBe(false)
+    expect(await existe(`utilisateurs/${A.uid}/photos/ph1`)).toBe(false)
     const [fichiersA] = await bucket().getFiles({ prefix: `clients/${A.uid}/` })
     expect(fichiersA).toHaveLength(0)
     await expect(app().auth().getUser(A.uid)).rejects.toMatchObject({ code: 'auth/user-not-found' })
@@ -59,6 +63,8 @@ describe('POST /api/supprimer-client', () => {
     expect(await existe(`utilisateurs/${B.uid}`)).toBe(true)
     expect(await existe(`programmes/p_${B.uid}`)).toBe(true)
     expect(await existe(`seancesFaites/p_${B.uid}_s1`)).toBe(true)
+    expect(await existe(`utilisateurs/${B.uid}/mesures/m1`)).toBe(true)
+    expect(await existe(`utilisateurs/${B.uid}/photos/ph1`)).toBe(true)
     const [fichiersB] = await bucket().getFiles({ prefix: `clients/${B.uid}/` })
     expect(fichiersB).toHaveLength(1)
     await expect(app().auth().getUser(B.uid)).resolves.toBeTruthy()
