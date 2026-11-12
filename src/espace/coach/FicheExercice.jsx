@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase.js'
-import { enregistrerExercice, retirerExercice } from '../depots.js'
+import { enregistrerExercice, retirerExercice, nouvelIdExercice } from '../depots.js'
 import { reduireImage } from '../donnees/photos.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
@@ -17,12 +17,14 @@ export default function FicheExercice() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [fiche, setFiche] = useState(id ? null : VIDE)
-  const [retirees, setRetirees] = useState([]) // chemins Storage à supprimer à l'enregistrement
+  const [idCree] = useState(() => (id ? null : nouvelIdExercice())) // créé une fois : un réessai reprend le même dossier
   const [nouvelles, setNouvelles] = useState([]) // [{ cle, fichier, apercu }]
   const [erreur, setErreur] = useState('')
   const [envoi, setEnvoi] = useState(false)
   const [introuvable, setIntrouvable] = useState(false)
   const champFichiers = useRef(null)
+  const nouvellesRef = useRef([])
+  nouvellesRef.current = nouvelles
 
   useEffect(() => {
     if (!id) return
@@ -31,7 +33,7 @@ export default function FicheExercice() {
       .catch(() => setErreur('Impossible de charger cette fiche. Vérifiez votre connexion.'))
   }, [id])
 
-  useEffect(() => () => nouvelles.forEach((n) => URL.revokeObjectURL(n.apercu)), []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => nouvellesRef.current.forEach((n) => URL.revokeObjectURL(n.apercu)), [])
 
   if (introuvable) {
     return (
@@ -74,8 +76,7 @@ export default function FicheExercice() {
     return copie
   }
   const retirerEnregistree = (chemin) => {
-    setFiche({ ...fiche, photos: fiche.photos.filter((p) => p !== chemin) })
-    setRetirees((r) => [...r, chemin])
+    setFiche({ ...fiche, photos: fiche.photos.filter((p) => p !== chemin) }) // le fichier reste dans Storage (copies des programmes)
   }
   const retirerNouvelle = (cle) => {
     const n = nouvelles.find((x) => x.cle === cle)
@@ -88,7 +89,7 @@ export default function FicheExercice() {
     if (!fiche.nom.trim()) { setErreur('Donnez un nom à l’exercice avant d’enregistrer.'); return }
     setEnvoi(true); setErreur('')
     try {
-      await enregistrerExercice({ ...fiche, id, photosRetirees: retirees }, nouvelles.map((n) => n.fichier))
+      await enregistrerExercice({ ...fiche, id: id ?? idCree }, nouvelles.map((n) => n.fichier))
       navigate('/espace/coach/exercices', { state: { message: `Fiche « ${fiche.nom.trim()} » enregistrée.` } })
     } catch (e) {
       setErreur(messageErreur(e.code ?? e.message))
@@ -100,7 +101,7 @@ export default function FicheExercice() {
     setEnvoi(true); setErreur('')
     try {
       if (fiche.retire) {
-        await enregistrerExercice({ ...fiche, id, retire: false, photosRetirees: retirees }, nouvelles.map((n) => n.fichier))
+        await enregistrerExercice({ ...fiche, id, retire: false }, nouvelles.map((n) => n.fichier))
         navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim()} » est de retour dans la banque.` } })
       } else {
         await retirerExercice(id)

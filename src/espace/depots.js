@@ -83,6 +83,7 @@ export async function supprimerClient(uid) {
 }
 
 // ---------- Banque d'exercices (tâche 7) ----------
+const urls = new Map()
 
 // Écoute en direct la banque : rappel([{ id, nom, consignes, muscles, photos, retire, majLe }]) triée par nom.
 export function ecouterExercices(rappel, erreur) {
@@ -97,38 +98,46 @@ export function ecouterExercices(rappel, erreur) {
   )
 }
 
+// Identifiant d'une future fiche : à créer une seule fois par formulaire pour qu'un nouvel essai reprenne le même dossier.
+export function nouvelIdExercice() {
+  return doc(collection(db, 'exercices')).id
+}
+
 // Crée ou met à jour une fiche. `exercice.photos` = chemins Storage conservés (dans l'ordre) ;
-// `nouvellesPhotos` = fichiers à réduire puis ajouter à la suite. Les photos qui n'y sont plus
-// sont supprimées de Storage une fois la fiche enregistrée. Renvoie l'identifiant.
+// `nouvellesPhotos` = fichiers à réduire puis ajouter à la suite. Une photo qui n'est plus dans
+// `photos` n'est PAS supprimée de Storage : les programmes en gardent une copie du chemin.
+// Si l'envoi ou l'enregistrement échoue, les fichiers envoyés pendant cet essai sont supprimés.
+// Renvoie l'identifiant (celui de `exercice.id`, ou un nouveau).
 export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
-  const reference = exercice.id ? doc(db, 'exercices', exercice.id) : doc(collection(db, 'exercices'))
-  const id = reference.id
-  const gardees = exercice.photos ?? []
+  const id = exercice.id ?? nouvelIdExercice()
 
   // réduire d'abord (refus « format » / « taille » avant tout envoi)
   const reduites = []
   for (const f of nouvellesPhotos) reduites.push(await reduireImage(f))
 
   const envoyees = []
-  for (const blob of reduites) {
-    const chemin = `exercices/${id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`
-    await uploadBytes(ref(stockage, chemin), blob, { contentType: 'image/jpeg' })
-    envoyees.push(chemin)
-  }
-
-  await setDoc(reference, {
-    nom: exercice.nom.trim(),
-    consignes: (exercice.consignes ?? '').trim(),
-    muscles: exercice.muscles ?? [],
-    photos: [...gardees, ...envoyees],
-    retire: exercice.retire ?? false,
-    majLe: serverTimestamp(),
-  })
-
-  // photos retirées de la fiche : suppression des fichiers (échec sans gravité)
-  for (const chemin of exercice.photosRetirees ?? []) {
-    try { await deleteObject(ref(stockage, chemin)) } catch { /* déjà absent */ }
-    urls.delete(chemin)
+  try {
+    for (const blob of reduites) {
+      const chemin = `exercices/${id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`
+      await uploadBytes(ref(stockage, chemin), blob, { contentType: 'image/jpeg' })
+      envoyees.push(chemin)
+    }
+    await setDoc(doc(db, 'exercices', id), {
+      nom: exercice.nom.trim(),
+      consignes: (exercice.consignes ?? '').trim(),
+      muscles: exercice.muscles ?? [],
+      photos: [...(exercice.photos ?? []), ...envoyees],
+      retire: exercice.retire ?? false,
+      majLe: serverTimestamp(),
+    })
+  } catch (e) {
+    for (const chemin of envoyees) {
+      try { await deleteObject(ref(stockage, chemin)) } catch { /* déjà absent */ }
+    }
+    if (e?.code === 'permission-denied') throw e
+    const erreur = new Error('envoi')
+    erreur.code = 'envoi'
+    throw erreur
   }
   return id
 }
@@ -138,7 +147,6 @@ export async function retirerExercice(id) {
   await updateDoc(doc(db, 'exercices', id), { retire: true, majLe: serverTimestamp() })
 }
 
-const urls = new Map()
 // Adresse affichable d'une photo (mise en mémoire le temps de la session)
 export function urlPhoto(chemin) {
   if (!urls.has(chemin)) {

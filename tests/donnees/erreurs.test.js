@@ -9,6 +9,7 @@ describe('messageErreur', () => {
     ['auth/expired-action-code', 'Ce lien a expiré. Demandez à Marie de vous renvoyer l’invitation.'],
     ['format', 'Format non pris en charge : envoyez une photo JPEG, PNG ou WebP.'],
     ['taille', 'Photo trop lourde (20 Mo maximum).'],
+    ['envoi', 'Les photos n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.'],
     ['code/inconnu', 'Une erreur est survenue. Réessayez.'],
     [undefined, 'Une erreur est survenue. Réessayez.'],
   ])('%s', (code, attendu) => {
