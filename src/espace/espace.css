@@ -1,0 +1,23 @@
+/* Styles de l'espace : uniquement les variables de la charte (styles.css) */
+.espace-attente { text-align: center; color: var(--gris-chaud); }
+.espace-carte {
+  background: var(--blanc);
+  border-radius: var(--arrondi);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+.espace-texte { margin: 0; color: var(--gris-chaud); max-width: 65ch; }
+.espace-connexion__carte { max-width: 480px; margin: 0 auto; align-items: stretch; }
+.espace-formulaire { display: flex; flex-direction: column; gap: 16px; }
+.espace-message { margin: 0; min-height: 0; font-weight: 600; font-size: 14px; line-height: 20px; }
+.espace-message:empty { display: none; }
+.espace-message--erreur { color: var(--encre); border-left: 3px solid var(--vermillon); padding-left: 12px; }
+.espace-lien {
+  align-self: center; background: none; border: 0; padding: 8px; font: inherit; font-weight: 600; font-size: 14px;
+  color: var(--encre); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; min-height: 44px;
+}
+.espace-lien:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.bouton:disabled { opacity: 0.6; cursor: progress; }

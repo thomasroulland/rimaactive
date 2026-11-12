@@ -1126,12 +1126,6 @@ main > section.questions:nth-of-type(n) { --fond-rubrique: var(--blanc); backgro
 .juridique__sous-partie h3 { margin-top: 24px; }
 .juridique__sous-partie:first-child h3 { margin-top: 0; }
 
-/* Message « En construction » de l'espace de connexion, au centre de l'écran */
-.construction { border: 0; border-radius: var(--arrondi); padding: 36px 40px; background: var(--craie); color: var(--encre); text-align: center; max-width: min(420px, calc(100vw - 40px)); box-shadow: 0 24px 60px rgba(22, 21, 20, 0.25); }
-.construction::backdrop { background: rgba(22, 21, 20, 0.55); }
-.construction__titre { margin: 0; font-weight: 900; font-size: 32px; line-height: 34px; letter-spacing: -0.04em; }
-.construction__texte { margin: 10px 0 24px; color: var(--gris-chaud); }
-.construction form { margin: 0; }
 /* Bas de page sur ordinateur : logo à gauche, e-mail bien au centre, réseaux à droite */
 @media (min-width: 900px) {
   .pied__ligne { display: grid; grid-template-columns: 1fr auto 1fr; }

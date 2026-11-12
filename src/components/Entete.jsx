@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logoCraie from '../assets/rimaactive-mot-craie.svg'
 import { PAGES_MENU } from './liens.js'
@@ -12,7 +12,6 @@ export default function Entete() {
   // pages qui commencent par une photo plein cadre : les trois pages de formules
   const surPhoto = useSurPhoto(false)
   const [ouvert, setOuvert] = useState(false)
-  const refConstruction = useRef(null)
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
   // Sur la page M'écrire elle-même, il est caché aussi (on y est déjà) ; sa place est gardée pour que rien ne bouge
   const ecrireVisible = useEcrireVisible(pathname === '/') && pathname !== '/contact'
@@ -46,11 +45,10 @@ export default function Entete() {
         <div className="entete__droite">
           {/* « M'écrire » : collé au menu, séparé par un trait fin, texte craie, flèche dans une pastille jaune (choix de Marie, 11 novembre 2026) */}
           <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>
-          {/* Espace de connexion (futurs coachings) : pour l'instant, un message « En construction » au centre de l'écran.
-              Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}
-          <button type="button" className="entete__compte" aria-label="Mon espace" title="Mon espace" onClick={() => refConstruction.current?.showModal()}>
+          {/* Espace de connexion : mène à /espace (connexion, puis espace client ou coach). Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}
+          <Link to="/espace" className="entete__compte" aria-label="Mon espace" title="Mon espace">
             <Picto nom="user-circle" taille={22} />
-          </button>
+          </Link>
           <button
             type="button"
             className="menu-bouton"
@@ -70,12 +68,6 @@ export default function Entete() {
           </NavLink>
         ))}
       </nav>
-      <dialog ref={refConstruction} className="construction" aria-labelledby="construction-titre"
-        onClick={(e) => { if (e.target === e.currentTarget) e.currentTarget.close() }}>
-        <p id="construction-titre" className="construction__titre">En construction</p>
-        <p className="construction__texte">Pour l’instant, rien n’est accessible ici.</p>
-        <form method="dialog"><button className="bouton bouton--principal">Fermer</button></form>
-      </dialog>
     </header>
   )
 }

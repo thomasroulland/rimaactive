@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import Accueil from './pages/Accueil.jsx'
@@ -6,6 +6,9 @@ import Cgv from './pages/Cgv.jsx'
 import Offres from './pages/Offres.jsx'
 import Contact from './pages/Contact.jsx'
 import InformationsLegales from './pages/InformationsLegales.jsx'
+
+// L'espace client et coach (et Firebase) ne se charge que sur /espace
+const EspaceLazy = lazy(() => import('./espace/EspaceApp.jsx'))
 
 function RemonterEnHaut() {
   const { pathname } = useLocation()
@@ -34,7 +37,7 @@ export default function App() {
           <Route path="mentions-legales" element={<InformationsLegales />} />
           <Route path="cgv" element={<Cgv />} />
           <Route path="confidentialite" element={<Navigate to="/mentions-legales#confidentialite" replace />} />
-          <Route path="espace" element={<Navigate to="/" replace />} />
+          <Route path="espace/*" element={<Suspense fallback={<p className="section" role="status">Chargement…</p>}><EspaceLazy /></Suspense>} />
           <Route path="*" element={<Accueil />} />
         </Route>
       </Routes>
