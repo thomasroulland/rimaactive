@@ -269,3 +269,39 @@ définitive. Cette règle remplace « Mise en ligne sans demander » de CLAUDE.m
   **Exception à la règle « pas de téléphone »** : le numéro de Marie figure uniquement dans les mentions légales, à sa demande.
   Restent à compléter : médiateur de la consommation ; service d'envoi du formulaire à ajouter dans la confidentialité quand il sera branché.
   La rubrique « Données personnelles » des mentions (doublon du lien vers la politique) est supprimée.
+
+## Espace client (12 novembre 2026, sur la branche espace-client-spec, pas en ligne)
+
+Espace connecté pour les clients (programme, séances, charges) et pour Marie (coachés, banque d'exercices, éditeur de
+programme). **Rien n'est en ligne ni sur GitHub** : tout est sur la branche `espace-client-spec`, `main` n'est pas touché.
+Conception : `docs/superpowers/specs/2026-11-12-espace-client-design.md` ; plan : `docs/superpowers/plans/2026-11-12-espace-client.md`.
+Pour mettre en route (Firebase, Vercel, rôle coach) : **`docs/espace-mise-en-route.md`**.
+
+- **Où sont les fichiers** : écrans dans `src/espace/` (`coach/` pour Marie, `client/` pour les clients, `donnees/` pour les calculs
+  purs, `depots.js` pour Firestore / Storage / API, `espace.css` pour les styles). Routes `/espace/*` chargées à la demande
+  (`lazy()` dans `src/App.jsx`) : le site vitrine ne charge **jamais** Firebase. API serveur dans `api/` (`inviter.js`,
+  `supprimer-client.js`, `_admin.js`), règles dans `firestore.rules` et `storage.rules`, rôle coach avec
+  `scripts/definir-coach.mjs`. Tests : `tests/donnees` (purs), `tests/regles` (émulateurs), `tests/api`.
+- **Lancer en local** (Java 21 requis pour les émulateurs) : `npx firebase emulators:start --project demo-rimaactive --only firestore,storage,auth`
+  puis, dans un autre terminal, `VITE_FIREBASE_EMULATEURS=1 npm run dev`. Aucune vraie clé n'est utilisée.
+- **Vérifier** : `npm test`, `npm run test:fuseaux` (dates sous d'autres fuseaux), `npm run test:regles` (lance les émulateurs tout seul),
+  `npm run build`. La CI (`.github/workflows/ci.yml`) fait la même chose, Java 21 compris.
+- **Secrets** : seulement dans Vercel. `VITE_FIREBASE_*` (publiques) et `FIREBASE_SERVICE_ACCOUNT` (JSON secret) ; ajouter
+  `FIREBASE_STORAGE_BUCKET` avec le nom du bucket affiché dans la console (les projets récents finissent par `.firebasestorage.app`,
+  l'API suppose `.appspot.com` sinon). Ne jamais coller une clé dans la discussion.
+- **Données** : dates de programme en jours locaux `AAAA-MM-JJ` (chaînes). Une séance faite a l'identifiant `programme_séance` :
+  un double appui sur « Fin de séance » ne crée qu'une séance.
+- **Confidentialité** : `src/pages/Confidentialite.jsx` contient un **brouillon** (Google Firebase comme prestataire, données de
+  l'espace, stockage de session, durées). À relire par Marie. La date « mis à jour le » (`InformationsLegales.jsx`, `miseAJour`)
+  n'a pas été changée : à régler le jour de la publication.
+- **Textes écrits par Claude à faire valider par Marie** : textes de l'espace (écrans, messages d'erreur), modèle d'e-mail
+  d'invitation du guide, accord santé, brouillon de confidentialité.
+
+**Décisions qui restent à Marie avant toute mise en ligne**
+1. **HDS** : le suivi de la douleur et du ressenti est une donnée de santé. Faire valider, avant d'inviter de vrais clients, si
+   l'hébergement choisi suffit ou s'il faut un hébergeur certifié HDS. En attendant, comptes de test seulement.
+2. **Vercel Pro** : le forfait gratuit (Hobby) est non commercial ; passer en Pro avant la mise en service.
+3. Créer le projet Firebase (région `europe-west`), passer en Blaze avec alerte de budget, renseigner les variables Vercel,
+   déployer les règles, donner le rôle coach (tout est décrit dans le guide ; Claude peut déployer les règles et lancer
+   `definir-coach.mjs` une fois la clé ajoutée dans Vercel).
+4. Valider la confidentialité, puis donner son **accord écrit** après avoir vu les captures avant / après.

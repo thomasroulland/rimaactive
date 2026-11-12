@@ -9,7 +9,7 @@ export const SECTIONS_CONFIDENTIALITE = [
     contenu: (
       <ul>
         <li><strong>Pas de cookie, pas de publicité, pas de mesure d'audience</strong> : vous n'êtes pas suivi sur ce site.</li>
-        <li><strong>Seules les données que vous m'envoyez</strong> (formulaire, e-mail, téléphone) sont utilisées, et uniquement pour vous répondre et organiser les séances.</li>
+        <li><strong>Seules les données que vous m'envoyez</strong> (formulaire, e-mail, téléphone) ou que vous saisissez dans votre espace client sont utilisées, et uniquement pour vous répondre, organiser et suivre les séances.</li>
         <li><strong>Elles ne sont ni vendues, ni partagées</strong> à des fins commerciales.</li>
         <li><strong>Vous pouvez à tout moment</strong> les consulter, les corriger ou les faire supprimer en écrivant à <Email />.</li>
       </ul>
@@ -52,6 +52,21 @@ export const SECTIONS_CONFIDENTIALITE = [
                 <td>Votre consentement explicite (art. 9.2.a), retirable à tout moment</td>
               </tr>
               <tr>
+                <td>Espace client, compte : prénom, nom, adresse e-mail</td>
+                <td>Créer votre accès personnel et vous identifier</td>
+                <td>Exécution du contrat (art. 6.1.b)</td>
+              </tr>
+              <tr>
+                <td>Espace client, programme et séances notées : charges, répétitions, effort, ressenti</td>
+                <td>Vous donner votre programme et suivre votre progression</td>
+                <td>Exécution du contrat (art. 6.1.b)</td>
+              </tr>
+              <tr>
+                <td>Espace client, douleur signalée (endroit, remarque)</td>
+                <td>Adapter les exercices en sécurité</td>
+                <td>Votre consentement explicite (art. 9.2.a), recueilli à votre première connexion et retirable à tout moment</td>
+              </tr>
+              <tr>
                 <td>Factures et coordonnées de facturation</td>
                 <td>Obligations comptables et fiscales</td>
                 <td>Obligation légale (art. 6.1.c)</td>
@@ -79,6 +94,10 @@ export const SECTIONS_CONFIDENTIALITE = [
         <p>Vos données sont lues uniquement par Marie Sillas. Elles transitent aussi par des prestataires techniques, qui n'ont pas le droit de les utiliser pour leur propre compte :</p>
         <ul>
           <li><strong>Vercel Inc.</strong> (hébergement du site), aux États-Unis ;</li>
+          <li>
+            <strong>Google Firebase</strong> (Google Ireland Limited, et Google LLC aux États-Unis), pour l'espace client :
+            connexion, programmes, séances notées et photos d'exercices. Ces données sont hébergées dans l'Union
+            européenne (région europe-west) ;</li>
           {/* pas de service d'envoi du formulaire pour l'instant (le formulaire ne transmet rien) : l'ajouter ici dès qu'il est branché */}
           <li><strong>Microsoft Outlook</strong> (Microsoft Corporation), messagerie e-mail.</li>
         </ul>
@@ -96,8 +115,8 @@ export const SECTIONS_CONFIDENTIALITE = [
     contenu: (
       <ul>
         <li><strong>Demande sans suite</strong> : 3 ans après notre dernier échange, puis suppression.</li>
-        <li><strong>Client</strong> : pendant toute la durée de l'accompagnement, puis 3 ans.</li>
-        <li><strong>Informations liées à la pratique</strong> : supprimées à la fin de l'accompagnement, ou dès que vous le demandez.</li>
+        <li><strong>Client</strong> (dont le compte de l'espace client) : pendant toute la durée de l'accompagnement, puis 3 ans.</li>
+        <li><strong>Informations liées à la pratique</strong> (dont séances notées, ressenti et douleur de l'espace client) : supprimées à la fin de l'accompagnement, ou dès que vous le demandez.</li>
         <li><strong>Factures</strong> : 10 ans, comme l'exige le Code de commerce.</li>
         <li><strong>Journaux techniques</strong> : selon la politique de l'hébergeur, en général quelques semaines.</li>
       </ul>
@@ -116,6 +135,13 @@ export const SECTIONS_CONFIDENTIALITE = [
           Les polices de caractères sont hébergées sur le site lui-même : aucune requête n'est envoyée à Google ou à un
           autre service tiers pendant votre visite. Les liens vers Instagram, Facebook et TikTok sont de
           simples liens : ces réseaux ne reçoivent rien tant que vous ne cliquez pas.
+        </p>
+        <p>
+          <strong>Espace client</strong> : une fois connecté, votre navigateur conserve sur votre appareil (stockage
+          local et base du navigateur, sans cookie) votre session de connexion et une copie de votre programme, pour
+          que l'espace fonctionne aussi sans réseau. Ce stockage est strictement nécessaire au fonctionnement de
+          l'espace connecté. Il ne sert ni à la publicité, ni à la mesure d'audience, et il n'est utilisé que si vous
+          vous connectez : la visite du site vitrine n'en dépose aucun.
         </p>
       </>
     ),
