@@ -104,11 +104,19 @@ Pour `FIREBASE_SERVICE_ACCOUNT`, ouvrez le fichier `.json` avec un éditeur de t
 
 ## 9. Mettre en place les règles de sécurité
 
-Ce sont les règles qui disent « un client ne voit que ses propres données ». Elles sont dans le dépôt (`firestore.rules`, `storage.rules`). Je peux les déployer pour vous : il me faut simplement l'identifiant du projet (étape 1) et que vous m'autorisiez à me connecter à Firebase avec votre compte (une fenêtre de connexion Google s'ouvre, c'est vous qui validez). La commande est :
+Ce sont les règles qui disent « un client ne voit que ses propres données ». Elles sont dans le dépôt
+(`firestore.rules` et `storage.rules`) ; Claude vous les envoie aussi en deux fichiers texte. Le plus simple est de les
+coller dans la console :
 
-```
-npx firebase deploy --only firestore:rules,firestore:indexes,storage --project <identifiant-du-projet>
-```
+1. **Firestore Database** → onglet **Règles** : effacez tout le texte, collez **tout** le contenu de `firestore.rules`
+   (fichier `regles-firestore.txt`), puis cliquez sur **Publier**.
+2. **Storage** → onglet **Règles** : effacez tout, collez **tout** le contenu de `storage.rules`
+   (fichier `regles-storage.txt`), puis **Publier**.
+3. Si une erreur s'affiche en rouge, envoyez une capture de l'erreur à Claude.
+
+Pas d'index à créer pour l'instant. (Autre possibilité, sur un ordinateur qui a les fichiers du site et après
+`npx firebase login` : `npx firebase deploy --only firestore:rules,storage --project <identifiant-du-projet>`.)
+À refaire à chaque fois que Claude vous signale un changement de ces règles.
 
 ## 10. Personnaliser l'e-mail d'invitation
 
@@ -154,7 +162,7 @@ Le rôle « coach » se donne **une seule fois**, à votre compte.
 node scripts/definir-coach.mjs marie.sillas@gmail.com
 ```
 
-Cette commande a besoin de la clé de l'étape 7, que Vercel ne permet plus de relire : il faut la fournir à l'ordinateur qui lance la commande. **C'est vous qui la lancez**, sur votre ordinateur : dans un terminal, placez-vous dans le dossier du site, puis (remplacez le chemin par celui de votre fichier `.json`) :
+Cette commande a besoin des fichiers du site sur votre ordinateur (Claude doit d'abord les envoyer sur GitHub, puis vous les récupérez) et de la clé de l'étape 7, que Vercel ne permet plus de relire : il faut la fournir à l'ordinateur qui lance la commande. **C'est vous qui la lancez**, sur votre ordinateur : dans un terminal, placez-vous dans le dossier du site, puis (remplacez le chemin par celui de votre fichier `.json`) :
 
 ```
 export FIREBASE_SERVICE_ACCOUNT="$(cat /chemin/vers/cle.json)"
