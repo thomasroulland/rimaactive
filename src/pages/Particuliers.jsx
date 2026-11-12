@@ -3,18 +3,12 @@ import photoIndividuel from '../assets/service-en-ligne.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Page Individuel : formules et prix donnés par Marie (mis à jour le 10 novembre 2026)
+// Page Individuel : formules et prix donnés par Marie (mis à jour le 12 novembre 2026 : crédit d'impôt affiché, « En salle » retiré pour l'instant)
 export const PAGE = {
   titre: 'Individuel',
   image: photoIndividuel,
   cadrage: '50% 45%',
-  liste: ['Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan, au-delà sur devis'],
-  // deux boutons sur la photo pour choisir À domicile / En salle (Marie, 10 novembre 2026) ;
-  // page.cartes garde toutes les formules (le formulaire de contact s'en sert)
-  onglets: [
-    { nom: 'À domicile', noms: ['Séance à l’unité à domicile', 'Suivi mensuel à domicile'] },
-    { nom: 'En salle', noms: ['Séance à l’unité en salle', 'Suivi mensuel en salle'] },
-  ],
+  liste: ['Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan'],
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
@@ -25,7 +19,7 @@ export const PAGE = {
       picto: 'house',
       surtitre: 'À domicile',
       infos: '60\u00a0min',
-      tarifs: [{ montant: '70\u00a0€', apres: 'la séance' }],
+      tarifs: [{ montant: '70\u00a0€', apres: 'la séance', detail: 'soit 35\u00a0€ après crédit d’impôt' }],
       titrePoints: 'Compris pour chaque séance',
       points: [
         // textes de Marie (10 novembre 2026) : intitulé en gras, puis la description
@@ -42,35 +36,9 @@ export const PAGE = {
       picto: 'kettlebell',
       surtitre: 'À domicile',
       infos: '4 séances par mois',
-      tarifs: [{ montant: '260\u00a0€', apres: 'par mois', detail: 'soit 65\u00a0€ la séance de 60\u00a0min' }],
+      tarifs: [{ montant: '60\u00a0€', apres: 'la séance', detail: ['soit 30\u00a0€ après crédit d’impôt', '240\u00a0€ par mois, soit 120\u00a0€ après crédit d’impôt'] }],
       titrePoints: 'Compris',
       points: ['4 séances à domicile', 'Programme personnalisé', 'Suivi inclus'],
-      sombre: true,
-    },
-    {
-      nom: 'Séance à l’unité en salle',
-      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
-      pourQui: 'Une personne, en salle, quel que soit votre niveau.',
-      titre: 'Séance à l’unité',
-      picto: 'barbell',
-      surtitre: 'En salle',
-      infos: '60\u00a0min',
-      tarifs: [{ montant: '60\u00a0€', apres: 'la séance' }],
-      titrePoints: 'Compris pour chaque séance',
-      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
-    },
-    {
-      // ajouté le 10 novembre 2026 (prix de Marie) ; « Compris » repris du Suivi mensuel à domicile, en salle
-      nom: 'Suivi mensuel en salle',
-      // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
-      pourQui: 'Une personne, en salle, qui veut un suivi régulier : 4 séances par mois.',
-      titre: 'Suivi mensuel',
-      picto: 'kettlebell',
-      surtitre: 'En salle',
-      infos: '4 séances par mois',
-      tarifs: [{ montant: '220\u00a0€', apres: 'par mois', detail: 'soit 55\u00a0€ la séance de 60\u00a0min' }],
-      titrePoints: 'Compris',
-      points: ['4 séances en salle', 'Programme personnalisé', 'Suivi inclus'],
       sombre: true,
     },
   ],

@@ -10,10 +10,10 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 
 // Page unique « Mes offres » (Marie, 10 novembre 2026) : une rubrique par offre, l'une sous l'autre.
 // Les bulles du haut restent visibles et amènent à chaque rubrique. Individuel garde les boutons
-// À domicile / En salle (deux cartes visibles à la fois) ; les autres offres ont leur photo à côté de leur carte.
+// deux cartes visibles à la fois (le bouton « En salle » est retiré le 12 novembre 2026) ; les autres offres ont leur photo à côté de leur carte.
 // Un clic sur une carte (ou « Voir le détail ») l'ouvre en grand. Les formules et prix viennent des fichiers des pages.
 const RUBRIQUES = [
-  { id: 'individuel', page: INDIVIDUEL, sous: 'À domicile ou en salle' },
+  { id: 'individuel', page: INDIVIDUEL, sous: 'À domicile' },
   { id: 'groupes', page: GROUPES, sous: '2 à 8 personnes, à domicile ou en extérieur' },
   { id: 'entreprises', page: ENTREPRISES, sous: 'Jusqu’à 16 personnes, dans vos locaux ou en extérieur' },
   { id: 'en-ligne', page: EN_LIGNE, sous: 'Un suivi à distance' },
@@ -89,10 +89,11 @@ function Rubrique({ id, page, sous, fonce }) {
             </div>
           )}
         </div>
-        <div className={`offres-page__corps ${onglets ? '' : 'offres-page__corps--photo'}`}>
-          {!onglets && <img className="offres-page__photo" src={page.image} alt="" style={{ objectPosition: page.cadrage }} />}
+        {/* la photo seulement à côté d'une carte seule ; Individuel (deux cartes) les garde en pleine largeur */}
+        <div className={`offres-page__corps ${cartes.length > 1 ? '' : 'offres-page__corps--photo'}`}>
+          {cartes.length === 1 && <img className="offres-page__photo" src={page.image} alt="" style={{ objectPosition: page.cadrage }} />}
           <ul className={`offres offres--${cartes.length === 1 ? '1' : '2'}`}>
-            {cartes.map((f) => <CarteOffre key={f.nom} f={f} contexte={page.titre} onOuvrir={() => setOuverte(f)} />)}
+            {cartes.map((f) => <CarteOffre key={f.nom} f={f} onOuvrir={() => setOuverte(f)} />)}
           </ul>
         </div>
         {liste.length > 0 && (

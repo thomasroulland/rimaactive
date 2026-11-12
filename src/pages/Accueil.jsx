@@ -13,8 +13,8 @@ const SERVICES = [
   {
     to: '/offres#individuel',
     titre: 'Individuel',
-    lieux: 'Domicile · Salle',
-    pourQui: 'Domicile · Salle',
+    lieux: 'Domicile',
+    pourQui: 'Domicile',
         photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoEnLigne,
     texte: 'Je vous accompagne en présentiel avec des séances construites autour de vos objectifs et de votre niveau.',

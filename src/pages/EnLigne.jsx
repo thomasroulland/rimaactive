@@ -3,7 +3,7 @@ import photoEnLigne from '../assets/service-individuel.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Page En ligne : Suivi mensuel en ligne, prix donné par Marie (10 novembre 2026) ; photo envoyée par Marie
+// Page En ligne : Suivi mensuel en ligne, prix donné par Marie (12 novembre 2026) ; photo envoyée par Marie
 export const PAGE = {
   titre: 'En ligne',
   image: photoEnLigne,
@@ -18,7 +18,7 @@ export const PAGE = {
       picto: 'laptop',
       surtitre: 'En ligne',
       infos: '3 mois',
-      tarifs: [{ montant: '150\u00a0€', apres: 'les 3 mois', detail: 'ou 3 × 50\u00a0€' }],
+      tarifs: [{ montant: '45\u00a0€', apres: 'par mois', detail: ['soit 135\u00a0€ les 3 mois', 'Engagement de 3 mois'] }],
       titrePoints: 'Compris',
       points: ['Programme personnalisé', 'Suivi hebdomadaire', 'Bilans'],
       sombre: true,

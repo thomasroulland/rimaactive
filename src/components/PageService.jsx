@@ -92,7 +92,7 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte }) {
               {t.montant}
               {t.apres && <span className="offre__apres">{t.apres}</span>}
             </p>
-            {t.detail && <p className="offre__detail">{t.detail}</p>}
+            {[t.detail].flat().filter(Boolean).map((d) => <p key={d} className="offre__detail">{d}</p>)}
           </div>
         ))}
       </div>}
@@ -154,7 +154,7 @@ export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] 
               <p key={t.montant} className="detail__prix">
                 {t.avant && <span className="detail__petit">{t.avant} </span>}{t.montant}
                 {t.apres && <span className="detail__petit detail__apres"> {t.apres}</span>}
-                {t.detail && <span className="detail__petit detail__sous"> {t.detail}</span>}
+                {[t.detail].flat().filter(Boolean).map((d) => <span key={d} className="detail__petit detail__sous"> {d}</span>)}
               </p>
             ))}
             {ouverte.presentation && <p className="detail__presentation">{ouverte.presentation}</p>}
