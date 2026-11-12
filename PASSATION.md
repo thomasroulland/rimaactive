@@ -301,7 +301,9 @@ Pour mettre en route (Firebase, Vercel, rôle coach) : **`docs/espace-mise-en-ro
 1. **HDS** : le suivi de la douleur et du ressenti est une donnée de santé. Faire valider, avant d'inviter de vrais clients, si
    l'hébergement choisi suffit ou s'il faut un hébergeur certifié HDS. En attendant, comptes de test seulement.
 2. **Vercel Pro** : le forfait gratuit (Hobby) est non commercial ; passer en Pro avant la mise en service.
-3. Créer le projet Firebase (région `europe-west`), passer en Blaze avec alerte de budget, renseigner les variables Vercel,
-   déployer les règles, donner le rôle coach (tout est décrit dans le guide ; Claude peut déployer les règles et lancer
-   `definir-coach.mjs` une fois la clé ajoutée dans Vercel).
+3. Créer le projet Firebase (Blaze avec alerte de budget d'abord, puis Firestore et Storage en `europe-west`), renseigner les variables
+   Vercel (`FIREBASE_SERVICE_ACCOUNT` en « Sensitive », donc non relisible), déployer les règles et les index, donner le rôle coach
+   (tout est décrit dans le guide). Claude peut déployer les règles ; pour `definir-coach.mjs`, Marie doit fournir la clé à la commande
+   elle-même ou via un formulaire sécurisé, jamais dans la discussion. Firebase Authentication n'a pas de région réglable : le texte
+   de confidentialité ne doit affirmer l'hébergement UE que pour Firestore et Storage, une fois la région réellement choisie.
 4. Valider la confidentialité, puis donner son **accord écrit** après avoir vu les captures avant / après.

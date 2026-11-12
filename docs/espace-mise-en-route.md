@@ -45,22 +45,23 @@ réglages de Vercel (étape 8). Vous pouvez me dire « c'est fait » : cela me s
 1. Menu **Firestore Database**, puis « Créer une base de données ».
 2. **Choisissez un emplacement en Europe** (un nom qui commence par `europe-west`, par exemple `europe-west9` pour Paris ou `europe-west1` pour la Belgique). **Ce choix est définitif** : vérifiez-le avant de valider.
 3. Mode de démarrage : choisissez « Mode production » (les règles de sécurité du site seront déployées à l'étape 9).
+4. **À savoir** : la région ne se règle que pour Firestore et le stockage (étape 6). Le service de connexion (Authentication) n'a pas de choix de région : c'est un service de Google qui peut traiter les adresses e-mail hors de l'Union européenne. La politique de confidentialité le précise ; notez ici la région choisie (par exemple `europe-west9`) pour vérifier que le texte public est exact avant publication.
 
-## 5. Activer le stockage des photos (Storage), en Europe
+## 5. Passer au forfait Blaze et poser une alerte de budget
 
-1. Menu **Storage**, puis « Commencer ».
-2. Mode « production » là aussi, et **même région européenne** que Firestore (ou une région `europe-west`).
-3. Une fois créé, le nom du « bucket » apparaît en haut de la page, sous la forme `gs://…`. **Copiez ce nom sans le `gs://`** (par exemple `rimaactive-1a2b3.firebasestorage.app` ou `rimaactive-1a2b3.appspot.com`) : il servira à l'étape 8. Les projets Firebase récents utilisent `….firebasestorage.app` ; les plus anciens `….appspot.com`. Prenez exactement celui que votre console affiche.
-
-## 6. Passer au forfait Blaze et poser une alerte de budget
-
-Le stockage des photos demande en général le forfait « Blaze » (paiement à l'usage). Pour un usage comme le vôtre, la facture reste en général à 0 € ou de l'ordre de quelques centimes, mais **posez une alerte de budget** pour être tranquille.
+Le stockage des photos demande en général le forfait « Blaze » (paiement à l'usage), à choisir **avant** de créer le stockage. Pour un petit usage comme le vôtre, le coût attendu est de quelques euros par mois ou moins, mais je ne peux pas vous le garantir : vérifiez la page de tarifs de Firebase. **Posez une alerte de budget** pour être tranquille.
 
 1. En bas du menu de gauche, cliquez sur le forfait (« Spark ») puis « Mettre à niveau » / « Upgrade », et choisissez **Blaze**.
 2. Vous devrez renseigner une carte bancaire.
 3. Quand Google propose de définir un budget, indiquez par exemple **5 €** par mois et gardez les alertes par e-mail activées. Si ce n'est pas proposé tout de suite, ouvrez la console Google Cloud (lien « Gérer le forfait » / « Facturation »), section **Budgets et alertes**, et créez-y un budget de 5 €.
 
 Une alerte prévient, elle ne bloque pas : si un jour vous en recevez une, parlez-m'en.
+
+## 6. Activer le stockage des photos (Storage), en Europe
+
+1. Menu **Storage**, puis « Commencer ».
+2. Mode « production » là aussi, et **même région européenne** que Firestore (ou une région `europe-west`).
+3. Une fois créé, le nom du « bucket » apparaît en haut de la page, sous la forme `gs://…`. **Copiez ce nom sans le `gs://`** (par exemple `rimaactive-1a2b3.firebasestorage.app` ou `rimaactive-1a2b3.appspot.com`) : il servira à l'étape 8. Les projets Firebase récents utilisent `….firebasestorage.app` ; les plus anciens `….appspot.com`. Prenez exactement celui que votre console affiche.
 
 ## 7. Créer la clé du « compte de service » (secrète)
 
@@ -84,12 +85,12 @@ Cette clé permet à l'API du site (inviter un client, supprimer un client) d'ag
 | `VITE_FIREBASE_STORAGE_BUCKET` | `storageBucket` de l'étape 2 | non |
 | `VITE_FIREBASE_MESSAGING_SENDER_ID` | `messagingSenderId` de l'étape 2 | non |
 | `VITE_FIREBASE_APP_ID` | `appId` de l'étape 2 | non |
-| `FIREBASE_SERVICE_ACCOUNT` | **tout le contenu** du fichier `.json` de l'étape 7, tel quel | **oui** |
-| `FIREBASE_STORAGE_BUCKET` | le nom du bucket copié à l'étape 5 (sans `gs://`) | non |
+| `FIREBASE_SERVICE_ACCOUNT` | **tout le contenu** du fichier `.json` de l'étape 7, tel quel | **oui** : cochez « Sensitive » pour Production et Preview |
+| `FIREBASE_STORAGE_BUCKET` | le nom du bucket copié à l'étape 6 (sans `gs://`) | non |
 
-Pour `FIREBASE_SERVICE_ACCOUNT`, ouvrez le fichier `.json` avec un éditeur de texte, sélectionnez tout, copiez, et collez dans la case de Vercel.
+Pour `FIREBASE_SERVICE_ACCOUNT`, ouvrez le fichier `.json` avec un éditeur de texte, sélectionnez tout, copiez, et collez dans la case de Vercel. Une variable « Sensitive » ne peut plus être relue après enregistrement, même par vous : gardez donc le fichier `.json` en lieu sûr.
 
-**Pourquoi `FIREBASE_STORAGE_BUCKET` ?** Sans lui, le site suppose que le bucket s'appelle `<projet>.appspot.com`. Or les projets Firebase récents utilisent `<projet>.firebasestorage.app`. Si le nom est faux, la suppression d'un client n'effacera pas ses photos. Copiez donc le nom affiché dans votre console (étape 5).
+**Pourquoi `FIREBASE_STORAGE_BUCKET` ?** Sans lui, le site suppose que le bucket s'appelle `<projet>.appspot.com`. Or les projets Firebase récents utilisent `<projet>.firebasestorage.app`. Si le nom est faux, la suppression d'un client n'effacera pas ses photos. Copiez donc le nom affiché dans votre console (étape 6).
 
 3. Les variables ne sont prises en compte qu'au prochain déploiement du site : **je m'en occupe, avec votre accord**.
 
@@ -98,7 +99,7 @@ Pour `FIREBASE_SERVICE_ACCOUNT`, ouvrez le fichier `.json` avec un éditeur de t
 Ce sont les règles qui disent « un client ne voit que ses propres données ». Elles sont dans le dépôt (`firestore.rules`, `storage.rules`). Je peux les déployer pour vous : il me faut simplement l'identifiant du projet (étape 1) et que vous m'autorisiez à me connecter à Firebase avec votre compte (une fenêtre de connexion Google s'ouvre, c'est vous qui validez). La commande est :
 
 ```
-npx firebase deploy --only firestore:rules,storage --project <identifiant-du-projet>
+npx firebase deploy --only firestore:rules,firestore:indexes,storage --project <identifiant-du-projet>
 ```
 
 ## 10. Personnaliser l'e-mail d'invitation
@@ -107,7 +108,7 @@ Quand vous invitez un client, il reçoit un e-mail « Réinitialisation du mot d
 
 1. Dans **Authentication**, ouvrez l'onglet des **modèles** (« Templates » / « Modèles »), puis « Réinitialisation du mot de passe ».
 2. Choisissez la langue **Français** (menu de langue du modèle).
-3. Si vous le pouvez, renseignez le nom de l'expéditeur : « Rimaactive » (et mettez votre adresse en « répondre à »).
+3. Si vous le pouvez, renseignez le nom de l'expéditeur : « Rimaactive » (et mettez votre adresse en « répondre à »). Par défaut, l'e-mail part d'une adresse Firebase (`firebaseapp.com`) et peut arriver dans les courriers indésirables : prévenez vos clients de regarder dans leurs spams.
 4. **Objet** suggéré : `Créez votre mot de passe pour votre espace Rimaactive`
 5. **Message** suggéré (vous pouvez le modifier librement ; gardez le lien `%LINK%`, Firebase le remplace par le vrai lien) :
 
@@ -141,7 +142,14 @@ Le rôle « coach » se donne **une seule fois**, à votre compte.
 node scripts/definir-coach.mjs marie.sillas@gmail.com
 ```
 
-Cette commande a besoin que la variable `FIREBASE_SERVICE_ACCOUNT` (la clé de l'étape 7) soit présente dans l'environnement de l'ordinateur qui la lance. **Une fois la clé ajoutée sur Vercel (étape 8), vous pouvez me demander de lancer la commande à votre place** : ne me collez jamais la clé dans la discussion, je la récupérerai sans que vous ayez à la montrer.
+Cette commande a besoin de la clé de l'étape 7, que Vercel ne permet plus de relire : il faut la fournir à l'ordinateur qui lance la commande. Deux façons simples :
+
+- **Vous la lancez vous-même** : dans un terminal, placez-vous dans le dossier du site, puis (remplacez le chemin par celui de votre fichier `.json`) :
+  ```
+  export FIREBASE_SERVICE_ACCOUNT="$(cat /chemin/vers/cle.json)"
+  node scripts/definir-coach.mjs marie.sillas@gmail.com
+  ```
+- **Ou je la lance avec vous** : je vous demanderai la clé par un formulaire sécurisé (jamais dans la discussion), et je lance la commande. Ne me collez jamais la clé dans le chat.
 
 3. Déconnectez-vous puis reconnectez-vous sur `/espace` : vous arrivez sur « Mes coachés ».
 

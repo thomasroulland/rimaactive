@@ -8,7 +8,7 @@ export const SECTIONS_CONFIDENTIALITE = [
     titre: "L’essentiel",
     contenu: (
       <ul>
-        <li><strong>Pas de cookie, pas de publicité, pas de mesure d'audience</strong> : vous n'êtes pas suivi sur ce site.</li>
+        <li><strong>Pas de cookie, pas de publicité, pas de mesure d'audience</strong> : vous n'êtes pas suivi sur ce site (hors stockage de connexion de l'espace client, voir « Cookies »).</li>
         <li><strong>Seules les données que vous m'envoyez</strong> (formulaire, e-mail, téléphone) ou que vous saisissez dans votre espace client sont utilisées, et uniquement pour vous répondre, organiser et suivre les séances.</li>
         <li><strong>Elles ne sont ni vendues, ni partagées</strong> à des fins commerciales.</li>
         <li><strong>Vous pouvez à tout moment</strong> les consulter, les corriger ou les faire supprimer en écrivant à <Email />.</li>
@@ -96,8 +96,9 @@ export const SECTIONS_CONFIDENTIALITE = [
           <li><strong>Vercel Inc.</strong> (hébergement du site), aux États-Unis ;</li>
           <li>
             <strong>Google Firebase</strong> (Google Ireland Limited, et Google LLC aux États-Unis), pour l'espace client :
-            connexion, programmes, séances notées et photos d'exercices. Ces données sont hébergées dans l'Union
-            européenne (région europe-west) ;</li>
+            programmes, séances notées et photos d'exercices, hébergés dans l'Union européenne (région
+            europe-west). Les comptes de connexion (adresse e-mail) sont gérés par Firebase Authentication, un service
+            de Google qui peut les traiter hors de l'Union européenne, avec les garanties citées ci-dessous ;</li>
           {/* pas de service d'envoi du formulaire pour l'instant (le formulaire ne transmet rien) : l'ajouter ici dès qu'il est branché */}
           <li><strong>Microsoft Outlook</strong> (Microsoft Corporation), messagerie e-mail.</li>
         </ul>
@@ -128,16 +129,16 @@ export const SECTIONS_CONFIDENTIALITE = [
     contenu: (
       <>
         <p>
-          Ce site <strong>ne dépose aucun cookie</strong> et n'utilise aucun outil de mesure d'audience, de publicité
+          Le site vitrine <strong>ne dépose aucun cookie</strong> et n'utilise aucun outil de mesure d'audience, de publicité
           ou de réseau social intégré. C'est pour cela qu'aucun bandeau de consentement ne s'affiche.
         </p>
         <p>
           Les polices de caractères sont hébergées sur le site lui-même : aucune requête n'est envoyée à Google ou à un
-          autre service tiers pendant votre visite. Les liens vers Instagram, Facebook et TikTok sont de
+          autre service tiers pendant votre visite du site vitrine. Les liens vers Instagram, Facebook et TikTok sont de
           simples liens : ces réseaux ne reçoivent rien tant que vous ne cliquez pas.
         </p>
         <p>
-          <strong>Espace client</strong> : une fois connecté, votre navigateur conserve sur votre appareil (stockage
+          <strong>Espace client</strong> : l'espace connecté utilise Google Firebase (voir « Qui y a accès »). Une fois connecté, votre navigateur conserve sur votre appareil (stockage
           local et base du navigateur, sans cookie) votre session de connexion et une copie de votre programme, pour
           que l'espace fonctionne aussi sans réseau. Ce stockage est strictement nécessaire au fonctionnement de
           l'espace connecté. Il ne sert ni à la publicité, ni à la mesure d'audience, et il n'est utilisé que si vous
