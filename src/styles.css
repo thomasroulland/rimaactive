@@ -1776,3 +1776,57 @@ html:has(.offres-page__rubrique) { scroll-padding-top: calc(var(--hauteur-entete
 @media (min-width: 900px) and (max-width: 1199px) {
   .page-contact textarea.champ { height: 50px; }
 }
+/* Mes offres, fin de page (11 novembre 2026, choix de Marie) : plus de photo ni de texte, seulement la mention TVA, discrète */
+.fin-mention { padding: 20px 0 24px; text-align: center; }
+.fin-mention p { margin: 0; font-size: 12px; line-height: 16px; color: var(--gris-chaud); }
+
+/* Barre de menu (11 novembre 2026, choix de Marie) : le logo seul à gauche, le menu à droite, collé à « M'écrire » */
+@media (min-width: 961px) {
+  .entete__barre { grid-template-columns: auto 1fr auto; column-gap: 4px; }
+  .nav { justify-self: end; }
+}
+/* « M'écrire » (11 novembre 2026, choix de Marie) : même forme que « Accueil » et « Mes offres », pilule jaune, flèche simple qui tourne au survol */
+.entete__ecrire { height: 30px; padding: 0 14px; gap: 6px; font-size: 14px; font-weight: 700; border: 0; background: var(--jaune); color: var(--encre); }
+.entete__ecrire svg { box-sizing: content-box; width: 10px; height: 10px; padding: 0; background: none; color: currentColor; }
+.entete__ecrire:hover { background: var(--encre); color: var(--craie); }
+
+/* Barre de menu encre (11 novembre 2026, choix de Marie) : fond encre sur toute la largeur, logo et textes craie,
+   la page en cours en pilule craie ; « M'écrire » reste jaune (craie au survol) */
+.entete, .entete--sur-photo { background: var(--encre); }
+.nav__lien { color: rgba(244, 243, 239, 0.78); }
+.nav__lien:hover { color: var(--encre); }
+.nav__lien[aria-current="page"] { background: var(--craie); color: var(--encre); }
+.entete__ecrire:hover { background: var(--craie); color: var(--encre); }
+.entete__compte, .entete--sur-photo .entete__compte { background: transparent; border-color: rgba(244, 243, 239, 0.28); color: var(--craie); }
+.entete__compte:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+.menu-bouton { color: var(--craie); }
+.entete .nav__lien:focus-visible, .entete .entete__ecrire:focus-visible, .entete__compte:focus-visible, .menu-bouton:focus-visible { outline: 2px solid var(--craie); outline-offset: 2px; }
+
+/* « M'écrire » caché (haut de l'accueil, page M'écrire) : il ne garde plus sa place, le menu se colle à droite ;
+   quand il apparaît, il se déplie en douceur et pousse le menu (choix de Marie, 11 novembre 2026) */
+.entete__ecrire {
+  max-width: 140px; overflow: hidden; white-space: nowrap;
+  transition: max-width 0.5s cubic-bezier(.3, .7, .2, 1), padding 0.5s cubic-bezier(.3, .7, .2, 1), gap 0.5s ease, opacity 0.3s ease, background-color var(--duree) ease, color var(--duree) ease;
+}
+.entete__ecrire--cache { max-width: 0; padding-inline: 0; gap: 0; opacity: 0; transform: none; }
+
+/* « M'écrire » dans la barre encre (11 novembre 2026, choix de Marie) : plus de pilule ; séparé du menu par un trait fin,
+   texte craie, la flèche dans une petite pastille jaune ; au survol le texte passe en jaune et la flèche tourne */
+.entete__ecrire { background: none; color: var(--craie); padding: 0 4px 0 18px; gap: 8px; position: relative; }
+.entete__ecrire::before { content: ""; position: absolute; left: 4px; top: 50%; width: 1px; height: 18px; transform: translateY(-50%); background: rgba(244, 243, 239, 0.28); }
+.entete__ecrire svg { padding: 6px; border-radius: 50%; background: var(--jaune); color: var(--encre); width: 8px; height: 8px; }
+.entete__ecrire:hover { background: none; color: var(--jaune); }
+.entete__ecrire--cache { padding-inline: 0; }
+.entete__ecrire--cache::before { display: none; }
+
+/* Haut de l'accueil (12 novembre 2026, choix de Marie) : « Marie Sillas » sur une ligne ; « M'écrire » jaune avec la flèche
+   en pastille encre, « Qui suis-je » en contour craie */
+.heros.heros--v3 .heros__titre--ligne { white-space: nowrap; font-size: clamp(44px, calc(4.4 * var(--vw)), 72px) !important; }
+.heros__boutons { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 22px; }
+.heros__ecrire { display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 5px 0 22px; border-radius: 999px; background: var(--jaune); color: var(--encre); font-weight: 700; font-size: 15px; text-decoration: none; transition: background-color var(--duree) ease, color var(--duree) ease; }
+.heros__ecrire svg { box-sizing: content-box; width: 11px; height: 11px; padding: 10px; border-radius: 50%; background: var(--encre); color: var(--jaune); transition: transform 0.45s cubic-bezier(.3, .7, .2, 1); }
+.heros__ecrire:hover { background: var(--craie); }
+.heros__ecrire:hover svg { transform: rotate(45deg); }
+.heros__second { display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--craie); color: var(--craie); font-weight: 700; font-size: 15px; text-decoration: none; transition: background-color var(--duree) ease, color var(--duree) ease; }
+.heros__second:hover { background: var(--craie); color: var(--encre); }
+.heros__ecrire:focus-visible, .heros__second:focus-visible { outline: 2px solid var(--craie); outline-offset: 3px; }

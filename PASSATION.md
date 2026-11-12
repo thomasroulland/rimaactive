@@ -247,3 +247,13 @@ Rien en attente de mise en ligne. Les branches de maquettes (`maquette-*`, `appr
 
 Marie a demandé : **rien en ligne ni sur GitHub sans son accord écrit**, et une image avant / après avant toute modification
 définitive. Cette règle remplace « Mise en ligne sans demander » de CLAUDE.md.
+## Changements du 11 et 12 novembre 2026 (choisis par Marie en mode live)
+
+- **Barre de menu** : fond encre sur toute la largeur, logo craie ; le menu (Accueil, Mes offres) est à droite ; page en cours
+  en pilule craie, au survol le jaune monte et le mot roule. « M'écrire » est collé au menu, séparé par un trait fin, en texte
+  craie avec la flèche dans une petite pastille jaune. Quand « M'écrire » est caché (haut de l'accueil, page M'écrire),
+  il ne garde plus sa place : le menu se colle à droite, puis « M'écrire » se déplie en glissant et pousse le menu.
+- **Haut de l'accueil** : « Marie Sillas » sur une ligne ; boutons « M'écrire » (jaune, flèche en pastille encre)
+  puis « Qui suis-je » (contour craie, vers #approche).
+- **Mes offres** : la fin de page (photo + « Vous hésitez entre deux formules ? ») est supprimée ; il ne reste que la mention
+  « TVA non applicable, art. 293 B du CGI. », discrète.

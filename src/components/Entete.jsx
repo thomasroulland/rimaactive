@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logoCraie from '../assets/rimaactive-mot-craie.svg'
-import logoEncre from '../assets/rimaactive-mot-encre.svg'
 import { PAGES_MENU } from './liens.js'
 import Picto from './Picto.jsx'
 
@@ -31,12 +30,12 @@ export default function Entete() {
   return (
     <header className={`entete ${surPhoto && !ouvert ? 'entete--sur-photo' : ''}`}>
       <div className="entete__barre">
-        {/* Le logo ramène en haut de l'accueil (utile surtout sur téléphone, où le menu est replié) */}
+        {/* Barre encre (choix de Marie, 11 novembre 2026) : logo craie. Le logo ramène en haut de l'accueil (utile surtout sur téléphone, où le menu est replié) */}
         <Link to="/" className="entete__logo" aria-label="Rimaactive, retour à l’accueil"
           onClick={() => { setOuvert(false); if (pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
-          <img src={surPhoto && !ouvert ? logoCraie : logoEncre} alt="Rimaactive, Marie Sillas coach sportive" width="104" height="21" />
+          <img src={logoCraie} alt="Rimaactive, Marie Sillas coach sportive" width="104" height="21" />
         </Link>
-        {/* Menu en mots simples ; la page en cours est dans une pilule encre ; au survol le jaune monte et le mot « roule » vers le haut (choix de Marie, novembre 2026) */}
+        {/* Menu à droite, à côté de « M'écrire » (11 novembre 2026) ; mots simples ; la page en cours est dans une pilule encre ; au survol le jaune monte et le mot « roule » vers le haut (choix de Marie, novembre 2026) */}
         <nav className="nav" aria-label="Menu principal">
           {PAGES_MENU.map((page) => (
             <NavLink key={page.to} to={page.to} end={page.to === '/'} className="nav__lien" onClick={versLeHaut(page)}>
@@ -45,7 +44,7 @@ export default function Entete() {
           ))}
         </nav>
         <div className="entete__droite">
-          {/* « M'écrire » : pilule jaune, la flèche dans une pastille encre au bout (choix de Marie, novembre 2026) */}
+          {/* « M'écrire » : collé au menu, séparé par un trait fin, texte craie, flèche dans une pastille jaune (choix de Marie, 11 novembre 2026) */}
           <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>
           {/* Espace de connexion (futurs coachings) : pour l'instant, un message « En construction » au centre de l'écran.
               Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}

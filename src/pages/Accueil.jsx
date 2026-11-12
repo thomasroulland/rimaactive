@@ -61,16 +61,17 @@ export default function Accueil() {
       {/* Haut de page : « Coach Marie » sur craie à gauche, la photo de Marie bras croisés à droite,
           avec trois repères en bulles blanches posés en bas de la photo (sous la photo sur téléphone) */}
       <section className="heros heros--v3" aria-labelledby="heros-titre">
+        {/* Haut de page (choix de Marie, 12 novembre 2026) : « Marie Sillas » sur une ligne, « M'écrire » (flèche en pastille)
+            et « Qui suis-je » (contour craie) côte à côte */}
         <div className="heros__cadre">
           <img className="heros__photo" src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
           <div className="heros__texte">
             <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
-            <h1 id="heros-titre" className="titre heros__titre"><span className="mot-avant">Marie</span>{' '}<br className="heros__saut" />Sillas</h1>
-            {/* retour à la ligne voulu par Marie après « grâce à une », sur tous les écrans */}
+            <h1 id="heros-titre" className="titre heros__titre heros__titre--ligne">Marie Sillas</h1>
             <p className="accroche heros__ligne">Un corps fort et mobile grâce à une<br />pratique fonctionnelle.</p>
-            <div className="actions">
-              <a href="#approche" className="bouton bouton--secondaire">Qui suis-je</a>
-              <Link to="/contact" className="bouton bouton--principal">M’écrire</Link>
+            <div className="heros__boutons">
+              <Link to="/contact" className="heros__ecrire">M’écrire <FlecheDiagonale /></Link>
+              <a href="#approche" className="heros__second">Qui suis-je</a>
             </div>
           </div>
         </div>
