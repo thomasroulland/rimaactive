@@ -1,6 +1,34 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+
+    function connecte() {
+      return request.auth != null;
+    }
+    function estCoach() {
+      return connecte() && request.auth.token.role == 'coach';
+    }
+    // Photo déjà réduite dans le navigateur : JPEG, PNG ou WebP, 5 Mo maximum.
+    function photoValide() {
+      return request.resource != null
+        && request.resource.contentType.matches('image/(jpeg|png|webp)')
+        && request.resource.size <= 5 * 1024 * 1024;
+    }
+
+    // Photos des exercices : lues par tout compte connecté, écrites par le coach.
+    match /exercices/{exoId}/{fichier=**} {
+      allow read: if connecte();
+      allow create, update: if estCoach() && photoValide();
+      allow delete: if estCoach();
+    }
+
+    // Photos d'un client : le client concerné et le coach.
+    match /clients/{uid}/{fichier=**} {
+      allow read: if connecte() && (request.auth.uid == uid || estCoach());
+      allow create, update: if connecte() && (request.auth.uid == uid || estCoach()) && photoValide();
+      allow delete: if connecte() && (request.auth.uid == uid || estCoach());
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }
