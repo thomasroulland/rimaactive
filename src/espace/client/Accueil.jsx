@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
-import { auth } from '../firebase.js'
+import { seDeconnecter } from '../firebase.js'
 import { etatAccueil, listeSeances, regularite, semaineCourante, aujourdhuiIso } from '../donnees/calculs.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
 import Picto from '../../components/Picto.jsx'
@@ -56,7 +55,7 @@ export default function Accueil({ prenom, programme, seances, faites }) {
         <MaRegularite programme={programme} faites={faites} jusqua={etat.type === 'termine' ? nbSemaines : semaine} />
       )}
 
-      <button type="button" className="espace-lien client-sortie" onClick={() => signOut(auth)}>Se déconnecter</button>
+      <button type="button" className="espace-lien client-sortie" onClick={seDeconnecter}>Se déconnecter</button>
     </section>
   )
 }

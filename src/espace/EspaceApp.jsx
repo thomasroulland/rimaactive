@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
-import { auth } from './firebase.js'
+import { seDeconnecter } from './firebase.js'
 import useSession from './useSession.js'
 import useTitre from '../components/useTitre.js'
 import Connexion from './Connexion.jsx'
@@ -44,7 +43,7 @@ function Page({ titre, children }) {
         <div className="espace-carte">
           <h1 className="titre titre--tuile">{titre}</h1>
           {children}
-          <button type="button" className="bouton bouton--secondaire" onClick={() => signOut(auth)}>Se déconnecter</button>
+          <button type="button" className="bouton bouton--secondaire" onClick={seDeconnecter}>Se déconnecter</button>
         </div>
       </div>
     </section>

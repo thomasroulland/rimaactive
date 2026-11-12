@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
-import { auth } from './firebase.js'
+import { seDeconnecter } from './firebase.js'
 import { donnerAccord } from './depots.js'
 import { messageErreur } from './erreurs.js'
 
@@ -45,7 +44,7 @@ export default function Accord({ uid, prenom }) {
             <button type="submit" className="bouton bouton--principal" disabled={!coche || envoi}>
               {envoi ? 'Enregistrement…' : 'Accéder à mon espace'}
             </button>
-            <button type="button" className="espace-lien" onClick={() => signOut(auth)}>Se déconnecter</button>
+            <button type="button" className="espace-lien" onClick={seDeconnecter}>Se déconnecter</button>
           </form>
         </div>
       </div>

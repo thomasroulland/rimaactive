@@ -6,7 +6,7 @@ import {
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, serverTimestamp, query, where } from 'firebase/firestore'
 import { contenuFin, contenuNotes } from '../../src/espace/donnees/seances.js'
 
-let env, coach, A, B, anon
+let env, coach, A, B, anon, sansRole
 
 beforeAll(async () => {
   env = await initializeTestEnvironment({
@@ -17,6 +17,8 @@ beforeAll(async () => {
   A = env.authenticatedContext('A', { role: 'client' }).firestore()
   B = env.authenticatedContext('B', { role: 'client' }).firestore()
   anon = env.unauthenticatedContext().firestore()
+  // Compte créé sans passer par Marie (inscription libre) : connecté, mais sans rôle
+  sansRole = env.authenticatedContext('X', {}).firestore()
 })
 afterAll(() => env.cleanup())
 
@@ -35,6 +37,9 @@ beforeEach(async () => {
     await setDoc(doc(db, 'programmes/P1'), base('A', 'publié'))
     await setDoc(doc(db, 'programmes/P2'), base('A', 'brouillon'))
     await setDoc(doc(db, 'programmes/P3'), base('B', 'publié'))
+    await setDoc(doc(db, 'utilisateurs/X'), { prenom: 'X', role: 'client', statut: 'invité', accordSante: null })
+    await setDoc(doc(db, 'programmes/PX'), base('X', 'publié'))
+    await setDoc(doc(db, 'seancesFaites/PX_S1'), seance({ client: 'X', programme: 'PX' }))
     await setDoc(doc(db, 'seancesFaites/P1_S1'), seance())
     await setDoc(doc(db, 'seancesFaites/P1_S2'), seance({ seance: 'S2', statut: 'terminée', effort: 7 }))
   })
@@ -200,5 +205,35 @@ describe('séance du client : écritures de l’écran', () => {
     await assertSucceeds(getDocs(query(collection(A, 'programmes'), where('client', '==', 'A'), where('statut', '==', 'publié'))))
     await assertFails(getDocs(query(collection(A, 'programmes'), where('client', '==', 'A'))))
     await assertSucceeds(getDocs(query(collection(A, 'seancesFaites'), where('client', '==', 'A'))))
+  })
+})
+
+describe('compte sans rôle (inscription libre)', () => {
+  it('ne lit ni son profil, ni un programme publié à son nom, ni ses séances', async () => {
+    await assertFails(getDoc(doc(sansRole, 'utilisateurs/X')))
+    await assertFails(getDoc(doc(sansRole, 'programmes/PX')))
+    await assertFails(getDoc(doc(sansRole, 'seancesFaites/PX_S1')))
+    await assertFails(getDocs(query(collection(sansRole, 'programmes'), where('client', '==', 'X'), where('statut', '==', 'publié'))))
+  })
+  it("n'écrit ni profil, ni séance", async () => {
+    await assertFails(updateDoc(doc(sansRole, 'utilisateurs/X'), { accordSante: serverTimestamp(), statut: 'actif' }))
+    await assertFails(setDoc(doc(sansRole, 'seancesFaites/PX_S2'), seance({ client: 'X', programme: 'PX', seance: 'S2' })))
+    await assertFails(updateDoc(doc(sansRole, 'seancesFaites/PX_S1'), { effort: 5 }))
+  })
+  it('ne lit ni exercices ni profils des autres', async () => {
+    await assertFails(getDoc(doc(sansRole, 'exercices/E1')))
+    await assertFails(getDoc(doc(sansRole, 'utilisateurs/A')))
+  })
+})
+
+describe('« Fin de séance » après le retrait de tous les exercices', () => {
+  const base = (seance) => ({ client: 'A', programme: 'P1', seance, date: '2026-11-17', majLe: serverTimestamp() })
+  it('garde les notes des exercices retirés quand plus aucun exercice n’est affiché', async () => {
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S5'), contenuNotes(base('S5'), { series: { e1: [{ charge: '40', reps: '8', rpe: '' }] } }), { merge: true }))
+    // Marie a retiré tous les exercices : l'écran n'a plus rien à envoyer (series vide)
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S5'), contenuFin(base('S5'), { effort: 6, series: {} }), { merge: true }))
+    const d = (await getDoc(doc(A, 'seancesFaites/P1_S5'))).data()
+    if (d.statut !== 'terminée') throw new Error('séance terminée attendue')
+    if (!d.series?.e1?.length || d.series.e1[0].charge !== '40') throw new Error(`notes de e1 perdues : ${JSON.stringify(d.series)}`)
   })
 })

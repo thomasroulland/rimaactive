@@ -66,11 +66,15 @@ function seriesPropres(series) {
   return out
 }
 
+// Une carte `series` vide n'est jamais envoyée : avec { merge: true }, Firestore remplacerait tout le champ
+// et effacerait les notes déjà enregistrées (par exemple celles d'exercices que Marie a retirés entre-temps).
+const aDesSeries = (series) => series != null && Object.keys(series).length > 0
+
 // Contenu écrit (fusion) pendant la séance : statut « en cours ».
 // `base` = { client, programme, seance, date, majLe } ; `donnees` = { series: { [elementId]: lignes } }
 export function contenuNotes(base, donnees = {}) {
   const out = { client: base.client, programme: base.programme, seance: base.seance, date: base.date, statut: 'en cours', majLe: base.majLe }
-  if (donnees.series) out.series = seriesPropres(donnees.series)
+  if (aDesSeries(donnees.series)) out.series = seriesPropres(donnees.series)
   return out
 }
 
@@ -92,7 +96,7 @@ export function contenuFin(base, fin = {}) {
     temps: texte(fin.temps).trim(),
     majLe: base.majLe,
   }
-  if (fin.series) out.series = seriesPropres(fin.series)
+  if (aDesSeries(fin.series)) out.series = seriesPropres(fin.series)
   return out
 }
 

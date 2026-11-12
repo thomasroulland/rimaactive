@@ -1,6 +1,5 @@
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
-import { auth } from '../firebase.js'
+import { seDeconnecter } from '../firebase.js'
 import MesCoaches from './MesCoaches.jsx'
 import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
@@ -15,7 +14,7 @@ export default function EspaceCoach() {
         <div className="conteneur espace-onglets__ligne">
           <NavLink to="/espace/coach" end className="espace-onglet">Mes coachés</NavLink>
           <NavLink to="/espace/coach/exercices" className="espace-onglet">Banque d’exercices</NavLink>
-          <button type="button" className="espace-onglet espace-onglet--sortie" data-quitter onClick={() => signOut(auth)}>Se déconnecter</button>
+          <button type="button" className="espace-onglet espace-onglet--sortie" data-quitter onClick={seDeconnecter}>Se déconnecter</button>
         </div>
       </nav>
       <Routes>

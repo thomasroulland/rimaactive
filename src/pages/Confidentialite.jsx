@@ -139,8 +139,10 @@ export const SECTIONS_CONFIDENTIALITE = [
         </p>
         <p>
           <strong>Espace client</strong> : l'espace connecté utilise Google Firebase (voir « Qui y a accès »). Une fois connecté, votre navigateur conserve sur votre appareil (stockage
-          local et base du navigateur, sans cookie) votre session de connexion et une copie de votre programme, pour
-          que l'espace fonctionne aussi sans réseau. Ce stockage est strictement nécessaire au fonctionnement de
+          local et base du navigateur, sans cookie) votre session de connexion et une copie de votre programme et de vos
+          séances (y compris vos notes de ressenti et de douleur), pour que l'espace fonctionne aussi sans réseau. Cette
+          copie reste sur l'appareil tant que vous êtes connecté ; elle est effacée quand vous cliquez sur « Se
+          déconnecter ». Sur un appareil partagé, pensez donc à vous déconnecter. Ce stockage est strictement nécessaire au fonctionnement de
           l'espace connecté. Il ne sert ni à la publicité, ni à la mesure d'audience, et il n'est utilisé que si vous
           vous connectez : la visite du site vitrine n'en dépose aucun.
         </p>

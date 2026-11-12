@@ -102,3 +102,11 @@ describe('exercices des programmes', () => {
     expect(exercicesDe([]).noms.size).toBe(0)
   })
 })
+
+describe('séries vides à la fin de séance', () => {
+  it('n’envoie pas de séries vides (elles effaceraient les notes des exercices retirés)', () => {
+    expect(contenuFin(base, { effort: 5, series: {} })).not.toHaveProperty('series')
+    expect(contenuNotes(base, { series: {} })).not.toHaveProperty('series')
+    expect(contenuFin(base, { effort: 5, series: { e1: [] } }).series).toEqual({ e1: [] })
+  })
+})
