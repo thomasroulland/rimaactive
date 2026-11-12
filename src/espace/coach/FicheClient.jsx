@@ -3,8 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   lireProfil, ecouterProgrammes, ecouterSeancesClient, commenterSeance, supprimerClient, programmeEnCours,
 } from '../depots.js'
-import { aujourdhuiIso, fusionnerNotes, meilleuresCharges, regularite } from '../donnees/calculs.js'
-import { dateCourte, dateLongue, evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
+import { aujourdhuiIso, meilleuresCharges, regularite } from '../donnees/calculs.js'
+import { dateCourte, dateLongue, detailSeance, evolutionCharges, exercicesDe, fr, texteSerie } from '../donnees/seances.js'
 import { messageErreur } from '../erreurs.js'
 
 const NB_POINTS = 8 // dernières séances montrées par exercice
@@ -12,30 +12,6 @@ const STATUTS = { 'invité': 'Invité', actif: 'Actif', 'en pause': 'En pause' }
 const Fleche = () => (
   <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
 )
-
-// « 60 kg × 5 @8 » ; une série non cochée « Fait » par le client : « non faite »
-function texteSerie(l) {
-  if (l.fait === false) return 'non faite'
-  const charge = String(l.charge ?? '').trim()
-  const reps = String(l.reps ?? '').trim()
-  const rpe = String(l.rpe ?? '').trim()
-  let t = charge && reps ? `${fr(charge)} kg × ${reps}` : charge ? `${fr(charge)} kg` : reps ? `${reps} rép.` : 'à compléter'
-  if (rpe) t += ` @${fr(rpe)}`
-  return t
-}
-
-// Exercices notés pendant une séance, avec leur nom ; un exercice qui n'est plus dans le programme est signalé.
-function detailSeance(seanceDuProgramme, series) {
-  const notes = series ?? {}
-  return fusionnerNotes(seanceDuProgramme ?? { blocs: [] }, notes)
-    .filter((x) => x.element === null || notes[x.element.id]) // fusionnerNotes pré-remplit : on ne garde que ce qui a été noté
-    .map((x, i) => ({
-      cle: x.element?.id ?? `retire-${i}`,
-      nom: x.element ? x.element.nom : 'Exercice retiré du programme',
-      retire: !x.element,
-      lignes: x.lignes,
-    }))
-}
 
 // Fiche d'un coaché : programme en cours, séances faites, courbes de charges, suppression.
 export default function FicheClient() {
@@ -177,7 +153,6 @@ function Regularite({ semaines }) {
 
 function SeanceFaite({ sf, seance }) {
   const [texte, setTexte] = useState(sf.commentaireCoach ?? '')
-  const [envoi, setEnvoi] = useState(false)
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
   const enregistre = sf.commentaireCoach ?? ''
@@ -187,16 +162,15 @@ function SeanceFaite({ sf, seance }) {
   const detail = detailSeance(seance, sf.series)
   const terminee = sf.statut === 'terminée'
 
-  async function enregistrer(e) {
+  // Optimiste, comme côté client : hors ligne la promesse ne se résout qu'au retour du réseau (le cache garde l'écriture).
+  // On n'attend donc pas ; un vrai refus (permission, etc.) arrive par le catch.
+  function enregistrer(e) {
     e.preventDefault()
-    setEnvoi(true); setMessage(''); setErreur('')
-    try {
-      await commenterSeance(sf.id, texte)
-      setMessage('Commentaire enregistré.')
-    } catch (err) {
-      setErreur(messageErreur(err.code))
-    }
-    setEnvoi(false)
+    setErreur('')
+    setMessage(navigator.onLine === false
+      ? 'Commentaire enregistré sur cet appareil, envoyé au retour du réseau.'
+      : 'Commentaire enregistré.')
+    commenterSeance(sf.id, texte).catch((err) => { setMessage(''); setErreur(messageErreur(err.code)) })
   }
 
   return (
@@ -242,7 +216,7 @@ function SeanceFaite({ sf, seance }) {
           <textarea id={id} className="champ" rows={3} value={texte} onChange={(e) => { setTexte(e.target.value); setMessage('') }} />
         </div>
         <div className="espace-actions">
-          <button type="submit" className="bouton bouton--secondaire bouton--compact" disabled={envoi || !modifie}>{envoi ? 'Enregistrement…' : 'Enregistrer le commentaire'}</button>
+          <button type="submit" className="bouton bouton--secondaire bouton--compact" disabled={!modifie}>Enregistrer le commentaire</button>
         </div>
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   dateLongue, dateCourte, prescription, resumeFormat, contenuNotes, contenuFin, evolutionCharges, statutSeance,
+  texteSerie, detailSeance, exercicesDe,
 } from '../../src/espace/donnees/seances.js'
 
 const base = { client: 'A', programme: 'P1', seance: 'S1', date: '2026-11-16', majLe: 'T' }
@@ -55,5 +56,49 @@ describe('affichage', () => {
     expect(statutSeance(sf, 'P1', 'S1')).toBe('En cours')
     expect(statutSeance(sf, 'P1', 'S2')).toBe('Faite')
     expect(statutSeance(sf, 'P2', 'S1')).toBe('À faire')
+  })
+})
+
+describe('fiche client : texte d’une série', () => {
+  it('charge, répétitions et RPE', () => {
+    expect(texteSerie({ charge: '60', reps: '5', rpe: '8' })).toBe('60 kg × 5 @8')
+    expect(texteSerie({ charge: '17.5', reps: '8', rpe: '' })).toBe('17,5 kg × 8')
+  })
+  it('valeurs manquantes', () => {
+    expect(texteSerie({ charge: '', reps: '10', rpe: '7' })).toBe('10 rép. @7')
+    expect(texteSerie({ charge: '20', reps: '' })).toBe('20 kg')
+    expect(texteSerie({})).toBe('à compléter')
+  })
+  it('série non cochée : non faite', () => {
+    expect(texteSerie({ charge: '60', reps: '5', fait: false })).toBe('non faite')
+  })
+})
+
+describe('fiche client : détail d’une séance', () => {
+  const seance = { blocs: [{ elements: [{ id: 'e1', nom: 'Squat' }, { id: 'e2', nom: 'Rowing' }] }] }
+  it('ne garde que les exercices notés, avec leur nom', () => {
+    const d = detailSeance(seance, { e1: [{ charge: '10', reps: '5' }] })
+    expect(d.map((x) => x.nom)).toEqual(['Squat'])
+    expect(d[0].retire).toBe(false)
+  })
+  it('exercice retiré du programme ou séance introuvable', () => {
+    const d = detailSeance(seance, { e1: [{ charge: '10' }], e9: [{ charge: '5' }] })
+    expect(d.map((x) => x.nom)).toEqual(['Squat', 'Exercice retiré du programme'])
+    expect(d[1].retire).toBe(true)
+    expect(detailSeance(null, { e1: [{}] })[0].nom).toBe('Exercice retiré du programme')
+    expect(detailSeance(seance, undefined)).toEqual([])
+  })
+})
+
+describe('exercices des programmes', () => {
+  const prog = (nom) => ({ semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'a', exoId: 'x', nom }, { id: 'b', nom: 'Sans exo' }] }] }] }] })
+  it('associe éléments et exercices, garde le nom du programme le plus récent (premier)', () => {
+    const { exoIdParElement, noms } = exercicesDe([prog('Squat récent'), prog('Squat ancien')])
+    expect(exoIdParElement.get('a')).toBe('x')
+    expect(exoIdParElement.has('b')).toBe(false)
+    expect(noms.get('x')).toBe('Squat récent')
+  })
+  it('liste vide', () => {
+    expect(exercicesDe([]).noms.size).toBe(0)
   })
 })

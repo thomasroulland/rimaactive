@@ -1,3 +1,4 @@
+import { fusionnerNotes } from './calculs.js'
 // Calculs purs des écrans du client : contenu des séances faites, textes de dates et de prescriptions.
 // Les dates sont des jours locaux 'AAAA-MM-JJ' : on lit leurs composantes, jamais via le fuseau de la machine.
 
@@ -130,4 +131,28 @@ export function exercicesDe(programmes) {
     }
   }
   return { exoIdParElement, noms }
+}
+
+// « 60 kg × 5 @8 » ; une série non cochée « Fait » par le client : « non faite »
+export function texteSerie(l) {
+  if (l.fait === false) return 'non faite'
+  const charge = String(l.charge ?? '').trim()
+  const reps = String(l.reps ?? '').trim()
+  const rpe = String(l.rpe ?? '').trim()
+  let t = charge && reps ? `${fr(charge)} kg × ${reps}` : charge ? `${fr(charge)} kg` : reps ? `${reps} rép.` : 'à compléter'
+  if (rpe) t += ` @${fr(rpe)}`
+  return t
+}
+
+// Exercices notés pendant une séance, avec leur nom ; un exercice qui n'est plus dans le programme est signalé.
+export function detailSeance(seanceDuProgramme, series) {
+  const notes = series ?? {}
+  return fusionnerNotes(seanceDuProgramme ?? { blocs: [] }, notes)
+    .filter((x) => x.element === null || notes[x.element.id]) // fusionnerNotes pré-remplit : on ne garde que ce qui a été noté
+    .map((x, i) => ({
+      cle: x.element?.id ?? `retire-${i}`,
+      nom: x.element ? x.element.nom : 'Exercice retiré du programme',
+      retire: !x.element,
+      lignes: x.lignes,
+    }))
 }
