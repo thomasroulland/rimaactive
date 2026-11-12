@@ -13,13 +13,15 @@ export function lundisProposes(actuel) {
   return liste
 }
 
-export function ChoixDebut({ id, valeur, changer, desactive }) {
+export function ChoixDebut({ id, valeur, changer, desactive, aide }) {
   return (
     <div className="champ-groupe">
       <label htmlFor={id}>Début (un lundi)</label>
-      <select id={id} className="champ" value={valeur} onChange={(e) => changer(e.target.value)} disabled={desactive}>
+      <select id={id} className="champ" value={valeur} onChange={(e) => changer(e.target.value)} disabled={desactive}
+        aria-describedby={aide ? `${id}-aide` : undefined}>
         {lundisProposes(valeur).map((l) => <option key={l} value={l}>{dateLongue(l)}</option>)}
       </select>
+      {aide && <p id={`${id}-aide`} className="espace-aide">{aide}</p>}
     </div>
   )
 }

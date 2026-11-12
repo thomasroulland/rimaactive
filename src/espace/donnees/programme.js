@@ -112,3 +112,16 @@ export function retirerElement(programme, { s, se }, elementId) {
     .map((b, i) => ({ ...b, lettre: LETTRES[i] ?? b.lettre }))
   return p
 }
+
+// Avant d'enregistrer : chaque séance déjà faite reprend la version du serveur (rien de ce qui a été
+// changé localement sur une séance devenue « faite » pendant l'édition n'est écrit).
+export function garderSeancesFaites(local, serveur, faites) {
+  if (!serveur || !faites?.size) return local
+  const versions = new Map()
+  for (const w of serveur.semaines ?? []) for (const s of w.seances ?? []) versions.set(s.id, s)
+  const p = structuredClone(local)
+  for (const w of p.semaines) {
+    w.seances = w.seances.map((s) => (faites.has(s.id) && versions.has(s.id) ? structuredClone(versions.get(s.id)) : s))
+  }
+  return p
+}

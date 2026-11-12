@@ -14,7 +14,7 @@ export default function EspaceCoach() {
         <div className="conteneur espace-onglets__ligne">
           <NavLink to="/espace/coach" end className="espace-onglet">Mes coachés</NavLink>
           <NavLink to="/espace/coach/exercices" className="espace-onglet">Banque d’exercices</NavLink>
-          <button type="button" className="espace-onglet espace-onglet--sortie" onClick={() => signOut(auth)}>Se déconnecter</button>
+          <button type="button" className="espace-onglet espace-onglet--sortie" data-quitter onClick={() => signOut(auth)}>Se déconnecter</button>
         </div>
       </nav>
       <Routes>

@@ -188,11 +188,16 @@
 .espace-barre__ligne { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; }
 .espace-barre__etat { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
 @media (max-width: 599px) {
-  .espace-params--programme, .espace-params--semaine { grid-template-columns: 1fr; }
   .espace-params { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .espace-params--programme, .espace-params--semaine { grid-template-columns: minmax(0, 1fr); }
   .espace-params--seance .espace-param--large, .espace-params .espace-param--large { grid-column: 1 / -1; }
   .espace-barre { padding: 8px 16px; }
   .espace-barre .espace-actions { width: 100%; }
   .espace-barre .bouton { flex: 1; padding-inline: 12px; }
   .espace-choix__bloc { width: 100%; }
 }
+
+/* corrections de la revue (tâche 8) */
+.espace-coach .bouton--compact { min-height: 44px; } /* cible tactile ≥ 44 px */
+.espace-params select.champ { width: 100%; min-width: 0; }
+.espace-aide { margin: 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }

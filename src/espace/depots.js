@@ -185,11 +185,14 @@ export function nouvelIdProgramme() {
   return doc(collection(db, 'programmes')).id
 }
 
-// Enregistre tout le programme (`programme.id` obligatoire). Un nouveau programme est un brouillon ;
-// un programme déjà publié le reste (le client voit la nouvelle version).
-export async function enregistrerProgramme(programme) {
-  const { id, majLe, ...donnees } = programme // majLe : remplacé par l’heure du serveur
-  await setDoc(doc(db, 'programmes', id), { ...donnees, statut: donnees.statut ?? 'brouillon', majLe: serverTimestamp() })
+// Crée (`creation: true`, en brouillon) ou met à jour un programme (`programme.id` obligatoire).
+// Une mise à jour n'écrit jamais `statut` : seul publierProgramme le change, pour qu'un onglet resté
+// ouvert sur un ancien brouillon ne dé-publie pas le programme.
+export async function enregistrerProgramme(programme, { creation = false } = {}) {
+  const { id, majLe, statut, ...donnees } = programme // majLe : remplacé par l’heure du serveur
+  const ref = doc(db, 'programmes', id)
+  if (creation) await setDoc(ref, { ...donnees, statut: statut ?? 'brouillon', majLe: serverTimestamp() })
+  else await updateDoc(ref, { ...donnees, majLe: serverTimestamp() })
 }
 
 export async function publierProgramme(id) {
@@ -197,11 +200,17 @@ export async function publierProgramme(id) {
 }
 
 // Séances déjà faites (séance faite « terminée ») : elles ne se modifient plus. Renvoie un Set d'identifiants de séance.
+const requeteVerrous = (programmeId) => query(
+  collection(db, 'seancesFaites'),
+  where('programme', '==', programmeId),
+  where('statut', '==', 'terminée'),
+)
 export async function seancesVerrouillees(programmeId) {
-  const s = await getDocs(query(
-    collection(db, 'seancesFaites'),
-    where('programme', '==', programmeId),
-    where('statut', '==', 'terminée'),
-  ))
+  const s = await getDocs(requeteVerrous(programmeId))
   return new Set(s.docs.map((d) => d.data().seance))
+}
+
+// Même chose en direct : une séance terminée pendant que l'éditeur est ouvert se verrouille aussitôt.
+export function ecouterVerrous(programmeId, rappel, erreur) {
+  return onSnapshot(requeteVerrous(programmeId), (s) => rappel(new Set(s.docs.map((d) => d.data().seance))), erreur)
 }

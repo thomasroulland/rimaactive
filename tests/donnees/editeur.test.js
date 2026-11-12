@@ -54,3 +54,17 @@ describe('lundiDe / dateLongue', () => {
     expect(dateLongue('2026-11-16')).toBe('lundi 16 novembre 2026')
   })
 })
+
+describe('garderSeancesFaites', () => {
+  it('remet la version du serveur des seules séances faites', async () => {
+    const { garderSeancesFaites } = await import('../../src/espace/donnees/programme.js')
+    const serveur = prog()
+    const local = structuredClone(serveur)
+    const [a, b] = local.semaines[0].seances
+    a.titre = 'Changé localement'; b.titre = 'Aussi changé'
+    const r = garderSeancesFaites(local, serveur, new Set([a.id]))
+    expect(r.semaines[0].seances.map((s) => s.titre)).toEqual(['', 'Aussi changé'])
+    expect(local.semaines[0].seances[0].titre).toBe('Changé localement')
+    expect(garderSeancesFaites(local, serveur, new Set())).toBe(local)
+  })
+})

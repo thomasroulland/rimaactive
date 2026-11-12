@@ -32,13 +32,15 @@ function Champ({ id, label, valeur, changer, large, mode, multiligne }) {
 
 // Éditeur d'une séance : champs de la séance, puis (force) blocs et exercices, ou (course) distance et temps.
 // `verrou` : séance faite, tout est en lecture seule.
-export default function EditeurSeance({ seance, numero, semaine, verrou, exercices, majSeance, majBloc, majElement, retirer, ajouter }) {
+export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, majSeance, majBloc, majElement, retirer, ajouter }) {
   const ids = (cle) => `se-${seance.id}-${cle}`
   const lettres = (seance.blocs ?? []).map((b) => b.lettre)
 
   return (
     <div className="espace-seance">
-      {verrou && <p className="espace-verrou espace-verrou--fort">Séance faite : non modifiable</p>}
+      {verrou && (attente
+        ? <p className="espace-verrou" role="status">Vérification des séances déjà faites…</p>
+        : <p className="espace-verrou espace-verrou--fort">Séance faite : non modifiable</p>)}
       <fieldset className="espace-seance__champs" disabled={verrou}>
         <legend className="sr-only">Séance {numero} de la semaine S{semaine}</legend>
         <div className="espace-carte espace-params espace-params--seance">
