@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:regles": "VITEST_EMULATEUR=1 firebase emulators:exec --project demo-rimaactive --only firestore,storage,auth \"vitest run tests/regles tests/api --passWithNoTests\""
+    "test:regles": "firebase emulators:exec --project demo-rimaactive --only firestore,storage,auth \"vitest run --config vitest.regles.config.js\""
   },
   "dependencies": {
     "firebase": "^12.19.0",

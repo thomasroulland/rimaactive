@@ -21,6 +21,8 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['accordSante', 'statut'])
         && request.resource.data.accordSante == request.time
         && request.resource.data.statut == 'actif';
+      // Le coach modifie le profil (statut, nom…), jamais le rôle.
+      allow update: if estCoach() && request.resource.data.role == resource.data.role;
     }
 
     match /exercices/{id} {
@@ -33,6 +35,11 @@ service cloud.firestore {
       allow write: if estCoach();
     }
 
+    // Champs qu'un client peut écrire sur sa séance (jamais commentaireCoach ; client, programme, seance figés après création).
+    function champsClient() {
+      return ['client', 'programme', 'seance', 'date', 'statut', 'series', 'effort', 'ressenti', 'douleur', 'distance', 'temps', 'majLe'];
+    }
+
     match /seancesFaites/{id} {
       allow read: if estCoach() || (connecte() && resource.data.client == request.auth.uid);
 
@@ -41,6 +48,7 @@ service cloud.firestore {
         && request.resource.data.client == request.auth.uid
         && id == request.resource.data.programme + '_' + request.resource.data.seance
         && request.resource.data.statut in ['en cours', 'terminée']
+        && request.resource.data.keys().hasOnly(champsClient())
         && get(/databases/$(database)/documents/programmes/$(request.resource.data.programme)).data.client == request.auth.uid
         && get(/databases/$(database)/documents/programmes/$(request.resource.data.programme)).data.statut == 'publié';
 
@@ -52,10 +60,10 @@ service cloud.firestore {
           && request.resource.data.client == resource.data.client
           && request.resource.data.programme == resource.data.programme
           && request.resource.data.seance == resource.data.seance
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(champsClient())
           && request.resource.data.statut in ['en cours', 'terminée'])
-        // Le coach commente une séance terminée, rien d'autre.
+        // Le coach commente la séance (en cours ou terminée), rien d'autre.
         || (estCoach()
-          && resource.data.statut == 'terminée'
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentaireCoach', 'majLe']));
 
       allow delete: if false;
