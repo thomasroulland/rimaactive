@@ -37,9 +37,10 @@ export default function App() {
           <Route path="mentions-legales" element={<InformationsLegales />} />
           <Route path="cgv" element={<Cgv />} />
           <Route path="confidentialite" element={<Navigate to="/mentions-legales#confidentialite" replace />} />
-          <Route path="espace/*" element={<Suspense fallback={<p className="section" role="status">Chargement…</p>}><EspaceLazy /></Suspense>} />
           <Route path="*" element={<Accueil />} />
         </Route>
+        {/* l'espace a sa propre coque (barre noire et pied) : ni menu ni pied du site */}
+        <Route path="espace/*" element={<Suspense fallback={<p className="section" role="status">Chargement…</p>}><EspaceLazy /></Suspense>} />
       </Routes>
     </>
   )

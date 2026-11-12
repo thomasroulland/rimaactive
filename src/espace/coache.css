@@ -1,0 +1,166 @@
+/* Espace : coque (barre noire, pied) et styles partagés des écrans du coaché.
+   D'après la maquette de Marie (<helmet> de Main.dc.html) et le style adouci (spec § 2).
+   Les valeurs du style adouci vivent ici, en variables --ec-*, et nulle part ailleurs. */
+:root {
+  /* champs */
+  --ec-champ-bord: #d9d5cd;
+  --ec-champ-bord-survol: #b9b4ab;
+  --ec-champ-bord-focus: #57534e;
+  --ec-champ-rayon: 10px;
+  --ec-champ-halo: 0 0 0 3px rgba(22, 21, 20, 0.08);
+  /* cases « Fait » et « Bloc fait » */
+  --ec-case-bord: #c9c4bb;
+  --ec-case-epaisseur: 1.5px;
+  --ec-case-rayon: 12px;
+  /* cases de régularité */
+  --ec-regul-bord: #b9b4ab;
+  --ec-regul-epaisseur: 1.5px;
+  /* notes d'effort, ressentis, pastilles de semaines */
+  --ec-note-bord: #d9d5cd;
+  --ec-note-fond: #ffffff;
+  --ec-choisi-fond: #f2c230;
+  --ec-choisi-texte: #161514;
+  /* titres repliables */
+  --ec-repli-filet: #dcd9d2;
+  --ec-repli-rond: #d9d5cd;
+  /* inchangés : barre noire, carte noire, jaune, vermillon, focus encre */
+  --ec-barre: #161514;
+  --ec-barre-texte: #f4f3ef;
+  --ec-jaune: #f2c230;
+  --ec-vermillon: #ff4a1c;
+  --ec-encre: #161514;
+  --ec-gris: #57534e;
+  --ec-craie: #f4f3ef;
+  --ec-largeur: 1120px;
+  --ec-gouttiere: 20px;
+}
+
+/* ---------- Coque ---------- */
+.ec-coque { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; background: var(--ec-craie); color: var(--ec-encre); }
+.ec-main { flex: 1 0 auto; width: 100%; }
+.ec-bandeau { background: var(--ec-barre); color: var(--ec-barre-texte); }
+.ec-bandeau :focus-visible { outline-color: var(--ec-barre-texte); }
+.ec-bandeau__ligne {
+  max-width: var(--ec-largeur); margin: 0 auto; padding: 12px var(--ec-gouttiere);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px;
+}
+.ec-logo { display: block; flex: none; }
+.ec-logo img { width: 128px; height: auto; }
+.ec-logo:focus-visible { outline-offset: 4px; }
+/* téléphone : logo et rond sur la première ligne, liens sur la seconde */
+.ec-nav { order: 3; width: 100%; display: flex; justify-content: space-between; gap: 0; margin: 0 -8px; }
+.ec-compte { order: 2; margin-left: auto; position: relative; }
+.ec-onglet {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 10px 8px; background: none; border: 0;
+  border-bottom: 3px solid transparent; font: 600 15px/20px var(--font-sans); color: var(--ec-barre-texte);
+  text-decoration: none; cursor: pointer;
+}
+.ec-onglet:hover { color: var(--ec-jaune); }
+.ec-onglet[aria-current="page"] { border-bottom-color: var(--ec-vermillon); }
+.ec-rond {
+  position: relative; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0;
+  border-radius: 50%; border: 2px solid var(--ec-barre-texte); background: none; color: var(--ec-barre-texte);
+  cursor: pointer; overflow: hidden;
+}
+.ec-rond:hover { border-color: var(--ec-jaune); color: var(--ec-jaune); }
+.ec-rond__img { position: absolute; inset: 0; background: #e8e5de center / cover no-repeat; }
+.ec-menu {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 20; min-width: 200px; padding: 6px;
+  background: var(--blanc); color: var(--ec-encre); border-radius: 16px; box-shadow: 0 14px 32px rgba(22, 21, 20, 0.12);
+}
+.ec-menu__bouton {
+  display: flex; align-items: center; width: 100%; min-height: 44px; padding: 0 14px; background: none; border: 0;
+  border-radius: 10px; font: 600 15px/20px var(--font-sans); color: var(--ec-encre); text-align: left; cursor: pointer;
+}
+.ec-menu__bouton:hover { background: var(--ec-jaune); }
+.ec-menu__bouton:disabled { opacity: 0.6; cursor: progress; }
+.ec-menu :focus-visible { outline: 2px solid var(--ec-encre); outline-offset: -2px; }
+@media (min-width: 760px) {
+  .ec-nav { order: 2; width: auto; margin: 0 0 0 auto; gap: 4px; }
+  .ec-onglet { padding: 10px 12px; }
+  .ec-compte { order: 3; margin-left: 0; }
+}
+.ec-pied { border-top: 1px solid var(--ec-repli-filet); }
+.ec-pied__ligne {
+  max-width: var(--ec-largeur); margin: 0 auto; padding: 12px var(--ec-gouttiere);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px;
+  font: 400 14px/22px var(--font-sans); color: var(--ec-gris);
+}
+.ec-pied__ligne a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ---------- Titres (Hanken Grotesk) ---------- */
+.ec-surtitre { margin: 0; font: 700 12px/16px var(--font-sans); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ec-gris); }
+.ec-h1 { margin: 0; font: 900 clamp(34px, 6vw, 55px)/1 var(--font-sans); letter-spacing: -0.045em; }
+.ec-h2 { margin: 0; font: 900 30px/1.1 var(--font-sans); letter-spacing: -0.04em; }
+.ec-h3 { margin: 0; font: 900 22px/1.2 var(--font-sans); letter-spacing: -0.03em; }
+.ec-petit { margin: 0; font: 400 14px/20px var(--font-sans); color: var(--ec-gris); }
+.ec-texte { margin: 0; font: 400 16px/26px var(--font-sans); }
+
+/* ---------- Cartes ---------- */
+.ec-carte { background: var(--blanc); border-radius: 16px; padding: 20px; }
+.ec-carte-noire { background: var(--ec-barre); color: var(--ec-barre-texte); border-radius: 16px; padding: 20px; }
+
+/* ---------- Champs ---------- */
+.ec-etiquette { display: block; margin-bottom: 4px; font: 400 13px/18px var(--font-sans); color: var(--ec-gris); }
+.ec-champ {
+  box-sizing: border-box; width: 100%; min-height: 44px; padding: 8px 10px; font: 400 16px/24px var(--font-sans);
+  color: var(--ec-encre); background: var(--blanc); border: 1px solid var(--ec-champ-bord); border-radius: var(--ec-champ-rayon);
+}
+.ec-champ:hover { border-color: var(--ec-champ-bord-survol); }
+.ec-champ:focus, .ec-champ:focus-visible {
+  outline: none; border-color: var(--ec-champ-bord-focus); box-shadow: var(--ec-champ-halo);
+}
+.ec-champ--serre { padding: 8px 4px; text-align: center; }
+
+/* ---------- Cases ---------- */
+.ec-case-fait {
+  appearance: none; -webkit-appearance: none; flex: none; position: relative; width: 44px; height: 44px; margin: 0;
+  border: var(--ec-case-epaisseur) solid var(--ec-case-bord); border-radius: var(--ec-case-rayon); background: var(--blanc); cursor: pointer;
+}
+.ec-case-fait:hover { border-color: var(--ec-champ-bord-survol); }
+.ec-case-fait:checked { background: var(--ec-encre); border-color: var(--ec-encre); }
+.ec-case-fait:checked::after {
+  content: ""; position: absolute; left: 14px; top: 7px; width: 10px; height: 20px;
+  border: solid #fff; border-width: 0 3px 3px 0; transform: rotate(45deg);
+}
+.ec-case-fait:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: 2px; }
+.ec-case-regul {
+  flex: none; width: 24px; height: 24px; box-sizing: border-box; display: inline-block; background: var(--blanc);
+  border: var(--ec-regul-epaisseur) solid var(--ec-regul-bord); border-radius: 6px;
+}
+.ec-case-regul.cochee { background: var(--ec-encre); border-color: var(--ec-encre); box-shadow: inset 0 0 0 4px #fff; }
+.ec-case-regul.encours { background: linear-gradient(135deg, #fff 50%, var(--ec-encre) 50%); }
+
+/* ---------- Pastilles, choix, notes d'effort ---------- */
+.ec-pastille, .ec-choix, .ec-effort {
+  box-sizing: border-box; border: 1px solid var(--ec-note-bord); background: var(--ec-note-fond); color: var(--ec-encre);
+  font-family: var(--font-sans); cursor: pointer;
+}
+.ec-pastille { min-width: 52px; min-height: 44px; padding: 0 14px; border-radius: 999px; font-weight: 700; font-size: 15px; line-height: 20px; position: relative; }
+.ec-pastille.encours::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--ec-vermillon); }
+.ec-choix { min-height: 44px; padding: 0 14px; border-radius: 999px; font-weight: 600; font-size: 15px; line-height: 20px; }
+.ec-effort { min-height: 48px; padding: 0 4px; border-radius: 12px; font-weight: 700; font-size: 17px; line-height: 20px; }
+.ec-pastille:hover, .ec-choix:hover, .ec-effort:hover { border-color: var(--ec-champ-bord-survol); }
+.ec-pastille[aria-pressed="true"], .ec-choix[aria-pressed="true"], .ec-effort[aria-pressed="true"] {
+  background: var(--ec-choisi-fond); border-color: var(--ec-choisi-fond); color: var(--ec-choisi-texte);
+}
+
+/* ---------- Rubrique repliable ---------- */
+.ec-repli > summary {
+  list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px;
+  cursor: pointer; border-bottom: 1px solid var(--ec-repli-filet); padding-bottom: 6px;
+}
+.ec-repli > summary::-webkit-details-marker { display: none; }
+.ec-repli > summary::after {
+  content: "+"; flex: none; width: 32px; height: 32px; border: 1px solid var(--ec-repli-rond); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font: 700 20px/1 var(--font-sans);
+}
+.ec-repli[open] > summary::after { content: "\2212"; }
+.ec-repli > summary:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: 2px; }
+
+/* ---------- Onglets de page (sous la barre) ---------- */
+.ec-partie {
+  min-height: 48px; padding: 10px 12px; border: 0; border-bottom: 3px solid transparent; margin-bottom: -1px; background: transparent;
+  font: 700 16px/20px var(--font-sans); color: var(--ec-gris); cursor: pointer;
+}
+.ec-partie[aria-pressed="true"], .ec-partie[aria-current="page"] { color: var(--ec-encre); border-bottom-color: var(--ec-vermillon); }

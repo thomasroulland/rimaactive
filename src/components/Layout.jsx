@@ -62,8 +62,8 @@ export default function Layout() {
     <>
       <a className="lien-evitement" href="#contenu">Aller au contenu</a>
       <Entete />
-      {/* La clé change à chaque page : le contenu est remonté et rejoue son fondu d'entrée (sauf sous /espace, qui garde sa session) */}
-      <main id="contenu" key={pathname.startsWith('/espace') ? '/espace' : pathname} className="page-entree">
+      {/* La clé change à chaque page : le contenu est remonté et rejoue son fondu d'entrée */}
+      <main id="contenu" key={pathname} className="page-entree">
         <Outlet />
       </main>
       <Pied seulementMentions={pathname === '/contact'} />
