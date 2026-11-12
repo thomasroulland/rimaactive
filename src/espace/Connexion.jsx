@@ -44,14 +44,14 @@ export default function Connexion() {
             <div className="champ-groupe">
               <label htmlFor="espace-email">Adresse e-mail</label>
               <input id="espace-email" className="champ" type="email" autoComplete="username" inputMode="email"
-                required value={email} onChange={(e) => setEmail(e.target.value)} />
+                required aria-invalid={erreur ? true : undefined} aria-describedby="espace-erreur" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="champ-groupe">
               <label htmlFor="espace-mdp">Mot de passe</label>
               <input id="espace-mdp" className="champ" type="password" autoComplete="current-password"
-                required value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} />
+                required aria-invalid={erreur ? true : undefined} aria-describedby="espace-erreur" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} />
             </div>
-            <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
+            <p id="espace-erreur" className="espace-message espace-message--erreur" role="alert">{erreur}</p>
             <p className="espace-message" role="status">{info}</p>
             <button type="submit" className="bouton bouton--principal" disabled={envoi}>
               {envoi ? 'Connexion…' : 'Se connecter'}

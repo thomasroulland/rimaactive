@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { onAuthStateChanged, getIdTokenResult } from 'firebase/auth'
+import { onIdTokenChanged, getIdTokenResult } from 'firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { auth, db } from './firebase.js'
 
@@ -11,7 +11,7 @@ export default function useSession() {
 
   useEffect(() => {
     let actif = true
-    const arreter = onAuthStateChanged(auth, async (utilisateur) => {
+    const arreter = onIdTokenChanged(auth, async (utilisateur) => {
       if (!utilisateur) { if (actif) setEtat({ utilisateur: null, role: null, authPrete: true }); return }
       let role = null
       try { role = (await getIdTokenResult(utilisateur)).claims.role ?? null } catch { /* hors ligne : pas de rôle */ }

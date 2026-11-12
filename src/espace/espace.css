@@ -13,7 +13,7 @@
 .espace-connexion__carte { max-width: 480px; margin: 0 auto; align-items: stretch; }
 .espace-formulaire { display: flex; flex-direction: column; gap: 16px; }
 .espace-message { margin: 0; min-height: 0; font-weight: 600; font-size: 14px; line-height: 20px; }
-.espace-message:empty { display: none; }
+.espace-message:empty { margin: 0; height: 0; overflow: hidden; } /* reste dans le DOM pour les lecteurs d'écran */
 .espace-message--erreur { color: var(--encre); border-left: 3px solid var(--vermillon); padding-left: 12px; }
 .espace-lien {
   align-self: center; background: none; border: 0; padding: 8px; font: inherit; font-weight: 600; font-size: 14px;
