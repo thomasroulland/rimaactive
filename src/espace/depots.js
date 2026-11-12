@@ -285,3 +285,34 @@ export function ecouterSeancesClient(uid, rappel, erreur) {
 export function commenterSeance(id, texte) {
   return updateDoc(doc(db, 'seancesFaites', id), { commentaireCoach: String(texte ?? '').trim(), majLe: serverTimestamp() })
 }
+
+// ---------- Photo de profil du coaché ----------
+
+// Réduit la photo, l'envoie sous clients/{uid}/profil/, la rattache au profil puis supprime l'ancienne.
+// Rejette Error('format') ou Error('taille') avant tout envoi ; Error('envoi') si l'envoi échoue.
+export async function changerAvatar(uid, fichier) {
+  const blob = await reduireImage(fichier)
+  const chemin = `clients/${uid}/profil/avatar-${Date.now()}.jpg`
+  const ancien = (await getDoc(doc(db, 'utilisateurs', uid))).data()?.avatar ?? null
+  try {
+    await uploadBytes(ref(stockage, chemin), blob, { contentType: 'image/jpeg' })
+    await updateDoc(doc(db, 'utilisateurs', uid), { avatar: chemin })
+  } catch (e) {
+    try { await deleteObject(ref(stockage, chemin)) } catch { /* pas envoyée */ }
+    if (e?.code === 'permission-denied' || e?.code === 'storage/unauthorized') throw Object.assign(new Error('permission-denied'), { code: 'permission-denied' })
+    throw Object.assign(new Error('envoi'), { code: 'envoi' })
+  }
+  if (ancien && ancien !== chemin) {
+    urls.delete(ancien)
+    try { await deleteObject(ref(stockage, ancien)) } catch { /* déjà absent */ }
+  }
+}
+
+export async function retirerAvatar(uid) {
+  const ancien = (await getDoc(doc(db, 'utilisateurs', uid))).data()?.avatar ?? null
+  await updateDoc(doc(db, 'utilisateurs', uid), { avatar: null })
+  if (ancien) {
+    urls.delete(ancien)
+    try { await deleteObject(ref(stockage, ancien)) } catch { /* déjà absent */ }
+  }
+}

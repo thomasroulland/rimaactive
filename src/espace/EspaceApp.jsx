@@ -6,6 +6,7 @@ import Connexion from './Connexion.jsx'
 import Accord from './Accord.jsx'
 import EspaceCoach from './coach/EspaceCoach.jsx'
 import EspaceClient from './client/EspaceClient.jsx'
+import { useUrlAvatar } from './client/Avatar.jsx'
 import './espace.css'
 
 // Racine de l'espace (chargée à la demande) : garde selon la session et le rôle.
@@ -29,9 +30,7 @@ export default function EspaceApp() {
   if (role === 'client') {
     if (!profil?.accordSante) return <Coque liens={[]}><Accord uid={utilisateur.uid} prenom={profil?.prenom} /></Coque>
     return (
-      <Coque liens={LIENS_CLIENT}>
-        <EspaceClient uid={utilisateur.uid} prenom={profil?.prenom} />
-      </Coque>
+      <EspaceCoache uid={utilisateur.uid} profil={profil} />
     )
   }
   // connecté mais sans rôle : compte non rattaché
@@ -40,6 +39,15 @@ export default function EspaceApp() {
       <Page titre="Compte non activé">
         <p className="espace-texte">Votre compte n’est pas encore activé. Contactez Marie pour qu’elle le finalise.</p>
       </Page>
+    </Coque>
+  )
+}
+
+function EspaceCoache({ uid, profil }) {
+  const avatar = useUrlAvatar(profil?.avatar)
+  return (
+    <Coque liens={LIENS_CLIENT} avatar={avatar}>
+      <EspaceClient uid={uid} profil={profil} />
     </Coque>
   )
 }

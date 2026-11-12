@@ -36,6 +36,15 @@ export function blocsDuClient(programmes, aujourdhui) {
   })
 }
 
+// Programme montré sur le tableau de bord : celui en cours ; sinon le prochain à venir ; sinon le dernier terminé.
+export function programmeAffiche(programmes, aujourdhui) {
+  const blocs = blocsDuClient(programmes, aujourdhui)
+  const choisi = blocs.find((b) => b.etat === 'en cours')
+    ?? blocs.find((b) => b.etat === 'à venir')
+    ?? blocs[blocs.length - 1]
+  return choisi?.programme ?? null
+}
+
 export function seancesDeLaSemaine(programme, n, faites) {
   return listeSeances(programme)
     .map((x, i) => ({ ...x, numero: i + 1 }))

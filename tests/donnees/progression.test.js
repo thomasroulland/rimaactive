@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  avancement, blocsDuClient, semaineDe, seancesDeLaSemaine, bonjour, nettoyerMesures, initiales,
+  avancement, blocsDuClient, programmeAffiche, semaineDe, seancesDeLaSemaine, bonjour, nettoyerMesures, initiales,
 } from '../../src/espace/donnees/progression.js'
 
 const JOURS3 = ['Lundi', 'Mercredi', 'Vendredi']
@@ -122,4 +122,15 @@ describe('initiales', () => {
     expect(initiales('léa', '')).toBe('L')
     expect(initiales()).toBe('')
   })
+})
+
+describe('programmeAffiche', () => {
+  const a = prog('2026-11-02', 4, 'a')
+  const b = prog('2026-11-30', 4, 'b')
+  it('aucun programme', () => expect(programmeAffiche([], '2026-11-12')).toBeNull())
+  it('le plus récent déjà commencé', () => expect(programmeAffiche([a, b], '2026-12-01').id).toBe('b'))
+  it('un programme à venir passe après celui en cours', () => expect(programmeAffiche([a, b], '2026-11-12').id).toBe('a'))
+  it('avant tout début : le prochain', () => expect(programmeAffiche([b], '2026-11-12').id).toBe('b'))
+  it('tout est passé : le dernier', () => expect(programmeAffiche([a, b], '2027-03-01').id).toBe('b'))
+  it('un programme terminé laisse la place au suivant à venir', () => expect(programmeAffiche([prog('2026-10-05', 4, 'c'), b], '2026-11-12').id).toBe('b'))
 })
