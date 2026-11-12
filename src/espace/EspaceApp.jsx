@@ -4,10 +4,12 @@ import { auth } from './firebase.js'
 import useSession from './useSession.js'
 import useTitre from '../components/useTitre.js'
 import Connexion from './Connexion.jsx'
+import Accord from './Accord.jsx'
+import MesCoaches from './coach/MesCoaches.jsx'
 import './espace.css'
 
 // Racine de l'espace (chargée à la demande) : garde selon la session et le rôle.
-// Les écrans marqués « provisoire » sont remplacés par les tâches suivantes (Accord : 6, coach : 6 et suivantes, client : 9).
+// L'écran client provisoire est remplacé par la tâche 9.
 export default function EspaceApp() {
   useTitre('Mon espace')
   const { utilisateur, profil, role, chargement } = useSession()
@@ -18,13 +20,13 @@ export default function EspaceApp() {
   if (role === 'coach') {
     return (
       <Routes>
-        <Route path="coach/*" element={<CoachProvisoire />} />
+        <Route path="coach/*" element={<MesCoaches />} />
         <Route path="*" element={<Navigate to="/espace/coach" replace />} />
       </Routes>
     )
   }
   if (role === 'client') {
-    if (!profil?.accordSante) return <AccordProvisoire />
+    if (!profil?.accordSante) return <Accord uid={utilisateur.uid} prenom={profil?.prenom} />
     return (
       <Routes>
         <Route index element={<ClientProvisoire />} />
@@ -54,7 +56,5 @@ function Page({ titre, children }) {
   )
 }
 
-// Provisoires : remplacés par les tâches 6 (Accord, coach) et 9 (client)
-const AccordProvisoire = () => <Page titre="Accord de santé"><p className="espace-texte">À venir.</p></Page>
-const CoachProvisoire = () => <Page titre="Espace coach" />
+// Provisoire : remplacé par la tâche 9 (client)
 const ClientProvisoire = () => <Page titre="Espace client" />

@@ -11,9 +11,11 @@
 }
 .espace-texte { margin: 0; color: var(--gris-chaud); max-width: 65ch; }
 .espace-connexion__carte { max-width: 480px; margin: 0 auto; align-items: stretch; }
-.espace-formulaire { display: flex; flex-direction: column; gap: 16px; }
+.espace-formulaire { position: relative; display: flex; flex-direction: column; gap: 16px; }
 .espace-message { margin: 0; min-height: 0; font-weight: 600; font-size: 14px; line-height: 20px; }
-.espace-message:empty { margin: 0; height: 0; overflow: hidden; } /* reste dans le DOM pour les lecteurs d'écran */
+/* Vide : sort du flux (donc ne compte plus dans le gap) mais reste dans le DOM et annoncé par les lecteurs d'écran */
+.espace-message:empty { position: absolute; width: 1px; height: 1px; margin: 0; padding: 0; overflow: hidden; border: 0; }
+.espace-coach > .espace-message:empty { position: absolute; }
 .espace-message--erreur { color: var(--encre); border-left: 3px solid var(--vermillon); padding-left: 12px; }
 .espace-lien {
   align-self: center; background: none; border: 0; padding: 8px; font: inherit; font-weight: 600; font-size: 14px;
@@ -21,3 +23,32 @@
 }
 .espace-lien:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
 .bouton:disabled { opacity: 0.6; cursor: progress; }
+
+/* ---------- Mes coachés ---------- */
+.espace-coach { position: relative; display: flex; flex-direction: column; gap: 24px; }
+.espace-coach__entete { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; }
+.espace-coach__entete .espace-texte { margin-top: 8px; }
+.espace-grille { list-style: none; margin: 0; padding: 0; display: grid; gap: 24px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.espace-client { align-items: stretch; gap: 8px; }
+.espace-client__tete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+.espace-client__nom { margin: 0; font-size: 24px; line-height: 28px; font-weight: 900; letter-spacing: -0.03em; }
+.espace-client__ligne { margin: 0; color: var(--gris-chaud); font-size: 14px; line-height: 20px; font-weight: 600; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; overflow-wrap: anywhere; }
+.espace-client__semaine { color: var(--encre); }
+.espace-statut { display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px; border-radius: 999px; font-size: 14px; font-weight: 700; background: var(--craie-fonce); color: var(--encre); }
+.espace-statut--actif { background: var(--encre); color: var(--craie); }
+.espace-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.espace-case { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 26px; cursor: pointer; }
+.espace-case input { flex: none; width: 24px; height: 24px; margin: 1px 0 0; accent-color: var(--encre); cursor: pointer; }
+.espace-case input:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.espace-lien-texte { color: var(--encre); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.espace-dialogue {
+  width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto;
+  border: 0; border-radius: 20px; padding: 24px; background: var(--blanc); color: var(--encre);
+  box-shadow: 0 30px 80px rgba(22, 21, 20, 0.3);
+}
+.espace-dialogue::backdrop { background: rgba(22, 21, 20, 0.6); }
+@media (min-width: 600px) { .espace-dialogue { padding: 32px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .espace-dialogue[open] { animation: espace-monte 0.35s cubic-bezier(.3, .7, .2, 1); }
+  @keyframes espace-monte { from { transform: translateY(16px); opacity: 0; } }
+}

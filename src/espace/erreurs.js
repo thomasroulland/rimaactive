@@ -7,6 +7,10 @@ const MESSAGES = {
   'auth/too-many-requests': 'Trop d’essais. Réessayez dans quelques minutes.',
   'auth/network-request-failed': 'Pas de connexion internet. Vérifiez votre réseau.',
   'auth/expired-action-code': 'Ce lien a expiré. Demandez à Marie de vous renvoyer l’invitation.',
+  'api/champs': 'Vérifiez le prénom, le nom et l’adresse e-mail.',
+  'api/401': 'Votre session a expiré. Reconnectez-vous.',
+  'api/403': 'Seul le compte de Marie peut faire cela.',
+  'permission-denied': 'Vous n’avez pas le droit de faire cela.',
 }
 
 export function messageErreur(code) {

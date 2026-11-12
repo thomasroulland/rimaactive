@@ -110,3 +110,9 @@ export function regularite(programme, faites) {
     faites: (sem.seances ?? []).filter((s) => faites.has(s.id)).length,
   }))
 }
+
+// Date du jour en jour local 'AAAA-MM-JJ' (jamais via UTC)
+export function aujourdhuiIso(date = new Date()) {
+  const p = (x) => String(x).padStart(2, '0')
+  return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}`
+}
