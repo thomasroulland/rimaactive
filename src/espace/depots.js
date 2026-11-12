@@ -82,8 +82,12 @@ export async function donnerAccord(uid) {
 }
 
 export async function supprimerClient(uid) {
-  const { statut } = await appelerApi('/api/supprimer-client', { uid })
-  if (statut !== 204) { const e = new Error('api'); e.code = `api/${statut}`; throw e }
+  const { statut, donnees } = await appelerApi('/api/supprimer-client', { uid })
+  if (statut !== 204) {
+    const e = new Error('api')
+    e.code = donnees?.code === 'configuration' ? 'api/configuration' : `api/${statut}`
+    throw e
+  }
 }
 
 // ---------- Banque d'exercices (tâche 7) ----------

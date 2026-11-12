@@ -21,12 +21,32 @@ export default async function handler(req, res) {
       if (e.code !== 'auth/user-not-found') throw e
     }
 
-    const u = await a.auth.createUser({ email, displayName: `${prenom} ${nom}` })
-    await a.auth.setCustomUserClaims(u.uid, { role: 'client' })
-    await a.db.doc(`utilisateurs/${u.uid}`).set({
-      prenom, nom, email, role: 'client', statut: 'invité', accordSante: null,
-      creeLe: a.horodatage(),
-    })
+    let u
+    try {
+      u = await a.auth.createUser({ email, displayName: `${prenom} ${nom}` })
+    } catch (e) {
+      // Deux invitations en même temps : l'autre a créé le compte entre la vérification et la création.
+      if (e.code !== 'auth/email-already-exists') throw e
+      const existant = await a.auth.getUserByEmail(email)
+      return res.status(409).json({ code: 'deja-invite', uid: existant.uid })
+    }
+    try {
+      await a.auth.setCustomUserClaims(u.uid, { role: 'client' })
+      await a.db.doc(`utilisateurs/${u.uid}`).set({
+        prenom, nom, email, role: 'client', statut: 'invité', accordSante: null,
+        creeLe: a.horodatage(),
+      })
+    } catch (e) {
+      // Pas de compte à moitié créé (sans rôle ni profil, invisible dans « Mes coachés ») : on l'efface.
+      try {
+        await a.auth.deleteUser(u.uid)
+      } catch (annulation) {
+        console.error('Compte à supprimer à la main :', u.uid, annulation)
+      }
+      // au cas où le profil a été écrit malgré l'erreur
+      await Promise.resolve().then(() => a.db.doc(`utilisateurs/${u.uid}`).delete()).catch(() => {})
+      throw e
+    }
     return res.status(201).json({ uid: u.uid })
   } catch (e) {
     return repondreErreur(res, e)

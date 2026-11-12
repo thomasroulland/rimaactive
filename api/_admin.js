@@ -6,22 +6,27 @@ import { getStorage } from 'firebase-admin/storage'
 
 const PROJET = process.env.GCLOUD_PROJECT || 'demo-rimaactive'
 
-// Initialise firebase-admin une seule fois et renvoie { auth, db, bucket, horodatage }.
+const surEmulateurs = (env) =>
+  Boolean(env.FIREBASE_STORAGE_EMULATOR_HOST || env.FIRESTORE_EMULATOR_HOST || env.FIREBASE_AUTH_EMULATOR_HOST)
+
+// Nom du bucket Storage. En ligne, FIREBASE_STORAGE_BUCKET est obligatoire (aucun nom deviné : les projets
+// récents finissent par .firebasestorage.app, les anciens par .appspot.com). Sur les émulateurs : le bucket de test.
+export function nomBucket(env = process.env) {
+  const nom = typeof env.FIREBASE_STORAGE_BUCKET === 'string' ? env.FIREBASE_STORAGE_BUCKET.trim() : ''
+  if (nom) return nom.replace(/^gs:\/\//, '')
+  if (surEmulateurs(env)) return `${env.GCLOUD_PROJECT || 'demo-rimaactive'}.appspot.com`
+  throw erreurHttp(500, 'configuration')
+}
+
+// Initialise firebase-admin une seule fois et renvoie { auth, db, bucket(), horodatage }.
+// bucket() lève une erreur 500 « configuration » si le nom du bucket manque (voir nomBucket).
 export function admin() {
   if (!getApps().length) {
     const compte = process.env.FIREBASE_SERVICE_ACCOUNT
-    const emulateur = process.env.FIRESTORE_EMULATOR_HOST || process.env.FIREBASE_AUTH_EMULATOR_HOST
     if (compte) {
-      const cle = JSON.parse(compte)
-      initializeApp({
-        credential: cert(cle),
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET || `${cle.project_id}.appspot.com`,
-      })
-    } else if (emulateur) {
-      initializeApp({
-        projectId: PROJET,
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET || `${PROJET}.appspot.com`,
-      })
+      initializeApp({ credential: cert(JSON.parse(compte)) })
+    } else if (surEmulateurs(process.env)) {
+      initializeApp({ projectId: PROJET })
     } else {
       throw new Error(
         'FIREBASE_SERVICE_ACCOUNT manquant : ajoutez la clé du compte de service dans les variables Vercel.',
@@ -32,7 +37,7 @@ export function admin() {
   return {
     auth: getAuth(app),
     db: getFirestore(app),
-    bucket: getStorage(app).bucket(),
+    bucket: () => getStorage(app).bucket(nomBucket()),
     horodatage: () => FieldValue.serverTimestamp(),
   }
 }
@@ -60,7 +65,10 @@ export async function verifierCoach(req) {
 
 // Répond à une erreur levée par verifierCoach ; les autres erreurs deviennent un 500.
 export function repondreErreur(res, e) {
-  if (e?.statut) return res.status(e.statut).json({ code: e.message })
+  if (e?.statut) {
+    if (e.statut >= 500) console.error(`Erreur ${e.statut} : ${e.message}`)
+    return res.status(e.statut).json({ code: e.message })
+  }
   console.error(e)
   return res.status(500).json({ code: 'serveur' })
 }

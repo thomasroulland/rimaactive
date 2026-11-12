@@ -10,6 +10,7 @@ describe('messageErreur', () => {
     ['format', 'Format non pris en charge : envoyez une photo JPEG, PNG ou WebP.'],
     ['taille', 'Photo trop lourde (20 Mo maximum).'],
     ['envoi', 'Les photos n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.'],
+    ['api/configuration', 'Réglage manquant sur le serveur (nom du stockage des photos). Rien n’a été supprimé : prévenez Claude.'],
     ['code/inconnu', 'Une erreur est survenue. Réessayez.'],
     [undefined, 'Une erreur est survenue. Réessayez.'],
   ])('%s', (code, attendu) => {

@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import handler from '../../api/inviter.js'
 import { app, appeler, compteAvecJeton, toutEffacer } from './aide.js'
 
@@ -6,6 +6,7 @@ let coach, client
 const champs = { prenom: ' Léa ', nom: 'Martin ', email: ' Lea.Martin@Example.com ' }
 
 beforeAll(() => app())
+afterEach(() => vi.restoreAllMocks())
 beforeEach(async () => {
   await toutEffacer()
   coach = await compteAvecJeton('coach@example.com', 'coach')
@@ -56,5 +57,40 @@ describe('POST /api/inviter', () => {
     const r = await appeler(handler, { jeton: coach.jeton, body })
     expect(r.code).toBe(400)
     expect(r.corps).toEqual({ code: 'champs' })
+  })
+})
+
+describe('POST /api/inviter : pas de compte orphelin', () => {
+  const sansCompte = async () => {
+    await expect(app().auth().getUserByEmail('lea.martin@example.com')).rejects.toMatchObject({ code: 'auth/user-not-found' })
+  }
+  it('si le rôle ne peut pas être posé : 500 et le compte créé est supprimé', async () => {
+    vi.spyOn(app().auth(), 'setCustomUserClaims').mockRejectedValueOnce(new Error('panne'))
+    const r = await appeler(handler, { jeton: coach.jeton, body: champs })
+    expect(r.code).toBe(500)
+    await sansCompte()
+    // Marie peut réinviter tout de suite
+    vi.restoreAllMocks()
+    expect((await appeler(handler, { jeton: coach.jeton, body: champs })).code).toBe(201)
+  })
+  it('si le profil ne peut pas être écrit : 500 et le compte créé est supprimé', async () => {
+    const db = app().firestore()
+    const vrai = db.doc.bind(db)
+    vi.spyOn(db, 'doc').mockImplementation((chemin) => (
+      chemin.startsWith('utilisateurs/') ? { set: () => Promise.reject(new Error('panne')) } : vrai(chemin)
+    ))
+    const r = await appeler(handler, { jeton: coach.jeton, body: champs })
+    expect(r.code).toBe(500)
+    await sansCompte()
+  })
+  it('deux invitations simultanées (compte créé entre-temps) : 409 deja-invite avec uid', async () => {
+    const auth = app().auth()
+    const existant = await auth.createUser({ email: 'lea.martin@example.com' })
+    vi.spyOn(auth, 'getUserByEmail').mockRejectedValueOnce(Object.assign(new Error('absent'), { code: 'auth/user-not-found' }))
+    const r = await appeler(handler, { jeton: coach.jeton, body: champs })
+    expect(r.code).toBe(409)
+    expect(r.corps).toEqual({ code: 'deja-invite', uid: existant.uid })
+    // le compte de l'autre invitation n'est pas supprimé
+    await expect(auth.getUser(existant.uid)).resolves.toBeTruthy()
   })
 })

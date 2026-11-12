@@ -2,11 +2,16 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
+    // Connecté avec un rôle donné par Marie (l'API) : un compte créé autrement n'a pas de rôle et n'a accès à rien.
     function connecte() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.get('role', '') in ['client', 'coach'];
     }
     function estCoach() {
       return connecte() && request.auth.token.role == 'coach';
+    }
+    // Le client propriétaire du dossier, ou le coach.
+    function clientOuCoach(uid) {
+      return (connecte() && request.auth.token.role == 'client' && request.auth.uid == uid) || estCoach();
     }
     // Photo déjà réduite dans le navigateur : JPEG, PNG ou WebP, 5 Mo maximum.
     function photoValide() {
@@ -15,7 +20,7 @@ service firebase.storage {
         && request.resource.size <= 5 * 1024 * 1024;
     }
 
-    // Photos des exercices : lues par tout compte connecté, écrites par le coach.
+    // Photos des exercices : lues par tout client ou coach, écrites par le coach.
     match /exercices/{exoId}/{fichier=**} {
       allow read: if connecte();
       allow create, update: if estCoach() && photoValide();
@@ -24,9 +29,9 @@ service firebase.storage {
 
     // Photos d'un client : le client concerné et le coach.
     match /clients/{uid}/{fichier=**} {
-      allow read: if connecte() && (request.auth.uid == uid || estCoach());
-      allow create, update: if connecte() && (request.auth.uid == uid || estCoach()) && photoValide();
-      allow delete: if connecte() && (request.auth.uid == uid || estCoach());
+      allow read: if clientOuCoach(uid);
+      allow create, update: if clientOuCoach(uid) && photoValide();
+      allow delete: if clientOuCoach(uid);
     }
 
     match /{allPaths=**} {

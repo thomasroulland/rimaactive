@@ -5,7 +5,7 @@ import {
 } from '@firebase/rules-unit-testing'
 import { ref, uploadBytes, getBytes, deleteObject } from 'firebase/storage'
 
-let env, coach, A, B, anon
+let env, coach, A, B, anon, sansRole
 
 beforeAll(async () => {
   env = await initializeTestEnvironment({
@@ -16,6 +16,8 @@ beforeAll(async () => {
   A = env.authenticatedContext('A', { role: 'client' }).storage()
   B = env.authenticatedContext('B', { role: 'client' }).storage()
   anon = env.unauthenticatedContext().storage()
+  // Compte créé sans passer par Marie (inscription libre) : connecté, mais sans rôle
+  sansRole = env.authenticatedContext('X', {}).storage()
 })
 afterAll(() => env.cleanup())
 
@@ -29,6 +31,7 @@ beforeEach(async () => {
     const st = ctx.storage()
     await uploadBytes(ref(st, 'exercices/E1/photo.jpg'), octets(10), jpeg)
     await uploadBytes(ref(st, 'clients/A/photo.jpg'), octets(10), jpeg)
+    await uploadBytes(ref(st, 'clients/X/photo.jpg'), octets(10), jpeg)
   })
 })
 
@@ -95,5 +98,20 @@ describe('suppression', () => {
   })
   it('un client ne supprime pas sous exercices/', async () => {
     await assertFails(deleteObject(ref(A, 'exercices/E1/photo.jpg')))
+  })
+})
+
+describe('compte sans rôle (inscription libre)', () => {
+  it('ne lit pas les photos des exercices', async () => {
+    await assertFails(getBytes(ref(sansRole, 'exercices/E1/photo.jpg')))
+  })
+  it('n’écrit, ne lit ni ne supprime rien sous clients/<son uid>/', async () => {
+    await assertFails(uploadBytes(ref(sansRole, 'clients/X/x.jpg'), octets(10), jpeg))
+    await assertFails(getBytes(ref(sansRole, 'clients/X/photo.jpg')))
+    await assertFails(deleteObject(ref(sansRole, 'clients/X/photo.jpg')))
+  })
+  it('n’écrit pas sous exercices/ ni chez un client', async () => {
+    await assertFails(uploadBytes(ref(sansRole, 'exercices/E1/x.jpg'), octets(10), jpeg))
+    await assertFails(uploadBytes(ref(sansRole, 'clients/A/x.jpg'), octets(10), jpeg))
   })
 })

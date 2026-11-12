@@ -10,6 +10,7 @@ const MESSAGES = {
   'api/champs': 'Vérifiez le prénom, le nom et l’adresse e-mail.',
   'api/401': 'Votre session a expiré. Reconnectez-vous.',
   'api/403': 'Seul le compte de Marie peut faire cela.',
+  'api/configuration': 'Réglage manquant sur le serveur (nom du stockage des photos). Rien n’a été supprimé : prévenez Claude.',
   format: 'Format non pris en charge : envoyez une photo JPEG, PNG ou WebP.',
   envoi: 'Les photos n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.',
   taille: 'Photo trop lourde (20 Mo maximum).',

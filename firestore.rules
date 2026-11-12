@@ -2,14 +2,18 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Connecté avec un rôle donné par Marie (l'API) : un compte créé autrement n'a pas de rôle et n'a accès à rien.
     function connecte() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.get('role', '') in ['client', 'coach'];
     }
     function estCoach() {
       return connecte() && request.auth.token.role == 'coach';
     }
+    function estClient() {
+      return connecte() && request.auth.token.role == 'client';
+    }
     function estMoi(uid) {
-      return connecte() && request.auth.uid == uid;
+      return estClient() && request.auth.uid == uid;
     }
 
     // Profils : création et suppression uniquement par l'API (compte de service).
@@ -31,7 +35,7 @@ service cloud.firestore {
 
     match /programmes/{id} {
       allow read: if estCoach()
-        || (connecte() && resource.data.client == request.auth.uid && resource.data.statut == 'publié');
+        || (estClient() && resource.data.client == request.auth.uid && resource.data.statut == 'publié');
       allow write: if estCoach();
     }
 
@@ -41,10 +45,10 @@ service cloud.firestore {
     }
 
     match /seancesFaites/{id} {
-      allow read: if estCoach() || (connecte() && resource.data.client == request.auth.uid);
+      allow read: if estCoach() || (estClient() && resource.data.client == request.auth.uid);
 
       // Identifiant ${programme}_${seance} : une seule séance faite par séance, même si « Fin de séance » part deux fois.
-      allow create: if connecte()
+      allow create: if estClient()
         && request.resource.data.client == request.auth.uid
         && id == request.resource.data.programme + '_' + request.resource.data.seance
         && request.resource.data.statut in ['en cours', 'terminée']
@@ -54,7 +58,7 @@ service cloud.firestore {
 
       allow update: if
         // Le client modifie sa séance tant qu'elle est en cours.
-        (connecte()
+        (estClient()
           && resource.data.client == request.auth.uid
           && resource.data.statut == 'en cours'
           && request.resource.data.client == resource.data.client
