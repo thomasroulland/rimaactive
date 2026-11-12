@@ -5,6 +5,7 @@ import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth, db, stockage } from './firebase.js'
 import { semaineCourante, aujourdhuiIso } from './donnees/calculs.js'
 import { reduireImage } from './donnees/photos.js'
+import { contenuNotes, contenuFin } from './donnees/seances.js'
 
 // Appelle une route /api/... avec le jeton du coach. Renvoie { statut, donnees } ; ne lève que si le réseau échoue.
 export async function appelerApi(chemin, corps) {
@@ -213,4 +214,50 @@ export async function seancesVerrouillees(programmeId) {
 // Même chose en direct : une séance terminée pendant que l'éditeur est ouvert se verrouille aussitôt.
 export function ecouterVerrous(programmeId, rappel, erreur) {
   return onSnapshot(requeteVerrous(programmeId), (s) => rappel(new Set(s.docs.map((d) => d.data().seance))), erreur)
+}
+
+// ---------- Espace client (tâche 9) ----------
+
+// Écoute le programme publié le plus récent du client (date de début, puis mise à jour).
+// rappel(programme | null, tousLesProgrammesPublies). La requête doit filtrer client ET statut, sinon les règles la refusent.
+export function ecouterMonProgramme(uid, rappel, erreur) {
+  return onSnapshot(
+    query(collection(db, 'programmes'), where('client', '==', uid), where('statut', '==', 'publié')),
+    (s) => {
+      const tous = s.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.debut || '').localeCompare(a.debut || '')
+          || (b.majLe?.toMillis?.() ?? 0) - (a.majLe?.toMillis?.() ?? 0))
+      rappel(tous[0] ?? null, tous)
+    },
+    erreur,
+  )
+}
+
+// Écoute les séances faites du client, avec `enAttente: true` tant qu'une modification n'est pas arrivée au serveur
+// (réseau coupé : elle est gardée sur le téléphone et part au retour du réseau).
+export function ecouterMesSeances(uid, rappel, erreur) {
+  return onSnapshot(
+    query(collection(db, 'seancesFaites'), where('client', '==', uid)),
+    { includeMetadataChanges: true },
+    (s) => rappel(s.docs.map((d) => ({ id: d.id, ...d.data(), enAttente: d.metadata.hasPendingWrites }))),
+    erreur,
+  )
+}
+
+const refSeance = (programmeId, seanceId) => doc(db, 'seancesFaites', `${programmeId}_${seanceId}`)
+const baseSeance = (programmeId, seanceId) => ({
+  client: auth.currentUser?.uid, programme: programmeId, seance: seanceId, date: aujourdhuiIso(), majLe: serverTimestamp(),
+})
+
+// Note les séries pendant la séance (fusion). La promesse ne se résout qu'au retour du serveur :
+// ne pas l'attendre pour mettre l'écran à jour (le cache hors ligne l'applique tout de suite).
+export function noterSeance(programmeId, seanceId, donnees) {
+  return setDoc(refSeance(programmeId, seanceId), contenuNotes(baseSeance(programmeId, seanceId), donnees), { merge: true })
+}
+
+// « Fin de séance » : { effort, ressenti, douleur: { oui, endroit, note }, distance, temps } (+ `series` facultatif,
+// pour enregistrer d'un coup les séries pré-remplies jamais touchées). Refusée par les règles si la séance est déjà terminée.
+export function terminerSeance(programmeId, seanceId, fin) {
+  return setDoc(refSeance(programmeId, seanceId), contenuFin(baseSeance(programmeId, seanceId), fin), { merge: true })
 }

@@ -6,10 +6,10 @@ import useTitre from '../components/useTitre.js'
 import Connexion from './Connexion.jsx'
 import Accord from './Accord.jsx'
 import EspaceCoach from './coach/EspaceCoach.jsx'
+import EspaceClient from './client/EspaceClient.jsx'
 import './espace.css'
 
 // Racine de l'espace (chargée à la demande) : garde selon la session et le rôle.
-// L'écran client provisoire est remplacé par la tâche 9.
 export default function EspaceApp() {
   useTitre('Mon espace')
   const { utilisateur, profil, role, chargement } = useSession()
@@ -27,12 +27,7 @@ export default function EspaceApp() {
   }
   if (role === 'client') {
     if (!profil?.accordSante) return <Accord uid={utilisateur.uid} prenom={profil?.prenom} />
-    return (
-      <Routes>
-        <Route index element={<ClientProvisoire />} />
-        <Route path="*" element={<Navigate to="/espace" replace />} />
-      </Routes>
-    )
+    return <EspaceClient uid={utilisateur.uid} prenom={profil?.prenom} />
   }
   // connecté mais sans rôle : compte non rattaché
   return (
@@ -56,5 +51,3 @@ function Page({ titre, children }) {
   )
 }
 
-// Provisoire : remplacé par la tâche 9 (client)
-const ClientProvisoire = () => <Page titre="Espace client" />

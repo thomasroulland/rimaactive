@@ -3,7 +3,8 @@ import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest'
 import {
   assertFails, assertSucceeds, initializeTestEnvironment,
 } from '@firebase/rules-unit-testing'
-import { doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, serverTimestamp, query, where } from 'firebase/firestore'
+import { contenuFin, contenuNotes } from '../../src/espace/donnees/seances.js'
 
 let env, coach, A, B, anon
 
@@ -167,5 +168,37 @@ describe('seancesFaites', () => {
     await assertFails(deleteDoc(doc(A, 'seancesFaites/P1_S1')))
     await assertFails(deleteDoc(doc(A, 'seancesFaites/P1_S2')))
     await assertFails(deleteDoc(doc(coach, 'seancesFaites/P1_S2')))
+  })
+})
+
+// Ce qu'écrit l'écran client (depots.js : noterSeance et terminerSeance), sur l'émulateur
+describe('séance du client : écritures de l’écran', () => {
+  const base = (seance) => ({ client: 'A', programme: 'P1', seance, date: '2026-11-17', majLe: serverTimestamp() })
+  const fin = { effort: 7, ressenti: 'Bien', douleur: { oui: false }, distance: '', temps: '', series: { e1: [{ charge: '40', reps: '8', rpe: '7' }] } }
+
+  it('note des séries puis termine la séance (fusion)', async () => {
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S3'), contenuNotes(base('S3'), { series: { e1: [{ charge: '40', reps: '8', rpe: '' }] } }), { merge: true }))
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S3'), contenuNotes(base('S3'), { series: { e2: [{ charge: '', reps: '12', rpe: '' }] } }), { merge: true }))
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S3'), contenuFin(base('S3'), fin), { merge: true }))
+    const d = (await getDoc(doc(A, 'seancesFaites/P1_S3'))).data()
+    if (d.statut !== 'terminée' || !d.series.e1 || !d.series.e2) throw new Error('fusion des séries attendue')
+  })
+
+  it('« Fin de séance » envoyée deux fois : un seul document, le second envoi est refusé', async () => {
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S4'), contenuFin(base('S4'), fin), { merge: true }))
+    await assertFails(setDoc(doc(A, 'seancesFaites/P1_S4'), contenuFin(base('S4'), { ...fin, effort: 3 }), { merge: true }))
+    const s = await getDocs(query(collection(A, 'seancesFaites'), where('client', '==', 'A'), where('seance', '==', 'S4')))
+    if (s.size !== 1) throw new Error(`un seul document attendu, ${s.size} trouvés`)
+    if (s.docs[0].data().effort !== 7) throw new Error('le premier envoi doit rester')
+  })
+
+  it('une note arrivée après la fin de séance est refusée', async () => {
+    await assertFails(setDoc(doc(A, 'seancesFaites/P1_S2'), contenuNotes(base('S2'), { series: { e1: [] } }), { merge: true }))
+  })
+
+  it('le client lit son programme publié et ses séances avec les requêtes de l’écran', async () => {
+    await assertSucceeds(getDocs(query(collection(A, 'programmes'), where('client', '==', 'A'), where('statut', '==', 'publié'))))
+    await assertFails(getDocs(query(collection(A, 'programmes'), where('client', '==', 'A'))))
+    await assertSucceeds(getDocs(query(collection(A, 'seancesFaites'), where('client', '==', 'A'))))
   })
 })
