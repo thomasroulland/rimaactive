@@ -18,7 +18,6 @@ export default function MesMesures({ uid }) {
   const [mesures, setMesures] = useState(null)
   const [saisie, setSaisie] = useState(vide)
   const [message, setMessage] = useState({ texte: '', erreur: false })
-  const [encours, setEncours] = useState(false)
   const [aSupprimer, setASupprimer] = useState(null)
 
   useEffect(() => ecouterMesMesures(uid, setMesures, () => setMessage({ texte: 'Impossible de charger vos mesures. Vérifiez votre connexion.', erreur: true })), [uid])
@@ -26,30 +25,20 @@ export default function MesMesures({ uid }) {
 
   const changer = (champ) => (e) => { setSaisie((s) => ({ ...s, [champ]: e.target.value })); setMessage({ texte: '', erreur: false }) }
 
-  const enregistrer = async (e) => {
+  // Sans attendre le serveur (le cache hors ligne applique l'écriture tout de suite) ; un vrai refus s'affiche via .catch.
+  const enregistrer = (e) => {
     e.preventDefault()
     const r = nettoyerMesures({ ...saisie, date: saisie.date || aujourdhuiIso() })
     if (!r.ok) { setMessage({ texte: r.erreur, erreur: true }); return }
-    setEncours(true)
-    try {
-      await ajouterMesure(uid, r.mesure)
-      setSaisie(vide())
-      setMessage({ texte: 'Mesures enregistrées.', erreur: false })
-    } catch (err) {
-      setMessage({ texte: messageErreur(err?.code), erreur: true })
-    } finally {
-      setEncours(false)
-    }
+    ajouterMesure(uid, r.mesure).catch((err) => setMessage({ texte: messageErreur(err?.code), erreur: true }))
+    setSaisie(vide())
+    setMessage({ texte: navigator.onLine === false ? 'Enregistré sur votre téléphone, envoyé au retour du réseau.' : 'Mesures enregistrées.', erreur: false })
   }
 
-  const supprimer = async (m) => {
+  const supprimer = (m) => {
     if (aSupprimer !== m.id) { setASupprimer(m.id); return }
-    try {
-      await supprimerMesure(uid, m.id)
-    } catch (err) {
-      setMessage({ texte: messageErreur(err?.code), erreur: true })
-    }
     setASupprimer(null)
+    supprimerMesure(uid, m.id).catch((err) => setMessage({ texte: messageErreur(err?.code), erreur: true }))
   }
 
   return (
@@ -70,7 +59,7 @@ export default function MesMesures({ uid }) {
             </div>
           ))}
         </div>
-        <button type="submit" className="ec-bouton ec-bouton--seul" disabled={encours}>Enregistrer mes mesures</button>
+        <button type="submit" className="ec-bouton ec-bouton--seul">Enregistrer mes mesures</button>
         {message.texte && <p className={message.erreur ? 'ec-petit ec-erreur-texte' : 'ec-petit'} role={message.erreur ? 'alert' : 'status'}>{message.texte}</p>}
       </form>
       {mesures && liste.length === 0 && <p className="ec-texte ec-gris">Aucune mesure pour l’instant.</p>}

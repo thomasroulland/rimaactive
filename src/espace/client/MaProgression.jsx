@@ -1,5 +1,5 @@
-import { listeSeances, meilleuresCharges, regularite, semaineCourante } from '../donnees/calculs.js'
-import { dateComplete } from '../donnees/progression.js'
+import { meilleuresCharges, regularite, semaineCourante } from '../donnees/calculs.js'
+import { bilanSeance, dateSeance } from '../donnees/progression.js'
 import { evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
 import { Link } from 'react-router-dom'
 import MesPhotos from './MesPhotos.jsx'
@@ -111,7 +111,7 @@ function Courbe({ nom, points, libelle }) {
           </div>
         ))}
       </div>
-      <p className="ec-petit">{evolutionCharges(vus)}</p>
+      <p className="ec-petit">{evolutionCharges(points)}</p>
     </article>
   )
 }
@@ -122,38 +122,43 @@ function Historique({ programmes, seances }) {
     .filter((s) => s.statut === 'terminée')
     .sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.id.localeCompare(b.id))
     .map((s) => {
-      const p = programmes.find((x) => x.id === s.programme)
-      const rang = p ? listeSeances(p).findIndex((x) => x.seance.id === s.seance) : -1
-      const trouve = rang === -1 ? null : listeSeances(p)[rang]
-      return { s, programme: p, numero: rang === -1 ? null : rang + 1, titre: trouve?.seance.titre || 'Séance', semaine: trouve?.semaine }
+      const programme = programmes.find((x) => x.id === s.programme)
+      let trouve = null
+      ;(programme?.semaines ?? []).forEach((sem, i) => {
+        const k = (sem.seances ?? []).findIndex((x) => x.id === s.seance)
+        if (k !== -1) trouve = { seance: sem.seances[k], semaine: i + 1, numero: k + 1 } // numéro dans la semaine, comme la maquette
+      })
+      return { s, programme, trouve }
     })
   return (
     <>
-    {lignes.length === 0 && <p className="ec-texte ec-gris">Vos séances apparaîtront ici dès que vous aurez enregistré la première.</p>}
-    <ul className="ec-histo">
-      {lignes.map(({ s, programme, numero, titre, semaine }) => {
-        const quand = `${dateComplete(s.date)}${semaine ? ` · semaine ${semaine}` : ''}`
-        const bilan = (s.effort ? `Effort séance ${s.effort}` : 'Effort séance non noté') + (s.ressenti ? ` · ${s.ressenti}` : '')
-        const contenu = (
-          <>
-            <span className="ec-histo__numero">{numero ? String(numero).padStart(2, '0') : ''}</span>
-            <span className="ec-histo__corps">
-              <span className="ec-histo__titre">{titre}</span>
-              <span className="ec-histo__meta">{quand}</span>
-              <span className="ec-histo__bilan">{bilan}</span>
-              {s.commentaire && <span className="ec-histo__note">« {s.commentaire} »</span>}
-            </span>
-          </>
-        )
-        return (
-          <li key={s.id}>
-            {programme
-              ? <Link className="ec-histo__carte" to={`/espace/seance/${s.programme}/${s.seance}`} aria-label={`${titre}, ${dateComplete(s.date)}, voir mes résultats`}>{contenu}</Link>
-              : <div className="ec-histo__carte">{contenu}</div>}
-          </li>
-        )
-      })}
-    </ul>
+      {lignes.length === 0 && <p className="ec-texte ec-gris">Vos séances apparaîtront ici dès que vous aurez enregistré la première.</p>}
+      <ul className="ec-histo">
+        {lignes.map(({ s, programme, trouve }) => {
+          const titre = trouve?.seance.titre || 'Séance'
+          const type = trouve?.seance.type === 'course' ? 'Course' : 'Force'
+          const quand = [dateSeance(s.date), trouve ? `semaine ${trouve.semaine}` : '', trouve ? type : ''].filter(Boolean).join(' · ')
+          const bilan = bilanSeance(trouve?.seance.type, s)
+          const contenu = (
+            <>
+              <span className="ec-histo__numero">{trouve ? String(trouve.numero).padStart(2, '0') : ''}</span>
+              <span className="ec-histo__corps">
+                <span className="ec-histo__titre">{titre}</span>
+                <span className="ec-histo__meta">{quand}</span>
+                {bilan && <span className="ec-histo__bilan">{bilan}</span>}
+                {s.commentaire && <span className="ec-histo__note">« {s.commentaire} »</span>}
+              </span>
+            </>
+          )
+          return (
+            <li key={s.id}>
+              {programme
+                ? <Link className="ec-histo__carte" to={`/espace/seance/${s.programme}/${s.seance}`} aria-label={`${titre}, ${dateSeance(s.date)}, voir mes résultats`}>{contenu}</Link>
+                : <div className="ec-histo__carte">{contenu}</div>}
+            </li>
+          )
+        })}
+      </ul>
     </>
   )
 }

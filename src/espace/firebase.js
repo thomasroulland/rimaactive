@@ -24,6 +24,9 @@ export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 })
 export const stockage = getStorage(app)
+// Réseau mauvais ou coupé : les envois échouent en 30 s au lieu de réessayer pendant des minutes.
+stockage.maxUploadRetryTime = 30000
+stockage.maxOperationRetryTime = 30000
 
 if (emulateurs) {
   connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true })

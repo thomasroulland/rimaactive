@@ -56,7 +56,7 @@ export function bonjour(prenom, date) {
   return `Bonjour ${prenom}, nous sommes ${JOURS_FR[date.getDay()]} ${date.getDate()} ${MOIS_FR[date.getMonth()]}.`
 }
 
-export const ERREUR_MESURE_VIDE = 'Indiquez au moins une mesure.'
+export const ERREUR_MESURE_VIDE = 'Remplissez au moins une mesure.'
 export const ERREUR_MESURE_TEXTE = 'Indiquez des nombres, par exemple 72,5.'
 
 export function nettoyerMesures(saisie) {
@@ -102,4 +102,44 @@ export function evolutionMesures(mesures) {
     parties.push(`${champ} ${d > 0 ? '+' : d < 0 ? '\u2212' : ''}${FR(Math.abs(d))}${UNITES[champ]}`)
   }
   return parties.length ? `Depuis le début : ${parties.join(' · ')}` : 'Ajoutez une deuxième mesure pour voir votre évolution.'
+}
+
+const JOURS_ABR = ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.']
+const MOIS_ABR = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
+
+// « Jeu. 12 nov. » : date des cartes de « Mes séances » (comme la maquette)
+export function dateSeance(iso) {
+  const [a, m, j] = String(iso || '').split('-').map(Number)
+  if (!a || !m || !j) return ''
+  const jour = JOURS_ABR[new Date(Date.UTC(a, m - 1, j)).getUTCDay()]
+  return `${jour.charAt(0).toUpperCase()}${jour.slice(1)} ${j} ${MOIS_ABR[m - 1]}`
+}
+
+function secondes(temps) {
+  if (!temps) return null
+  const p = String(temps).split(':').map((x) => parseInt(x, 10))
+  if (p.some(Number.isNaN)) return null
+  if (p.length === 3) return p[0] * 3600 + p[1] * 60 + p[2]
+  if (p.length === 2) return p[0] * 60 + p[1]
+  return null
+}
+
+// « 6:00 /km » ; null si la distance ou le temps manque
+export function allure(distance, temps) {
+  const d = parseFloat(String(distance ?? '').replace(',', '.'))
+  const s = secondes(temps)
+  if (!d || !s) return null
+  const spk = Math.round(s / d)
+  const r = spk % 60
+  return `${Math.floor(spk / 60)}:${r < 10 ? '0' : ''}${r} /km`
+}
+
+// Ligne de bilan d'une séance terminée (maquette) : course « 5 km en 30:00 · 6:00 /km », force « Effort séance 7 · Bien »
+export function bilanSeance(type, sf) {
+  if (type === 'course') {
+    const al = allure(sf.distance, sf.temps)
+    const base = (sf.distance ? `${String(sf.distance).replace('.', ',')} km` : '') + (sf.temps ? ` en ${sf.temps}` : '')
+    return [base.trim(), al].filter(Boolean).join(' · ')
+  }
+  return (sf.effort ? `Effort séance ${sf.effort}` : 'Effort séance non noté') + (sf.ressenti ? ` · ${sf.ressenti}` : '')
 }

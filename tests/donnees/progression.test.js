@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  avancement, blocsDuClient, programmeAffiche, semaineDe, seancesDeLaSemaine, bonjour, nettoyerMesures, initiales, dateComplete, evolutionMesures,
+  avancement, blocsDuClient, programmeAffiche, semaineDe, seancesDeLaSemaine, bonjour, nettoyerMesures, initiales, dateComplete, evolutionMesures, dateSeance, allure, bilanSeance,
 } from '../../src/espace/donnees/progression.js'
 
 const JOURS3 = ['Lundi', 'Mercredi', 'Vendredi']
@@ -105,8 +105,8 @@ describe('nettoyerMesures', () => {
     expect(nettoyerMesures({ date: '2026-11-12', poids: '70' }).mesure.date).toBe('2026-11-12')
   })
   it('tout vide refusé', () => {
-    expect(nettoyerMesures({ poids: '', taille: '  ' })).toEqual({ ok: false, erreur: 'Indiquez au moins une mesure.' })
-    expect(nettoyerMesures({})).toEqual({ ok: false, erreur: 'Indiquez au moins une mesure.' })
+    expect(nettoyerMesures({ poids: '', taille: '  ' })).toEqual({ ok: false, erreur: 'Remplissez au moins une mesure.' })
+    expect(nettoyerMesures({})).toEqual({ ok: false, erreur: 'Remplissez au moins une mesure.' })
     expect(nettoyerMesures(undefined).ok).toBe(false)
   })
   it('texte non numérique refusé', () => {
@@ -156,5 +156,20 @@ describe('evolutionMesures', () => {
   })
   it('signe plus pour une hausse', () => {
     expect(evolutionMesures([{ date: '2026-11-01', bras: 30 }, { date: '2026-12-01', bras: 31.5 }])).toBe('Depuis le début : bras +1,5 cm')
+  })
+})
+
+describe('dateSeance, allure, bilanSeance', () => {
+  it('écrit la date comme la maquette', () => { expect(dateSeance('2026-11-12')).toBe('Jeu. 12 nov.') })
+  it('calcule l’allure', () => {
+    expect(allure('5', '30:00')).toBe('6:00 /km')
+    expect(allure('10', '1:05:00')).toBe('6:30 /km')
+    expect(allure('', '30:00')).toBeNull()
+  })
+  it('bilan de course et de force', () => {
+    expect(bilanSeance('course', { distance: '5', temps: '30:00' })).toBe('5 km en 30:00 · 6:00 /km')
+    expect(bilanSeance('course', {})).toBe('')
+    expect(bilanSeance('force', { effort: 7, ressenti: 'Bien' })).toBe('Effort séance 7 · Bien')
+    expect(bilanSeance('force', {})).toBe('Effort séance non noté')
   })
 })

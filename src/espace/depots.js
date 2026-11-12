@@ -353,22 +353,37 @@ export function ecouterMesPhotos(uid, rappel, erreur) {
   )
 }
 
-// Réduit la photo, l'envoie sous clients/{uid}/progression/, puis crée le document ; si le document échoue, supprime le fichier.
-// Rejette Error('format') ou Error('taille') avant tout envoi ; Error('envoi') si l'envoi échoue.
+// Réduit la photo, l'envoie sous clients/{uid}/progression/, puis crée le document.
+// Rejette Error('format') ou Error('taille') avant tout envoi ; refuse tout de suite sans réseau ; Error('envoi') si l'envoi échoue.
+// Le fichier n'est supprimé que s'il est parti et que le document est refusé (jamais en bloquant l'écran).
 export async function ajouterPhoto(uid, fichier, date) {
   const blob = await reduireImage(fichier)
-  const chemin = `clients/${uid}/progression/${date}-${Date.now()}.jpg`
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    throw Object.assign(new Error('auth/network-request-failed'), { code: 'auth/network-request-failed' })
+  }
+  const fichierRef = ref(stockage, `clients/${uid}/progression/${date}-${Date.now()}.jpg`)
   try {
-    await uploadBytes(ref(stockage, chemin), blob, { contentType: 'image/jpeg' })
-    await addDoc(collection(db, 'utilisateurs', uid, 'photos'), { date, chemin, creeLe: serverTimestamp() })
+    await uploadBytes(fichierRef, blob, { contentType: 'image/jpeg' })
   } catch (e) {
-    try { await deleteObject(ref(stockage, chemin)) } catch { /* pas envoyée */ }
-    if (e?.code === 'permission-denied' || e?.code === 'storage/unauthorized') throw Object.assign(new Error('permission-denied'), { code: 'permission-denied' })
+    if (e?.code === 'storage/unauthorized') throw Object.assign(new Error('permission-denied'), { code: 'permission-denied' })
+    throw Object.assign(new Error('envoi'), { code: 'envoi' })
+  }
+  const nettoyer = () => { deleteObject(fichierRef).catch(() => {}) }
+  const doc_ = addDoc(collection(db, 'utilisateurs', uid, 'photos'), { date, chemin: fichierRef.fullPath, creeLe: serverTimestamp() })
+  doc_.catch(nettoyer) // refus tardif (réseau coupé entre-temps) : le fichier orphelin est retiré
+  // On n'attend le serveur que quelques secondes : hors ligne, le document part au retour du réseau.
+  const refus = await Promise.race([
+    doc_.then(() => null, (e) => e),
+    new Promise((r) => setTimeout(() => r(null), 5000)),
+  ])
+  if (refus) {
+    if (refus.code === 'permission-denied') throw Object.assign(new Error('permission-denied'), { code: 'permission-denied' })
     throw Object.assign(new Error('envoi'), { code: 'envoi' })
   }
 }
 
-// Supprime le document puis le fichier (un fichier déjà absent n'est pas une erreur).
+// Supprime le document puis le fichier (un fichier déjà absent n'est pas une erreur). Hors ligne, la promesse
+// n'est tenue qu'au retour du réseau : ne pas l'attendre pour mettre l'écran à jour.
 export async function supprimerPhoto(uid, photo) {
   await deleteDoc(doc(db, 'utilisateurs', uid, 'photos', photo.id))
   urls.delete(photo.chemin)

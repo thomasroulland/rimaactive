@@ -37,15 +37,12 @@ export default function MesPhotos({ uid }) {
     }
   }
 
-  const supprimer = async (photo) => {
+  // Sans attendre le serveur : hors ligne, la photo disparaît tout de suite et la suppression part au retour du réseau.
+  const supprimer = (photo) => {
     if (aSupprimer !== photo.id) { setASupprimer(photo.id); return }
     setErreur('')
-    try {
-      await supprimerPhoto(uid, photo)
-    } catch (err) {
-      setErreur(messageErreur(err?.code))
-    }
     setASupprimer(null)
+    supprimerPhoto(uid, photo).catch((err) => setErreur(messageErreur(err?.code)))
   }
 
   return (
@@ -82,8 +79,7 @@ export default function MesPhotos({ uid }) {
           </div>
         </div>
       )}
-      {(
-        <div className="ec-galerie">
+      <div className="ec-galerie">
           {liste.map((p) => (
             <figure key={p.id} className="ec-carte ec-vignette-photo">
               <Image photo={p} />
@@ -93,8 +89,7 @@ export default function MesPhotos({ uid }) {
               </button>
             </figure>
           ))}
-        </div>
-      )}
+      </div>
     </>
   )
 }
