@@ -9,11 +9,12 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:fuseaux": "TZ=Pacific/Kiritimati vitest run tests/donnees && TZ=America/Los_Angeles vitest run tests/donnees",
-    "test:regles": "firebase emulators:exec --project demo-rimaactive --only firestore,storage,auth \"vitest run --config vitest.regles.config.js\""
+    "test:regles": "firebase emulators:exec --project demo-rimaactive --only firestore,storage,auth \"vitest run --config vitest.regles.config.js\"",
+    "test:vercel": "node --no-experimental-require-module -e \"for (const m of ['app','auth','firestore','storage']) require('firebase-admin/' + m); console.log('firebase-admin se charge sans require(esm), comme sur Vercel')\""
   },
   "dependencies": {
     "firebase": "^12.19.0",
-    "firebase-admin": "^14.5.1",
+    "firebase-admin": "^13.10.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0"
