@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { CONTACT } from '../../components/liens.js'
 import logoCraie from '../../assets/rimaactive-mot-craie.svg'
 import { seDeconnecter } from '../firebase.js'
@@ -18,9 +18,7 @@ export default function Coque({ liens = [], compte = true, avatar = null, childr
           </NavLink>
           {liens.length > 0 && (
             <nav className="ec-nav" aria-label="Espace client">
-              {liens.map((lien) => (
-                <NavLink key={lien.to} to={lien.to} end={lien.to === '/espace'} className="ec-onglet">{lien.label}</NavLink>
-              ))}
+              {liens.map((lien) => <Onglet key={lien.to} lien={lien} />)}
             </nav>
           )}
           {compte && <MenuCompte avatar={avatar} />}
@@ -92,4 +90,15 @@ function MenuCompte({ avatar }) {
       )}
     </div>
   )
+}
+
+// Onglet de la barre. Sur une séance, l'onglet d'où l'on vient reste souligné (maquette) :
+// « Mon programme » si la séance a été ouverte depuis Mon programme, sinon « Tableau de bord ».
+function Onglet({ lien }) {
+  const { pathname, state } = useLocation()
+  if (pathname.startsWith('/espace/seance/')) {
+    const actif = lien.to === (state?.depuis === 'programme' ? '/espace/programme' : '/espace')
+    return <Link to={lien.to} className="ec-onglet" aria-current={actif ? 'page' : undefined}>{lien.label}</Link>
+  }
+  return <NavLink to={lien.to} end={lien.to === '/espace'} className="ec-onglet">{lien.label}</NavLink>
 }

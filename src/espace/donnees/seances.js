@@ -99,8 +99,11 @@ function ajouterCartes(out, donnees) {
 
 // Contenu écrit (fusion) pendant la séance : statut « en cours ».
 // `base` = { client, programme, seance, date, majLe } ; `donnees` = { series: { [elementId]: lignes } }
+// Course : `distance` et `temps` faits, gardés au fil de la saisie quand ils sont fournis.
 export function contenuNotes(base, donnees = {}) {
   const out = { client: base.client, programme: base.programme, seance: base.seance, date: base.date, statut: 'en cours', majLe: base.majLe }
+  if (donnees.distance != null) out.distance = texte(donnees.distance).trim()
+  if (donnees.temps != null) out.temps = texte(donnees.temps).trim()
   return ajouterCartes(out, donnees)
 }
 
@@ -181,4 +184,80 @@ export function detailSeance(seanceDuProgramme, series) {
       retire: !x.element,
       lignes: x.lignes,
     }))
+}
+
+// ---------- Écran de la séance (maquette de Marie) ----------
+
+const estZero = (v) => String(v ?? '').trim() !== '' && parseFloat(String(v).replace(',', '.')) === 0
+const rempli = (v) => String(v ?? '').trim() !== ''
+
+// Ce que Marie a prévu pour un exercice, comme la maquette :
+// séries classiques → { prescription: '4 × 5 · 90 kg', details: 'Repos 2 min · Tempo 3-1-1' } ;
+// autres formats → { prescription: '12 reps · 20 kg', details: '' }. Charge 0 : « poids du corps ».
+export function lignesExercice(element, enSeries = true) {
+  const e = element ?? {}
+  const charge = estZero(e.charge) ? 'poids du corps'
+    : rempli(e.charge) ? `${fr(String(e.charge).trim())} kg`
+      : rempli(e.pct) ? `${fr(String(e.pct).trim())} % de 1RM` : ''
+  if (!enSeries) {
+    const reps = String(e.reps ?? '').trim()
+    const r = /^\d+$/.test(reps) ? `${reps} reps` : reps
+    return { prescription: [r, charge].filter(Boolean).join(' · '), details: '' }
+  }
+  const n = String(e.series ?? '').trim()
+  const reps = String(e.reps ?? '').trim()
+  const volume = n && reps ? `${n} × ${reps}` : n ? `${n} séries` : reps ? `${reps} reps` : ''
+  const details = [
+    rempli(e.repos) && `Repos ${String(e.repos).trim()}`,
+    rempli(e.tempo) && `Tempo ${String(e.tempo).trim()}`,
+    rempli(e.rpe) && `RPE ${fr(String(e.rpe).trim())}`,
+  ].filter(Boolean).join(' · ')
+  return { prescription: [volume, charge || (volume ? 'charge libre' : '')].filter(Boolean).join(' · '), details }
+}
+
+// Champ de « Mon résultat » d'un bloc EMOM, AMRAP, TABATA ou HIIT : libellé et aide (« sur 10 »)
+export function champResultat(bloc) {
+  const f = bloc?.format
+  if (f === 'emom') return { label: 'Minutes réussies', aide: rempli(bloc.duree) ? `sur ${String(bloc.duree).trim()}` : '' }
+  if (f === 'amrap' || f === 'tabata' || f === 'hiit') {
+    return { label: 'Tours faits', aide: rempli(bloc.tours) ? `sur ${String(bloc.tours).trim()}` : '' }
+  }
+  return null
+}
+
+// Un exercice d'un bloc EMOM ou AMRAP a un champ « Charge (kg) », sauf au poids du corps (maquette)
+export function avecChargeSeule(bloc, element) {
+  return (bloc?.format === 'emom' || bloc?.format === 'amrap') && !estZero(element?.charge)
+}
+
+// '0:30:00' → 1800 s ; '30:00' → 1800 s ; sinon null
+export function secondes(temps) {
+  const p = String(temps ?? '').trim().split(':')
+  if (p.length < 2 || p.length > 3 || p.some((x) => !/^\d+$/.test(x))) return null
+  const n = p.map(Number)
+  return p.length === 3 ? n[0] * 3600 + n[1] * 60 + n[2] : n[0] * 60 + n[1]
+}
+
+// Allure et vitesse d'une sortie (maquette) : { allure: '6:40 /km', vitesse: '9,0 km/h' }, '–' si incalculable
+export function allureVitesse(distance, temps) {
+  const d = parseFloat(String(distance ?? '').replace(',', '.'))
+  const s = secondes(temps)
+  if (!(d > 0) || !s) return { allure: '–', vitesse: '–' }
+  const spk = Math.round(s / d)
+  const m = Math.floor(spk / 60)
+  const r = spk % 60
+  return { allure: `${m}:${r < 10 ? '0' : ''}${r} /km`, vitesse: `${fr((d / (s / 3600)).toFixed(1))} km/h` }
+}
+
+// Ligne de série après une saisie (maquette + règle « modifier une série la coche ») :
+// la série est cochée et les cases vides reprennent ce que Marie a prévu.
+export function saisirSerie(ligne, cle, valeur, element) {
+  const prevu = { charge: rempli(element?.charge) ? String(element.charge) : '', reps: rempli(element?.reps) ? String(element.reps) : '' }
+  if (cle === 'fait') {
+    if (!valeur) return { ...ligne, fait: false }
+    return { ...ligne, fait: true, charge: rempli(ligne.charge) ? ligne.charge : prevu.charge, reps: rempli(ligne.reps) ? ligne.reps : prevu.reps }
+  }
+  const out = { ...ligne, [cle]: valeur, fait: true }
+  for (const k of ['charge', 'reps']) if (k !== cle && !rempli(out[k])) out[k] = prevu[k]
+  return out
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   dateLongue, dateCourte, prescription, resumeFormat, contenuNotes, contenuFin, RESSENTIS, evolutionCharges, statutSeance,
-  texteSerie, detailSeance, exercicesDe,
+  texteSerie, detailSeance, exercicesDe, lignesExercice, champResultat, avecChargeSeule, secondes, allureVitesse, saisirSerie,
 } from '../../src/espace/donnees/seances.js'
 
 const base = { client: 'A', programme: 'P1', seance: 'S1', date: '2026-11-16', majLe: 'T' }
@@ -129,5 +129,56 @@ describe('séries vides à la fin de séance', () => {
     expect(contenuFin(base, { effort: 5, series: {} })).not.toHaveProperty('series')
     expect(contenuNotes(base, { series: {} })).not.toHaveProperty('series')
     expect(contenuFin(base, { effort: 5, series: { e1: [] } }).series).toEqual({ e1: [] })
+  })
+})
+
+describe('écran de la séance', () => {
+  it('écrit la prescription comme la maquette', () => {
+    expect(lignesExercice({ series: '4', reps: '5', charge: '90', repos: '2 min' })).toEqual({ prescription: '4 × 5 · 90 kg', details: 'Repos 2 min' })
+    expect(lignesExercice({ series: '4', reps: '8', charge: '2.5', tempo: '3-1-1', rpe: '7' }).details).toBe('Tempo 3-1-1 · RPE 7')
+    expect(lignesExercice({ series: '3', reps: '10', charge: '0' }).prescription).toBe('3 × 10 · poids du corps')
+    expect(lignesExercice({ series: '3', reps: '10', charge: '' }).prescription).toBe('3 × 10 · charge libre')
+    expect(lignesExercice({ series: '3', reps: '6', pct: '75' }).prescription).toBe('3 × 6 · 75 % de 1RM')
+    expect(lignesExercice({}).prescription).toBe('')
+    expect(lignesExercice({ reps: '12', charge: '20' }, false)).toEqual({ prescription: '12 reps · 20 kg', details: '' })
+    expect(lignesExercice({ reps: '20 s', charge: '0', repos: '1 min' }, false)).toEqual({ prescription: '20 s · poids du corps', details: '' })
+  })
+
+  it('résultat de bloc : libellé et aide selon le format', () => {
+    expect(champResultat({ format: 'emom', duree: '10' })).toEqual({ label: 'Minutes réussies', aide: 'sur 10' })
+    expect(champResultat({ format: 'amrap', duree: '12' })).toEqual({ label: 'Tours faits', aide: '' })
+    expect(champResultat({ format: 'tabata', tours: '8' })).toEqual({ label: 'Tours faits', aide: 'sur 8' })
+    expect(champResultat({ format: 'hiit' })).toEqual({ label: 'Tours faits', aide: '' })
+    expect(champResultat({ format: 'series' })).toBeNull()
+  })
+
+  it('charge seule : EMOM et AMRAP, sauf au poids du corps', () => {
+    expect(avecChargeSeule({ format: 'emom' }, { charge: '20' })).toBe(true)
+    expect(avecChargeSeule({ format: 'amrap' }, { charge: '' })).toBe(true)
+    expect(avecChargeSeule({ format: 'emom' }, { charge: '0' })).toBe(false)
+    expect(avecChargeSeule({ format: 'tabata' }, { charge: '20' })).toBe(false)
+  })
+
+  it('allure et vitesse d’une sortie', () => {
+    expect(secondes('0:30:00')).toBe(1800)
+    expect(secondes('30:00')).toBe(1800)
+    expect(secondes('30')).toBeNull()
+    expect(secondes('0:3a:00')).toBeNull()
+    expect(allureVitesse('4,5', '0:30:10')).toEqual({ allure: '6:42 /km', vitesse: '9,0 km/h' })
+    expect(allureVitesse('', '0:30:00')).toEqual({ allure: '–', vitesse: '–' })
+  })
+
+  it('saisir une série la coche et reprend le prévu dans les cases vides', () => {
+    const el = { charge: '90', reps: '5' }
+    const vide = { charge: '', reps: '', rpe: '', fait: false }
+    expect(saisirSerie(vide, 'rpe', '7', el)).toEqual({ charge: '90', reps: '5', rpe: '7', fait: true })
+    expect(saisirSerie(vide, 'charge', '', el)).toEqual({ charge: '', reps: '5', rpe: '', fait: true })
+    expect(saisirSerie(vide, 'fait', true, el)).toEqual({ charge: '90', reps: '5', rpe: '', fait: true })
+    expect(saisirSerie({ charge: '95', reps: '4', rpe: '', fait: true }, 'fait', false, el)).toEqual({ charge: '95', reps: '4', rpe: '', fait: false })
+  })
+
+  it('course : distance et temps gardés au fil de la saisie, seulement s’ils sont fournis', () => {
+    expect(contenuNotes(base, { distance: ' 4,5 ', temps: '0:30:00' })).toMatchObject({ distance: '4,5', temps: '0:30:00' })
+    expect(contenuNotes(base, { notes: { e1: 'x' } })).not.toHaveProperty('distance')
   })
 })

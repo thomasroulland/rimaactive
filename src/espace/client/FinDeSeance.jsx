@@ -1,76 +1,68 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { RESSENTIS } from '../donnees/seances.js'
 
 const EFFORTS = [5, 6, 7, 8, 9, 10]
+const NOMS = { 5: 'Modéré', 6: 'Moyennement difficile', 7: 'Difficile', 8: 'Très difficile', 9: 'Extrêmement difficile', 10: 'Effort maximal' }
+const AIDE = 'Touchez une note : 5 modéré, 10 effort maximal.'
 
-// « Fin de séance » : effort 5 à 10, ressenti ; course : distance et temps.
-// `fait` : la séance faite déjà terminée (affichée en lecture seule).
-export default function FinDeSeance({ course, fait, envoyer }) {
-  const [fin, setFin] = useState({ effort: null, ressenti: '', distance: '', temps: '' })
+// Panneau « Fin de séance » (maquette) : effort global 5 à 10, ressenti, commentaire (« Mes sensations » en course),
+// « Enregistrer ma séance ». Séance terminée (`fait.statut === 'terminée'`) : même panneau en lecture seule.
+// `etat` : texte d'enregistrement (réseau) ; `envoyer(fin)` : { effort, ressenti, commentaire }.
+export default function FinDeSeance({ course, fait, etat, envoyer }) {
+  const terminee = fait?.statut === 'terminée'
+  const [fin, setFin] = useState({ effort: null, ressenti: '', commentaire: '' })
   const [erreur, setErreur] = useState('')
-  const maj = (cle, v) => setFin((f) => ({ ...f, [cle]: v }))
-
-  if (fait?.statut === 'terminée') {
-    return (
-      <section className="espace-carte client-fin" aria-labelledby="titre-fin">
-        <h2 id="titre-fin" className="client-sous-titre">Fin de séance</h2>
-        <dl className="client-bilan">
-          {course && <><dt>Distance</dt><dd>{fait.distance ? `${fait.distance} km` : '–'}</dd><dt>Temps</dt><dd>{fait.temps || '–'}</dd></>}
-          <dt>Effort</dt><dd>{fait.effort ? `${fait.effort} sur 10` : '–'}</dd>
-          <dt>Ressenti</dt><dd>{fait.ressenti || '–'}</dd>
-        </dl>
-        {fait.commentaireCoach && <p className="client-exo__commentaire">Marie : {fait.commentaireCoach}</p>}
-      </section>
-    )
-  }
+  const v = terminee
+    ? { effort: fait.effort ?? null, ressenti: fait.ressenti ?? '', commentaire: fait.commentaire ?? '' }
+    : fin
+  const maj = (cle, val) => { setErreur(''); setFin((f) => ({ ...f, [cle]: val })) }
 
   const valider = (e) => {
     e.preventDefault()
-    if (!fin.effort) { setErreur('Choisissez votre effort, de 5 à 10.'); return }
-    setErreur('')
+    if (!fin.effort) { setErreur('Touchez une note d’effort pour enregistrer votre séance.'); return }
     envoyer(fin)
   }
 
   return (
-    <form className="espace-carte client-fin" aria-labelledby="titre-fin" onSubmit={valider} noValidate>
-      <h2 id="titre-fin" className="client-sous-titre">Fin de séance</h2>
-
-      {course && (
-        <div className="client-fin__duo">
-          <div className="champ-groupe">
-            <label htmlFor="fin-distance">Distance (km)</label>
-            <input id="fin-distance" className="champ" inputMode="decimal" autoComplete="off" value={fin.distance} onChange={(e) => maj('distance', e.target.value)} />
+    <aside className="ec-fin" aria-labelledby="titre-fin">
+      <form className="ec-fin__form" onSubmit={valider} noValidate>
+        <h2 id="titre-fin" className="ec-h3">Fin de séance</h2>
+        <fieldset className="ec-fin__groupe">
+          <legend className="ec-fin__legende">Effort global de la séance</legend>
+          <div className="ec-fin__efforts">
+            {EFFORTS.map((n) => (
+              <button key={n} type="button" className="ec-effort" aria-pressed={v.effort === n} aria-label={`${n}, ${NOMS[n]}`}
+                disabled={terminee} onClick={() => maj('effort', n)}>{n}</button>
+            ))}
           </div>
-          <div className="champ-groupe">
-            <label htmlFor="fin-temps">Temps (h:mm:ss)</label>
-            <input id="fin-temps" className="champ" inputMode="numeric" autoComplete="off" placeholder="0:30:00" value={fin.temps} onChange={(e) => maj('temps', e.target.value)} />
+          <p className={erreur ? 'ec-erreur ec-fin__aide' : 'ec-petit ec-fin__aide'} aria-live="polite">
+            {erreur || (v.effort ? `${v.effort} · ${NOMS[v.effort]}` : AIDE)}
+          </p>
+        </fieldset>
+        <fieldset className="ec-fin__groupe">
+          <legend className="ec-fin__legende">Mon ressenti</legend>
+          <div className="ec-fin__ressentis">
+            {RESSENTIS.map((r) => (
+              <button key={r} type="button" className="ec-choix" aria-pressed={v.ressenti === r} disabled={terminee}
+                onClick={() => maj('ressenti', r)}>{r}</button>
+            ))}
           </div>
+        </fieldset>
+        <div className="ec-fin__commentaire">
+          <label htmlFor="fin-commentaire" className="ec-fin__legende">{course ? 'Mes sensations' : 'Mon commentaire'}</label>
+          <textarea id="fin-commentaire" className="ec-champ" rows="4" value={v.commentaire} readOnly={terminee}
+            placeholder={terminee ? '' : 'Sensations, douleurs, ce qui a été facile ou difficile'}
+            onChange={(e) => maj('commentaire', e.target.value)} />
         </div>
+        {!terminee && <button type="submit" className="ec-bouton">Enregistrer ma séance</button>}
+      </form>
+      {etat && (
+        <p role="status" className="ec-fin__etat">
+          {etat}{etat === 'Séance enregistrée.' && <> <Link className="ec-lien" to="/espace">Voir mon tableau de bord</Link></>}
+        </p>
       )}
-
-      <fieldset className="champ-groupe">
-        <legend>Effort de la séance</legend>
-        <p className="espace-aide" id="fin-effort-aide">5 effort modéré, 10 effort maximal.</p>
-        <div className="client-choix client-choix--effort">
-          {EFFORTS.map((n) => (
-            <button key={n} type="button" className="client-choix__bouton" aria-pressed={fin.effort === n}
-              aria-describedby="fin-effort-aide" onClick={() => maj('effort', n)}>{n}</button>
-          ))}
-        </div>
-      </fieldset>
-
-      <fieldset className="champ-groupe">
-        <legend>Mon ressenti</legend>
-        <div className="client-choix">
-          {RESSENTIS.map((r) => (
-            <button key={r} type="button" className="client-choix__bouton client-choix__bouton--mot" aria-pressed={fin.ressenti === r}
-              onClick={() => maj('ressenti', fin.ressenti === r ? '' : r)}>{r}</button>
-          ))}
-        </div>
-      </fieldset>
-
-      <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
-      <button type="submit" className="bouton bouton--principal">Enregistrer ma séance</button>
-    </form>
+      {terminee && fait.commentaireCoach && <p className="ec-texte ec-fin__marie">Marie : {fait.commentaireCoach}</p>}
+    </aside>
   )
 }

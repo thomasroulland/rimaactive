@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { listeSeances, fusionnerNotes, preRemplir } from '../donnees/calculs.js'
-import { dateLongue, resumeFormat } from '../donnees/seances.js'
+import { allureVitesse, saisirSerie } from '../donnees/seances.js'
 import { noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
-import ExerciceSeance from './ExerciceSeance.jsx'
+import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
+import Consignes from './Consignes.jsx'
 import FinDeSeance from './FinDeSeance.jsx'
 
-const DELAI = 600 // ms entre la dernière frappe et l'enregistrement d'un exercice
+const DELAI = 600 // ms entre la dernière frappe et l'enregistrement
 
 function useEnLigne() {
   const [enLigne, setEnLigne] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine))
@@ -31,10 +32,15 @@ function etatEnvoi(fait, enLigne) {
       : 'Notes enregistrées sur votre téléphone. Elles partiront dès le retour du réseau.'
   }
   if (fait.enAttente) return 'Envoi en cours…'
-  return terminee ? 'Séance enregistrée. Marie la retrouve dans son espace.' : 'Notes enregistrées.'
+  return terminee ? 'Séance enregistrée.' : ''
 }
 
-// Une séance : blocs et exercices (séries pré-remplies avec le prévu), ou sortie de course, puis « Fin de séance ».
+// Lignes de séries : anciennes notes sans le champ « fait » comptées comme faites
+const avecFait = (lignes) => (lignes ?? []).map((l) => ({ ...l, fait: l.fait !== false }))
+const lignesVides = (element) => preRemplir(element).map(() => ({ charge: '', reps: '', rpe: '', fait: false }))
+const carteVide = () => ({ series: {}, notes: {}, blocs: {} })
+
+// Une séance (maquette) : blocs et exercices, ou sortie de course, puis « Fin de séance ».
 // Une clé par séance : passer d'une séance à l'autre repart d'un écran neuf (notes en attente envoyées).
 export default function Seance(props) {
   const { programmeId, seanceId } = useParams()
@@ -43,10 +49,12 @@ export default function Seance(props) {
 
 function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const enLigne = useEnLigne()
-  const [modifs, setModifs] = useState({})
+  const depuisProgramme = useLocation().state?.depuis === 'programme'
+  const [modifs, setModifs] = useState({ ...carteVide(), course: {} })
   const [refus, setRefus] = useState('')
-  const minuteries = useRef({})
-  const enAttente = useRef({})
+  const [fiche, setFiche] = useState(null)
+  const minuterie = useRef(null)
+  const enAttente = useRef(carteVide())
 
   const programme = programmes.find((p) => p.id === programmeId)
   const liste = listeSeances(programme)
@@ -60,17 +68,19 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
       : 'Vos notes n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.')
   }
 
-  const envoyerExercice = (elementId) => {
-    clearTimeout(minuteries.current[elementId])
-    const lignes = enAttente.current[elementId]
-    if (!lignes) return
-    delete enAttente.current[elementId]
-    noterSeance(programmeId, seanceId, { series: { [elementId]: lignes } }).catch(erreurEnvoi)
+  // n'attend pas le serveur : le cache hors ligne applique l'écriture tout de suite
+  const envoyer = () => {
+    clearTimeout(minuterie.current)
+    const a = enAttente.current
+    enAttente.current = carteVide()
+    const rien = ['series', 'notes', 'blocs'].every((k) => Object.keys(a[k]).length === 0) && a.distance == null && a.temps == null
+    if (rien) return
+    noterSeance(programmeId, seanceId, a).catch(erreurEnvoi)
   }
 
   // en quittant l'écran, en verrouillant le téléphone ou en fermant l'onglet : envoyer tout de suite ce qui attend
   const toutEnvoyer = useRef(null)
-  toutEnvoyer.current = () => Object.keys(enAttente.current).forEach(envoyerExercice)
+  toutEnvoyer.current = envoyer
   useEffect(() => {
     const vider = () => toutEnvoyer.current()
     const cache = () => { if (document.visibilityState === 'hidden') vider() }
@@ -83,115 +93,164 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     }
   }, [])
 
+  const retour = depuisProgramme
+    ? <Link className="ec-retour" to="/espace/programme"><Fleche />Mon programme</Link>
+    : <Link className="ec-retour" to="/espace"><Fleche />Tableau de bord</Link>
+
   if (!item) {
     return (
-      <section className="client-page">
-        <Link className="espace-retour" to="/espace/programme"><Retour /> Mon programme</Link>
-        <h1 className="client-titre">Séance introuvable</h1>
-        <p className="espace-texte">Cette séance n’est plus dans votre programme. Marie l’a peut-être déplacée ou retirée.</p>
+      <section className="ec-page ec-seance">
+        {retour}
+        <h1 className="ec-h1">Séance introuvable</h1>
+        <p className="ec-texte">Cette séance n’est plus dans votre programme. Marie l’a peut-être déplacée ou retirée.</p>
       </section>
     )
   }
 
-  const { seance, semaine, date } = item
+  const { seance, semaine } = item
   const numero = liste.filter((x) => x.semaine === semaine).indexOf(item) + 1
   const course = seance.type === 'course'
-  const notes = { ...(fait?.series ?? {}), ...modifs }
-  const entrees = fusionnerNotes(seance, notes)
-  // case « Fait » : lignes pré-remplies non cochées ; anciennes notes sans le champ comptées comme faites
-  const avecFait = (lignes) => lignes.map((l) => ({ ...l, fait: l.fait !== false }))
-  const parElement = new Map(entrees.filter((e) => e.element).map((e) => [
-    e.element.id,
-    notes[e.element.id] ? avecFait(notes[e.element.id]) : preRemplir(e.element).map((l) => ({ ...l, fait: false })),
-  ]))
-  const retires = entrees.filter((e) => !e.element).map((e) => ({ ...e, lignes: avecFait(e.lignes) }))
+  const rpeVise = programme.semaines?.[semaine - 1]?.rpe
 
-  const changer = (elementId, lignes) => {
+  // ce qui est enregistré, recouvert par ce qui vient d'être saisi
+  const series = { ...(fait?.series ?? {}), ...modifs.series }
+  const notes = { ...(fait?.notes ?? {}), ...modifs.notes }
+  const blocs = { ...(fait?.blocs ?? {}), ...modifs.blocs }
+  const sortie = {
+    distance: modifs.course.distance ?? fait?.distance ?? '',
+    temps: modifs.course.temps ?? fait?.temps ?? '',
+  }
+  const lignes = (el) => (series[el.id] ? avecFait(series[el.id]) : lignesVides(el))
+  const retires = fusionnerNotes(seance, series).filter((e) => !e.element)
+
+  const noter = (cle, id, valeur) => {
     setRefus('')
-    setModifs((m) => ({ ...m, [elementId]: lignes }))
-    enAttente.current[elementId] = lignes
-    clearTimeout(minuteries.current[elementId])
-    minuteries.current[elementId] = setTimeout(() => envoyerExercice(elementId), DELAI)
+    setModifs((m) => ({ ...m, [cle]: { ...m[cle], [id]: valeur } }))
+    enAttente.current[cle][id] = valeur
+    clearTimeout(minuterie.current)
+    minuterie.current = setTimeout(envoyer, DELAI)
+  }
+  const actions = verrou ? null : {
+    serie: (el, i, cle, v) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? saisirSerie(l, cle, v, el) : l))),
+    note: (id, v) => noter('notes', id, v),
+    chargeSeule: (id, v) => noter('series', id, [{ charge: v, reps: '', rpe: '', fait: v.trim() !== '' }]),
+    bloc: (id, cle, v) => noter('blocs', id, { resultat: '', rpe: '', fait: false, note: '', ...blocs[id], [cle]: v }),
+  }
+  const saisirSortie = (cle, v) => {
+    setRefus('')
+    setModifs((m) => ({ ...m, course: { ...m.course, [cle]: v } }))
+    enAttente.current[cle] = v
+    clearTimeout(minuterie.current)
+    minuterie.current = setTimeout(envoyer, DELAI)
   }
 
   const terminer = (fin) => {
-    Object.values(minuteries.current).forEach(clearTimeout)
-    enAttente.current = {}
+    clearTimeout(minuterie.current)
+    enAttente.current = carteVide()
     setRefus('')
-    // toutes les séries affichées, y compris celles pré-remplies jamais touchées
-    const series = course ? undefined : Object.fromEntries(parElement)
-    terminerSeance(programmeId, seanceId, { ...fin, series }).catch(erreurEnvoi)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    const toutes = {}
+    if (!course) {
+      for (const b of seance.blocs ?? []) {
+        for (const el of b.elements ?? []) {
+          if (series[el.id]) toutes[el.id] = series[el.id]
+          // séries jamais touchées : enregistrées avec le prévu, non faites
+          else if ((b.format ?? 'series') === 'series') toutes[el.id] = preRemplir(el).map((l) => ({ ...l, fait: false }))
+        }
+      }
+    }
+    terminerSeance(programmeId, seanceId, { ...fin, ...(course ? sortie : {}), series: toutes, notes, blocs }).catch(erreurEnvoi)
   }
 
   const infos = [
-    { picto: 'clock', texte: `${dateLongue(date)}${seance.duree ? ` · ${seance.duree}` : ''}` },
-    seance.lieu && { picto: 'map-pin', texte: seance.lieu },
-    seance.objectif && { picto: 'check-square', texte: seance.objectif },
+    seance.lieu && { picto: 'map-pin', libelle: 'Lieu', texte: seance.lieu },
+    seance.objectif && { picto: 'check-square', libelle: 'Objectif', texte: seance.objectif },
+    !course && rpeVise && { picto: 'barbell', libelle: 'Effort visé', texte: `RPE ${rpeVise}` },
   ].filter(Boolean)
-  const envoi = etatEnvoi(fait, enLigne)
+  const allure = allureVitesse(sortie.distance, sortie.temps)
+  const prevuCourse = [seance.distance, seance.temps].filter(Boolean).join(' · ')
 
   return (
-    <section className="client-page client-seance">
-      <Link className="espace-retour" to="/espace/programme"><Retour /> Mon programme</Link>
-      <div className="client-pile client-pile--serre">
-        <p className="surtitre">Semaine {semaine} · séance {numero}</p>
-        <h1 className="client-titre">{seance.titre || `Séance ${numero}`}</h1>
+    <section className="ec-page ec-seance">
+      {retour}
+      <div className="ec-seance__titres">
+        <p className="ec-surtitre">Semaine {semaine} · séance {numero}</p>
+        <h1 className="ec-h1">{seance.titre || `Séance ${numero}`}</h1>
       </div>
-      <ul className="client-infos">
-        {infos.map((i) => <li key={i.picto}><Picto nom={i.picto} taille={22} />{i.texte}</li>)}
-      </ul>
-
-      {(refus || envoi) && (
-        <p className={`client-envoi${refus ? ' client-envoi--refus' : ''}`} role="status">{refus || envoi}</p>
-      )}
-
-      {course ? (
-        <section className="client-pile" aria-labelledby="titre-sortie">
-          <h2 id="titre-sortie" className="client-sous-titre">Ma sortie</h2>
-          <div className="espace-carte">
-            {(seance.distance || seance.temps) && (
-              <p className="client-exo__prevu">{[seance.distance && `Distance visée : ${seance.distance}`, seance.temps && `Temps visé : ${seance.temps}`].filter(Boolean).join(' · ')}</p>
-            )}
-            {seance.consigne && <p className="espace-texte">{seance.consigne}</p>}
-          </div>
-        </section>
-      ) : (
-        <>
-          {(seance.blocs ?? []).length === 0 && retires.length === 0 && (
-            <p className="espace-texte">Marie n’a pas encore ajouté d’exercice à cette séance.</p>
-          )}
-          {(seance.blocs ?? []).map((b) => (
-            <section key={b.id} className="client-pile" aria-labelledby={`bloc-${b.id}`}>
-              <h2 id={`bloc-${b.id}`} className="client-bloc">
-                Bloc {b.lettre} <span className="espace-bloc__format">{resumeFormat(b)}</span>
-              </h2>
-              <ol className="client-liste client-liste--exos">
-                {(b.elements ?? []).map((el, ei) => (
-                  <ExerciceSeance key={el.id} element={el} code={`${b.lettre}${ei + 1}`} enSeries={b.format === 'series'}
-                    lignes={parElement.get(el.id)} verrou={verrou} changer={(l) => changer(el.id, l)} />
-                ))}
-              </ol>
-            </section>
+      {infos.length > 0 && (
+        <ul className="ec-seance__infos">
+          {infos.map((i) => (
+            <li key={i.picto}><Picto nom={i.picto} taille={22} /><span><span className="ec-seance__libelle">{i.libelle}</span>{i.texte}</span></li>
           ))}
-          {retires.length > 0 && (
-            <section className="client-pile" aria-label="Exercices retirés du programme">
-              <ol className="client-liste client-liste--exos">
-                {retires.map((r, i) => (
-                  <ExerciceSeance key={i} element={null} code={`R${i + 1}`} enSeries lignes={r.lignes} verrou />
-                ))}
-              </ol>
-            </section>
-          )}
-        </>
+        </ul>
       )}
+      {refus && <p className="ec-erreur" role="alert">{refus}</p>}
 
-      <FinDeSeance key={fait?.statut} course={course} fait={fait} envoyer={terminer} />
+      <div className="ec-seance__corps">
+        <div className="ec-seance__gauche">
+          {course ? (
+            <section className="ec-sbloc" aria-labelledby="titre-sortie">
+              <div className="ec-sbloc__tete"><h2 id="titre-sortie" className="ec-h3 ec-sbloc__titre">Ma sortie</h2></div>
+              {(prevuCourse || seance.consigne) && (
+                <div className="ec-carte ec-sortie__prevu">
+                  {prevuCourse && <p className="ec-sexo__nom">{prevuCourse}</p>}
+                  {seance.consigne && <p className="ec-petit ec-sortie__consigne">{seance.consigne}</p>}
+                </div>
+              )}
+              <div className="ec-carte ec-sortie">
+                <div className="ec-sortie__champs">
+                  <div>
+                    <label className="ec-etiquette" htmlFor="sortie-distance">Distance (km)</label>
+                    <input id="sortie-distance" className="ec-champ" type="text" inputMode="decimal" autoComplete="off" placeholder={verrou ? '' : '4,0'}
+                      value={sortie.distance} readOnly={verrou} onChange={(e) => saisirSortie('distance', e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="ec-etiquette" htmlFor="sortie-temps">Temps (h:mm:ss)</label>
+                    <input id="sortie-temps" className="ec-champ" type="text" inputMode="numeric" autoComplete="off" placeholder={verrou ? '' : '0:30:00'}
+                      value={sortie.temps} readOnly={verrou} onChange={(e) => saisirSortie('temps', e.target.value)} />
+                  </div>
+                </div>
+                <div className="ec-sortie__allure" aria-live="polite">
+                  <p className="ec-texte">Allure <strong>{allure.allure}</strong></p>
+                  <p className="ec-texte">Vitesse <strong>{allure.vitesse}</strong></p>
+                </div>
+              </div>
+            </section>
+          ) : (
+            <>
+              {(seance.blocs ?? []).length === 0 && retires.length === 0 && (
+                <p className="ec-texte">Marie n’a pas encore ajouté d’exercice à cette séance.</p>
+              )}
+              {(seance.blocs ?? []).map((b) => (
+                <BlocSeries key={b.id} bloc={b} saisie={{ lignes, notes, blocs }} actions={actions} lecture={verrou} voirConsignes={setFiche} />
+              ))}
+              {retires.length > 0 && (
+                <section className="ec-sbloc" aria-label="Exercices retirés du programme">
+                  <ol className="ec-sexos">
+                    {retires.map((r, i) => (
+                      <li key={i} className="ec-sexo">
+                        <div className="ec-sexo__texte">
+                          <h3 className="ec-sexo__nom">Exercice retiré du programme</h3>
+                          <p className="ec-petit">Marie a retiré cet exercice de la séance. Les séries que vous aviez notées restent enregistrées.</p>
+                        </div>
+                        <TableauSeries base={`retire-${i}`} nom="Exercice retiré" lignes={avecFait(r.lignes)} lecture changer={() => {}} />
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
+            </>
+          )}
+        </div>
+
+        <FinDeSeance key={fait?.statut} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer} />
+      </div>
+
+      <Consignes element={fiche} fermer={() => setFiche(null)} />
     </section>
   )
 }
 
-const Retour = () => (
+const Fleche = () => (
   <svg width="20" height="20" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M216 128H40M112 56l-72 72 72 72" />
   </svg>

@@ -92,6 +92,7 @@ export default function MonProgramme({ profil, programmes, programme, seances })
                   <Link
                     className="ec-pcarte"
                     to={`/espace/seance/${bloc.programme.id}/${x.seance.id}`}
+                    state={{ depuis: 'programme' }}
                     aria-label={`Séance ${x.numero}, ${x.seance.titre || 'sans titre'}, ${statut}`}
                   >
                     <span className="ec-pcarte__numero" aria-hidden="true">{String(x.numero).padStart(2, '0')}</span>
