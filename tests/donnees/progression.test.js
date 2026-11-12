@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  avancement, blocsDuClient, programmeAffiche, semaineDe, seancesDeLaSemaine, bonjour, nettoyerMesures, initiales,
+  avancement, blocsDuClient, programmeAffiche, semaineDe, seancesDeLaSemaine, bonjour, nettoyerMesures, initiales, dateComplete, evolutionMesures,
 } from '../../src/espace/donnees/progression.js'
 
 const JOURS3 = ['Lundi', 'Mercredi', 'Vendredi']
@@ -133,4 +133,28 @@ describe('programmeAffiche', () => {
   it('avant tout début : le prochain', () => expect(programmeAffiche([b], '2026-11-12').id).toBe('b'))
   it('tout est passé : le dernier', () => expect(programmeAffiche([a, b], '2027-03-01').id).toBe('b'))
   it('un programme terminé laisse la place au suivant à venir', () => expect(programmeAffiche([prog('2026-10-05', 4, 'c'), b], '2026-11-12').id).toBe('b'))
+})
+
+describe('dateComplete', () => {
+  it('écrit la date en toutes lettres', () => {
+    expect(dateComplete('2026-11-12')).toBe('12 novembre 2026')
+    expect(dateComplete('2026-01-05')).toBe('5 janvier 2026')
+  })
+})
+
+describe('evolutionMesures', () => {
+  it('invite à une deuxième mesure tant que rien ne se compare', () => {
+    expect(evolutionMesures([])).toBe('Ajoutez une deuxième mesure pour voir votre évolution.')
+    expect(evolutionMesures([{ date: '2026-11-01', poids: 72.5, taille: null }])).toBe('Ajoutez une deuxième mesure pour voir votre évolution.')
+  })
+  it('compare la première et la dernière valeur de chaque mesure, à la française', () => {
+    const m = [
+      { date: '2026-12-01', poids: 70, taille: 80, bras: null },
+      { date: '2026-11-01', poids: 72.5, taille: 80, bras: 30 },
+    ]
+    expect(evolutionMesures(m)).toBe('Depuis le début : poids −2,5 kg · taille 0 cm')
+  })
+  it('signe plus pour une hausse', () => {
+    expect(evolutionMesures([{ date: '2026-11-01', bras: 30 }, { date: '2026-12-01', bras: 31.5 }])).toBe('Depuis le début : bras +1,5 cm')
+  })
 })

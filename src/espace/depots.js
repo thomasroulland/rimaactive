@@ -1,5 +1,5 @@
 // Lectures et écritures Firestore / API de l'espace. Parties utilisateurs (tâche 6).
-import { collection, doc, onSnapshot, query, where, updateDoc, setDoc, getDoc, getDocs, serverTimestamp } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, onSnapshot, query, where, updateDoc, setDoc, getDoc, getDocs, serverTimestamp } from 'firebase/firestore'
 import { ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth, db, stockage } from './firebase.js'
@@ -315,4 +315,62 @@ export async function retirerAvatar(uid) {
     urls.delete(ancien)
     try { await deleteObject(ref(stockage, ancien)) } catch { /* déjà absent */ }
   }
+}
+
+// ---------- Mesures et photos de progression du coaché ----------
+
+// Écoute les mesures du client, de la plus récente à la plus ancienne.
+export function ecouterMesMesures(uid, rappel, erreur) {
+  return onSnapshot(
+    collection(db, 'utilisateurs', uid, 'mesures'),
+    (s) => rappel(
+      s.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.id.localeCompare(b.id)),
+    ),
+    erreur,
+  )
+}
+
+// `mesure` : résultat de nettoyerMesures (date 'AAAA-MM-JJ', poids… nombres ou null). Pas de mise à jour possible : on ajoute ou on supprime.
+export function ajouterMesure(uid, mesure) {
+  return addDoc(collection(db, 'utilisateurs', uid, 'mesures'), { ...mesure, creeLe: serverTimestamp() })
+}
+
+export function supprimerMesure(uid, id) {
+  return deleteDoc(doc(db, 'utilisateurs', uid, 'mesures', id))
+}
+
+export function ecouterMesPhotos(uid, rappel, erreur) {
+  return onSnapshot(
+    collection(db, 'utilisateurs', uid, 'photos'),
+    (s) => rappel(
+      s.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.id.localeCompare(b.id)),
+    ),
+    erreur,
+  )
+}
+
+// Réduit la photo, l'envoie sous clients/{uid}/progression/, puis crée le document ; si le document échoue, supprime le fichier.
+// Rejette Error('format') ou Error('taille') avant tout envoi ; Error('envoi') si l'envoi échoue.
+export async function ajouterPhoto(uid, fichier, date) {
+  const blob = await reduireImage(fichier)
+  const chemin = `clients/${uid}/progression/${date}-${Date.now()}.jpg`
+  try {
+    await uploadBytes(ref(stockage, chemin), blob, { contentType: 'image/jpeg' })
+    await addDoc(collection(db, 'utilisateurs', uid, 'photos'), { date, chemin, creeLe: serverTimestamp() })
+  } catch (e) {
+    try { await deleteObject(ref(stockage, chemin)) } catch { /* pas envoyée */ }
+    if (e?.code === 'permission-denied' || e?.code === 'storage/unauthorized') throw Object.assign(new Error('permission-denied'), { code: 'permission-denied' })
+    throw Object.assign(new Error('envoi'), { code: 'envoi' })
+  }
+}
+
+// Supprime le document puis le fichier (un fichier déjà absent n'est pas une erreur).
+export async function supprimerPhoto(uid, photo) {
+  await deleteDoc(doc(db, 'utilisateurs', uid, 'photos', photo.id))
+  urls.delete(photo.chemin)
+  try { await deleteObject(ref(stockage, photo.chemin)) } catch { /* déjà absent */ }
 }

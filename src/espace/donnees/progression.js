@@ -80,3 +80,26 @@ export function initiales(prenom, nom) {
   const l = (t) => (t ?? '').trim().charAt(0).toUpperCase()
   return l(prenom) + l(nom)
 }
+
+// « 12 novembre 2026 » (jour local 'AAAA-MM-JJ', jamais via UTC)
+export function dateComplete(iso) {
+  const [a, m, j] = String(iso || '').split('-').map(Number)
+  if (!a || !m || !j) return String(iso || '')
+  return `${j} ${MOIS_FR[m - 1]} ${a}`
+}
+
+const UNITES = { poids: ' kg', taille: ' cm', hanches: ' cm', poitrine: ' cm', bras: ' cm', cuisse: ' cm' }
+const FR = (n) => String(n).replace('.', ',')
+
+// « Depuis le début : poids −2,5 kg · taille −1 cm » ; il faut au moins deux valeurs d'une même mesure.
+export function evolutionMesures(mesures) {
+  const tri = [...(mesures ?? [])].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+  const parties = []
+  for (const champ of CHAMPS_MESURES) {
+    const vals = tri.map((m) => m[champ]).filter((v) => typeof v === 'number')
+    if (vals.length < 2) continue
+    const d = Math.round((vals[vals.length - 1] - vals[0]) * 10) / 10
+    parties.push(`${champ} ${d > 0 ? '+' : d < 0 ? '\u2212' : ''}${FR(Math.abs(d))}${UNITES[champ]}`)
+  }
+  return parties.length ? `Depuis le début : ${parties.join(' · ')}` : 'Ajoutez une deuxième mesure pour voir votre évolution.'
+}
