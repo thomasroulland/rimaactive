@@ -30,20 +30,34 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['avatar'])
         && (request.resource.data.avatar == null
           || (request.resource.data.avatar is string
-            && request.resource.data.avatar.matches('clients/' + uid + '/profil/.+')));
+            && request.resource.data.avatar.matches('clients/' + uid + '/profil/[^/]+')));
       // Le coach modifie le profil (statut, nom…), jamais le rôle.
       allow update: if estCoach() && request.resource.data.role == resource.data.role;
 
       // Mesures du client : lecture, création, suppression par lui ou la coach ; pas de mise à jour.
+      function mesureOuNull(champ) {
+        return !(champ in request.resource.data) || request.resource.data[champ] == null || request.resource.data[champ] is number;
+      }
       match /mesures/{id} {
-        allow read, create, delete: if estMoi(uid) || estCoach();
+        allow read, delete: if estMoi(uid) || estCoach();
+        allow create: if (estMoi(uid) || estCoach())
+          && request.resource.data.keys().hasOnly(['date', 'poids', 'taille', 'hanches', 'poitrine', 'bras', 'cuisse', 'creeLe'])
+          && request.resource.data.date is string
+          && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && request.resource.data.creeLe == request.time
+          && mesureOuNull('poids') && mesureOuNull('taille') && mesureOuNull('hanches')
+          && mesureOuNull('poitrine') && mesureOuNull('bras') && mesureOuNull('cuisse');
       }
       // Photos de progression : le fichier doit être dans le dossier du client.
       match /photos/{id} {
         allow read, delete: if estMoi(uid) || estCoach();
         allow create: if (estMoi(uid) || estCoach())
+          && request.resource.data.keys().hasOnly(['date', 'chemin', 'creeLe'])
+          && request.resource.data.date is string
+          && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && request.resource.data.creeLe == request.time
           && request.resource.data.chemin is string
-          && request.resource.data.chemin.matches('clients/' + uid + '/progression/.+');
+          && request.resource.data.chemin.matches('clients/' + uid + '/progression/[^/]+');
       }
     }
 
