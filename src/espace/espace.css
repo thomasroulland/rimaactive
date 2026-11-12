@@ -52,3 +52,53 @@
   .espace-dialogue[open] { animation: espace-monte 0.35s cubic-bezier(.3, .7, .2, 1); }
   @keyframes espace-monte { from { transform: translateY(16px); opacity: 0; } }
 }
+
+/* ---------- Espace coach : onglets ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.espace-onglets { background: var(--craie); border-bottom: 1px solid var(--filet); padding: 0 var(--gouttiere); }
+.espace-onglets__ligne { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0 28px; }
+.espace-onglet {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0; background: none; border: 0;
+  border-bottom: 3px solid transparent; font: inherit; font-size: 16px; font-weight: 600; color: var(--gris-chaud);
+  text-decoration: none; cursor: pointer;
+}
+.espace-onglet:hover { color: var(--encre); }
+.espace-onglet.active { color: var(--encre); border-bottom-color: var(--vermillon); }
+.espace-onglet:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.espace-onglet--sortie { margin-left: auto; font-weight: 400; }
+
+/* ---------- Banque d'exercices ---------- */
+.espace-recherche { align-items: stretch; }
+.espace-recherche .champ-groupe { max-width: 520px; }
+.espace-grille--exos { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.espace-exo { align-items: stretch; gap: 8px; padding: 12px; height: 100%; color: var(--encre); text-decoration: none; transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s cubic-bezier(.3, .7, .2, 1); }
+.espace-exo:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(22, 21, 20, 0.12); }
+.espace-exo:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.espace-exo__photo, .espace-photo__image { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: var(--craie-fonce); }
+.espace-photo--vide { display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; color: var(--gris-chaud); font-size: 14px; line-height: 20px; font-weight: 600; }
+.espace-exo__nom { font-size: 20px; line-height: 24px; font-weight: 900; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.espace-exo__muscles { color: var(--gris-chaud); font-size: 14px; line-height: 20px; font-weight: 600; }
+.espace-exo .espace-statut { align-self: flex-start; }
+.espace-retour { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 44px; color: var(--encre); font-weight: 600; text-decoration: none; }
+.espace-retour:hover { text-decoration: underline; text-underline-offset: 3px; }
+.espace-retour:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.espace-verrou { margin-top: 12px; background: var(--craie-fonce); border-radius: 12px; padding: 12px 16px; font-size: 14px; line-height: 20px; color: var(--encre); }
+.espace-fiche { display: flex; flex-direction: column; gap: 24px; }
+.espace-fiche__champs, .espace-fiche__photos { align-items: stretch; }
+.espace-fiche textarea.champ { min-height: 140px; resize: vertical; }
+.espace-muscles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 16px; }
+.espace-muscles .espace-case { align-items: center; min-height: 44px; }
+.espace-sous-titre { margin: 0; font-size: 24px; line-height: 28px; font-weight: 900; letter-spacing: -0.03em; }
+.espace-photos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+.espace-photo { display: flex; flex-direction: column; gap: 4px; }
+.espace-photo__legende { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
+.espace-photo__actions { display: flex; flex-wrap: wrap; gap: 0 4px; }
+.espace-photo__actions .espace-lien { padding: 8px 6px; }
+.espace-lien:disabled { opacity: 0.4; cursor: default; text-decoration: none; }
+.espace-fiche__photos .bouton { align-self: flex-start; }
+.espace-fiche__bas { position: relative; display: flex; flex-direction: column; gap: 12px; }
+@media (min-width: 900px) {
+  .espace-fiche { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; }
+  .espace-fiche__bas { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { .espace-exo { transition: none; } .espace-exo:hover { transform: none; } }

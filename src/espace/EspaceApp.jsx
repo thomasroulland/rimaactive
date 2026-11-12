@@ -5,7 +5,7 @@ import useSession from './useSession.js'
 import useTitre from '../components/useTitre.js'
 import Connexion from './Connexion.jsx'
 import Accord from './Accord.jsx'
-import MesCoaches from './coach/MesCoaches.jsx'
+import EspaceCoach from './coach/EspaceCoach.jsx'
 import './espace.css'
 
 // Racine de l'espace (chargée à la demande) : garde selon la session et le rôle.
@@ -20,7 +20,7 @@ export default function EspaceApp() {
   if (role === 'coach') {
     return (
       <Routes>
-        <Route path="coach/*" element={<MesCoaches />} />
+        <Route path="coach/*" element={<EspaceCoach />} />
         <Route path="*" element={<Navigate to="/espace/coach" replace />} />
       </Routes>
     )

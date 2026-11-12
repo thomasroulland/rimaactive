@@ -1,8 +1,10 @@
 // Lectures et écritures Firestore / API de l'espace. Parties utilisateurs (tâche 6).
-import { collection, doc, onSnapshot, query, where, updateDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, doc, onSnapshot, query, where, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage'
 import { sendPasswordResetEmail } from 'firebase/auth'
-import { auth, db } from './firebase.js'
+import { auth, db, stockage } from './firebase.js'
 import { semaineCourante, aujourdhuiIso } from './donnees/calculs.js'
+import { reduireImage } from './donnees/photos.js'
 
 // Appelle une route /api/... avec le jeton du coach. Renvoie { statut, donnees } ; ne lève que si le réseau échoue.
 export async function appelerApi(chemin, corps) {
@@ -78,4 +80,69 @@ export async function donnerAccord(uid) {
 export async function supprimerClient(uid) {
   const { statut } = await appelerApi('/api/supprimer-client', { uid })
   if (statut !== 204) { const e = new Error('api'); e.code = `api/${statut}`; throw e }
+}
+
+// ---------- Banque d'exercices (tâche 7) ----------
+
+// Écoute en direct la banque : rappel([{ id, nom, consignes, muscles, photos, retire, majLe }]) triée par nom.
+export function ecouterExercices(rappel, erreur) {
+  return onSnapshot(
+    collection(db, 'exercices'),
+    (s) => rappel(
+      s.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.nom || '').localeCompare(b.nom || '', 'fr')),
+    ),
+    erreur,
+  )
+}
+
+// Crée ou met à jour une fiche. `exercice.photos` = chemins Storage conservés (dans l'ordre) ;
+// `nouvellesPhotos` = fichiers à réduire puis ajouter à la suite. Les photos qui n'y sont plus
+// sont supprimées de Storage une fois la fiche enregistrée. Renvoie l'identifiant.
+export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
+  const reference = exercice.id ? doc(db, 'exercices', exercice.id) : doc(collection(db, 'exercices'))
+  const id = reference.id
+  const gardees = exercice.photos ?? []
+
+  // réduire d'abord (refus « format » / « taille » avant tout envoi)
+  const reduites = []
+  for (const f of nouvellesPhotos) reduites.push(await reduireImage(f))
+
+  const envoyees = []
+  for (const blob of reduites) {
+    const chemin = `exercices/${id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`
+    await uploadBytes(ref(stockage, chemin), blob, { contentType: 'image/jpeg' })
+    envoyees.push(chemin)
+  }
+
+  await setDoc(reference, {
+    nom: exercice.nom.trim(),
+    consignes: (exercice.consignes ?? '').trim(),
+    muscles: exercice.muscles ?? [],
+    photos: [...gardees, ...envoyees],
+    retire: exercice.retire ?? false,
+    majLe: serverTimestamp(),
+  })
+
+  // photos retirées de la fiche : suppression des fichiers (échec sans gravité)
+  for (const chemin of exercice.photosRetirees ?? []) {
+    try { await deleteObject(ref(stockage, chemin)) } catch { /* déjà absent */ }
+    urls.delete(chemin)
+  }
+  return id
+}
+
+// « Retirer » : l'exercice sort de la banque, ses fichiers restent (les programmes gardent leur copie des chemins).
+export async function retirerExercice(id) {
+  await updateDoc(doc(db, 'exercices', id), { retire: true, majLe: serverTimestamp() })
+}
+
+const urls = new Map()
+// Adresse affichable d'une photo (mise en mémoire le temps de la session)
+export function urlPhoto(chemin) {
+  if (!urls.has(chemin)) {
+    urls.set(chemin, getDownloadURL(ref(stockage, chemin)).catch((e) => { urls.delete(chemin); throw e }))
+  }
+  return urls.get(chemin)
 }
