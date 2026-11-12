@@ -25,6 +25,10 @@ describe('prescription', () => {
   it('résume le format du bloc', () => {
     expect(resumeFormat({ format: 'series' })).toBe('Séries classiques')
     expect(resumeFormat({ format: 'emom', duree: '12' })).toBe('EMOM 12 min')
+    expect(resumeFormat({ format: 'tabata', tours: '8', travail: '20', repos: '10' })).toBe('TABATA 8 × 20 s / 10 s')
+    expect(resumeFormat({ format: 'hiit', tours: '6', travail: '40', repos: '20' })).toBe('HIIT 6 × 40 s / 20 s')
+    expect(resumeFormat({ format: 'hiit', travail: '40' })).toBe('HIIT 40 s')
+    expect(resumeFormat({ format: 'tabata' })).toBe('TABATA')
   })
 })
 

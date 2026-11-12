@@ -77,7 +77,7 @@ chacune leur propre document, plus tard.
   `publié`), et les semaines :
   - semaine : numéro, mot de la semaine, RPE visé ;
   - séance : identifiant, titre, jour, lieu, durée, objectif, type (`force` ou `course`), consigne ;
-  - bloc : lettre (A, B, C…), format (`series`, `emom`, `amrap`, `tabata`, `hiit`) et ses réglages (durée, repos) ;
+  - bloc : lettre (A, B, C…), format (`series`, `emom`, `amrap`, `tabata`, `hiit`) et ses réglages (durée pour EMOM et AMRAP ; travail, repos et tours pour TABATA et HIIT) ;
   - élément : exercice (copie du nom, des consignes et des photos au moment de l'ajout, pour qu'un exercice retiré
     ou modifié dans la banque ne change pas un programme existant), séries, répétitions, charge ou % du 1RM, RPE,
     repos, tempo, commentaire ;

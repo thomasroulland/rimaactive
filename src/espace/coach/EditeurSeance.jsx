@@ -1,3 +1,4 @@
+import { resumeFormat } from '../donnees/seances.js'
 import { JOURS } from '../donnees/calculs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice from './ChoixExercice.jsx'
@@ -10,14 +11,8 @@ export const FORMATS = [
   ['hiit', 'HIIT'],
 ]
 
-function resumeFormat(b) {
-  if (b.format === 'emom' || b.format === 'amrap') return b.duree ? `${b.format.toUpperCase()} ${b.duree} min` : b.format.toUpperCase()
-  if (b.format === 'tabata' || b.format === 'hiit') {
-    const d = [b.duree && `${b.duree} min`, b.repos && `repos ${b.repos} s`].filter(Boolean).join(', ')
-    return `${b.format.toUpperCase()}${d ? ` ${d}` : ''}`
-  }
-  return 'Séries classiques'
-}
+// réglages proposés quand on choisit TABATA ou HIIT (maquette de Marie) : travail, repos, tours
+const REGLAGES_FORMAT = { tabata: { travail: '20', repos: '10', tours: '8' }, hiit: { travail: '40', repos: '20', tours: '6' } }
 
 function Champ({ id, label, valeur, changer, large, mode, multiligne }) {
   return (
@@ -82,15 +77,23 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                   <div className="espace-params espace-params--bloc">
                     <div className="champ-groupe espace-param">
                       <label htmlFor={`bloc-${b.id}-format`}>Format du bloc</label>
-                      <select id={`bloc-${b.id}-format`} className="champ" value={b.format} onChange={(e) => majBloc(bi, 'format', e.target.value)}>
+                      <select id={`bloc-${b.id}-format`} className="champ" value={b.format} onChange={(e) => {
+                        const f = e.target.value
+                        majBloc(bi, 'format', f)
+                        Object.entries(REGLAGES_FORMAT[f] ?? {}).forEach(([cle, v]) => { if (!b[cle]) majBloc(bi, cle, v) })
+                      }}>
                         {FORMATS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                       </select>
                     </div>
-                    {b.format !== 'series' && (
+                    {(b.format === 'emom' || b.format === 'amrap') && (
                       <Champ id={`bloc-${b.id}-duree`} label="Durée (min)" mode="numeric" valeur={b.duree} changer={(v) => majBloc(bi, 'duree', v)} />
                     )}
                     {(b.format === 'tabata' || b.format === 'hiit') && (
-                      <Champ id={`bloc-${b.id}-repos`} label="Repos (s)" mode="numeric" valeur={b.repos} changer={(v) => majBloc(bi, 'repos', v)} />
+                      <>
+                        <Champ id={`bloc-${b.id}-travail`} label="Travail (s)" mode="numeric" valeur={b.travail} changer={(v) => majBloc(bi, 'travail', v)} />
+                        <Champ id={`bloc-${b.id}-repos`} label="Repos (s)" mode="numeric" valeur={b.repos} changer={(v) => majBloc(bi, 'repos', v)} />
+                        <Champ id={`bloc-${b.id}-tours`} label="Tours" mode="numeric" valeur={b.tours} changer={(v) => majBloc(bi, 'tours', v)} />
+                      </>
                     )}
                   </div>
                 </div>

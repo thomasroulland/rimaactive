@@ -33,9 +33,11 @@ export function fr(v) {
 export function resumeFormat(bloc) {
   const f = bloc?.format
   if (f === 'emom' || f === 'amrap') return bloc.duree ? `${f.toUpperCase()} ${bloc.duree} min` : f.toUpperCase()
+  // TABATA / HIIT (maquette de Marie) : « TABATA 8 × 20 s / 10 s » = tours × travail / repos
   if (f === 'tabata' || f === 'hiit') {
-    const d = [bloc.duree && `${bloc.duree} min`, bloc.repos && `repos ${bloc.repos} s`].filter(Boolean).join(', ')
-    return `${f.toUpperCase()}${d ? ` ${d}` : ''}`
+    const effort = bloc.travail ? `${bloc.travail} s` : ''
+    const cycle = [bloc.tours && effort ? `${bloc.tours} × ${effort}` : effort, bloc.repos && `${bloc.repos} s`].filter(Boolean).join(' / ')
+    return `${f.toUpperCase()}${cycle ? ` ${cycle}` : ''}`
   }
   return 'Séries classiques'
 }

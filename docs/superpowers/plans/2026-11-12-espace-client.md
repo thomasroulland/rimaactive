@@ -86,7 +86,7 @@ Modifiés : `package.json`, `vercel.json`, `src/App.jsx`, `src/components/Entete
 { client: uid, nom, debut: 'AAAA-MM-JJ', parSemaine, statut: 'brouillon' | 'publié', majLe,
   semaines: [{ id, mot, rpe, seances: [{ id, titre, jour /* 'Lundi'… */, lieu, duree, objectif,
     type: 'force' | 'course', consigne, distance, temps,
-    blocs: [{ id, lettre, format: 'series' | 'emom' | 'amrap' | 'tabata' | 'hiit', duree, repos,
+    blocs: [{ id, lettre, format: 'series' | 'emom' | 'amrap' | 'tabata' | 'hiit', duree, travail, repos, tours,
       elements: [{ id, exoId, nom, consignes, muscles, photos, series, reps, charge, pct, rpe, repos, tempo,
         commentaire }] }] }] }] }
 // seancesFaites/{programmeId}_{seanceId}
