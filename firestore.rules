@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function connecte() {
+      return request.auth != null;
+    }
+    function estCoach() {
+      return connecte() && request.auth.token.role == 'coach';
+    }
+    function estMoi(uid) {
+      return connecte() && request.auth.uid == uid;
+    }
+
+    // Profils : création et suppression uniquement par l'API (compte de service).
+    match /utilisateurs/{uid} {
+      allow read: if estMoi(uid) || estCoach();
+      // Le client accepte l'accord santé une seule fois, sans toucher à rien d'autre.
+      allow update: if estMoi(uid)
+        && resource.data.accordSante == null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['accordSante', 'statut'])
+        && request.resource.data.accordSante == request.time
+        && request.resource.data.statut == 'actif';
+    }
+
+    match /exercices/{id} {
+      allow read, write: if estCoach();
+    }
+
+    match /programmes/{id} {
+      allow read: if estCoach()
+        || (connecte() && resource.data.client == request.auth.uid && resource.data.statut == 'publié');
+      allow write: if estCoach();
+    }
+
+    match /seancesFaites/{id} {
+      allow read: if estCoach() || (connecte() && resource.data.client == request.auth.uid);
+
+      // Identifiant ${programme}_${seance} : une seule séance faite par séance, même si « Fin de séance » part deux fois.
+      allow create: if connecte()
+        && request.resource.data.client == request.auth.uid
+        && id == request.resource.data.programme + '_' + request.resource.data.seance
+        && request.resource.data.statut in ['en cours', 'terminée']
+        && get(/databases/$(database)/documents/programmes/$(request.resource.data.programme)).data.client == request.auth.uid
+        && get(/databases/$(database)/documents/programmes/$(request.resource.data.programme)).data.statut == 'publié';
+
+      allow update: if
+        // Le client modifie sa séance tant qu'elle est en cours.
+        (connecte()
+          && resource.data.client == request.auth.uid
+          && resource.data.statut == 'en cours'
+          && request.resource.data.client == resource.data.client
+          && request.resource.data.programme == resource.data.programme
+          && request.resource.data.seance == resource.data.seance
+          && request.resource.data.statut in ['en cours', 'terminée'])
+        // Le coach commente une séance terminée, rien d'autre.
+        || (estCoach()
+          && resource.data.statut == 'terminée'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentaireCoach', 'majLe']));
+
+      allow delete: if false;
+    }
+  }
+}
