@@ -1,4 +1,3 @@
-import { ACompleter } from '../components/PageJuridique.jsx'
 import { CONTACT } from '../components/liens.js'
 
 const Email = () => <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
@@ -21,7 +20,7 @@ export const SECTIONS_CONFIDENTIALITE = [
     titre: 'Responsable du traitement',
     contenu: (
       <p>
-        Marie Sillas, Rimaactive, <ACompleter>adresse</ACompleter>. Contact pour toute question sur vos données :{' '}
+        Marie Sillas, Rimaactive, 26 rue d’Epernon, 78550 Houdan. Contact pour toute question sur vos données :{' '}
         <Email />.
       </p>
     ),
@@ -80,8 +79,8 @@ export const SECTIONS_CONFIDENTIALITE = [
         <p>Vos données sont lues uniquement par Marie Sillas. Elles transitent aussi par des prestataires techniques, qui n'ont pas le droit de les utiliser pour leur propre compte :</p>
         <ul>
           <li><strong>Vercel Inc.</strong> (hébergement du site), aux États-Unis ;</li>
-          <li><strong><ACompleter>service d'envoi du formulaire, par ex. Formspree ou Resend</ACompleter></strong> ;</li>
-          <li><strong><ACompleter>messagerie e-mail utilisée</ACompleter></strong>.</li>
+          {/* pas de service d'envoi du formulaire pour l'instant (le formulaire ne transmet rien) : l'ajouter ici dès qu'il est branché */}
+          <li><strong>Microsoft Outlook</strong> (Microsoft Corporation), messagerie e-mail.</li>
         </ul>
         <p>
           Lorsque des données sont traitées hors de l'Union européenne, ce transfert est encadré par les garanties

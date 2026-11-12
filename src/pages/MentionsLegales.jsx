@@ -12,15 +12,16 @@ export const SECTIONS_MENTIONS = [
           <dt>Nom</dt>
           <dd>Marie Sillas, entrepreneuse individuelle, sous le nom commercial Rimaactive</dd>
           <dt>Adresse</dt>
-          <dd><ACompleter>adresse professionnelle ou de domiciliation</ACompleter></dd>
+          <dd>26 rue d’Epernon, 78550 Houdan</dd>
           <dt>SIRET</dt>
-          <dd><ACompleter>numéro SIRET</ACompleter></dd>
+          <dd>132 567 819 00017 (code APE 8551Z)</dd>
           <dt>TVA</dt>
-          <dd>
-            <ACompleter>si micro-entreprise : « TVA non applicable, article 293 B du CGI » ; sinon numéro de TVA intracommunautaire</ACompleter>
-          </dd>
+          <dd>TVA non applicable, article 293 B du CGI</dd>
           <dt>E-mail</dt>
           <dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd>
+          {/* seul endroit du site avec un numéro de téléphone : demandé par Marie pour les mentions légales (12 novembre 2026) */}
+          <dt>Téléphone</dt>
+          <dd>06 61 68 16 03</dd>
         </dl>
         <p>Directrice de la publication : Marie Sillas.</p>
       </>
@@ -37,11 +38,11 @@ export const SECTIONS_MENTIONS = [
         </p>
         <dl className="coordonnees-legales">
           <dt>Diplôme</dt>
-          <dd><ACompleter>intitulé du diplôme (BPJEPS, licence STAPS…)</ACompleter></dd>
+          <dd>CQP Instructeur Fitness, option Musculation et Personal Training (certification de branche, RNCP 40595)</dd>
           <dt>Carte professionnelle</dt>
-          <dd><ACompleter>numéro de carte, délivrée par le SDJES de votre département</ACompleter></dd>
+          <dd>En cours de délivrance par le SDJES des Yvelines</dd>
           <dt>Assurance</dt>
-          <dd><ACompleter>assureur responsabilité civile professionnelle et zone couverte</ACompleter></dd>
+          <dd>Hiscox, responsabilité civile professionnelle, activité de coach sportif, France</dd>
         </dl>
       </>
     ),
@@ -92,16 +93,6 @@ export const SECTIONS_MENTIONS = [
           pas responsable de leur contenu ni de leur politique de confidentialité.
         </p>
       </>
-    ),
-  },
-  {
-    id: 'donnees',
-    titre: 'Données personnelles',
-    contenu: (
-      <p>
-        Le traitement de vos données et vos droits sont détaillés dans la{' '}
-        <a href="#confidentialite">politique de confidentialité</a>.
-      </p>
     ),
   },
   {

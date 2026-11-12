@@ -34,7 +34,7 @@ export default function InformationsLegales() {
     <PageJuridique
       fil="Mentions légales"
       titre="Mentions légales"
-      miseAJour="5 novembre 2026"
+      miseAJour="12 novembre 2026"
       intro="Qui édite ce site, qui l’héberge, et ce que deviennent les informations que vous me confiez."
       sections={PARTIES}
     />
