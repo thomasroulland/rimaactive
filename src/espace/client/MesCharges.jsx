@@ -1,27 +1,7 @@
 import { meilleuresCharges } from '../donnees/calculs.js'
-import { dateCourte, evolutionCharges, fr } from '../donnees/seances.js'
+import { dateCourte, evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
 
 const NB_POINTS = 8 // dernières séances montrées par exercice
-
-// Exercices des programmes publiés : élément → exercice de la banque, et nom de chaque exercice (le plus récent)
-function exercicesDe(programmes) {
-  const exoIdParElement = new Map()
-  const noms = new Map()
-  for (const p of programmes) {
-    for (const sem of p.semaines ?? []) {
-      for (const s of sem.seances ?? []) {
-        for (const b of s.blocs ?? []) {
-          for (const el of b.elements ?? []) {
-            if (!el.exoId) continue
-            exoIdParElement.set(el.id, el.exoId)
-            if (!noms.has(el.exoId)) noms.set(el.exoId, el.nom)
-          }
-        }
-      }
-    }
-  }
-  return { exoIdParElement, noms }
-}
 
 // « Mes charges » : pour chaque exercice, la meilleure charge de chaque séance terminée.
 export default function MesCharges({ programmes, seances }) {

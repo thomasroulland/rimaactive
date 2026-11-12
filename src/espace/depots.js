@@ -22,7 +22,7 @@ export async function appelerApi(chemin, corps) {
 }
 
 // Programme « en cours » d'un client : le programme publié dont le début est le plus récent
-function programmeEnCours(programmes, aujourdhui) {
+export function programmeEnCours(programmes, aujourdhui) {
   const publies = programmes.filter((p) => p.statut === 'publié')
   if (publies.length === 0) return null
   const passes = publies.filter((p) => p.debut <= aujourdhui).sort((a, b) => b.debut.localeCompare(a.debut))
@@ -260,4 +260,24 @@ export function noterSeance(programmeId, seanceId, donnees) {
 // pour enregistrer d'un coup les séries pré-remplies jamais touchées). Refusée par les règles si la séance est déjà terminée.
 export function terminerSeance(programmeId, seanceId, fin) {
   return setDoc(refSeance(programmeId, seanceId), contenuFin(baseSeance(programmeId, seanceId), fin), { merge: true })
+}
+
+// ---------- Fiche client côté coach (tâche 10) ----------
+
+// Écoute toutes les séances faites d'un client, de la plus récente à la plus ancienne.
+export function ecouterSeancesClient(uid, rappel, erreur) {
+  return onSnapshot(
+    query(collection(db, 'seancesFaites'), where('client', '==', uid)),
+    (s) => rappel(
+      s.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.id.localeCompare(b.id)),
+    ),
+    erreur,
+  )
+}
+
+// Le coach ne peut changer que `commentaireCoach` (et `majLe`) d'une séance faite : les règles le vérifient.
+export function commenterSeance(id, texte) {
+  return updateDoc(doc(db, 'seancesFaites', id), { commentaireCoach: String(texte ?? '').trim(), majLe: serverTimestamp() })
 }

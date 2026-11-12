@@ -41,7 +41,7 @@ export default function MesCoaches() {
             {clients.map((c) => (
               <li key={c.uid} className="espace-carte espace-client">
                 <div className="espace-client__tete">
-                  <h2 className="espace-client__nom">{c.prenom} {c.nom}</h2>
+                  <h2 className="espace-client__nom"><Link to={`/espace/coach/clients/${c.uid}`} className="espace-client__lien">{c.prenom} {c.nom}</Link></h2>
                   <span className={`espace-statut espace-statut--${c.statut === 'actif' ? 'actif' : 'autre'}`}>{STATUTS[c.statut] ?? c.statut}</span>
                 </div>
                 <p className="espace-client__ligne">{c.email}</p>
@@ -57,10 +57,15 @@ export default function MesCoaches() {
                     </>
                   ) : 'Pas de programme en cours'}
                 </p>
-                <Link to={`/espace/coach/clients/${c.uid}/programme`} className="bouton bouton--secondaire bouton--compact espace-client__action">
-                  {c.nbProgrammes > 0 ? 'Ouvrir le programme' : 'Créer un programme'}
-                  <span className="sr-only"> de {c.prenom} {c.nom}</span>
-                </Link>
+                <div className="espace-actions espace-client__action">
+                  <Link to={`/espace/coach/clients/${c.uid}`} className="bouton bouton--secondaire bouton--compact">
+                    Voir la fiche<span className="sr-only"> de {c.prenom} {c.nom}</span>
+                  </Link>
+                  <Link to={`/espace/coach/clients/${c.uid}/programme`} className="bouton bouton--secondaire bouton--compact">
+                    {c.nbProgrammes > 0 ? 'Ouvrir le programme' : 'Créer un programme'}
+                    <span className="sr-only"> de {c.prenom} {c.nom}</span>
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>

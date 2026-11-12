@@ -111,3 +111,23 @@ export function statutSeance(seancesFaites, programmeId, seanceId) {
   if (!sf) return 'À faire'
   return sf.statut === 'terminée' ? 'Faite' : 'En cours'
 }
+
+// Exercices des programmes publiés : élément → exercice de la banque, et nom de chaque exercice (le plus récent)
+export function exercicesDe(programmes) {
+  const exoIdParElement = new Map()
+  const noms = new Map()
+  for (const p of programmes) {
+    for (const sem of p.semaines ?? []) {
+      for (const s of sem.seances ?? []) {
+        for (const b of s.blocs ?? []) {
+          for (const el of b.elements ?? []) {
+            if (!el.exoId) continue
+            exoIdParElement.set(el.id, el.exoId)
+            if (!noms.has(el.exoId)) noms.set(el.exoId, el.nom)
+          }
+        }
+      }
+    }
+  }
+  return { exoIdParElement, noms }
+}
