@@ -65,3 +65,50 @@ export function ajouterElement(programme, { s, se, b }, exercice) {
   })
   return p
 }
+
+// ---------- Éditeur de programme (tâche 8) ----------
+
+export const LETTRES = ['A', 'B', 'C', 'D', 'E', 'F']
+
+export function nouvelleSemaine(parSemaine) {
+  return nouveauProgramme({ client: '', nom: '', debut: '', semaines: 1, parSemaine }).semaines[0]
+}
+
+export function nouvelleSeance(type = 'force', jour = 'Lundi') {
+  return { ...seanceVide(jour), type }
+}
+
+const CHAMPS_SEANCE = ['titre', 'lieu', 'duree', 'objectif', 'consigne', 'distance', 'temps']
+
+// Vraie si rien n'a été écrit dans la semaine (séances créées par défaut, sans titre ni exercice)
+export function semaineVide(semaine) {
+  if (!semaine) return true
+  if (String(semaine.mot ?? '').trim() || String(semaine.rpe ?? '').trim()) return false
+  return (semaine.seances ?? []).every((s) =>
+    CHAMPS_SEANCE.every((c) => !String(s[c] ?? '').trim()) && (s.blocs ?? []).length === 0)
+}
+
+// Ajoute un exercice dans le bloc de la lettre donnée (créé à la suite s'il n'existe pas)
+export function ajouterAuBloc(programme, { s, se }, lettre, exercice) {
+  const p = structuredClone(programme)
+  const seance = p.semaines[s].seances[se]
+  seance.blocs = seance.blocs ?? []
+  let b = seance.blocs.findIndex((x) => x.lettre === lettre)
+  if (b < 0) {
+    seance.blocs.push({ id: nouvelId(), lettre, format: 'series', duree: '', repos: '', elements: [] })
+    seance.blocs.sort((x, y) => x.lettre.localeCompare(y.lettre))
+    b = seance.blocs.findIndex((x) => x.lettre === lettre)
+  }
+  return ajouterElement(p, { s, se, b }, exercice)
+}
+
+// Retire un élément ; un bloc devenu vide disparaît et les blocs restants sont renommés A, B, C…
+export function retirerElement(programme, { s, se }, elementId) {
+  const p = structuredClone(programme)
+  const seance = p.semaines[s].seances[se]
+  seance.blocs = (seance.blocs ?? [])
+    .map((b) => ({ ...b, elements: (b.elements ?? []).filter((e) => e.id !== elementId) }))
+    .filter((b) => b.elements.length > 0)
+    .map((b, i) => ({ ...b, lettre: LETTRES[i] ?? b.lettre }))
+  return p
+}

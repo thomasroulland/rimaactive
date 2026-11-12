@@ -116,3 +116,16 @@ export function aujourdhuiIso(date = new Date()) {
   const p = (x) => String(x).padStart(2, '0')
   return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}`
 }
+
+// Lundi de la semaine d'un jour 'AAAA-MM-JJ'
+export function lundiDe(iso) {
+  const n = versJour(iso)
+  const jourSemaine = (new Date(n * MS_JOUR).getUTCDay() + 6) % 7 // 0 = lundi
+  return depuisJour(n - jourSemaine)
+}
+
+// « lundi 16 novembre 2026 »
+export function dateLongue(iso) {
+  return new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(versJour(iso) * MS_JOUR))
+}

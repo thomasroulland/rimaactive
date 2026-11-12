@@ -102,3 +102,97 @@
   .espace-fiche__bas { grid-column: 1 / -1; }
 }
 @media (prefers-reduced-motion: reduce) { .espace-exo { transition: none; } .espace-exo:hover { transform: none; } }
+
+/* ---------- Éditeur de programme ---------- */
+.espace-client__action { align-self: flex-start; margin-top: 8px; }
+.espace-section--barre { padding-bottom: 32px; }
+.espace-creation { align-items: stretch; max-width: 880px; }
+.espace-creation__champs { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: end; }
+.espace-creation__nom { grid-column: 1 / -1; }
+.espace-autres { min-width: 240px; }
+.espace-autres > label { font-size: 14px; line-height: 20px; }
+
+/* grilles de champs compacts (libellé 14 px, champ 44 px) */
+.espace-params { display: grid; gap: 12px 16px; grid-template-columns: repeat(auto-fill, minmax(136px, 1fr)); align-items: end; width: 100%; }
+.espace-carte.espace-params { display: grid; }
+.espace-params--programme { grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr); }
+.espace-params--semaine { grid-template-columns: minmax(110px, 160px) minmax(0, 1fr); }
+.espace-params--seance { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.espace-params--bloc { grid-template-columns: repeat(auto-fill, minmax(150px, 200px)); }
+.espace-param--large { grid-column: 1 / -1; }
+.espace-params--programme .espace-param--large, .espace-params--semaine .espace-param--large { grid-column: auto; }
+.espace-param { gap: 4px; }
+.espace-params .champ-groupe > label { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
+.espace-params .champ { min-height: 44px; padding-block: 8px; }
+.espace-params textarea.champ { min-height: 88px; }
+.champ:disabled { background: var(--craie); color: var(--encre); cursor: default; opacity: 1; }
+
+/* pastilles S1…Sn */
+.espace-semaines { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; }
+.espace-pastilles { display: flex; flex-wrap: wrap; gap: 8px; }
+.espace-pastille {
+  min-width: 52px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--encre);
+  background: transparent; font: inherit; font-size: 15px; font-weight: 700; color: var(--encre); cursor: pointer;
+}
+.espace-pastille:hover { background: var(--blanc); }
+.espace-pastille[aria-pressed="true"] { background: var(--jaune); border-color: var(--jaune); }
+.espace-pastille:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.espace-semaines .espace-lien { align-self: auto; text-decoration-color: var(--vermillon); text-decoration-thickness: 2px; font-size: 15px; font-weight: 700; }
+
+/* cartes de séances */
+.espace-seances { counter-reset: none; }
+.espace-seance-carte { align-items: stretch; gap: 8px; }
+.espace-seance-carte__tete { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.espace-seance-carte__num { color: var(--vermillon); font-size: 32px; line-height: 32px; font-weight: 900; letter-spacing: -0.04em; }
+.espace-seance-carte__jour { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
+.espace-seance-carte__titre { margin: 0; font-size: 20px; line-height: 24px; font-weight: 900; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.espace-seance-carte__resume { margin: 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+.espace-seance-carte .espace-actions { align-items: center; margin-top: auto; padding-top: 8px; }
+.espace-verrou--fort { margin: 0; font-weight: 700; border-left: 3px solid var(--encre); }
+
+/* séance : blocs et éléments */
+.espace-seance { display: flex; flex-direction: column; gap: 24px; }
+.espace-seance__champs { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+.espace-bloc { display: flex; flex-direction: column; gap: 12px; }
+.espace-bloc__tete { display: flex; flex-direction: column; gap: 12px; padding-bottom: 12px; border-bottom: 2px solid var(--encre); }
+.espace-bloc__format { font-weight: 400; font-size: 16px; letter-spacing: 0; color: var(--gris-chaud); margin-left: 8px; }
+.espace-elements { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.espace-element { align-items: stretch; gap: 16px; padding: 20px; }
+.espace-element__tete { display: flex; align-items: flex-start; gap: 12px; }
+.espace-element__nom { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.espace-element__code { color: var(--vermillon); font-size: 22px; line-height: 24px; font-weight: 900; letter-spacing: -0.02em; }
+.espace-element__titre { margin: 0; font-size: 18px; line-height: 24px; font-weight: 800; overflow-wrap: anywhere; }
+.espace-element__muscles { margin: 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+.espace-element__tete .espace-lien { align-self: flex-start; padding: 8px 4px; }
+.espace-vignette { flex: none; display: block; width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: var(--craie-fonce); }
+.espace-vignette--petite { width: 48px; height: 48px; }
+
+/* ajout d'exercice */
+.espace-choix { align-items: stretch; }
+.espace-choix__tete { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.espace-choix__bloc { width: 200px; }
+.espace-choix__bloc > label { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
+.espace-choix__bloc .champ { min-height: 44px; padding-block: 8px; }
+.espace-choix__liste { list-style: none; margin: 0; padding: 0; max-height: 360px; overflow-y: auto; border-top: 1px solid var(--filet); }
+.espace-choix__ligne { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--filet); }
+.espace-choix__nom { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.espace-choix__exo { font-weight: 700; overflow-wrap: anywhere; }
+.espace-choix__muscles { font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+.espace-choix__ligne .bouton--compact { min-height: 44px; padding: 8px 18px; }
+
+/* barre d'enregistrement collée en bas */
+.espace-barre {
+  position: sticky; bottom: 0; z-index: 5; background: var(--craie); border-top: 1px solid var(--filet);
+  padding: 12px var(--gouttiere); box-shadow: 0 -8px 24px rgba(22, 21, 20, 0.06);
+}
+.espace-barre__ligne { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; }
+.espace-barre__etat { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
+@media (max-width: 599px) {
+  .espace-params--programme, .espace-params--semaine { grid-template-columns: 1fr; }
+  .espace-params { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .espace-params--seance .espace-param--large, .espace-params .espace-param--large { grid-column: 1 / -1; }
+  .espace-barre { padding: 8px 16px; }
+  .espace-barre .espace-actions { width: 100%; }
+  .espace-barre .bouton { flex: 1; padding-inline: 12px; }
+  .espace-choix__bloc { width: 100%; }
+}

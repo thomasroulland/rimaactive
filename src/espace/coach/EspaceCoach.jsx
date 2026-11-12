@@ -4,6 +4,7 @@ import { auth } from '../firebase.js'
 import MesCoaches from './MesCoaches.jsx'
 import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
+import EditeurProgramme from './EditeurProgramme.jsx'
 
 // Espace coach : barre d'onglets (charte « Tabs ») puis l'écran choisi
 export default function EspaceCoach() {
@@ -21,6 +22,7 @@ export default function EspaceCoach() {
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />
         <Route path="exercices/:id" element={<FicheExercice />} />
+        <Route path="clients/:uid/programme" element={<EditeurProgramme />} />
         <Route path="*" element={<Navigate to="/espace/coach" replace />} />
       </Routes>
     </>

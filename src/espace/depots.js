@@ -1,5 +1,5 @@
 // Lectures et écritures Firestore / API de l'espace. Parties utilisateurs (tâche 6).
-import { collection, doc, onSnapshot, query, where, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, doc, onSnapshot, query, where, updateDoc, setDoc, getDoc, getDocs, serverTimestamp } from 'firebase/firestore'
 import { ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth, db, stockage } from './firebase.js'
@@ -31,7 +31,7 @@ function programmeEnCours(programmes, aujourdhui) {
 }
 
 // Écoute en direct la liste des clients et leur programme en cours.
-// rappel([{ uid, prenom, nom, email, statut, programme: null | { nom, semaine, nbSemaines, debut } }])
+// rappel([{ uid, prenom, nom, email, statut, nbProgrammes, programme: null | { nom, semaine, nbSemaines, debut } }])
 export function ecouterClients(rappel, erreur) {
   let clients = null
   let programmes = null
@@ -40,7 +40,10 @@ export function ecouterClients(rappel, erreur) {
     const aujourdhui = aujourdhuiIso()
     rappel(
       clients
-        .map((c) => ({ ...c, programme: programmeEnCours(programmes.filter((p) => p.client === c.uid), aujourdhui) }))
+        .map((c) => {
+          const siens = programmes.filter((p) => p.client === c.uid)
+          return { ...c, nbProgrammes: siens.length, programme: programmeEnCours(siens, aujourdhui) }
+        })
         .sort((a, b) => `${a.prenom} ${a.nom}`.localeCompare(`${b.prenom} ${b.nom}`, 'fr')),
     )
   }
@@ -153,4 +156,52 @@ export function urlPhoto(chemin) {
     urls.set(chemin, getDownloadURL(ref(stockage, chemin)).catch((e) => { urls.delete(chemin); throw e }))
   }
   return urls.get(chemin)
+}
+
+// ---------- Programmes (tâche 8) ----------
+
+// Profil d'un utilisateur (null s'il n'existe pas)
+export async function lireProfil(uid) {
+  const d = await getDoc(doc(db, 'utilisateurs', uid))
+  return d.exists() ? { uid: d.id, ...d.data() } : null
+}
+
+// Écoute les programmes d'un client, du plus récent au plus ancien (date de début, puis mise à jour).
+export function ecouterProgrammes(clientUid, rappel, erreur) {
+  return onSnapshot(
+    query(collection(db, 'programmes'), where('client', '==', clientUid)),
+    (s) => rappel(
+      s.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.debut || '').localeCompare(a.debut || '')
+          || (b.majLe?.toMillis?.() ?? 0) - (a.majLe?.toMillis?.() ?? 0)),
+    ),
+    erreur,
+  )
+}
+
+// Identifiant d'un futur programme : créé une seule fois, pour qu'un nouvel essai écrive le même document.
+export function nouvelIdProgramme() {
+  return doc(collection(db, 'programmes')).id
+}
+
+// Enregistre tout le programme (`programme.id` obligatoire). Un nouveau programme est un brouillon ;
+// un programme déjà publié le reste (le client voit la nouvelle version).
+export async function enregistrerProgramme(programme) {
+  const { id, majLe, ...donnees } = programme // majLe : remplacé par l’heure du serveur
+  await setDoc(doc(db, 'programmes', id), { ...donnees, statut: donnees.statut ?? 'brouillon', majLe: serverTimestamp() })
+}
+
+export async function publierProgramme(id) {
+  await updateDoc(doc(db, 'programmes', id), { statut: 'publié', majLe: serverTimestamp() })
+}
+
+// Séances déjà faites (séance faite « terminée ») : elles ne se modifient plus. Renvoie un Set d'identifiants de séance.
+export async function seancesVerrouillees(programmeId) {
+  const s = await getDocs(query(
+    collection(db, 'seancesFaites'),
+    where('programme', '==', programmeId),
+    where('statut', '==', 'terminée'),
+  ))
+  return new Set(s.docs.map((d) => d.data().seance))
 }

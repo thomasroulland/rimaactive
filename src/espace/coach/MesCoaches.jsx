@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ecouterClients, inviterClient, renvoyerInvitation } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import Picto from '../../components/Picto.jsx'
@@ -56,6 +57,10 @@ export default function MesCoaches() {
                     </>
                   ) : 'Pas de programme en cours'}
                 </p>
+                <Link to={`/espace/coach/clients/${c.uid}/programme`} className="bouton bouton--secondaire bouton--compact espace-client__action">
+                  {c.nbProgrammes > 0 ? 'Ouvrir le programme' : 'Créer un programme'}
+                  <span className="sr-only"> de {c.prenom} {c.nom}</span>
+                </Link>
               </li>
             ))}
           </ul>
