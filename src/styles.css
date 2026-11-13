@@ -647,8 +647,17 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 .page-contact .presentation-contact__email { margin-top: 4px; }
 .page-contact .presentation-contact__email .mention { display: none; }
 @media (min-width: 900px) {
-  .page-contact { grid-template-columns: 1fr 1fr; min-height: calc(var(--ecran) - var(--hauteur-entete) - 60px); }
+  .page-contact { grid-template-columns: 1fr 1fr; }
+  /* (sélecteur renforcé : passe avant .section.ecran-plein) */
+  main > .page-contact.page-contact { min-height: calc(100svh - var(--hauteur-entete) - 60px); /* tout l'écran, même grand (sans la limite de 880 px de --ecran) : la photo descend jusqu'au pied */ }
   .page-contact__photo { height: 100%; }
+  /* fondu de la photo dans le fond craie, côté formulaire et en bas (demande de Thomas, 14 novembre 2026) */
+  .page-contact__photo {
+    -webkit-mask-image: linear-gradient(to right, #000 62%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 62%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
   .page-contact__droite { padding: 24px max(var(--gouttiere), calc((100 * var(--vw) - var(--largeur)) / 2)) 24px 56px; }
   .page-contact .presentation-contact__lieu { max-width: none; margin-top: 8px; }
   .page-contact .formulaire { gap: 8px 20px; }
