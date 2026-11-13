@@ -86,7 +86,7 @@ export default function MesPhotos({ uid }) {
             <figure key={p.id} className="ec-carte ec-vignette-photo">
               <Image photo={p} />
               <figcaption>{dateComplete(p.date)}</figcaption>
-              <button type="button" className="ec-lien" onClick={() => supprimer(p)}>
+              <button type="button" className={`ec-lien${aSupprimer === p.id ? " ec-lien--danger" : ""}`} onClick={() => supprimer(p)}>
                 {aSupprimer === p.id ? 'Confirmer la suppression' : 'Supprimer'}
               </button>
             </figure>

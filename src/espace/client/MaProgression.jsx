@@ -144,13 +144,16 @@ function Historique({ programmes, seances }) {
       {lignes.length === 0 && <p className="ec-vide">Vos séances apparaîtront ici dès que vous aurez enregistré la première.</p>}
       {lignes.length > 0 && <ul className="ec-histo">
         {lignes.map(({ s, programme, trouve }) => {
-          const titre = trouve?.seance.titre || 'Séance'
+          const titre = trouve?.seance.titre || (trouve ? 'Séance' : 'Séance faite')
           const type = trouve?.seance.type === 'course' ? 'Course' : 'Force'
-          const quand = [dateSeance(s.date), trouve ? `semaine ${trouve.semaine}` : '', trouve ? type : ''].filter(Boolean).join(' · ')
+          // séance d'un programme supprimé par Marie : on garde la date et le bilan, et on le dit
+          const quand = [dateSeance(s.date), trouve ? `semaine ${trouve.semaine}` : 'programme retiré', trouve ? type : ''].filter(Boolean).join(' · ')
           const bilan = bilanSeance(trouve?.seance.type, s)
           const contenu = (
             <>
-              <span className="ec-histo__numero">{trouve ? String(trouve.numero).padStart(2, '0') : ''}</span>
+              {trouve
+                ? <span className="ec-histo__numero">{String(trouve.numero).padStart(2, '0')}</span>
+                : <span className="ec-histo__fait" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>}
               <span className="ec-histo__corps">
                 <span className="ec-histo__titre">{titre}</span>
                 <span className="ec-histo__meta">{quand}</span>

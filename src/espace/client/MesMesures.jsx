@@ -82,7 +82,7 @@ export default function MesMesures({ uid }) {
                     <td className="ec-tableau__date">{dateComplete(m.date)}</td>
                     <td>{valeur(m.poids, ' kg')}</td><td>{valeur(m.taille)}</td><td>{valeur(m.hanches)}</td>
                     <td>{valeur(m.poitrine)}</td><td>{valeur(m.bras)}</td><td>{valeur(m.cuisse)}</td>
-                    <td><button type="button" className="ec-lien ec-lien--petit" onClick={() => supprimer(m)}>{aSupprimer === m.id ? 'Confirmer' : 'Supprimer'}</button></td>
+                    <td><button type="button" className={`ec-lien ec-lien--petit${aSupprimer === m.id ? " ec-lien--danger" : ""}`} onClick={() => supprimer(m)}>{aSupprimer === m.id ? 'Confirmer' : 'Supprimer'}</button></td>
                   </tr>
                 ))}
               </tbody>

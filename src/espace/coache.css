@@ -815,3 +815,11 @@ select.ec-champ { appearance: auto; min-width: 0; }
 }
 .ec-case-regul.encours { background-image: none; background-color: var(--blanc); border-color: var(--ec-champ-bord-survol); }
 .ec-case-regul.encours::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--ec-vermillon); }
+
+/* Liens d'action du coaché : même petite pilule douce que côté coach (14 novembre 2026) */
+.ec-lien { display: inline-flex; align-items: center; justify-content: center; gap: 8px; align-self: flex-start; min-height: 36px; padding: 0 14px; border: 1px solid #e6e2da; border-radius: 999px; background: var(--ec-craie, #f4f3ef); font: 700 14px/1 var(--font-sans); color: var(--ec-encre); text-decoration: none; transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; }
+.ec-lien:hover { background: #fff; border-color: #cfcac1; box-shadow: 0 2px 8px rgba(22, 21, 20, 0.06); }
+.ec-lien--petit { min-height: 30px; padding: 0 12px; font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { .ec-lien { transition: none; } }
+.ec-lien--danger, .ec-lien--danger:hover { background: var(--ec-vermillon); border-color: var(--ec-vermillon); color: #fff; }
+.ec-histo__fait { flex: none; display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ec-craie); color: var(--ec-encre); }
