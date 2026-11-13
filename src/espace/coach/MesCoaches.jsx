@@ -51,10 +51,16 @@ export default function MesCoaches() {
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreurDonnees}</p>
 
-        {aRegarder.length > 0 && (
+        {clients && nb > 0 && (
           <section className="a-regarder" aria-labelledby="a-regarder-titre">
             <h2 id="a-regarder-titre" className="a-regarder__titre">À regarder</h2>
-            <ul className="a-regarder__liste">
+            {aRegarder.length === 0 && (
+              <p className="a-regarder__calme">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                Rien d’important pour l’instant : tous vos coachés sont dans les clous.
+              </p>
+            )}
+            {aRegarder.length > 0 && <ul className="a-regarder__liste">
               {aRegarder.map((c) => (
                 <li key={c.uid} className="a-regarder__ligne">
                   <div>
@@ -64,7 +70,7 @@ export default function MesCoaches() {
                   <Link to={`/espace/coach/clients/${c.uid}`} className="lien-souligne">Ouvrir la fiche<span className="sr-only"> de {c.prenom} {c.nom}</span></Link>
                 </li>
               ))}
-            </ul>
+            </ul>}
           </section>
         )}
 
