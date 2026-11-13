@@ -312,3 +312,69 @@ Pour mettre en route (Firebase, Vercel, rôle coach) : **`docs/espace-mise-en-ro
    (la clé ne passe jamais par la discussion). Firebase Authentication n'a pas de région réglable : le texte
    de confidentialité ne doit affirmer l'hébergement UE que pour Firestore et Storage, une fois la région réellement choisie.
 4. Valider la confidentialité, puis donner son **accord écrit** après avoir vu les captures avant / après.
+
+## Espace coaché (13 novembre 2026, sur la branche espace-client-spec, pas en ligne)
+
+Les écrans du coaché ont été refaits d'après la **maquette de Marie** (`Main.dc.html`, dans son artefact de design) : mise en page,
+textes, tailles et couleurs de la maquette font foi. **Rien n'est en ligne ni sur GitHub.** Conception :
+`docs/superpowers/specs/2026-11-13-espace-coache-maquette-design.md` ; plan : `docs/superpowers/plans/2026-11-13-espace-coache-maquette.md`.
+
+- **Coque** (`src/espace/coque/Coque.jsx`) : barre noire (logo, liens selon le rôle, rond du compte avec menu « Déconnexion ») et pied
+  de l'espace. Elle remplace l'ancienne barre du bas.
+- **Style adouci** : toutes les valeurs (champs 1 px, rayon 10 px, cases, notes d'effort, pastilles, titres repliables) sont des
+  variables `--ec-*` dans **un seul fichier**, `src/espace/coache.css`. Pour changer le style, on change là, pas dans les écrans.
+  La barre noire, la carte noire, le jaune, le vermillon et le focus 2 px encre n'ont pas bougé.
+- **Écrans** (`src/espace/client/`) :
+  - tableau de bord (`TableauDeBord.jsx`) : avatar, « Bonjour, », avancement « Séance n sur N », carte noire de la prochaine séance,
+    onglets « Cette semaine » (`CetteSemaine.jsx`) et « Ma progression » (`MaProgression.jsx`, rubriques repliables : mes mesures,
+    mes photos, mes charges, mes séances) ;
+  - « Mon programme » (`MonProgramme.jsx`) : blocs (en cours, terminé, à venir) puis semaines et séances ;
+  - séance (`Seance.jsx`, `BlocSeries.jsx`, `BlocResultat.jsx`) : force (séries, EMOM, Tabata, AMRAP) et course ; fenêtre « Consignes »
+    (`Consignes.jsx`, photos et consignes de l'exercice) ; fin de séance (`FinDeSeance.jsx`, effort de 5 à 10, ressenti, commentaire).
+  - Calculs purs dans `src/espace/donnees/progression.js` (avancement, bloc en cours = le plus récent publié dont la date de début est
+    passée, semaine, mesures lues « à la française » : 72,5).
+  - Retirés : `Accueil.jsx`, `Programme.jsx`, `MesCharges.jsx`, `ExerciceSeance.jsx` ; les anciennes règles `.client-*` de `espace.css`
+    qui n'étaient plus utilisées ont été supprimées (les écrans du coach et du coaché sont restés identiques, image par image).
+- **Nouvelles données** (règles Firestore et Storage mises à jour, testées) :
+  - `utilisateurs/{uid}` : champ `avatar` (chemin Storage `clients/{uid}/profil/<fichier>`) ; sous-collections `mesures` (poids, tour de
+    taille, etc., nombres ou vides) et `photos` (chemin Storage `clients/{uid}/…`). Photos réduites avant envoi ; les photos d'iPhone (HEIC)
+    ou trop lourdes sont refusées avec les mêmes messages que la banque d'exercices.
+  - `seancesFaites` : `notes` (note par exercice), `blocs` (résultat par bloc, `resultat` et, pour l'AMRAP, `reps`), `commentaire`,
+    `effort` de 5 à 10 (facultatif), course : `fc` et `zones` (Z1 à Z5, en %). Le champ `douleur` n'est plus demandé (les anciennes
+    séances le gardent). Une carte vide n'est jamais envoyée avec `merge`, pour ne pas effacer ce qui est déjà enregistré.
+  - La suppression d'un client efface aussi mesures, photos et avatar.
+  - Écriture hors ligne : l'enregistrement part tout de suite, le message dit « Enregistré sur votre téléphone, envoyé au retour du réseau. ».
+- **Ce qui reste côté coach** (non refait, inchangé) : écrans de Marie (mes coachés, banque d'exercices, éditeur de programme, fiche
+  client). Elle ne voit pas encore le commentaire ni les notes par exercice du coaché, ni les mesures et photos de progression. Les champs
+  « Effort visé » de la course et « Matériel » n'existent pas dans le programme : leurs zones sont masquées côté coaché jusqu'à ce que
+  l'éditeur les propose.
+- **Rappel HDS** : le ressenti, le commentaire, l'effort, la fréquence cardiaque, les mesures du corps et les photos de progression sont
+  des données de santé, plus nombreuses qu'avant. La question de l'hébergeur certifié HDS (voir ci-dessus) est donc plus pressante :
+  comptes de test seulement tant qu'elle n'est pas tranchée, et la confidentialité doit citer ces nouvelles données.
+- **Vérifié** : `npm test` (107), `npm run test:vercel`, `npm run test:fuseaux`, `npm run test:regles`, `npm run build` ; planches
+  maquette / construit des sept écrans, à 1280 et à 390 px, aucun défilement horizontal.
+
+**Décisions prises pendant le chantier** (à confirmer ou changer par Marie)
+1. « Mes charges » vit dans « Ma progression » (plus d'écran séparé).
+2. Quand la maquette et le plan se contredisent, la **maquette gagne** : message de mesures vides « Remplissez au moins une mesure. ».
+3. Course : « FC moyenne » et « Temps passé par zone » sont à saisir, comme dans la maquette.
+4. AMRAP : deux champs, « Tours complets » et « Reps en plus », comme dans la maquette.
+5. L'effort n'est pas obligatoire pour enregistrer la séance (la maquette l'autorise).
+6. Après « Enregistrer ma séance », la séance est **en lecture seule** (pas de « Mettre à jour ma séance » de la maquette), pour garder des
+   données fiables côté coach. À rouvrir si Marie veut pouvoir corriger.
+7. Style adouci conservé sur les titres de bloc et « Mon résultat » (Marie avait demandé moins de contraste).
+8. Dates de « Mes séances » comme dans le code de la maquette (« Jeu. 12 nov. ») ; graphiques à 6 points pour tenir à 390 px.
+9. « Mes séances » n'affiche pas le segment « RPE séries » de la maquette ; sans distance ni temps, une course n'affiche pas de bilan.
+
+**Textes écrits par Claude, à faire valider par Marie** (les autres textes viennent de la maquette)
+- Mesures : « Indiquez des nombres, par exemple 72,5. » ; « Ajoutez une deuxième mesure pour voir votre évolution. ».
+- Progression : « Envoi en cours… » ; « Impossible de charger vos photos. Vérifiez votre connexion. » et « … vos mesures. … » ;
+  « Enregistré sur votre téléphone, envoyé au retour du réseau. » ; « Pas de connexion internet. Vérifiez votre réseau. ».
+- Mon programme : « 1 séance faite sur 12 » / « 0 séance faite sur 12 » (singulier, la maquette met toujours le pluriel) ;
+  « Votre prochain bloc apparaîtra ici. » ; libellés pour lecteurs d'écran « Bloc n, En cours · … », « Semaine n, en cours »,
+  « Séance n, titre, statut ».
+- Séance : « Pas encore de photo pour cet exercice. » ; « Séance introuvable » et « Cette séance n'est plus dans votre programme… » ;
+  « Marie n'a pas encore ajouté d'exercice à cette séance. » ; « Exercice retiré du programme » / « Marie a retiré cet exercice… » ;
+  « Notes enregistrées sur votre téléphone… », « Séance enregistrée sur votre téléphone… », « Vos notes n'ont pas pu être envoyées… »,
+  « Séance déjà enregistrée. » ; libellés pour lecteurs d'écran « Voir les photos et consignes : {nom} », « Fermer la fiche ».
+- Coque : « Mon compte » et « Rimaactive, mon espace » (lecteurs d'écran seulement).
