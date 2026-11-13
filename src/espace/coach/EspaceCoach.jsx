@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { nouveautesParClient, useDonneesCoach, useVisites } from './donneesCoach.js'
 import MesCoaches from './MesCoaches.jsx'
 import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
@@ -13,11 +14,11 @@ export const LIENS_COACH = [
 ]
 
 // Espace coach : l'écran choisi
-export default function EspaceCoach() {
+export default function EspaceCoach({ profil }) {
   return (
     <>
       <Routes>
-        <Route index element={<MesCoaches />} />
+        <Route index element={<MesCoaches profil={profil} />} />
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />
         <Route path="exercices/:id" element={<FicheExercice />} />
@@ -28,4 +29,12 @@ export default function EspaceCoach() {
       </Routes>
     </>
   )
+}
+
+// Pages du coach avec, sur « Mes coachés », le nombre de coachés qui ont du nouveau
+export function useLiensCoach() {
+  const { seances } = useDonneesCoach()
+  useVisites()
+  const n = [...nouveautesParClient(seances).values()].filter((l) => l.length > 0).length
+  return LIENS_COACH.map((l) => (l.end && n > 0 ? { ...l, badge: n } : l))
 }

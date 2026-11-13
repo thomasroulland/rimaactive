@@ -1913,3 +1913,5 @@ input, textarea { caret-color: var(--vermillon); }
 }
 /* questions : pendant la fermeture (data-ferme), l'icône repasse tout de suite au « + » */
 .question[data-ferme] .question__plus::after { transform: rotate(90deg); }
+/* pastille sur un lien du menu (espace coach : coachés qui ont du nouveau) */
+.nav__badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; margin-left: 8px; padding: 0 6px; border-radius: 999px; background: var(--vermillon); color: var(--encre); font-size: 12px; font-weight: 800; line-height: 1; }

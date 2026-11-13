@@ -51,7 +51,7 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
         {/* Menu à droite, à côté de « M'écrire » (11 novembre 2026) ; mots simples ; la page en cours est dans une pilule encre ; au survol le jaune monte et le mot « roule » vers le haut (choix de Marie, novembre 2026) */}
         <nav className="nav" aria-label="Menu principal">
           {liens.map((page) => {
-            const mot = <span className="roule" data-texte={page.label}>{page.label}</span>
+            const mot = <><span className="roule" data-texte={page.label}>{page.label}</span>{page.badge > 0 && <span className="nav__badge" aria-label={`, ${page.badge} avec du nouveau`}>{page.badge}</span>}</>
             // `courant` fixé par l'espace (sur une séance, l'onglet d'où l'on vient reste allumé)
             return page.courant === undefined
               ? <NavLink key={page.to} to={page.to} end={page.end ?? (page.to === '/' || page.to === '/espace')} className="nav__lien" onClick={versLeHaut(page)}>{mot}</NavLink>

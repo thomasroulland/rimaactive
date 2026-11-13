@@ -389,3 +389,23 @@ export async function supprimerPhoto(uid, photo) {
   urls.delete(photo.chemin)
   try { await deleteObject(ref(stockage, photo.chemin)) } catch { /* déjà absent */ }
 }
+
+// ---------- Mes coachés : activité récente (13 novembre 2026) ----------
+
+// Toutes les séances terminées de tous les coachés (lecture réservée au coach par les règles), les plus récentes d'abord.
+export function ecouterSeancesTerminees(rappel, erreur) {
+  return onSnapshot(
+    query(collection(db, 'seancesFaites'), where('statut', '==', 'terminée')),
+    (s) => rappel(
+      s.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.majLe?.toMillis?.() ?? 0) - (a.majLe?.toMillis?.() ?? 0)),
+    ),
+    erreur,
+  )
+}
+
+// Tous les programmes (coach) : titres des séances et dates de fin
+export function ecouterTousProgrammes(rappel, erreur) {
+  return onSnapshot(collection(db, 'programmes'), (s) => rappel(s.docs.map((d) => ({ id: d.id, ...d.data() }))), erreur)
+}

@@ -7,6 +7,7 @@ export function derniereVisite(uid) {
 }
 export function noterVisite(uid, quand = new Date()) {
   try { window.localStorage.setItem(cle(uid), quand.toISOString()) } catch { /* stockage indisponible : pas de repères */ }
+  window.dispatchEvent(new Event('rima-vu')) // la liste et la pastille se mettent à jour
 }
 // Instant d'une séance faite (horodatage du serveur), en millisecondes ; sinon sa date à midi
 export function instantSeance(sf) {

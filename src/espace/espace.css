@@ -574,3 +574,25 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
   .editeur-semaine--ouverte .editeur-semaine__seances { display: none; }
   .panneau-seance { padding: 18px 16px; }
 }
+
+/* ---------- Mes coachés : filtres, activité, nouveautés (13 novembre 2026) ---------- */
+.filtres-coaches { display: flex; flex-wrap: wrap; gap: 8px; }
+.filtre-coaches { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--ec-champ-bord, #d9d5cd); background: var(--blanc); color: var(--encre); font: 600 14px/20px var(--font-sans); cursor: pointer; transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
+.filtre-coaches:hover { border-color: var(--ec-champ-bord-survol, #b9b4ab); }
+.filtre-coaches[aria-pressed="true"] { background: var(--encre); border-color: var(--encre); color: var(--craie); }
+.filtre-coaches:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.coache--a-voir { box-shadow: inset 3px 0 0 var(--vermillon), 0 1px 2px rgba(22, 21, 20, 0.04); }
+.coache--a-voir:hover { box-shadow: inset 3px 0 0 var(--vermillon), 0 14px 32px rgba(22, 21, 20, 0.1); }
+.coache__nb { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--encre); }
+.coache__nb::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--vermillon); }
+.coache__activite { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13px; line-height: 18px; color: var(--coach-texte-doux, #6b665f); }
+.coache__activite li { display: flex; gap: 8px; align-items: baseline; }
+.coache__activite li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: #cfcac2; transform: translateY(-1px); }
+.coache__activite li.nouveau { color: var(--encre); }
+.coache__activite li.nouveau::before { background: var(--vermillon); }
+.coache__activite b { color: var(--encre); font-weight: 700; }
+.coache__rappel { margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--craie); font-size: 13px; line-height: 19px; color: var(--gris-chaud); }
+.coache__rappel b { color: var(--encre); }
+.coache__programme-lien--faire { background: var(--jaune); border-color: var(--jaune); font-weight: 700; }
+.coache__programme-lien--faire:hover { background: #e9b81f; border-color: #e9b81f; color: var(--encre); }
+.coache__voir::after { content: "→"; }

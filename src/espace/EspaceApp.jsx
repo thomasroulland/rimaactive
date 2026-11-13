@@ -4,7 +4,7 @@ import useSession from './useSession.js'
 import useTitre from '../components/useTitre.js'
 import Connexion from './Connexion.jsx'
 import Accord from './Accord.jsx'
-import EspaceCoach, { LIENS_COACH } from './coach/EspaceCoach.jsx'
+import EspaceCoach, { useLiensCoach } from './coach/EspaceCoach.jsx'
 import EspaceClient from './client/EspaceClient.jsx'
 import { useUrlAvatar } from './client/Avatar.jsx'
 import Squelette from './client/Squelette.jsx'
@@ -20,16 +20,7 @@ export default function EspaceApp() {
   if (chargement) return <Coque compte={false}><Squelette /></Coque>
   if (!utilisateur) return <Coque compte={false} site client><Connexion /></Coque>
 
-  if (role === 'coach') {
-    return (
-      <Coque liens={LIENS_COACH}>
-        <Routes>
-          <Route path="coach/*" element={<EspaceCoach />} />
-          <Route path="*" element={<Navigate to="/espace/coach" replace />} />
-        </Routes>
-      </Coque>
-    )
-  }
+  if (role === 'coach') return <EspaceDuCoach profil={profil} />
   if (role === 'client') {
     if (!profil?.accordSante) return <Coque site client><Accord uid={utilisateur.uid} prenom={profil?.prenom} /></Coque>
     return (
@@ -74,3 +65,16 @@ function Page({ titre, children }) {
   )
 }
 
+
+// Espace du coach : la barre affiche le nombre de coachés qui ont du nouveau
+function EspaceDuCoach({ profil }) {
+  const liens = useLiensCoach()
+  return (
+    <Coque liens={liens}>
+      <Routes>
+        <Route path="coach/*" element={<EspaceCoach profil={profil} />} />
+        <Route path="*" element={<Navigate to="/espace/coach" replace />} />
+      </Routes>
+    </Coque>
+  )
+}
