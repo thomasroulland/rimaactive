@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
-  lireProfil, ecouterProgrammes, ecouterSeancesClient, commenterSeance, supprimerClient, programmeEnCours,
+  ecouterProgrammes, ecouterSeancesClient, commenterSeance, supprimerClient, programmeEnCours,
 } from '../depots.js'
 import { aujourdhuiIso, meilleuresCharges, regularite } from '../donnees/calculs.js'
 import { dateCourte, dateLongue, detailSeance, evolutionCharges, exercicesDe, fr, texteSerie } from '../donnees/seances.js'
 import { messageErreur } from '../erreurs.js'
 import { avancement } from '../donnees/progression.js'
 import { effortMoyen, frNombre, meilleurProgres } from '../donnees/resume.js'
-import EnteteCoache from './EnteteCoache.jsx'
+import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import { derniereVisite, noterVisite, nouvellesSeances } from './vus.js'
 
 const NB_POINTS = 8 // dernières séances montrées par exercice
@@ -21,16 +21,13 @@ const Fleche = () => (
 export default function FicheClient() {
   const { uid } = useParams()
   const navigate = useNavigate()
-  const [client, setClient] = useState(undefined)
+  const { client } = useCoache()
   const [programmes, setProgrammes] = useState(null)
   const [seances, setSeances] = useState(null)
   const [erreur, setErreur] = useState('')
   const [suppression, setSuppression] = useState(false)
   const [tout, setTout] = useState(false) // toutes les séances, pas seulement les 8 dernières
 
-  useEffect(() => {
-    lireProfil(uid).then(setClient).catch(() => { setClient(null); setErreur('Impossible de charger ce coaché. Vérifiez votre connexion.') })
-  }, [uid])
   useEffect(() => ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.')), [uid])
   useEffect(() => ecouterSeancesClient(uid, setSeances, () => setErreur('Impossible de charger les séances. Vérifiez votre connexion.')), [uid])
 
@@ -209,7 +206,7 @@ function SeanceFaite({ sf, seance, prenom, nouvelle }) {
     <li className="espace-carte fiche-seance">
       <div className="fiche-seance__tete">
         <h3 className="espace-element__titre">{seance ? seance.titre || 'Séance' : 'Séance retirée du programme'}{nouvelle && <span className="repere-nouveau">Nouveau</span>}</h3>
-        <p className="fiche-seance__date">{dateLongue(sf.date)}</p>
+        <p className="fiche-seance__date">{dateLongue(sf.date)}{terminee && heure(sf.majLe) && ` · ${heure(sf.majLe)}`}</p>
       </div>
       <p className="fiche-seance__bilan">
         {terminee ? (
@@ -358,4 +355,11 @@ function DialogueSuppression({ client, uid, fermer, fini }) {
       </form>
     </dialog>
   )
+}
+
+// Heure de fin d'une séance (horodatage du serveur) : « 18 h 42 »
+function heure(ts) {
+  const d = ts?.toDate?.()
+  if (!d) return ''
+  return `${d.getHours()} h ${String(d.getMinutes()).padStart(2, '0')}`
 }

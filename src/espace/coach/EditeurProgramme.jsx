@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
-  lireProfil, ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
+  ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
@@ -9,7 +9,7 @@ import {
 } from '../donnees/programme.js'
 import { dateLongue } from '../donnees/calculs.js'
 import { lignesExercice } from '../donnees/seances.js'
-import EnteteCoache from './EnteteCoache.jsx'
+import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import { messageErreur } from '../erreurs.js'
 import CreationProgramme, { ChoixDebut } from './CreationProgramme.jsx'
 import EditeurSeance from './EditeurSeance.jsx'
@@ -33,7 +33,7 @@ function copieLocale(p) {
 export default function EditeurProgramme() {
   const { uid } = useParams()
   const [params, setParams] = useSearchParams()
-  const [client, setClient] = useState(undefined)
+  const { client } = useCoache()
   const [programmes, setProgrammes] = useState(null)
   const [exercices, setExercices] = useState(null)
   const [prog, setProg] = useState(null)
@@ -61,9 +61,6 @@ export default function EditeurProgramme() {
   const semIdx = Math.min(Math.max((Number(params.get('semaine')) || 1) - 1, 0), Math.max(nbSem - 1, 0))
   const seanceId = params.get('seance')
 
-  useEffect(() => {
-    lireProfil(uid).then(setClient).catch(() => setErreur('Impossible de charger ce coaché. Vérifiez votre connexion.'))
-  }, [uid])
   useEffect(() => ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.')), [uid])
   useEffect(() => ecouterExercices(setExercices, () => setExercices([])), [])
 

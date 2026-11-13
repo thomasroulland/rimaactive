@@ -596,3 +596,14 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
 .coache__programme-lien--faire { background: var(--jaune); border-color: var(--jaune); font-weight: 700; }
 .coache__programme-lien--faire:hover { background: #e9b81f; border-color: #e9b81f; color: var(--encre); }
 .coache__voir::after { content: "→"; }
+/* page commune d'un coaché : les onglets s'affichent dans la page, sans marges en double ; le contenu arrive en fondu */
+.onglet-contenu > .section, .onglet-contenu > p.section { padding: 0; }
+.onglet-contenu > .section > .conteneur { max-width: none; }
+.onglet-contenu { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .onglet-contenu { animation: onglet-entre 0.28s cubic-bezier(.3, .7, .2, 1) both; }
+  @keyframes onglet-entre { from { opacity: 0; transform: translateY(8px); } }
+}
+/* trait vermillon : un seul trait qui glisse d'un onglet à l'autre (useGlissiere) */
+.onglets-coache.ec-glisse a::after { display: none; }
+.onglets-coache.ec-glisse::after { bottom: -1px; border-radius: 2px; }

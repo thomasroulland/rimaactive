@@ -282,8 +282,9 @@ export function ecouterSeancesClient(uid, rappel, erreur) {
 }
 
 // Le coach ne peut changer que `commentaireCoach` (et `majLe`) d'une séance faite : les règles le vérifient.
+// `majLe` n'est pas touché (13 novembre 2026) : il garde l'heure à laquelle le client a fini sa séance, affichée au coach.
 export function commenterSeance(id, texte) {
-  return updateDoc(doc(db, 'seancesFaites', id), { commentaireCoach: String(texte ?? '').trim(), majLe: serverTimestamp() })
+  return updateDoc(doc(db, 'seancesFaites', id), { commentaireCoach: String(texte ?? '').trim() })
 }
 
 // ---------- Photo de profil du coaché ----------

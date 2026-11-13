@@ -6,6 +6,7 @@ import FicheExercice from './FicheExercice.jsx'
 import FicheClient from './FicheClient.jsx'
 import EditeurProgramme from './EditeurProgramme.jsx'
 import MesuresCoache from './MesuresCoache.jsx'
+import { PageCoache } from './EnteteCoache.jsx'
 
 // Pages de l'espace coach : elles sont dans la barre de menu, comme partout (13 novembre 2026)
 export const LIENS_COACH = [
@@ -22,9 +23,12 @@ export default function EspaceCoach({ profil }) {
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />
         <Route path="exercices/:id" element={<FicheExercice />} />
-        <Route path="clients/:uid" element={<FicheClient />} />
-        <Route path="clients/:uid/programme" element={<EditeurProgramme />} />
-        <Route path="clients/:uid/mesures" element={<MesuresCoache />} />
+        {/* les pages d'un coaché partagent l'en-tête et les onglets (le coaché est chargé une fois) */}
+        <Route path="clients/:uid" element={<PageCoache />}>
+          <Route index element={<FicheClient />} />
+          <Route path="programme" element={<EditeurProgramme />} />
+          <Route path="mesures" element={<MesuresCoache />} />
+        </Route>
         <Route path="*" element={<Navigate to="/espace/coach" replace />} />
       </Routes>
     </>

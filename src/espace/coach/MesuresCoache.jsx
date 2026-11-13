@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ecouterMesMesures, ecouterMesPhotos, lireProfil } from '../depots.js'
+import { ecouterMesMesures, ecouterMesPhotos } from '../depots.js'
 import { dateComplete, evolutionMesures } from '../donnees/progression.js'
 import { ecartPoids, frNombre } from '../donnees/resume.js'
-import EnteteCoache from './EnteteCoache.jsx'
+import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import PhotoStockee from './PhotoStockee.jsx'
 
 const COLONNES = [['poids', 'Poids', 'kg'], ['taille', 'Taille', 'cm'], ['hanches', 'Hanches', 'cm'], ['poitrine', 'Poitrine', 'cm'], ['bras', 'Bras', 'cm'], ['cuisse', 'Cuisse', 'cm']]
@@ -11,12 +11,11 @@ const COLONNES = [['poids', 'Poids', 'kg'], ['taille', 'Taille', 'cm'], ['hanche
 // Onglet « Mesures et photos » d'un coaché (13 novembre 2026) : ce que le coaché a saisi, en lecture seule.
 export default function MesuresCoache() {
   const { uid } = useParams()
-  const [client, setClient] = useState(undefined)
+  const { client } = useCoache()
   const [mesures, setMesures] = useState(null)
   const [photos, setPhotos] = useState(null)
   const [erreur, setErreur] = useState('')
 
-  useEffect(() => { lireProfil(uid).then(setClient).catch(() => { setClient(null); setErreur('Impossible de charger ce coaché. Vérifiez votre connexion.') }) }, [uid])
   useEffect(() => ecouterMesMesures(uid, setMesures, () => setErreur('Impossible de charger les mesures. Vérifiez votre connexion.')), [uid])
   useEffect(() => ecouterMesPhotos(uid, setPhotos, () => setErreur('Impossible de charger les photos. Vérifiez votre connexion.')), [uid])
 
