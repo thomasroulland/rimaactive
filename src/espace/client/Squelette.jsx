@@ -12,7 +12,7 @@ import '../coache.css'
 // dès son premier rendu et le retire quand il disparaît (voir window.__rimaZoom).
 export function EspaceZoom() {
   const { pathname } = useLocation()
-  const actif = !/^\/espace\/coach(\/|$)/.test(pathname)
+  const actif = /^\/espace(\/|$)/.test(pathname) // tout l'espace, coach compris, à ses tailles normales
   useLayoutEffect(() => {
     window.__rimaZoom?.(actif)
     return () => window.__rimaZoom?.(false)

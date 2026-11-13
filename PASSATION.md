@@ -391,7 +391,8 @@ textes, tailles et couleurs de la maquette font foi. **Rien n'est en ligne ni su
 
 ## Une seule structure partout, espace coach refait (13 novembre 2026, propositions sur espace-client-spec, pas en ligne)
 - **Mise à l'échelle** (`index.html`) : jusqu'à 1536 × 720 (l'écran de Marie), les tailles de la charte ; au-delà, tout grandit
-  en proportion, 1,5 fois au plus (2 fois sur les écrans de 3000 px et plus, 4K à 100 %). La même règle sur le site, la connexion, l'espace coaché et l'espace coach. Largeur du contenu : 1240 px.
+  en proportion, 1,5 fois au plus (2 fois sur les écrans de 3000 px et plus, 4K à 100 %). Seulement sur le site vitrine : l'espace (connexion, coaché, coach) reste à ses tailles normales sur tous les écrans,
+  pour une vue d'ensemble (demande du 13 novembre 2026). Largeur du contenu : 1240 px.
 - **Une seule barre de menu** (`Entete.jsx`), utilisée aussi par l'espace (`Coque.jsx`, `Squelette.jsx`) : 64 px, logo 128 px, menu en 15 px.
   Dans l'espace coach, « Mes coachés » et « Banque d'exercices » sont dans la barre ; sur téléphone, l'espace garde ses pages sur une 2e ligne.
   Un seul pied de page (`Pied.jsx`) partout.
