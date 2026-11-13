@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { LETTRES } from '../donnees/programme.js'
 import useReglages from './useReglages.js'
+import ChoixAvecAjout from './ChoixAvecAjout.jsx'
 import { enregistrerExercice } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
@@ -100,14 +101,10 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
             <label htmlFor="nx-nom">Nom</label>
             <input id="nx-nom" className="champ" autoComplete="off" {...champ('nom')} aria-invalid={erreur ? true : undefined} aria-describedby={erreur ? 'nx-erreur' : undefined} />
           </div>
-          <div className="champ-groupe">
-            <label htmlFor="nx-cat">Catégorie</label>
-            <select id="nx-cat" className="champ" {...champ('categorie')} value={nouvel.categorie || reglages.categories[0] || ''}>{reglages.categories.map((c) => <option key={c}>{c}</option>)}</select>
-          </div>
-          <div className="champ-groupe">
-            <label htmlFor="nx-mat">Matériel</label>
-            <select id="nx-mat" className="champ" {...champ('materiel')} value={nouvel.materiel || reglages.materiels[reglages.materiels.length - 1] || ''}>{reglages.materiels.map((m) => <option key={m}>{m}</option>)}</select>
-          </div>
+          <ChoixAvecAjout id="nx-cat" label="Catégorie" cle="categories" liste={reglages.categories} libelleNouveau="Nouvelle catégorie"
+            valeur={nouvel.categorie || reglages.categories[0] || ''} changer={(v) => setNouvel((n) => ({ ...n, categorie: v }))} />
+          <ChoixAvecAjout id="nx-mat" label="Matériel" cle="materiels" liste={reglages.materiels} libelleNouveau="Nouveau matériel"
+            valeur={nouvel.materiel || reglages.materiels[reglages.materiels.length - 1] || ''} changer={(v) => setNouvel((n) => ({ ...n, materiel: v }))} />
           <div className="champ-groupe espace-choix__large">
             <label htmlFor="nx-cons">Consigne d’exécution</label>
             <input id="nx-cons" className="champ" autoComplete="off" {...champ('consignes')} />

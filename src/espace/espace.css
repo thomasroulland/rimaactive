@@ -1122,3 +1122,43 @@ button.calendrier__jour:focus-visible { outline: 2px solid var(--encre); outline
   .jour-cal__corps { padding: 14px 12px 20px; }
   .jour-cal__bloc { padding: 14px 16px; }
 }
+
+/* Graphiques interactifs (14 novembre 2026) : bulle au survol / au doigt / au clavier, trait repère */
+.courbe-zone { position: relative; max-width: 480px; border-radius: 12px; outline: none; touch-action: pan-y; }
+.courbe-zone:focus-visible { box-shadow: 0 0 0 2px var(--blanc), 0 0 0 4px var(--encre); }
+.courbe-zone .fiche-svg { cursor: crosshair; }
+.fiche-svg__repere { stroke: var(--encre); stroke-width: 1; stroke-dasharray: 3 3; opacity: .45; }
+.fiche-svg__point { transition: r .15s ease; }
+.fiche-svg__point--actif { fill: var(--encre); stroke: var(--vermillon); stroke-width: 3; }
+.courbe-bulle { position: absolute; z-index: 2; transform: translate(-50%, calc(-100% - 14px)); display: flex; flex-direction: column; gap: 1px; min-width: 96px; padding: 8px 12px; border-radius: 12px; background: var(--encre); color: var(--blanc); box-shadow: 0 8px 22px rgba(22, 21, 20, 0.18); pointer-events: none; white-space: nowrap; animation: courbe-bulle .15s ease; }
+.courbe-bulle::after { content: ''; position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; background: var(--encre); transform: translateX(-50%) rotate(45deg); border-radius: 2px; }
+.courbe-bulle--gauche { transform: translate(-18px, calc(-100% - 14px)); }
+.courbe-bulle--gauche::after { left: 18px; }
+.courbe-bulle--droite { transform: translate(calc(-100% + 18px), calc(-100% - 14px)); }
+.courbe-bulle--droite::after { left: auto; right: 12px; transform: rotate(45deg); }
+.courbe-bulle__date { font-size: 12px; font-weight: 600; opacity: .7; }
+.courbe-bulle__valeur { font-size: 17px; line-height: 22px; font-weight: 900; letter-spacing: -0.02em; }
+.courbe-bulle__valeur small { font-size: 13px; font-weight: 600; opacity: .8; }
+.courbe-bulle__ecart { font-size: 12px; font-weight: 700; color: #f4b9a8; }
+.courbe-bulle__ecart--plus { color: var(--jaune); }
+@keyframes courbe-bulle { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .courbe-bulle { animation: none; } .fiche-svg__point { transition: none; } }
+/* « Catégories et matériel » : deux colonnes côte à côte (14 novembre 2026) */
+.gestion-listes__colonnes { display: flex; flex-direction: column; gap: 16px; }
+.espace-dialogue.gestion-listes--colonnes[open] { width: min(920px, calc(100vw - 32px)); }
+@media (min-width: 760px) {
+  .gestion-listes--colonnes .gestion-listes__colonnes { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; align-items: start; }
+  .gestion-listes--colonnes .gestion-listes__partie + .gestion-listes__partie { padding-top: 0; border-top: 0; padding-left: 28px; border-left: 1px solid #ece9e3; margin-left: -28px; }
+}
+.courbe-bulle--dessous { transform: translate(-50%, 16px); }
+.courbe-bulle--dessous.courbe-bulle--gauche { transform: translate(-18px, 16px); }
+.courbe-bulle--dessous.courbe-bulle--droite { transform: translate(calc(-100% + 18px), 16px); }
+.courbe-bulle--dessous::after { bottom: auto; top: -5px; }
+/* Catégorie / matériel : créer une valeur depuis la fiche */
+.choix-ajout__ligne { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.choix-ajout__ligne .champ { flex: 1 1 180px; min-width: 0; }
+.choix-ajout__annuler { flex: none; width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; font-size: 20px; line-height: 1; color: var(--gris-chaud); cursor: pointer; }
+.choix-ajout__annuler:hover { background: var(--craie); color: var(--encre); }
+.choix-ajout__champ { position: relative; flex: 1 1 180px; min-width: 0; display: flex; }
+.choix-ajout__champ .champ { flex: 1; padding-right: 40px; }
+.choix-ajout__champ .choix-ajout__annuler { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); }

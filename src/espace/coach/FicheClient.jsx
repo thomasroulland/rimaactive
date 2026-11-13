@@ -274,9 +274,13 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
   )
 }
 
-// Courbe de la meilleure charge de chaque séance : ligne encre, points vermillon, axes nommés. Pas de bibliothèque.
+// Courbe d'une valeur par séance (meilleure charge ou tonnage) : ligne encre, points vermillon, axes nommés. Pas de bibliothèque.
+// Interactive (14 novembre 2026) : au survol, au doigt ou au clavier (flèches), une bulle donne la date, la valeur et l'écart
+// avec la séance d'avant ; un trait vertical repère le point.
 export function Courbe({ nom, points, libelle = 'meilleure charge par séance' }) {
-  const L = 300; const H = 170; const g = 44; const d = 14; const h = 14; const b = 32
+  const [actif, setActif] = useState(null)
+  const zone = useRef(null)
+  const L = 300; const H = 170; const g = 44; const d = 14; const h = 18; const b = 32
   const val = (p) => parseFloat(String(p.charge).replace(',', '.')) || 0
   const valeurs = points.map(val)
   const min = Math.min(...valeurs); const max = Math.max(...valeurs)
@@ -286,27 +290,76 @@ export function Courbe({ nom, points, libelle = 'meilleure charge par séance' }
   const etiquettes = [...new Set(n <= 4 ? points.map((_, i) => i) : [0, Math.round((n - 1) / 3), Math.round((2 * (n - 1)) / 3), n - 1])]
   const dernier = points[n - 1]
   const description = points.map((p) => `${dateCourte(p.date)}, ${fr(p.charge)} kg${p.reps ? ` pour ${p.reps} répétitions` : ''}`).join(' ; ')
+  const ligne = points.map((p, i) => `${x(i)},${y(val(p))}`).join(' ')
+  const aire = n > 1 ? `M${x(0)},${H - b} L${ligne.replaceAll(' ', ' L')} L${x(n - 1)},${H - b} Z` : ''
+  const idDegrade = `degrade-${String(nom).replace(/[^a-z0-9]/gi, '')}-${n}`
+
+  // point le plus proche du pointeur (coordonnées du viewBox)
+  function survol(e) {
+    const r = e.currentTarget.getBoundingClientRect()
+    const vx = ((e.clientX - r.left) / r.width) * L
+    let meilleur = 0
+    for (let i = 1; i < n; i++) if (Math.abs(x(i) - vx) < Math.abs(x(meilleur) - vx)) meilleur = i
+    setActif(meilleur)
+  }
+  function clavier(e) {
+    const dernierIndex = n - 1
+    const cible = { ArrowLeft: (actif ?? dernierIndex) - 1, ArrowRight: (actif ?? -1) + 1, Home: 0, End: dernierIndex }[e.key]
+    if (cible === undefined) return
+    e.preventDefault()
+    setActif(Math.min(Math.max(cible, 0), dernierIndex))
+  }
+  const pa = actif === null ? null : points[actif]
+  const ecart = actif > 0 ? val(points[actif]) - val(points[actif - 1]) : null
+  const texteActif = pa ? `${dateCourte(pa.date)} : ${fr(pa.charge)} kg${pa.reps ? ` × ${pa.reps}` : ''}${ecart !== null && ecart !== 0 ? `, ${ecart > 0 ? '+' : '−'}${fr(Math.abs(Math.round(ecart * 10) / 10))} kg par rapport à la séance d’avant` : ''}` : ''
+  // la bulle reste dans le cadre : collée à gauche / à droite pour les points du bord
+  const cote = actif === null ? '' : x(actif) < L * 0.2 ? ' courbe-bulle--gauche' : x(actif) > L * 0.8 ? ' courbe-bulle--droite' : ''
+  // point haut placé : la bulle passe en dessous pour ne pas couvrir le titre
+  const dessous = pa ? y(val(pa)) < H * 0.4 : false
+
   return (
     <li className="espace-carte fiche-courbe">
       <div className="client-courbe__tete">
         <h3 className="espace-element__titre">{nom}</h3>
         <p className="client-courbe__derniere">{fr(dernier.charge)} kg{dernier.reps ? ` × ${dernier.reps}` : ''}</p>
       </div>
-      <svg className="fiche-svg" viewBox={`0 0 ${L} ${H}`} role="img" aria-label={`${nom}, ${libelle} : ${description}`}>
-        <line className="fiche-svg__axe" x1={g} x2={L - d} y1={h} y2={h} />
-        <line className="fiche-svg__axe" x1={g} x2={L - d} y1={H - b} y2={H - b} />
-        <text className="fiche-svg__txt" x={g - 8} y={h + 4} textAnchor="end">{fr(max)} kg</text>
-        {max !== min && <text className="fiche-svg__txt" x={g - 8} y={H - b + 4} textAnchor="end">{fr(min)} kg</text>}
-        {n > 1 && <polyline className="fiche-svg__ligne" points={points.map((p, i) => `${x(i)},${y(val(p))}`).join(' ')} />}
-        {points.map((p, i) => <circle key={i} className="fiche-svg__point" cx={x(i)} cy={y(val(p))} r="6" />)}
-        {etiquettes.map((i) => (
-          <text key={i} className="fiche-svg__txt" x={x(i)} y={H - 8} textAnchor={n === 1 ? 'middle' : i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}>{dateCourte(points[i].date)}</text>
-        ))}
-      </svg>
+      <div className="courbe-zone" ref={zone} tabIndex={0} role="group"
+        aria-label={`${nom}, ${libelle}. Flèches gauche et droite pour parcourir les séances.`}
+        onKeyDown={clavier} onFocus={() => setActif((a) => a ?? n - 1)} onBlur={() => setActif(null)}>
+        <svg className="fiche-svg" viewBox={`0 0 ${L} ${H}`} role="img" aria-label={`${nom}, ${libelle} : ${description}`}
+          onPointerMove={survol} onPointerDown={survol} onPointerLeave={(e) => { if (e.pointerType === 'mouse') setActif(null) }}>
+          <defs>
+            <linearGradient id={idDegrade} x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="var(--vermillon)" stopOpacity="0.14" />
+              <stop offset="100%" stopColor="var(--vermillon)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <line className="fiche-svg__axe" x1={g} x2={L - d} y1={h} y2={h} />
+          <line className="fiche-svg__axe" x1={g} x2={L - d} y1={H - b} y2={H - b} />
+          <text className="fiche-svg__txt" x={g - 8} y={h + 4} textAnchor="end">{fr(max)} kg</text>
+          {max !== min && <text className="fiche-svg__txt" x={g - 8} y={H - b + 4} textAnchor="end">{fr(min)} kg</text>}
+          {aire && <path d={aire} fill={`url(#${idDegrade})`} />}
+          {n > 1 && <polyline className="fiche-svg__ligne" points={ligne} />}
+          {actif !== null && <line className="fiche-svg__repere" x1={x(actif)} x2={x(actif)} y1={h - 6} y2={H - b} />}
+          {points.map((p, i) => <circle key={i} className={`fiche-svg__point${i === actif ? ' fiche-svg__point--actif' : ''}`} cx={x(i)} cy={y(val(p))} r={i === actif ? 8 : 6} />)}
+          {etiquettes.map((i) => (
+            <text key={i} className="fiche-svg__txt" x={x(i)} y={H - 8} textAnchor={n === 1 ? 'middle' : i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}>{dateCourte(points[i].date)}</text>
+          ))}
+        </svg>
+        {pa && (
+          <div className={`courbe-bulle${cote}${dessous ? ' courbe-bulle--dessous' : ''}`} aria-hidden="true"
+            style={{ left: `${(x(actif) / L) * 100}%`, top: `${(y(val(pa)) / H) * 100}%` }}>
+            <span className="courbe-bulle__date">{dateCourte(pa.date)}</span>
+            <span className="courbe-bulle__valeur">{fr(pa.charge)} kg{pa.reps ? <small> × {pa.reps}</small> : null}</span>
+            {ecart !== null && ecart !== 0 && <span className={`courbe-bulle__ecart${ecart > 0 ? ' courbe-bulle__ecart--plus' : ''}`}>{ecart > 0 ? '+' : '−'}{fr(Math.abs(Math.round(ecart * 10) / 10))} kg</span>}
+          </div>
+        )}
+        <p className="sr-only" aria-live="polite">{texteActif}</p>
+      </div>
       <p className="espace-aide">{evolutionCharges(points)}</p>
       <table className="sr-only">
-        <caption>{nom} : meilleure charge de chaque séance</caption>
-        <thead><tr><th scope="col">Date</th><th scope="col">Charge</th><th scope="col">Répétitions</th></tr></thead>
+        <caption>{nom} : {libelle}</caption>
+        <thead><tr><th scope="col">Date</th><th scope="col">Valeur</th><th scope="col">Répétitions</th></tr></thead>
         <tbody>{points.map((p, i) => <tr key={i}><td>{dateCourte(p.date)}</td><td>{fr(p.charge)} kg</td><td>{p.reps}</td></tr>)}</tbody>
       </table>
     </li>

@@ -10,7 +10,7 @@ export default function GestionListes({ titre, listes, reglages, fermer }) {
   const ref = useRef(null)
   useEffect(() => { const d = ref.current; if (d && !d.open) d.showModal() }, [])
   return (
-    <dialog ref={ref} className="espace-dialogue gestion-listes" aria-labelledby="gl-titre" onClose={fermer}
+    <dialog ref={ref} className={`espace-dialogue gestion-listes${listes.length > 1 ? ' gestion-listes--colonnes' : ''}`} aria-labelledby="gl-titre" onClose={fermer}
       onClick={(e) => { if (e.target === ref.current) ref.current.close() }}>
       <div className="gestion__tete">
         <h2 id="gl-titre" className="titre titre--tuile">{titre}</h2>
@@ -18,7 +18,9 @@ export default function GestionListes({ titre, listes, reglages, fermer }) {
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
         </button>
       </div>
-      {listes.map((l) => <Liste key={l.cle} cle={l.cle} titre={l.titre} seule={listes.length === 1} reglages={reglages} />)}
+      <div className="gestion-listes__colonnes">
+        {listes.map((l) => <Liste key={l.cle} cle={l.cle} titre={l.titre} seule={listes.length === 1} reglages={reglages} />)}
+      </div>
     </dialog>
   )
 }

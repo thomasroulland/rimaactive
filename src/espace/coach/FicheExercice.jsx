@@ -8,6 +8,7 @@ import { reduireImage } from '../donnees/photos.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import useReglages from './useReglages.js'
+import ChoixAvecAjout from './ChoixAvecAjout.jsx'
 
 // Liste proposée par Claude, à faire valider par Marie
 export const MUSCLES = ['Quadriceps', 'Ischio-jambiers', 'Fessiers', 'Mollets', 'Pectoraux', 'Dos', 'Épaules', 'Biceps', 'Triceps', 'Abdominaux', 'Lombaires']
@@ -154,14 +155,10 @@ export default function FicheExercice() {
               <input id="exo-nom" className="champ" autoComplete="off" required value={fiche.nom} onChange={maj('nom')} />
             </div>
             <div className="formulaire-ligne">
-              <div className="champ-groupe">
-                <label htmlFor="exo-cat">Catégorie</label>
-                <select id="exo-cat" className="champ" value={fiche.categorie ?? 'Renforcement'} onChange={maj('categorie')}>{[...new Set([...reglages.categories, fiche.categorie].filter(Boolean))].map((c) => <option key={c}>{c}</option>)}</select>
-              </div>
-              <div className="champ-groupe">
-                <label htmlFor="exo-mat">Matériel</label>
-                <select id="exo-mat" className="champ" value={fiche.materiel ?? 'À préciser'} onChange={maj('materiel')}>{[...new Set([...reglages.materiels, fiche.materiel].filter(Boolean))].map((m) => <option key={m}>{m}</option>)}</select>
-              </div>
+              <ChoixAvecAjout id="exo-cat" label="Catégorie" cle="categories" liste={reglages.categories} libelleNouveau="Nouvelle catégorie"
+                valeur={fiche.categorie} changer={(v) => setFiche((f) => ({ ...f, categorie: v }))} />
+              <ChoixAvecAjout id="exo-mat" label="Matériel" cle="materiels" liste={reglages.materiels} libelleNouveau="Nouveau matériel"
+                valeur={fiche.materiel} changer={(v) => setFiche((f) => ({ ...f, materiel: v }))} />
             </div>
             <div className="champ-groupe">
               <label htmlFor="exo-consignes">Consigne d’exécution</label>
