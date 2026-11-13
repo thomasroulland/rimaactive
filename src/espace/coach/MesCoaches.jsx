@@ -2,7 +2,7 @@ import PhotoCoache from './PhotoCoache.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { inviterClient, renvoyerInvitation } from '../depots.js'
-import { ajoutJours, aujourdhuiIso, ecartJours } from '../donnees/calculs.js'
+import { ajoutJours, aujourdhuiIso, ecartJours, lundiDe } from '../donnees/calculs.js'
 import { dateSeance } from '../donnees/progression.js'
 import { suiviCoache } from '../donnees/alertes.js'
 import { useDonneesCoach } from './donneesCoach.js'
@@ -54,6 +54,12 @@ export default function MesCoaches() {
   }
   const compte = Object.fromEntries(FILTRES.map(([id]) => [id, fiches.filter(garde[id]).length]))
   const visibles = fiches.filter(garde[filtre])
+  // chiffres du bandeau (14 novembre 2026) : coachés actifs, séances faites cette semaine, points à regarder, programmes à préparer
+  const lundi = lundiDe(aujourdhui)
+  const cetteSemaine = (seances ?? []).filter((s) => s.statut === 'terminée' && s.date >= lundi && s.date <= aujourdhui).length
+  const actifs = fiches.filter((f) => f.statut === 'actif').length
+  // état de chaque carte, pour sa couleur : en cours, bientôt fini / à préparer, invité, en pause
+  const etatCarte = (c) => (c.statut === 'en pause' ? 'pause' : c.statut === 'invité' ? 'invite' : c.aFaire ? 'preparer' : c.alertes.length ? 'regarder' : 'encours')
   const resumeTete = clients === null ? ' '
     : `${nb} coaché${nb > 1 ? 's' : ''} · ${points === 0 ? 'rien à regarder' : `${points} point${points > 1 ? 's' : ''} à regarder`}`
 
@@ -75,7 +81,15 @@ export default function MesCoaches() {
         <p className="espace-message espace-message--erreur" role="alert">{erreurDonnees}</p>
 
         {clients && nb > 0 && (
-          <section className="a-regarder" aria-labelledby="a-regarder-titre">
+          <dl className="bandeau-coach">
+            <div><dt>Coachés actifs</dt><dd>{actifs}</dd></div>
+            <div><dt>Séances faites cette semaine</dt><dd className="bandeau-coach__jaune">{cetteSemaine}</dd></div>
+            <div><dt>Points à regarder</dt><dd className={points ? 'bandeau-coach__vermillon' : ''}>{points}</dd></div>
+            <div><dt>Programmes à préparer</dt><dd>{compte.programme}</dd></div>
+          </dl>
+        )}
+        {clients && nb > 0 && (
+          <section className={`a-regarder${aRegarder.length ? ' a-regarder--points' : ' a-regarder--calme'}`} aria-labelledby="a-regarder-titre">
             <h2 id="a-regarder-titre" className="a-regarder__titre">À regarder</h2>
             {aRegarder.length === 0 && (
               <p className="a-regarder__calme">
@@ -118,7 +132,7 @@ export default function MesCoaches() {
               const p = c.programmeComplet
               const visio = c.derniereVisio?.date
               return (
-                <li key={c.uid} className="carte-coache">
+                <li key={c.uid} className={`carte-coache carte-coache--${etatCarte(c)}`}>
                   <div className="carte-coache__tete">
                     <PhotoCoache client={c} taille={40} />
                     <h2 className="carte-coache__nom"><Link to={`/espace/coach/clients/${c.uid}`} className="carte-coache__lien">{c.prenom} {c.nom}</Link></h2>

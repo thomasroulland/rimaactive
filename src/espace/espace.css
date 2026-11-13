@@ -1162,3 +1162,43 @@ button.calendrier__jour:focus-visible { outline: 2px solid var(--encre); outline
 .choix-ajout__champ { position: relative; flex: 1 1 180px; min-width: 0; display: flex; }
 .choix-ajout__champ .champ { flex: 1; padding-right: 40px; }
 .choix-ajout__champ .choix-ajout__annuler { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); }
+
+/* ---------- Mes coachés en couleurs (14 novembre 2026) : bandeau encre, couleur d'état sur chaque carte ---------- */
+.bandeau-coach { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; padding: 20px 8px; border-radius: 20px; background: var(--encre); color: var(--craie); }
+.bandeau-coach > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px; padding: 2px 20px; }
+.bandeau-coach > div + div { border-left: 1px solid rgba(244, 243, 239, 0.12); }
+.bandeau-coach dt { font-size: 13px; line-height: 18px; font-weight: 600; color: rgba(244, 243, 239, 0.65); }
+.bandeau-coach dd { margin: 0; font-size: 40px; line-height: 44px; font-weight: 900; letter-spacing: -0.04em; color: var(--blanc); }
+.bandeau-coach__jaune { color: var(--jaune) !important; }
+.bandeau-coach__vermillon { color: var(--vermillon) !important; }
+@media (max-width: 760px) {
+  .bandeau-coach { grid-template-columns: 1fr 1fr; padding: 14px 4px; row-gap: 14px; }
+  .bandeau-coach > div:nth-child(3) { border-left: 0; }
+  .bandeau-coach dd { font-size: 32px; line-height: 36px; }
+}
+
+/* encadré « À regarder » : liseré vermillon s'il y a des points, teinte jaune douce sinon */
+.a-regarder--points { box-shadow: inset 4px 0 0 var(--vermillon), 0 1px 2px rgba(22, 21, 20, 0.04); }
+.a-regarder--calme { background: #fdf6dc; }
+.a-regarder--calme .a-regarder__titre { border-bottom-color: rgba(22, 21, 20, 0.08); }
+.a-regarder__calme svg { box-sizing: content-box; padding: 5px; border-radius: 50%; background: var(--jaune); }
+
+/* cartes : un liseré de couleur en haut selon l'état */
+.carte-coache { overflow: hidden; }
+.carte-coache::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: #e6e2da; }
+.carte-coache--encours::before { background: var(--encre); }
+.carte-coache--regarder::before { background: var(--vermillon); }
+.carte-coache--preparer::before { background: var(--jaune); }
+.carte-coache--invite::before { background: repeating-linear-gradient(90deg, var(--jaune) 0 10px, transparent 10px 16px); }
+.carte-coache--pause { background: #faf9f6; }
+.carte-coache--pause .carte-coache__nom, .carte-coache--pause .carte-coache__programme { opacity: .7; }
+.carte-coache__barre > span { background: linear-gradient(90deg, var(--jaune), var(--vermillon)); }
+.case-semaine--faite { border-color: var(--vermillon); background-color: var(--vermillon); }
+.case-semaine--passee { border-color: var(--encre); }
+.carte-coache .alertes li::before { background: var(--vermillon); }
+
+/* initiales des coachés : teintes douces */
+.photo-coache--jaune { background: #fbecb4; border-color: #f4dd86; }
+.photo-coache--vermillon { background: #ffd9cd; border-color: #ffc2b0; }
+.photo-coache--craie { background: #ece8df; border-color: #e0dbd0; }
+.photo-coache:has(.photo-coache__img) { background: var(--craie); border-color: #ece9e3; }
