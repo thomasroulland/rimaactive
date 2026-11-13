@@ -1,3 +1,4 @@
+import PhotoCoache from './PhotoCoache.jsx'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ecouterModeles, enregistrerModele, enregistrerProgramme, nouvelIdModele, nouvelIdProgramme, supprimerModele } from '../depots.js'
@@ -212,7 +213,7 @@ function ProgrammesDesCoaches() {
           {groupes.map(({ c, liste }, i) => (
             <li key={c.uid} className="espace-carte progs__coache" style={{ '--i': i }}>
               <div className="progs__coache-tete">
-                <span className="progs__initiales" aria-hidden="true">{(c.prenom?.[0] ?? '') + (c.nom?.[0] ?? '')}</span>
+                <PhotoCoache client={c} taille={36} />
                 <h3 className="progs__coache-nom"><Link to={`/espace/coach/clients/${c.uid}`}>{c.prenom} {c.nom}</Link></h3>
                 <Link to={`/espace/coach/clients/${c.uid}/programme?nouveau=1`} className="progs__plus" aria-label={`Nouveau programme pour ${c.prenom} ${c.nom}`} title="Nouveau programme">
                   <span aria-hidden="true" className="progs__plus-icone" />

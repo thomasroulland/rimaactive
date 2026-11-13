@@ -1,3 +1,4 @@
+import PhotoCoache from './PhotoCoache.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { inviterClient, renvoyerInvitation } from '../depots.js'
@@ -63,7 +64,8 @@ export default function MesCoaches() {
             {aRegarder.length > 0 && <ul className="a-regarder__liste">
               {aRegarder.map((c) => (
                 <li key={c.uid} className="a-regarder__ligne">
-                  <div>
+                  <PhotoCoache client={c} taille={36} />
+                  <div className="a-regarder__corps">
                     <p className="a-regarder__nom">{c.prenom} {c.nom}</p>
                     <ul className="alertes">{c.alertes.map((a) => <li key={a}>{a}</li>)}</ul>
                   </div>
@@ -86,6 +88,7 @@ export default function MesCoaches() {
               return (
                 <li key={c.uid} className="carte-coache">
                   <div className="carte-coache__tete">
+                    <PhotoCoache client={c} taille={40} />
                     <h2 className="carte-coache__nom"><Link to={`/espace/coach/clients/${c.uid}`} className="carte-coache__lien">{c.prenom} {c.nom}</Link></h2>
                     {r ? <span className="carte-coache__semaine">{r.semaine === 0 ? 'Commence bientôt' : `Semaine ${r.semaine} sur ${r.nbSemaines}`}</span>
                       : <span className={`espace-statut espace-statut--${c.statut === 'actif' ? 'actif' : 'autre'}`}>{STATUTS[c.statut] ?? c.statut}</span>}

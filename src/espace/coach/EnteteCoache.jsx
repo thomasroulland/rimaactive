@@ -1,3 +1,4 @@
+import PhotoCoache from './PhotoCoache.jsx'
 import { createContext, useContext, useEffect, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router-dom'
@@ -75,6 +76,7 @@ function Tete({ client, uid, onglet, enCours, emplacement }) {
         Mes coachés
       </Link>
       <header className="coache-tete">
+        <PhotoCoache client={client} taille={72} classe="coache-tete__photo" />
         <div className="coache-tete__identite">
           <p className="surtitre">{enCours ? `${enCours.nom} · ${enCours.semaine === 0 ? 'commence bientôt' : `semaine ${enCours.semaine} sur ${enCours.nbSemaines}`}` : 'Pas de programme en cours'}</p>
           <h1 className="titre titre--section">{nom}</h1>

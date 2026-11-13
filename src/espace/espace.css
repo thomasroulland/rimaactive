@@ -946,3 +946,14 @@ span.page-seance__fleche { opacity: .35; }
 .page-seance__jour { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; background: var(--blanc); border: 1px solid var(--filet); font-size: 13px; font-weight: 700; }
 .modele-tete__champ { flex: 0 1 auto; max-width: 100%; field-sizing: content; }
 .modele-tete .surtitre { margin: 4px 0 0; }
+
+/* photo de profil d'un coaché (vue coach) : photo ronde ou initiales */
+.photo-coache { flex: none; display: inline-grid; place-items: center; width: var(--taille, 40px); height: var(--taille, 40px); border-radius: 50%; overflow: hidden; background: var(--craie); border: 1px solid #ece9e3; }
+.photo-coache__img { width: 100%; height: 100%; object-fit: cover; display: block; animation: ec-fondu .3s ease; }
+.photo-coache__initiales { font-size: calc(var(--taille, 40px) * 0.36); font-weight: 800; letter-spacing: 0.02em; color: var(--encre); }
+.carte-coache__tete { align-items: center; }
+.carte-coache__tete .carte-coache__nom { flex: 1; min-width: 0; }
+.a-regarder__ligne { align-items: center; }
+.a-regarder__corps { flex: 1; min-width: 0; }
+.coache-tete__photo { align-self: center; }
+@media (max-width: 560px) { .coache-tete__photo { --taille: 56px !important; } }
