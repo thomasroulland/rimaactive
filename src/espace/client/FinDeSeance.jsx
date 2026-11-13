@@ -38,7 +38,7 @@ export default function FinDeSeance({ course, fait, etat, envoyer }) {
             ))}
           </div>
           {(v.effort || !terminee) && (
-            <p className="ec-petit ec-fin__aide" aria-live="polite">{v.effort ? `${v.effort} · ${NOMS[v.effort]}` : AIDE}</p>
+            <p className="ec-petit ec-fin__aide" aria-live="polite">{v.effort ? (NOMS[v.effort] ? `${v.effort} · ${NOMS[v.effort]}` : `${v.effort} sur 10`) : AIDE}</p>
           )}
         </fieldset>
         <fieldset className="ec-fin__groupe">
