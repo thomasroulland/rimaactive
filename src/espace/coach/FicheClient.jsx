@@ -10,6 +10,7 @@ import { noterVisio } from '../depots.js'
 import { dateSeance } from '../donnees/progression.js'
 import { avancement } from '../donnees/progression.js'
 import { effortMoyen, frNombre, meilleurProgres } from '../donnees/resume.js'
+import { basculerDetails } from '../../components/basculerDetails.js'
 import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import { derniereVisite, noterVisite, nouvellesSeances } from './vus.js'
 
@@ -242,7 +243,7 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
       )}
       {detail.length > 0 && (
         <details className="fiche-detail">
-          <summary>Détail des séries · {detail.length} exercice{detail.length > 1 ? 's' : ''}</summary>
+          <summary onClick={(e) => basculerDetails(e, e.currentTarget.nextElementSibling)}>Détail des séries · {detail.length} exercice{detail.length > 1 ? 's' : ''}</summary>
         <ul className="fiche-exos">
           {detail.map((x) => (
             <li key={x.cle} className="fiche-exo">

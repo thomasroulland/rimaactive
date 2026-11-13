@@ -4,6 +4,7 @@ import { CATEGORIES, MATERIELS } from '../donnees/banque.js'
 import { enregistrerExercice } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
+import { basculerDetails } from '../../components/basculerDetails.js'
 
 const simplifier = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 const VIDE = { nom: '', categorie: CATEGORIES[0], materiel: MATERIELS[MATERIELS.length - 1], consignes: '' }
@@ -91,7 +92,8 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
       )}
       <details className="espace-choix__creer" open={creationOuverte}
         onToggle={(e) => setCreationOuverte(e.currentTarget.open)}>
-        <summary>Créer un nouvel exercice sans quitter la séance</summary>
+        <summary onClick={(e) => basculerDetails(e, e.currentTarget.nextElementSibling)}>Créer un nouvel exercice sans quitter la séance</summary>
+        <div className="espace-choix__corps">
         <div className="espace-choix__form">
           <div className="champ-groupe">
             <label htmlFor="nx-nom">Nom</label>
@@ -115,6 +117,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
         <button type="button" className="bouton bouton--principal bouton--compact" onClick={creer} disabled={envoi}>
           {envoi ? 'Création…' : `Créer et ajouter au bloc ${blocChoisi}`}
         </button>
+        </div>
       </details>
     </section>
   )

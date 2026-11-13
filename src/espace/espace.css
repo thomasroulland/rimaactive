@@ -467,7 +467,7 @@
 .ariane a:hover { color: var(--encre); text-decoration: underline; text-underline-offset: 3px; }
 .ariane [aria-current] { color: var(--encre); }
 .coache-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
-.coache-tete__identite { min-width: 0; flex: 1 1 260px; }
+.coache-tete__identite { min-width: 0; flex: 1 1 420px; }
 .coache-tete__infos { margin: 6px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--coach-texte-doux, #6b665f); overflow-wrap: anywhere; }
 .coache-tete__actions { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
 .onglets-coache { display: flex; flex-wrap: wrap; gap: 4px 28px; border-bottom: 1px solid var(--filet); margin-top: -4px; }
@@ -770,14 +770,36 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
 
 /* Ajouter un exercice : catégories et création sans quitter la séance (maquette coach) */
 .espace-choix__filtres { margin-top: -4px; }
-.espace-choix__creer { border-top: 1px solid var(--filet); padding-top: 12px; display: grid; gap: 12px; }
+.espace-choix__creer { border-top: 1px solid var(--filet); padding-top: 12px; }
+.espace-choix__creer[open] > summary { margin-bottom: 12px; }
 .espace-choix__creer > summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; gap: 8px; list-style: none; }
 .espace-choix__creer > summary::-webkit-details-marker { display: none; }
 .espace-choix__creer > summary::before { content: '+'; display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--filet); border-radius: 50%; font-weight: 500; transition: transform .2s ease; }
 .espace-choix__creer[open] > summary::before { transform: rotate(45deg); }
-.espace-choix__creer > .bouton { justify-self: start; }
+.espace-choix__corps { display: grid; gap: 12px; }
+.espace-choix__corps > .bouton { justify-self: start; }
 .espace-choix__form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px 16px; }
 .espace-choix__large { grid-column: 1 / -1; }
 @media (prefers-reduced-motion: reduce) { .espace-choix__creer > summary::before { transition: none; } }
 .espace-param__aide { font-size: 13px; line-height: 18px; color: var(--gris-chaud); }
 .espace-element .espace-params { align-items: start; }
+.comparaison__vide { display: grid; place-items: center; border: 1px dashed var(--filet); background: var(--craie); color: var(--gris-chaud); font-size: 14px; }
+@media (max-width: 560px) { .comparaison { gap: 10px; } }
+.comparaison__vide { aspect-ratio: 4 / 3; }
+.comparaison__img { max-height: 72vh; }
+
+/* Séance ouverte : page entière (maquette coach), plus de panneau à côté des colonnes */
+.page-seance { display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 88px; }
+.page-seance__nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; }
+.page-seance__voisines { display: flex; gap: 20px; }
+.page-seance > .surtitre { margin: 8px 0 0; }
+.page-seance__titre { margin: 0 0 8px; }
+.page-seance .espace-seance { gap: 20px; }
+
+/* Ouvertures en douceur (coach) : page de séance, changement de semaine, cartes repliables */
+@media (prefers-reduced-motion: no-preference) {
+  .page-seance { animation: espace-monte 0.35s cubic-bezier(.3, .7, .2, 1); }
+  .colonnes-seances { animation: onglet-entre 0.3s cubic-bezier(.3, .7, .2, 1); }
+  .espace-choix__creer > summary::before, .historique__seance > summary::after, .fiche-detail > summary::after { transition: transform .25s ease; }
+  .historique__seance[open] > summary::after, .fiche-detail[open] > summary::after { transform: rotate(180deg); }
+}

@@ -14,6 +14,7 @@ import { messageErreur } from '../erreurs.js'
 import { useCoache } from './EnteteCoache.jsx'
 import { Courbe, DialogueSuppression, SeanceFaite, trouverSeance } from './FicheClient.jsx'
 import PhotoStockee from './PhotoStockee.jsx'
+import { basculerDetails } from '../../components/basculerDetails.js'
 
 // Onglets de la fiche d'un coaché, d'après la maquette coach de Marie (13 novembre 2026).
 // Les données communes (coaché, programmes, séances) viennent de la page commune (useCoache).
@@ -138,7 +139,7 @@ export function Historique() {
         return (
           <li key={sf.id}>
             <details className="historique__seance espace-carte">
-              <summary>
+              <summary onClick={(e) => basculerDetails(e, e.currentTarget.nextElementSibling)}>
                 <span className="historique__titre">{dateSeance(sf.date)} · {s ? s.titre || 'Séance' : 'Séance retirée du programme'}</span>
                 <span className="espace-aide">{sem ? `S${sem}` : ''}{bilan ? ` · ${bilan}` : ''}</span>
               </summary>
@@ -306,22 +307,29 @@ export function Photos() {
   return (
     <div className="onglet-pile">
       <p className="espace-aide">Photos importées par {client.prenom} depuis son espace. Privées : visibles uniquement par {client.prenom} et vous.</p>
-      {photos.length === 0 && <p className="espace-texte">Aucune photo pour l’instant.</p>}
-      {photos.length >= 2 && (
-        <Carte titre="Avant / après" id="t-cmp">
-          <div className="comparaison">
-            {[['Avant', pAvant, setAvant], ['Après', pApres, setApres]].map(([lib, p, choisir]) => (
-              <div key={lib} className="comparaison__cote">
-                <div className="champ-groupe"><label htmlFor={`cmp-${lib}`}>{lib}</label>
-                  <select id={`cmp-${lib}`} className="champ" value={p.id} onChange={(e) => choisir(e.target.value)}>
-                    {photos.map((x) => <option key={x.id} value={x.id}>{dateComplete(x.date)}</option>)}
-                  </select></div>
-                <PhotoStockee chemin={p.chemin} alt={`${lib} : photo du ${dateComplete(p.date)}`} classe="comparaison__img" />
-              </div>
-            ))}
-          </div>
-        </Carte>
-      )}
+      <Carte titre="Avant / après" id="t-cmp">
+        {photos.length < 2 && (
+          <p className="espace-aide">
+            {photos.length === 0
+              ? `Aucune photo pour l’instant. Dès que ${client.prenom} en importe depuis son espace, vous pourrez comparer deux dates ici.`
+              : `Une seule photo pour l’instant : la comparaison sera possible dès la deuxième.`}
+          </p>
+        )}
+        <div className="comparaison">
+          {[['Avant', pAvant, setAvant], ['Après', photos.length >= 2 ? pApres : null, setApres]].map(([lib, p, choisir]) => (
+            <div key={lib} className="comparaison__cote">
+              <div className="champ-groupe"><label htmlFor={`cmp-${lib}`}>{lib}</label>
+                <select id={`cmp-${lib}`} className="champ" value={p?.id ?? ''} disabled={!p} onChange={(e) => choisir(e.target.value)}>
+                  {!p && <option value="">Pas encore de photo</option>}
+                  {p && photos.map((x) => <option key={x.id} value={x.id}>{dateComplete(x.date)}</option>)}
+                </select></div>
+              {p
+                ? <PhotoStockee chemin={p.chemin} alt={`${lib} : photo du ${dateComplete(p.date)}`} classe="comparaison__img" />
+                : <div className="comparaison__img comparaison__vide" aria-hidden="true"><span>{lib === 'Avant' ? 'Première photo' : 'Photo la plus récente'}</span></div>}
+            </div>
+          ))}
+        </div>
+      </Carte>
       {photos.length > 0 && (
         <ul className="photos-coache">
           {[...photos].reverse().map((ph) => (

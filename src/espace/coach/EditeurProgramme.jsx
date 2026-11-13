@@ -52,14 +52,13 @@ export default function EditeurProgramme() {
   const supprime = useRef(null) // programme supprimé : ne pas le rouvrir avant que la liste se mette à jour
   const version = useRef(0)
   const panneau = useRef(null)
-  // une séance qui s'ouvre : son panneau vient à l'écran (sur téléphone, il remplace la liste)
+  // une séance qui s'ouvre prend toute la page (maquette coach) : on remonte en haut de la séance
   const seanceOuverte = params.get('seance')
   useEffect(() => {
-    if (!seanceOuverte) return
     const el = panneau.current
     if (!el) return
     const haut = el.getBoundingClientRect().top
-    if (haut < 0 || haut > window.innerHeight * 0.6) el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+    if (haut < 0 || haut > window.innerHeight * 0.5) el.scrollIntoView({ behavior: 'auto', block: 'start' })
   }, [seanceOuverte])
 
   const creation = params.get('nouveau') === '1'
@@ -238,6 +237,25 @@ export default function EditeurProgramme() {
     })
   }
 
+  // Supprimer la semaine affichée : impossible s'il n'en reste qu'une ou si une de ses séances est faite.
+  // Les semaines suivantes remontent d'un cran (S4 devient S3) et donc d'une semaine dans le calendrier.
+  const semaineFaite = (i) => (prog?.semaines[i]?.seances ?? []).some((x) => verrous?.has(x.id))
+  function supprimerSemaine() {
+    if (nbSem <= 1) { setErreur('Un programme garde au moins une semaine.'); return }
+    if (verrous === null || semaineFaite(semIdx)) { setErreur(`Des séances de la semaine S${semIdx + 1} sont déjà faites : elle ne peut pas être supprimée.`); return }
+    const n = semIdx + 1
+    demander({
+      titre: `Supprimer la semaine S${n} ?`,
+      texte: `Ses ${semaine.seances.length} séance${semaine.seances.length > 1 ? 's' : ''} seront retirée${semaine.seances.length > 1 ? 's' : ''}.${n < nbSem ? ` Les semaines suivantes avancent d’une semaine (S${n + 1} devient S${n}).` : ''}`,
+      libelle: 'Supprimer la semaine',
+      action: () => {
+        muter((p) => { p.semaines.splice(semIdx, 1) })
+        aller({ semaine: Math.max(1, Math.min(n, nbSem - 1)) }, true)
+        setErreur(''); setMessage(`Semaine S${n} supprimée.`)
+      },
+    })
+  }
+
   // ---------- Affichage ----------
   const nomClient = client ? `${client.prenom} ${client.nom}` : ''
   const dialogue = confirmation && <Confirmation {...confirmation} fermer={() => setConfirmation(null)} />
@@ -366,6 +384,7 @@ export default function EditeurProgramme() {
           {messages}
           {alerteVerrous}
 
+          {!seance && (<>
           <div className={`espace-carte espace-params espace-params--programme${modele ? ' espace-params--modele' : ''}`}>
             <div className="champ-groupe espace-param espace-param--large">
               <label htmlFor="prog-nom">Nom du programme</label>
@@ -388,6 +407,9 @@ export default function EditeurProgramme() {
             </div>
             <div className="espace-actions">
               <button type="button" className="espace-lien" onClick={dupliquer}>Dupliquer la semaine</button>
+              {nbSem > 1 && verrous !== null && !semaineFaite(semIdx) && (
+                <button type="button" className="espace-lien" onClick={supprimerSemaine}>Supprimer la semaine<span className="sr-only"> S{semIdx + 1}</span></button>
+              )}
             </div>
           </div>
 
@@ -404,12 +426,12 @@ export default function EditeurProgramme() {
             </div>
           </div>
 
-          <div className={`editeur-semaine${seance ? ' editeur-semaine--ouverte' : ''}`}>
+          <div className="editeur-semaine">
             <div className="editeur-semaine__seances">
               {semaine.seances.length === 0
                 ? <p className="espace-texte">Aucune séance cette semaine. Ajoutez-en une ci-dessous.</p>
                 : (
-                  <ol className="colonnes-seances">
+                  <ol className="colonnes-seances" key={semaine.id}>
                     {semaine.seances.map((s, i) => {
                       const faite = verrous?.has(s.id)
                       const ouverte = seance?.id === s.id
@@ -442,24 +464,31 @@ export default function EditeurProgramme() {
               </div>
             </div>
 
-            {seance && (
-              <aside className="panneau-seance" aria-labelledby="panneau-titre" ref={panneau}>
-                <div className="panneau-seance__tete">
-                  <div>
-                    <p className="surtitre">Séance {String(seIdx + 1).padStart(2, '0')} · {seance.jour}</p>
-                    <h2 id="panneau-titre" className="panneau-seance__titre">{seance.titre || `Séance ${seIdx + 1}`}</h2>
-                  </div>
-                  <Link to={lienSeance(null)} className="panneau-seance__fermer" aria-label="Fermer la séance">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-                  </Link>
-                </div>
-                <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
-                  majSeance={majSeance} majBloc={majBloc} majElement={majElement}
-                  retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
-                  ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
-              </aside>
-            )}
           </div>
+          </>)}
+
+          {seance && (
+            <article className="page-seance" aria-labelledby="page-seance-titre" ref={panneau}>
+              <div className="page-seance__nav">
+                <Link to={lienSeance(null)} className="espace-retour">
+                  <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
+                  Retour à la semaine {semIdx + 1}
+                </Link>
+                {semaine.seances.length > 1 && (
+                  <div className="page-seance__voisines">
+                    {seIdx > 0 && <Link to={lienSeance(semaine.seances[seIdx - 1].id)} className="espace-lien">← Séance {String(seIdx).padStart(2, '0')}</Link>}
+                    {seIdx < semaine.seances.length - 1 && <Link to={lienSeance(semaine.seances[seIdx + 1].id)} className="espace-lien">Séance {String(seIdx + 2).padStart(2, '0')} →</Link>}
+                  </div>
+                )}
+              </div>
+              <p className="surtitre">{modele ? '' : `${prog.nom || 'Programme'} · `}Semaine {semIdx + 1} · Séance {String(seIdx + 1).padStart(2, '0')} · {seance.jour}</p>
+              <h2 id="page-seance-titre" className="titre titre--section page-seance__titre">{seance.titre || `Séance ${seIdx + 1}`}</h2>
+              <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
+                majSeance={majSeance} majBloc={majBloc} majElement={majElement}
+                retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
+                ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
+            </article>
+          )}
         </div>
       </section>
       {barre}
