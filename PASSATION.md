@@ -405,3 +405,13 @@ textes, tailles et couleurs de la maquette font foi. **Rien n'est en ligne ni su
 - **Hauteur d'un écran limitée à 880 px** (`--ecran` dans `styles.css`) : jusqu'à 880 px de haut (l'écran de Marie compris),
   chaque rubrique remplit l'écran comme avant ; au-delà, les rubriques ne remplissent plus l'écran et s'enchaînent,
   sans aimantation au défilement. Écart à la règle « une rubrique = un écran » : à faire valider par Marie.
+
+## Mise en ligne de l'espace client et coach (13 novembre 2026)
+
+Thomas a confirmé l'accord écrit de Marie (« tout est bon ») : la branche `espace-client-spec` a été avancée dans `main`
+(fusion `--ff-only`) et poussée. Avant la fusion : `npm test` (125), `npm run test:fuseaux`, `npm run test:vercel`,
+`npm run test:regles` (88) et `npm run build` passent.
+- **À faire dans la console Firebase si ce n'est pas déjà fait** : coller `firestore.rules` (bilans, notes privées, modèles).
+- **E-mail d'invitation** : la console Firebase refuse de modifier les modèles d'e-mail sur ce projet. Le modèle aux couleurs
+  du site est prêt (`docs/email-invitation.html`, logo blanc dans `public/email/`) ; piste : le faire envoyer par le site
+  (service d'envoi + lien `generatePasswordResetLink`), pas encore fait.
