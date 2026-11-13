@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { meilleuresCharges, regularite, semaineCourante } from '../donnees/calculs.js'
 import { bilanSeance, dateSeance } from '../donnees/progression.js'
 import { evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
 import { Link } from 'react-router-dom'
+import { basculerDetails } from '../../components/basculerDetails.js'
 import MesPhotos from './MesPhotos.jsx'
 import MesMesures from './MesMesures.jsx'
 
@@ -31,43 +32,13 @@ export default function MaProgression({ uid, programme, programmes, faites, sean
   )
 }
 
-// Rubrique repliable : <details> (clavier et lecteurs d'écran inchangés), avec une hauteur qui s'anime à l'ouverture et à la fermeture.
-// data-etat : « replie » (hauteur 0) puis retiré à la fin du mouvement ; sans mouvement (préférence système), le <details> fait seul.
+// Rubrique repliable : <details> (clavier et lecteurs d'écran inchangés), qui s'ouvre et se ferme en glissant
+// (même animation que les questions de l'accueil, voir components/basculerDetails.js).
 function Rubrique({ id, titre, children }) {
   const racine = useRef(null)
-  const minuterie = useRef(null)
-  useEffect(() => () => clearTimeout(minuterie.current), [])
-
-  const basculer = (e) => {
-    const d = racine.current
-    if (!d || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    e.preventDefault()
-    clearTimeout(minuterie.current)
-    const duree = parseFloat(getComputedStyle(d).getPropertyValue('--ec-duree-lent')) || 300 // la même durée que le CSS
-    const fin = (ouvert) => {
-      d.open = ouvert
-      d.removeAttribute('data-etat')
-    }
-    const replie = !d.open || d.dataset.etat === 'replie' // fermée, ou en train de se fermer : on (ré)ouvre
-    if (replie) {
-      if (!d.open) {
-        d.dataset.etat = 'replie'
-        d.open = true
-        void d.offsetHeight // la hauteur 0 est appliquée avant de lancer le mouvement
-      }
-      d.dataset.etat = 'deplie'
-      minuterie.current = setTimeout(() => fin(true), duree)
-    } else {
-      d.dataset.etat = 'deplie'
-      void d.offsetHeight
-      d.dataset.etat = 'replie'
-      minuterie.current = setTimeout(() => fin(false), duree)
-    }
-  }
-
   return (
     <details className="ec-repli" open ref={racine}>
-      <summary onClick={basculer}><h2 id={id} className="ec-h2">{titre}</h2></summary>
+      <summary onClick={(e) => basculerDetails(e, racine.current?.querySelector('.ec-repli__zone'))}><h2 id={id} className="ec-h2">{titre}</h2></summary>
       <div className="ec-repli__zone">
         <div className="ec-repli__interieur"><div className="ec-pile">{children}</div></div>
       </div>

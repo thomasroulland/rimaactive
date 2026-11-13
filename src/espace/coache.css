@@ -756,3 +756,6 @@ select.ec-champ { appearance: auto; min-width: 0; }
 @keyframes snack-sort { to { opacity: 0; transform: translate(-50%, 8px); } }
 @media (max-width: 599px) { .snack { bottom: 84px; } }
 @media (prefers-reduced-motion: reduce) { .snack, .snack--erreur { animation: none; } }
+/* rubriques repliables : pendant la fermeture, l'icône repasse tout de suite au « + » ; l'ancienne animation est retirée */
+.ec-repli[data-ferme] > summary::after { content: "+"; }
+.ec-repli__zone { display: block; }

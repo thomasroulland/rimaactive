@@ -1911,3 +1911,5 @@ input, textarea { caret-color: var(--vermillon); }
   /* Mes offres : chaque rubrique prend la hauteur de son contenu, sans vide dessous */
   .offres-page__rubrique { min-height: 0; padding-block: 48px 56px; }
 }
+/* questions : pendant la fermeture (data-ferme), l'icône repasse tout de suite au « + » */
+.question[data-ferme] .question__plus::after { transform: rotate(90deg); }

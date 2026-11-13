@@ -7,6 +7,7 @@ import photoEnLigne from '../assets/service-en-ligne.jpg'
 import { Link } from 'react-router-dom'
 import { Photo } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
+import { basculerDetails } from '../components/basculerDetails.js'
 import { CONTACT } from '../components/liens.js'
 
 const SERVICES = [
@@ -233,7 +234,8 @@ function Questions() {
         <div className="questions__liste">
           {QUESTIONS.map(([q, r]) => (
             <details key={q} className="question">
-              <summary>{q}<span className="question__plus" aria-hidden="true" /></summary>
+              {/* la réponse s'ouvre et se ferme en glissant */}
+              <summary onClick={(e) => basculerDetails(e, e.currentTarget.nextElementSibling)}>{q}<span className="question__plus" aria-hidden="true" /></summary>
               <p>{r}</p>
             </details>
           ))}
