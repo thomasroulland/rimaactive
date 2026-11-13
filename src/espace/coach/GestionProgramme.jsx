@@ -3,13 +3,13 @@ import { decalerProgramme, depublierProgramme, enregistrerProgramme, nouvelIdPro
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { dupliquerProgramme } from '../donnees/programme.js'
 import { messageErreur } from '../erreurs.js'
+import { lundisProposes, libelleLundi } from './CreationProgramme.jsx'
 
-// Lundis proposés : 8 semaines avant la date actuelle et 16 après
+// Lundis proposés : ceux de la création (26 semaines avant et après aujourd'hui) + 8 semaines autour de la date actuelle
 export function lundisAutour(iso) {
   const base = lundiDe(iso || aujourdhuiIso())
-  const liste = Array.from({ length: 25 }, (_, i) => ajoutJours(base, (i - 8) * 7))
-  if (iso && !liste.includes(iso)) liste.push(iso) // date actuelle (même si ce n'est pas un lundi)
-  return liste.sort()
+  const autour = Array.from({ length: 25 }, (_, i) => ajoutJours(base, (i - 8) * 7))
+  return [...new Set([...lundisProposes(iso), ...autour])].sort()
 }
 const ecartJours = (a, b) => Math.round((new Date(`${b}T12:00:00`) - new Date(`${a}T12:00:00`)) / (24 * 3600 * 1000))
 // « 2 semaines plus tard », « 5 jours plus tôt »
@@ -60,7 +60,7 @@ export default function GestionProgramme({ prog, prenom, aDesModifs, fermer, fai
           <div className="champ-groupe">
             <label htmlFor="g-debut">Nouveau début (un lundi)</label>
             <select id="g-debut" className="champ" value={debut} onChange={(e) => setDebut(e.target.value)}>
-              {lundisAutour(prog.debut).map((l) => <option key={l} value={l}>{dateLongue(l)}{l === prog.debut ? ' (actuel)' : ''}</option>)}
+              {lundisAutour(prog.debut).map((l) => <option key={l} value={l}>{libelleLundi(l)}{l === prog.debut ? ' (actuel)' : ''}</option>)}
             </select>
           </div>
           <button type="button" className="bouton bouton--principal" disabled={envoi || aDesModifs || debut === prog.debut}
@@ -81,7 +81,7 @@ export default function GestionProgramme({ prog, prenom, aDesModifs, fermer, fai
           <div className="champ-groupe">
             <label htmlFor="g-debut-copie">Début</label>
             <select id="g-debut-copie" className="champ" value={copie.debut} onChange={(e) => setCopie({ ...copie, debut: e.target.value })}>
-              {lundisAutour(copie.debut).map((l) => <option key={l} value={l}>{dateLongue(l)}</option>)}
+              {lundisAutour(copie.debut).map((l) => <option key={l} value={l}>{libelleLundi(l)}</option>)}
             </select>
           </div>
           <button type="button" className="bouton bouton--secondaire" disabled={envoi || aDesModifs || !copie.nom.trim()}

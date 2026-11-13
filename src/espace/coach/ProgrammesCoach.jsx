@@ -5,7 +5,7 @@ import { ecouterModeles, enregistrerModele, enregistrerProgramme, nouvelIdModele
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { dupliquerProgramme, nouveauProgramme } from '../donnees/programme.js'
 import { messageErreur } from '../erreurs.js'
-import { NB_SEMAINES } from './CreationProgramme.jsx'
+import { NB_SEMAINES, libelleLundi, lundisProposes } from './CreationProgramme.jsx'
 import { useDonneesCoach } from './donneesCoach.js'
 import Confirmation from './Confirmation.jsx'
 import { dateCourte } from '../donnees/seances.js'
@@ -61,7 +61,8 @@ function Modeles() {
   const [erreur, setErreur] = useState('')
   const [envoi, setEnvoi] = useState(false)
   useEffect(() => ecouterModeles(setModeles, () => setErreur('Impossible de charger les modèles. Vérifiez votre connexion.')), [])
-  const lundis = Array.from({ length: 12 }, (_, i) => ajoutJours(lundiDe(aujourdhuiIso()), (i + 1) * 7))
+  const lundis = lundisProposes()
+  const lundiSuivant = ajoutJours(lundiDe(aujourdhuiIso()), 7)
   const tenter = async (fn) => {
     setErreur(''); setMessage(''); setEnvoi(true)
     try { await fn() } catch (e) { setErreur(messageErreur(e.code)) } finally { setEnvoi(false) }
@@ -145,7 +146,7 @@ function Modeles() {
                 <div className="modele__actions">
                   <Link to={`/espace/coach/modeles/${m.id}`} className="bouton bouton--secondaire bouton--compact">Modifier</Link>
                   <button type="button" className="lien-souligne modele__affecter-lien" aria-expanded={ouvert} aria-controls={`aff-${m.id}`}
-                    onClick={() => setAffecter(ouvert ? null : { id: m.id, client: clients?.[0]?.uid ?? '', debut: lundis[0] })}>
+                    onClick={() => setAffecter(ouvert ? null : { id: m.id, client: clients?.[0]?.uid ?? '', debut: lundiSuivant })}>
                     Affecter à un coaché
                   </button>
                 </div>
@@ -159,8 +160,8 @@ function Modeles() {
                               {(clients ?? []).map((c) => <option key={c.uid} value={c.uid}>{c.prenom} {c.nom}</option>)}
                             </select></div>
                           <div className="champ-groupe"><label htmlFor={`aff-d-${m.id}`}>Début (un lundi)</label>
-                            <select id={`aff-d-${m.id}`} className="champ" value={affecter?.id === m.id ? affecter.debut : lundis[0]} onChange={(e) => setAffecter({ ...affecter, debut: e.target.value })}>
-                              {lundis.map((l) => <option key={l} value={l}>{dateLongue(l)}</option>)}
+                            <select id={`aff-d-${m.id}`} className="champ" value={affecter?.id === m.id ? affecter.debut : lundiSuivant} onChange={(e) => setAffecter({ ...affecter, debut: e.target.value })}>
+                              {lundis.map((l) => <option key={l} value={l}>{libelleLundi(l)}</option>)}
                             </select></div>
                         </div>
                         <p className="espace-aide">{choisi?.programme ? `${choisi.prenom} a déjà « ${choisi.programme.nom} » : la copie s’ajoute en brouillon, sans le remplacer.` : 'La copie arrive en brouillon : vous la publiez quand elle est prête.'}</p>

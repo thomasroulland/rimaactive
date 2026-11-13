@@ -5,12 +5,18 @@ import { aujourdhuiIso, lundiDe, ajoutJours, dateLongue } from '../donnees/calcu
 export const NB_SEMAINES = Array.from({ length: 11 }, (_, i) => i + 2) // 2 à 12
 const PAR_SEMAINE = [1, 2, 3, 4, 5, 6]
 
-// Lundis proposés pour le début : celui de la semaine en cours puis les 16 suivants (+ la valeur actuelle si plus ancienne)
+// Lundis proposés pour le début : de 26 semaines avant la semaine en cours à 26 semaines après
+// (une date passée est permise : programme déjà commencé hors du site, rattrapage…), + la valeur actuelle si elle sort de la liste
+export const SEMAINES_AVANT = 26
 export function lundisProposes(actuel) {
-  const premier = lundiDe(aujourdhuiIso())
-  const liste = Array.from({ length: 17 }, (_, i) => ajoutJours(premier, i * 7))
-  if (actuel && !liste.includes(actuel)) liste.unshift(actuel)
-  return liste
+  const premier = ajoutJours(lundiDe(aujourdhuiIso()), -SEMAINES_AVANT * 7)
+  const liste = Array.from({ length: SEMAINES_AVANT * 2 + 1 }, (_, i) => ajoutJours(premier, i * 7))
+  if (actuel && !liste.includes(actuel)) liste.push(actuel)
+  return liste.sort()
+}
+// Libellé d'un lundi dans les listes : « (cette semaine) » pour repérer aujourd'hui au milieu des dates passées
+export function libelleLundi(l) {
+  return `${dateLongue(l)}${l === lundiDe(aujourdhuiIso()) ? ' (cette semaine)' : ''}`
 }
 
 export function ChoixDebut({ id, valeur, changer, desactive, aide, lundis, actuel }) {
@@ -19,7 +25,7 @@ export function ChoixDebut({ id, valeur, changer, desactive, aide, lundis, actue
       <label htmlFor={id}>Début (un lundi)</label>
       <select id={id} className="champ" value={valeur} onChange={(e) => changer(e.target.value)} disabled={desactive}
         aria-describedby={aide ? `${id}-aide` : undefined}>
-        {(lundis ?? lundisProposes(valeur)).map((l) => <option key={l} value={l}>{dateLongue(l)}{actuel && l === actuel && l !== valeur ? ' (enregistré)' : ''}</option>)}
+        {(lundis ?? lundisProposes(valeur)).map((l) => <option key={l} value={l}>{libelleLundi(l)}{actuel && l === actuel && l !== valeur ? ' (enregistré)' : ''}</option>)}
       </select>
       {aide && <p id={`${id}-aide`} className="espace-aide">{aide}</p>}
     </div>
