@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
   ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
+  ecouterModele, enregistrerModele,
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
@@ -32,9 +33,10 @@ function copieLocale(p) {
 // Créer / modifier le programme d'un coaché (/espace/coach/clients/:uid/programme).
 // Paramètres d'adresse : ?nouveau=1 (création), ?semaine=N, ?seance=<id> (éditeur de séance).
 export default function EditeurProgramme() {
-  const { uid } = useParams()
+  const { uid, modeleId } = useParams()
+  const modele = Boolean(modeleId) // mode « modèle » : /espace/coach/modeles/:modeleId (maquette coach)
   const [params, setParams] = useSearchParams()
-  const { client } = useCoache()
+  const { client } = useCoache() ?? { client: { prenom: '', nom: '' } }
   const [programmes, setProgrammes] = useState(null)
   const [exercices, setExercices] = useState(null)
   const [prog, setProg] = useState(null)
@@ -65,7 +67,9 @@ export default function EditeurProgramme() {
   const semIdx = Math.min(Math.max((Number(params.get('semaine')) || 1) - 1, 0), Math.max(nbSem - 1, 0))
   const seanceId = params.get('seance')
 
-  useEffect(() => ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.')), [uid])
+  useEffect(() => (modele
+    ? ecouterModele(modeleId, setProgrammes, () => setErreur('Impossible de charger le modèle. Vérifiez votre connexion.'))
+    : ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.'))), [uid, modele, modeleId])
   useEffect(() => ecouterExercices(setExercices, () => setExercices([])), [])
 
   // Ouvre le programme le plus récent au premier chargement
@@ -79,6 +83,7 @@ export default function EditeurProgramme() {
   const progId = prog?.id
   useEffect(() => {
     if (!progId) return undefined
+    if (modele) { setVerrous(new Set()); return undefined } // un modèle n'a pas de séances faites
     setVerrous(null); setErreurVerrous('')
     return ecouterVerrous(progId, (v) => { setVerrous(v); setErreurVerrous('') },
       () => setErreurVerrous('Impossible de vérifier les séances déjà faites : la modification des séances est bloquée. Rechargez la page.'))
@@ -156,6 +161,13 @@ export default function EditeurProgramme() {
     const etaitPublie = prog.statut === 'publié'
     setEnvoi(true); setErreur(''); setMessage('')
     try {
+      if (modele) {
+        await enregistrerModele(prog)
+        if (version.current === v) setModifie(false)
+        setMessage('Modèle enregistré.')
+        setEnvoi(false)
+        return
+      }
       const serveur = programmes?.find((p) => p.id === prog.id)
       const aEcrire = garderSeancesFaites(prog, serveur, verrous)
       await enregistrerProgramme(aEcrire)
@@ -274,13 +286,17 @@ export default function EditeurProgramme() {
     <div className="espace-barre" role="region" aria-label="Enregistrement">
       <div className="conteneur espace-barre__ligne">
         <p className="espace-barre__etat">
-          <span className={`espace-statut espace-statut--${publie ? 'actif' : 'autre'}`}>{publie ? 'Publié' : 'Brouillon'}</span>
+          <span className={`espace-statut espace-statut--${publie && !modele ? 'actif' : 'autre'}`}>{modele ? 'Modèle' : publie ? 'Publié' : 'Brouillon'}</span>
           {modifie
             ? <span className="espace-barre__modifie">Modifications non enregistrées</span>
-            : <span>{publie ? 'Votre coaché voit ce programme.' : 'Votre coaché ne le voit pas encore.'}</span>}
+            : <span>{modele ? 'Aucun coaché ne le voit : affectez-le depuis Programmes.' : publie ? 'Votre coaché voit ce programme.' : 'Votre coaché ne le voit pas encore.'}</span>}
         </p>
         <div className="espace-actions">
-          {publie ? (
+          {modele ? (
+            <button type="button" className="bouton bouton--principal" disabled={envoi || !modifie} onClick={() => enregistrer(false)}>
+              {envoi ? 'Enregistrement…' : 'Enregistrer le modèle'}
+            </button>
+          ) : publie ? (
             <button type="button" className="bouton bouton--principal" disabled={envoi || !modifie} onClick={() => enregistrer(false)}>
               {envoi ? 'Enregistrement…' : 'Enregistrer les modifications'}
             </button>
@@ -313,7 +329,7 @@ export default function EditeurProgramme() {
       <section className="section espace-section--barre">
         <div className="conteneur espace-coach">
           <EnteteCoache client={client} uid={uid} chemin={chemin}
-            infos={`${prog.nom || 'Programme sans nom'} · ${nbSem} semaine${nbSem > 1 ? 's' : ''} · début le ${dateLongue(prog.debut)}`}
+            infos={modele ? '' : `${prog.nom || 'Programme sans nom'} · ${nbSem} semaine${nbSem > 1 ? 's' : ''} · début le ${dateLongue(prog.debut)}`}
             actions={(
               <>
                 {programmes.length > 1 && (
@@ -337,17 +353,27 @@ export default function EditeurProgramme() {
                 }}>Nouveau programme</button>
               </>
             )} />
+          {modele && (
+            <header className="modele-tete">
+              <Link to="/espace/coach/programmes" className="espace-retour">
+                <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
+                Programmes
+              </Link>
+              <p className="surtitre">Modèle de programme</p>
+              <h1 className="titre titre--section">{prog.nom || 'Modèle sans nom'}</h1>
+            </header>
+          )}
           {messages}
           {alerteVerrous}
 
-          <div className="espace-carte espace-params espace-params--programme">
+          <div className={`espace-carte espace-params espace-params--programme${modele ? ' espace-params--modele' : ''}`}>
             <div className="champ-groupe espace-param espace-param--large">
               <label htmlFor="prog-nom">Nom du programme</label>
               <input id="prog-nom" className="champ" autoComplete="off" value={prog.nom} onChange={(e) => { const v = e.target.value; muter((p) => { p.nom = v }) }} />
             </div>
-            <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })}
+            {!modele && <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })}
               desactive={verrous === null || verrous.size > 0}
-              aide={verrous?.size > 0 ? 'Des séances sont déjà faites : pour décaler les dates, utilisez « Gérer le programme ».' : ''} />
+              aide={verrous?.size > 0 ? 'Des séances sont déjà faites : pour décaler les dates, utilisez « Gérer le programme ».' : ''} />}
           </div>
 
           <div className="espace-semaines">

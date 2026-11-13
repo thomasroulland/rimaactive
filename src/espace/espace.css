@@ -747,3 +747,18 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
 .comparaison__img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; background: var(--craie-fonce); }
 @media (max-width: 599px) { .profil-sportif__rm { grid-template-columns: 1fr; } }
 .formulaire-grille textarea.champ, .fiche-carte textarea.champ { min-height: 0; height: auto; padding-block: 10px; resize: vertical; }
+
+/* ---------- Programmes : modèles (maquette coach, 13 novembre 2026) ---------- */
+.formulaire-ligne { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 12px; }
+.formulaire-ligne .champ-groupe { flex: 1 1 150px; }
+.formulaire-ligne__large { flex: 3 1 260px !important; }
+.formulaire-ligne .champ, .formulaire-ligne .bouton { min-height: 46px; }
+.grille-modeles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.modele__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 4px; }
+.modele__lien { padding: 0; border: 0; background: none; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; }
+.modele__affecter { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-top: 12px; border-top: 1px solid #ece9e3; }
+.modele__affecter .formulaire-ligne { width: 100%; }
+.modele__bas { display: flex; gap: 12px; align-items: center; margin-top: auto; padding-top: 4px; }
+.modele__suppr { padding: 0; min-height: 28px; font-size: 13px; color: var(--gris-chaud); }
+.modele-tete { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.espace-params--modele { grid-template-columns: 1fr; }

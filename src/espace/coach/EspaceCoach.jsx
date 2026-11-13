@@ -21,6 +21,7 @@ export default function EspaceCoach({ profil }) {
       <Routes>
         <Route index element={<MesCoaches profil={profil} />} />
         <Route path="programmes" element={<ProgrammesCoach />} />
+        <Route path="modeles/:modeleId" element={<EditeurProgramme />} />
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />
         <Route path="exercices/:id" element={<FicheExercice />} />

@@ -454,3 +454,21 @@ export function ajouterNoteCoach(uid, texte, date) {
 export function supprimerNoteCoach(uid, id) { return deleteDoc(doc(db, 'utilisateurs', uid, 'notesCoach', id)) }
 // Objectif et 1RM du coaché, renseignés par le coach sur son profil
 export function majProfilSportif(uid, champs) { return updateDoc(doc(db, 'utilisateurs', uid), champs) }
+
+// ---------- Modèles de programmes (page « Programmes », maquette coach) ----------
+export function ecouterModeles(rappel, erreur) {
+  return onSnapshot(collection(db, 'modeles'), (s) => rappel(s.docs.map((d) => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (a.nom || '').localeCompare(b.nom || '', 'fr'))), erreur)
+}
+// Un seul modèle, rendu sous forme de liste (l'éditeur de programme attend une liste)
+export function ecouterModele(id, rappel, erreur) {
+  return onSnapshot(doc(db, 'modeles', id), (d) => rappel(d.exists() ? [{ id: d.id, ...d.data() }] : []), erreur)
+}
+export function nouvelIdModele() { return doc(collection(db, 'modeles')).id }
+export async function enregistrerModele(modele, { creation = false } = {}) {
+  const { id, majLe, ...donnees } = modele // eslint-disable-line no-unused-vars
+  const ref = doc(db, 'modeles', id)
+  if (creation) await setDoc(ref, { ...donnees, majLe: serverTimestamp() })
+  else await updateDoc(ref, { ...donnees, majLe: serverTimestamp() })
+}
+export function supprimerModele(id) { return deleteDoc(doc(db, 'modeles', id)) }
