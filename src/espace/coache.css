@@ -829,7 +829,9 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-histo__fait { flex: none; display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ec-craie); color: var(--ec-encre); }
 
 /* ---------- Page de connexion (14 novembre 2026) : carte en deux parties, photo du site + formulaire ---------- */
-.ec-coque--client .espace-connexion.connexion { min-height: calc(100svh - var(--hauteur-entete, 64px)); display: flex; align-items: center; padding-block: clamp(24px, 5vh, 56px); }
+/* la page tient dans l'écran avec le pied de page : le contenu (entre la barre et le pied) se centre dans la place restante */
+.ec-main:has(> .connexion) { display: flex; flex-direction: column; }
+.ec-coque--client .espace-connexion.connexion { flex: 1 0 auto; display: flex; align-items: center; padding-block: clamp(20px, 4vh, 48px); }
 .connexion > .conteneur { width: 100%; }
 .ec-coque--client .espace-connexion__carte.connexion__carte { max-width: 1000px; padding: 0; gap: 0; flex-direction: row; align-items: stretch; overflow: hidden; border-radius: 24px; }
 .connexion__visuel { position: relative; flex: 1 1 46%; min-height: 520px; background: var(--ec-encre, #161514); }
@@ -862,10 +864,17 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .connexion__symbole { width: 28px; height: 28px; }
   .connexion__phrase { font-size: 22px; max-width: 22ch; }
   .connexion__signature { display: none; }
-  .ec-coque--client .espace-connexion.connexion { min-height: 0; }
+
 }
 @media (prefers-reduced-motion: no-preference) {
   .connexion__photo { animation: connexion-photo 900ms cubic-bezier(.3, .7, .2, 1) both; }
   @keyframes connexion-photo { from { transform: scale(1.06); opacity: 0; } }
 }
 .ec-coque--client .espace-connexion .connexion__ligne-label > label { font-weight: 600; font-size: 15px; line-height: 22px; color: var(--ec-gris, #57534e); }
+@media (min-width: 821px) and (max-height: 820px) {
+  .connexion__visuel { min-height: 0; }
+  .connexion__corps { padding-block: 26px; gap: 10px; }
+  .connexion__form { gap: 12px; }
+  .connexion__aide { margin-top: 2px; padding-top: 12px; }
+  .ec-coque--client .espace-connexion.connexion { padding-block: 16px; }
+}
