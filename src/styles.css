@@ -1922,3 +1922,21 @@ input, textarea { caret-color: var(--vermillon); }
 .question[data-ferme] .question__plus::after { transform: rotate(90deg); }
 /* pastille sur un lien du menu (espace coach : coachés qui ont du nouveau) */
 .nav__badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; margin-left: 8px; padding: 0 6px; border-radius: 999px; background: var(--vermillon); color: var(--encre); font-size: 12px; font-weight: 800; line-height: 1; }
+
+/* M'écrire sur grand écran (14 novembre 2026, « un peu vide autour ») : le formulaire grandit avec l'écran
+   (titre, champs, espaces) et se pose sur une carte blanche, pour occuper la moitié droite sans la remplir de vide. */
+@media (min-width: 1600px) and (min-height: 940px) {
+  .page-contact__droite { gap: 28px; padding-left: 72px; }
+  .page-contact .presentation-contact .titre { font-size: 64px; line-height: 64px; }
+  .page-contact .presentation-contact__lieu { font-size: 19px; line-height: 30px; }
+  .page-contact .formulaire { gap: 18px 24px; padding: 32px 36px; border-radius: 24px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+  .page-contact .champ-groupe { gap: 8px; }
+  .page-contact .champ-groupe > label, .page-contact .champ-groupe legend { font-size: 17px; }
+  .page-contact .champ { min-height: 52px; padding-block: 10px; font-size: 17px; line-height: 28px; background: var(--craie); }
+  .page-contact .champ:hover, .page-contact .champ:focus { background: var(--blanc); }
+  .page-contact textarea.champ { height: 150px; }
+  .page-contact .choix { gap: 8px; }
+  .page-contact .choix span { min-height: 44px; padding: 0 20px; font-size: 16px; }
+  .page-contact .case { font-size: 15px; line-height: 22px; }
+  .page-contact .formulaire button[type=submit] { min-height: 50px; padding-inline: 32px; font-size: 16px; }
+}
