@@ -8,18 +8,18 @@ import '../coache.css'
 
 // Coque de l'espace : barre noire (logo, liens, rond de compte), contenu, pied.
 // `compte` : afficher le rond de compte et son menu (faux avant la connexion). `avatar` : adresse d'une photo de profil.
-export default function Coque({ liens = [], compte = true, avatar = null, children }) {
+// `site` : menu du site (Accueil, Mes offres, M'écrire) à la place des liens de l'espace (connexion, accord).
+// `client` : écrans du coaché (sélection, curseur et focus aux couleurs de la charte) ; les écrans du coach n'en ont pas.
+export default function Coque({ liens = [], compte = true, avatar = null, site = false, client = false, children }) {
   return (
-    <div className="ec-coque">
+    <div className={`ec-coque${client ? ' ec-coque--client' : ''}`}>
       <a className="lien-evitement" href="#contenu">Aller au contenu</a>
       <header className="ec-bandeau">
         <div className="ec-bandeau__ligne">
           <NavLink to="/espace" className="ec-logo" aria-label="Rimaactive, mon espace">
             <img src={logoCraie} alt="" width="128" height="30" />
           </NavLink>
-          {liens.length > 0 && (
-            <Nav liens={liens} />
-          )}
+          {site ? <NavSite /> : liens.length > 0 && <Nav liens={liens} />}
           {compte && <MenuCompte avatar={avatar} />}
         </div>
       </header>
@@ -40,6 +40,21 @@ function Nav({ liens }) {
   return (
     <nav className="ec-nav ec-glisse" aria-label="Espace client" ref={ref}>
       {liens.map((lien) => <Onglet key={lien.to} lien={lien} />)}
+    </nav>
+  )
+}
+
+// Menu du site sur la connexion et l'accord : mêmes mots que la barre du site, au style de la barre de l'espace
+function NavSite() {
+  return (
+    <nav className="ec-nav ec-nav--site" aria-label="Menu du site">
+      <Link to="/" className="ec-onglet">Accueil</Link>
+      <Link to="/offres" className="ec-onglet">Mes offres</Link>
+      <Link to="/contact" className="ec-onglet ec-ecrire">M’écrire
+        <span className="ec-ecrire__rond" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round"><path d="M72 184L184 72M88 72h96v96" /></svg>
+        </span>
+      </Link>
     </nav>
   )
 }

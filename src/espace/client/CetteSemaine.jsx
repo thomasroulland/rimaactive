@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { seancesDeLaSemaine } from '../donnees/progression.js'
 import { statutSeance } from '../donnees/seances.js'
+import { Chevron, Statut } from './Statut.jsx'
 
 // Onglet « Cette semaine » : une ligne par séance de la semaine (case, numéro, titre, état).
 export default function CetteSemaine({ programme, semaine, faites, seances }) {
@@ -18,9 +19,10 @@ export default function CetteSemaine({ programme, semaine, faites, seances }) {
                 <span className={`ec-case-regul ${classe}`.trim()} aria-hidden="true" />
                 <span className="ec-ligne__corps">
                   <span className="ec-ligne__titre">Séance {x.numero}</span>
-                  <span className="ec-ligne__meta">{x.seance.titre}</span>
+                  {x.seance.titre && <span className="ec-ligne__meta">{x.seance.titre}</span>}
                 </span>
-                <span className="ec-ligne__statut">{statut}</span>
+                <Statut statut={statut} />
+                <Chevron />
               </Link>
             </li>
           )

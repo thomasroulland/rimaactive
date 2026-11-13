@@ -59,7 +59,7 @@ export default function MesPhotos({ uid }) {
       </div>
       {erreur && <p className="ec-erreur" role="alert">{erreur}</p>}
       {photos === null && !erreur && <SqGalerie />}
-      {photos && liste.length === 0 && <p className="ec-texte ec-gris">Aucune photo pour l’instant.</p>}
+      {photos && liste.length === 0 && <p className="ec-vide">Aucune photo pour l’instant.</p>}
       {liste.length >= 2 && (
         <div className="ec-carte ec-pile ec-pile--serre">
           <h3 className="ec-h4">Comparer avant / après</h3>

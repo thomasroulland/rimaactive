@@ -64,7 +64,7 @@ export default function MesMesures({ uid }) {
         {message.texte && <p className={message.erreur ? 'ec-petit ec-erreur-texte' : 'ec-petit'} role={message.erreur ? 'alert' : 'status'}>{message.texte}</p>}
       </form>
       {mesures === null && message.texte === '' && <SqTableau />}
-      {mesures && liste.length === 0 && <p className="ec-texte ec-gris">Aucune mesure pour l’instant.</p>}
+      {mesures && liste.length === 0 && <p className="ec-vide">Aucune mesure pour l’instant.</p>}
       {liste.length > 0 && (
         <>
           <div className="ec-tableau-enveloppe">

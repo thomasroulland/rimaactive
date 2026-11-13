@@ -16,7 +16,7 @@ export default function EspaceApp() {
   const { utilisateur, profil, role, chargement } = useSession()
 
   if (chargement) return <Coque compte={false}><Squelette /></Coque>
-  if (!utilisateur) return <Coque compte={false}><Connexion /></Coque>
+  if (!utilisateur) return <Coque compte={false} site client><Connexion /></Coque>
 
   if (role === 'coach') {
     return (
@@ -29,7 +29,7 @@ export default function EspaceApp() {
     )
   }
   if (role === 'client') {
-    if (!profil?.accordSante) return <Coque liens={[]}><Accord uid={utilisateur.uid} prenom={profil?.prenom} /></Coque>
+    if (!profil?.accordSante) return <Coque site client><Accord uid={utilisateur.uid} prenom={profil?.prenom} /></Coque>
     return (
       <EspaceCoache uid={utilisateur.uid} profil={profil} />
     )
@@ -47,7 +47,7 @@ export default function EspaceApp() {
 function EspaceCoache({ uid, profil }) {
   const avatar = useUrlAvatar(profil?.avatar)
   return (
-    <Coque liens={LIENS_CLIENT} avatar={avatar}>
+    <Coque liens={LIENS_CLIENT} avatar={avatar} client>
       <EspaceClient uid={uid} profil={profil} />
     </Coque>
   )

@@ -77,7 +77,7 @@ function Rubrique({ id, titre, children }) {
 
 // ---------- Ma régularité ----------
 function Regularite({ programme, faites }) {
-  if (!programme) return <p className="ec-texte ec-gris">Votre programme arrive bientôt.</p>
+  if (!programme) return <p className="ec-vide">Votre programme arrive bientôt.</p>
   const comptes = regularite(programme, faites)
   return (
     <ul className="ec-regul">
@@ -114,10 +114,12 @@ function Charges({ programmes, seances }) {
   }
   return (
     <>
-      {courbes.length === 0 && <p className="ec-texte ec-gris">Vos charges apparaîtront ici dès votre première séance de force enregistrée.</p>}
-      <div className="ec-charges">
-        {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points} libelle={libelle} />)}
-      </div>
+      {courbes.length === 0 && <p className="ec-vide">Vos charges apparaîtront ici dès votre première séance de force enregistrée.</p>}
+      {courbes.length > 0 && (
+        <div className="ec-charges">
+          {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points} libelle={libelle} />)}
+        </div>
+      )}
     </>
   )
 }
@@ -143,7 +145,7 @@ function Courbe({ nom, points, libelle }) {
           <div key={i} className="ec-courbe__point">
             <span className="ec-courbe__valeur">{fr(p.charge)}{p.reps ? `×${p.reps}` : ''}</span>
             <span className="ec-courbe__barre" style={{ height: `${Math.round(max > min ? 14 + ((vals[i] - min) / (max - min)) * 34 : 30)}px` }} />
-            <span className="ec-courbe__date">{libelle(p.date)}</span>
+            <span className="ec-courbe__date">{libelle(p.date).split('·').map((t, k) => <span key={k}>{t}</span>)}</span>
           </div>
         ))}
       </div>
@@ -168,8 +170,8 @@ function Historique({ programmes, seances }) {
     })
   return (
     <>
-      {lignes.length === 0 && <p className="ec-texte ec-gris">Vos séances apparaîtront ici dès que vous aurez enregistré la première.</p>}
-      <ul className="ec-histo">
+      {lignes.length === 0 && <p className="ec-vide">Vos séances apparaîtront ici dès que vous aurez enregistré la première.</p>}
+      {lignes.length > 0 && <ul className="ec-histo">
         {lignes.map(({ s, programme, trouve }) => {
           const titre = trouve?.seance.titre || 'Séance'
           const type = trouve?.seance.type === 'course' ? 'Course' : 'Force'
@@ -194,7 +196,7 @@ function Historique({ programmes, seances }) {
             </li>
           )
         })}
-      </ul>
+      </ul>}
     </>
   )
 }

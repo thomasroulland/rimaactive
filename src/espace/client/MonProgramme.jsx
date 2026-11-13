@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement, blocsDuClient, dateSeance, seancesDeLaSemaine } from '../donnees/progression.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
+import { Statut } from './Statut.jsx'
 
 const ETATS = { 'en cours': 'encours', passé: 'passe', 'à venir': 'avenir' }
+const ETIQUETTES = { 'en cours': 'En cours', passé: 'Terminé', 'à venir': 'À venir' }
 
 function etatTexte(bloc) {
   if (bloc.etat === 'en cours') return `En cours · semaine ${bloc.semaine} sur ${(bloc.programme.semaines ?? []).length}`
@@ -63,9 +65,12 @@ export default function MonProgramme({ profil, programmes, programme, seances })
               aria-label={`Bloc ${i + 1}, ${etatTexte(b)}`}
               onClick={() => choisirBloc(i)}
             >
-              <span className="ec-etape__nom">Bloc {i + 1}</span>
-              <span className="ec-etape__etat">{etatTexte(b)}</span>
+              <span className="ec-etape__tete">
+                <span className="ec-etape__nom">Bloc {i + 1}</span>
+                <span className={`ec-etat ec-etat--${ETATS[b.etat]}`}>{ETIQUETTES[b.etat]}</span>
+              </span>
               <span className="ec-etape__dates">{dateSeance(b.debut)} → {dateSeance(b.fin)}</span>
+              <Semaines bloc={b} />
             </button>
           ))}
           {!aVenir && <p className="ec-etape-vide">Votre prochain bloc apparaîtra ici.</p>}
@@ -105,11 +110,11 @@ export default function MonProgramme({ profil, programmes, programme, seances })
                   >
                     <span className="ec-pcarte__numero" aria-hidden="true">{String(x.numero).padStart(2, '0')}</span>
                     <span className="ec-pcarte__corps">
-                      <span className="ec-pcarte__titre">{x.seance.titre}</span>
-                      <span className="ec-pcarte__num">Séance {x.numero}</span>
+                      <span className="ec-pcarte__titre">{x.seance.titre || `Séance ${x.numero}`}</span>
+                      {x.seance.titre && <span className="ec-pcarte__num">Séance {x.numero}</span>}
                       {meta && <span className="ec-pcarte__meta">{meta}</span>}
+                      <span className="ec-pcarte__bas"><Statut statut={statut} /></span>
                     </span>
-                    <span className="ec-pcarte__statut">{statut}</span>
                   </Link>
                 </li>
               )
@@ -118,6 +123,22 @@ export default function MonProgramme({ profil, programmes, programme, seances })
         </section>
       )}
     </div>
+  )
+}
+
+// Fine frise des semaines du bloc : faites (ou passées) en encre, à venir en craie foncé.
+function Semaines({ bloc }) {
+  const n = (bloc.programme.semaines ?? []).length
+  if (n === 0) return null
+  const pleines = bloc.etat === 'passé' ? n : bloc.etat === 'en cours' ? bloc.semaine : 0
+  const texte = bloc.etat === 'en cours' ? `Semaine ${bloc.semaine} sur ${n}` : `${n} semaine${n > 1 ? 's' : ''}`
+  return (
+    <span className="ec-etape__semaines">
+      <span className="ec-etape__barres" aria-hidden="true">
+        {Array.from({ length: n }, (_, k) => <span key={k} className={k < pleines ? 'pleine' : undefined} />)}
+      </span>
+      <span className="ec-etape__texte">{texte}</span>
+    </span>
   )
 }
 
