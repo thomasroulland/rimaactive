@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import Entete from '../../components/Entete.jsx'
 import Pied from '../../components/Pied.jsx'
+import Connexion from '../Connexion.jsx'
+import { lireIndice } from '../indiceSession.js'
 import '../coache.css'
 
 // Ce fichier est chargé avec le site (écran d'attente avant l'espace) : il ne doit importer ni Firebase ni le reste de l'espace.
@@ -20,6 +22,16 @@ export function EspaceZoom() {
 
 // Premier écran de /espace, pendant le chargement du code de l'espace : la barre noire et le squelette.
 export function SqChargementEspace() {
+  // personne n'est connecté sur cet appareil : la connexion tout de suite, sans écran d'attente
+  if (!lireIndice()) {
+    return (
+      <div className="ec-coque ec-coque--client">
+        <Entete />
+        <main id="contenu" className="ec-main"><Connexion /></main>
+        <Pied />
+      </div>
+    )
+  }
   return (
     <div className="ec-coque">
       <Entete liens={[]} ecrire={false} accueil="/espace" rangee compte={null} />

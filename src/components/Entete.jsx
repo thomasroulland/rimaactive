@@ -17,7 +17,17 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
   const [ouvert, setOuvert] = useState(false)
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
   // Sur la page M'écrire elle-même, il est caché aussi (on y est déjà) ; sa place est gardée pour que rien ne bouge
-  const ecrireVisible = useEcrireVisible(pathname === '/') && pathname !== '/contact'
+  const ecrirePossible = useEcrireVisible(pathname === '/') // le hook est toujours appelé (règle de React)
+  const ecrireCible = ecrire && ecrirePossible && pathname !== '/contact'
+  // Passage d'une barre à l'autre (connexion ↔ site) : la nouvelle barre part de l'état de la précédente,
+  // pour que « M'écrire » se plie ou se déplie en glissant au lieu d'apparaître ou de disparaître d'un coup
+  const [ecrireVisible, setEcrireVisible] = useState(() => dernierEcrire ?? ecrireCible)
+  useEffect(() => {
+    dernierEcrire = ecrireCible
+    if (ecrireVisible === ecrireCible) return undefined
+    const image = requestAnimationFrame(() => setEcrireVisible(ecrireCible))
+    return () => cancelAnimationFrame(image)
+  }, [ecrireCible, ecrireVisible])
   const avecMenu = !rangee && liens.length > 0
   // « Accueil » ramène toujours tout en haut de l'accueil, même quand on y est déjà
   const versLeHaut = (page) => () => { if (page.to === pathname) window.scrollTo({ top: 0, behavior: 'smooth' }) }
@@ -50,11 +60,11 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
         </nav>
         <div className="entete__droite">
           {/* « M'écrire » : collé au menu, séparé par un trait fin, texte craie, flèche dans une pastille jaune (choix de Marie, 11 novembre 2026) */}
-          {ecrire && <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>}
+          {(ecrire || ecrireVisible) && <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>}
           {/* Espace de connexion : mène à /espace (connexion, puis espace client ou coach). Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}
           {compte === undefined
             ? (
-              <Link to="/espace" className="entete__compte" aria-label="Mon espace" title="Mon espace">
+              <Link to="/espace" className="entete__compte" aria-label="Mon espace" title="Mon espace" onPointerEnter={prechargerEspace} onFocus={prechargerEspace} onTouchStart={prechargerEspace}>
                 <Picto nom="user-circle" taille={24} />
               </Link>
             )
@@ -81,6 +91,12 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
     </header>
   )
 }
+
+// Dernier état de « M'écrire » dans la barre, gardé d'une barre à l'autre
+let dernierEcrire = null
+
+// Au survol de « Mon espace », le code de l'espace se charge en avance : au clic, il est déjà là
+const prechargerEspace = () => { import('../espace/EspaceApp.jsx').catch(() => {}) }
 
 // Vrai tant que l'accueil n'a pas défilé : la barre est alors posée sur la photo
 function useSurPhoto(actif) {

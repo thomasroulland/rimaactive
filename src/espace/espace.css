@@ -440,3 +440,12 @@
 .espace-params--programme { align-items: start; }
 .espace-params input.champ, .espace-params select.champ { box-sizing: border-box; height: 46px; min-height: 46px; margin: 0; padding-block: 0; }
 .espace-params > .champ-groupe { gap: 4px; }
+/* moins d'espace inutile en haut des pages du coach (13 novembre 2026) */
+.ec-main > .section { padding-top: 20px; }
+.espace-coach { gap: 20px; }
+.espace-retour { min-height: 32px; margin-bottom: -8px; }
+.espace-coach__entete { padding-bottom: 18px; }
+.fiche-entete { gap: 16px; }
+.coache__initiales--grand { width: 60px; height: 60px; font-size: 22px; }
+.fiche-colonnes, .fiche-cote, .fiche-principal { gap: 24px; }
+.fiche-bloc { gap: 12px; }

@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
-import { auth } from './firebase.js'
 import { messageErreur } from './erreurs.js'
+import './espace.css'
+
+// Firebase n'est chargé qu'au moment d'envoyer : ce formulaire peut s'afficher avant le reste de l'espace
+const firebaseAuth = () => Promise.all([import('firebase/auth'), import('./firebase.js')])
 
 // Page de connexion : e-mail, mot de passe, « Mot de passe oublié ? »
 export default function Connexion() {
@@ -15,6 +17,7 @@ export default function Connexion() {
     event.preventDefault()
     setErreur(''); setInfo(''); setEnvoi(true)
     try {
+      const [{ signInWithEmailAndPassword }, { auth }] = await firebaseAuth()
       await signInWithEmailAndPassword(auth, email.trim(), motDePasse)
     } catch (e) {
       setErreur(messageErreur(e.code))
@@ -26,6 +29,7 @@ export default function Connexion() {
     setErreur(''); setInfo('')
     if (!email.trim()) { setErreur('Saisissez d’abord votre adresse e-mail.'); return }
     try {
+      const [{ sendPasswordResetEmail }, { auth }] = await firebaseAuth()
       await sendPasswordResetEmail(auth, email.trim())
     } catch (e) {
       // l'absence de compte n'est pas révélée : seules les erreurs de réseau ou d'adresse sont montrées

@@ -9,12 +9,14 @@ import EspaceClient from './client/EspaceClient.jsx'
 import { useUrlAvatar } from './client/Avatar.jsx'
 import Squelette from './client/Squelette.jsx'
 import './espace.css'
+import { lireIndice } from './indiceSession.js'
 
 // Racine de l'espace (chargée à la demande) : garde selon la session et le rôle.
 export default function EspaceApp() {
   useTitre('Mon espace')
   const { utilisateur, profil, role, chargement } = useSession()
 
+  if (chargement && !utilisateur && !lireIndice()) return <Coque compte={false} site client><Connexion /></Coque>
   if (chargement) return <Coque compte={false}><Squelette /></Coque>
   if (!utilisateur) return <Coque compte={false} site client><Connexion /></Coque>
 

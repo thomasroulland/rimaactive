@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { onIdTokenChanged, getIdTokenResult } from 'firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { auth, db } from './firebase.js'
+import { ecrireIndice } from './indiceSession.js'
 
 // { utilisateur, profil, role, chargement }
 // role : lu dans le jeton ('client' | 'coach' | null) ; profil : utilisateurs/{uid} en direct (null s'il n'existe pas)
@@ -12,9 +13,10 @@ export default function useSession() {
   useEffect(() => {
     let actif = true
     const arreter = onIdTokenChanged(auth, async (utilisateur) => {
-      if (!utilisateur) { if (actif) setEtat({ utilisateur: null, role: null, authPrete: true }); return }
+      if (!utilisateur) { ecrireIndice(null); if (actif) setEtat({ utilisateur: null, role: null, authPrete: true }); return }
       let role = null
       try { role = (await getIdTokenResult(utilisateur)).claims.role ?? null } catch { /* hors ligne : pas de rôle */ }
+      ecrireIndice(role ?? 'connecte')
       if (actif) setEtat({ utilisateur, role, authPrete: true })
     })
     return () => { actif = false; arreter() }

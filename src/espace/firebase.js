@@ -20,9 +20,15 @@ const app = initializeApp({
 
 export const auth = getAuth(app)
 // Cache hors ligne : la salle de sport n'a pas toujours de réseau
-export const db = initializeFirestore(app, {
-  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-})
+const nouvelleBase = () => {
+  const base = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+  })
+  if (emulateurs) connectFirestoreEmulator(base, '127.0.0.1', 8080)
+  return base
+}
+// `let` : après une déconnexion, la base est recréée à neuf (les fichiers qui l'importent voient la nouvelle)
+export let db = nouvelleBase()
 export const stockage = getStorage(app)
 // Réseau mauvais ou coupé : les envois échouent en 30 s au lieu de réessayer pendant des minutes.
 stockage.maxUploadRetryTime = 30000
@@ -30,7 +36,6 @@ stockage.maxOperationRetryTime = 30000
 
 if (emulateurs) {
   connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true })
-  connectFirestoreEmulator(db, '127.0.0.1', 8080)
   connectStorageEmulator(stockage, '127.0.0.1', 9199)
 }
 
@@ -41,12 +46,19 @@ let connecteIci = false
 let effacement = null
 function effacerCopieEtRecharger() {
   effacement ??= (async () => {
+    // laisse l'espace se refermer (il revient à la connexion) avant d'arrêter la base
+    await new Promise((ok) => setTimeout(ok, 0))
     try {
       await terminate(db)
       await clearIndexedDbPersistence(db)
     } catch { /* un autre onglet utilise encore la copie : il l'effacera en se fermant à son tour */ }
-    // Firestore est arrêté : on recharge l'espace pour repartir de zéro.
-    window.location.replace('/espace')
+    // Base arrêtée et copie effacée : une base neuve, sans recharger la page (13 novembre 2026)
+    try {
+      db = nouvelleBase()
+    } catch {
+      window.location.replace('/espace') // en dernier recours seulement
+    }
+    effacement = null
   })()
   return effacement
 }

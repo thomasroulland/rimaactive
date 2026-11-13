@@ -1891,5 +1891,14 @@ input, textarea { caret-color: var(--vermillon); }
 /* Mes offres sur grand écran (13 novembre 2026) : le titre reste au même endroit dans les quatre rubriques (calées en haut),
    mais la marge du haut grandit avec la hauteur de l'écran, pour que les cartes ne restent pas collées en haut avec un grand vide dessous */
 @media (min-width: 900px) and (min-height: 761px) {
-  .offres-page__rubrique { padding-top: clamp(44px, calc((var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles) - 470px) / 2), 140px); }
+  /* les cartes (et la photo à côté) grandissent avec la hauteur de l'écran ; le bouton reste en bas de la carte */
+  :root { --hauteur-offre: clamp(375px, calc(var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles) - 210px), 600px); }
+  .offres-page__rubrique .offres > .offre { min-height: var(--hauteur-offre); box-sizing: border-box; }
+  /* l'espace gagné se répartit dans la carte (marges, écart entre les lignes), pas seulement au-dessus du bouton */
+  .offres-page__rubrique .offres > .offre { padding: clamp(18px, calc(var(--ecran) * 0.04), 40px) clamp(24px, calc(var(--ecran) * 0.045), 44px) !important; }
+  .offres-page__rubrique .offres > .offre > .offre__titre-points { margin-top: clamp(12px, calc(var(--ecran) * 0.03), 28px) !important; padding-top: clamp(12px, calc(var(--ecran) * 0.028), 26px) !important; }
+  .offres-page__rubrique .offres > .offre > .offre__points { gap: clamp(3px, calc(var(--ecran) * 0.012), 12px) !important; margin-top: clamp(8px, calc(var(--ecran) * 0.016), 16px) !important; }
+  .offres-page__rubrique .offres > .offre > .offre__points li { font-size: 15px !important; line-height: 22px !important; }
+  .offres-page__rubrique .offres > .offre > .offre__infos { margin-top: clamp(4px, calc(var(--ecran) * 0.012), 12px); }
+  .offres-page__rubrique { padding-top: clamp(20px, calc(var(--ecran) * 0.035), 36px); }
 }
