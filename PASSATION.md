@@ -415,3 +415,9 @@ Thomas a confirmé l'accord écrit de Marie (« tout est bon ») : la branche `e
 - **E-mail d'invitation** : la console Firebase refuse de modifier les modèles d'e-mail sur ce projet. Le modèle aux couleurs
   du site est prêt (`docs/email-invitation.html`, logo blanc dans `public/email/`) ; piste : le faire envoyer par le site
   (service d'envoi + lien `generatePasswordResetLink`), pas encore fait.
+
+## Animation d'ouverture sur toutes les pages (14 novembre 2026, branche `animations-pages`, pas en ligne)
+- Les pages du coach (Mes coachés, Banque d'exercices, fiche d'exercice, Programmes, modèle, fiche d'un coaché) et « Compte non activé »
+  arrivent comme celles du coaché : fondu et légère montée de 8 px (`.ec-main > .section` dans `coache.css`) ; fondu seul si
+  l'appareil demande moins d'animations. Vérifié page par page : site vitrine (fondu), connexion, accord, coaché, coach, onglets
+  d'un coaché, séance ouverte dans l'éditeur : toutes ont une animation d'ouverture.

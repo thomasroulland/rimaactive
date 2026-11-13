@@ -627,6 +627,9 @@ select.ec-champ { appearance: auto; min-width: 0; }
 
 /* page : arrivée en fondu */
 .ec-page, .espace-connexion__carte { animation: ec-fondu var(--ec-duree) var(--ec-courbe); }
+/* pages du coach (et « Compte non activé ») : la même arrivée que les pages du coaché (14 novembre 2026).
+   Chaque page du coach est une <section class="section"> posée directement dans le contenu. */
+.ec-main > .section:not(.espace-connexion), .ec-main > p.section { animation: ec-fondu var(--ec-duree) var(--ec-courbe); }
 .ec-menu { animation: ec-fondu var(--ec-duree-vif) var(--ec-courbe); }
 .ec-fenetre[open] { animation: ec-fondu var(--ec-duree-lent) var(--ec-courbe); }
 .ec-fenetre[open]::backdrop { animation: ec-fondu var(--ec-duree-lent) var(--ec-courbe); }
@@ -637,6 +640,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
 @media (prefers-reduced-motion: no-preference) {
   /* arrivée : le contenu monte de 8 px en apparaissant */
   .ec-page:not(.ec-sq-zone), .espace-connexion__carte, .ec-panneau { animation: ec-entree 240ms var(--ec-courbe); }
+  .ec-main > .section:not(.espace-connexion), .ec-main > p.section { animation: ec-entree 240ms var(--ec-courbe); }
   .ec-menu { animation: ec-menu-entree 180ms var(--ec-courbe); transform-origin: top right; }
   .ec-fenetre[open] { animation: ec-fenetre-entree 280ms var(--ec-courbe); }
   .espace-connexion .espace-message:not(:empty) { animation: ec-entree var(--ec-duree) var(--ec-courbe); }
