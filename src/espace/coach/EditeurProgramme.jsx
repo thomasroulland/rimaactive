@@ -15,7 +15,7 @@ import { messageErreur } from '../erreurs.js'
 import CreationProgramme, { ChoixDebut } from './CreationProgramme.jsx'
 import EditeurSeance from './EditeurSeance.jsx'
 import Confirmation from './Confirmation.jsx'
-import GestionProgramme from './GestionProgramme.jsx'
+import GestionProgramme, { lundisAutour } from './GestionProgramme.jsx'
 import useGardeSortie from './useGardeSortie.js'
 
 const MAX_SEMAINES = 12
@@ -372,8 +372,8 @@ export default function EditeurProgramme() {
               <input id="prog-nom" className="champ" autoComplete="off" value={prog.nom} onChange={(e) => { const v = e.target.value; muter((p) => { p.nom = v }) }} />
             </div>
             {!modele && <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })}
-              desactive={verrous === null || verrous.size > 0}
-              aide={verrous?.size > 0 ? 'Des séances sont déjà faites : pour décaler les dates, utilisez « Gérer le programme ».' : ''} />}
+              lundis={lundisAutour(prog.debut)}
+              aide={verrous?.size > 0 ? 'Toutes les séances suivent le nouveau début ; celles déjà faites gardent leur date.' : ''} />}
           </div>
 
           <div className="espace-semaines">

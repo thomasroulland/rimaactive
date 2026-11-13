@@ -5,7 +5,7 @@ import { dupliquerProgramme } from '../donnees/programme.js'
 import { messageErreur } from '../erreurs.js'
 
 // Lundis proposés : 8 semaines avant la date actuelle et 16 après
-function lundisAutour(iso) {
+export function lundisAutour(iso) {
   const base = lundiDe(iso || aujourdhuiIso())
   const liste = Array.from({ length: 25 }, (_, i) => ajoutJours(base, (i - 8) * 7))
   if (iso && !liste.includes(iso)) liste.push(iso) // date actuelle (même si ce n'est pas un lundi)
