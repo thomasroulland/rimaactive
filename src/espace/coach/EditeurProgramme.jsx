@@ -371,29 +371,37 @@ export default function EditeurProgramme() {
                 }}>Nouveau programme</button>
               </>
             )} />
-          {modele && (
+          {modele && !seance && (
             <header className="modele-tete">
               <Link to="/espace/coach/programmes" className="espace-retour">
                 <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
                 Programmes
               </Link>
               <p className="surtitre">Modèle de programme</p>
-              <h1 className="titre titre--section">{prog.nom || 'Modèle sans nom'}</h1>
+              {/* le nom se modifie directement dans le titre (plus de carte à part) */}
+              <h1 className="modele-tete__titre">
+                <label htmlFor="prog-nom" className="sr-only">Nom du modèle</label>
+                <input id="prog-nom" className="modele-tete__champ" autoComplete="off" value={prog.nom} placeholder="Nom du modèle" size={Math.max((prog.nom ?? "").length, 12)}
+                  onChange={(e) => { const v = e.target.value; muter((p) => { p.nom = v }) }} />
+                <svg className="modele-tete__crayon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" /></svg>
+              </h1>
             </header>
           )}
           {messages}
           {alerteVerrous}
 
           {!seance && (<>
-          <div className={`espace-carte espace-params espace-params--programme${modele ? ' espace-params--modele' : ''}`}>
+          {!modele && (
+          <div className="espace-carte espace-params espace-params--programme">
             <div className="champ-groupe espace-param espace-param--large">
               <label htmlFor="prog-nom">Nom du programme</label>
               <input id="prog-nom" className="champ" autoComplete="off" value={prog.nom} onChange={(e) => { const v = e.target.value; muter((p) => { p.nom = v }) }} />
             </div>
-            {!modele && <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })}
+            <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })}
               lundis={lundisAutour(prog.debut)}
-              aide={verrous?.size > 0 ? 'Toutes les séances suivent le nouveau début ; celles déjà faites gardent leur date.' : ''} />}
+              aide={verrous?.size > 0 ? 'Toutes les séances suivent le nouveau début ; celles déjà faites gardent leur date.' : ''} />
           </div>
+          )}
 
           <div className="espace-semaines">
             <div role="group" aria-label="Semaines" className="espace-pastilles">
@@ -469,20 +477,29 @@ export default function EditeurProgramme() {
 
           {seance && (
             <article className="page-seance" aria-labelledby="page-seance-titre" ref={panneau}>
+              {/* haut de la séance resserré : fil (programme › semaine), flèches entre séances, titre + jour */}
               <div className="page-seance__nav">
-                <Link to={lienSeance(null)} className="espace-retour">
-                  <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
-                  Retour à la semaine {semIdx + 1}
-                </Link>
-                {semaine.seances.length > 1 && (
-                  <div className="page-seance__voisines">
-                    {seIdx > 0 && <Link to={lienSeance(semaine.seances[seIdx - 1].id)} className="espace-lien">← Séance {String(seIdx).padStart(2, '0')}</Link>}
-                    {seIdx < semaine.seances.length - 1 && <Link to={lienSeance(semaine.seances[seIdx + 1].id)} className="espace-lien">Séance {String(seIdx + 2).padStart(2, '0')} →</Link>}
-                  </div>
-                )}
+                <nav className="page-seance__fil" aria-label="Où suis-je">
+                  {modele && <><Link to="/espace/coach/programmes">Programmes</Link><span aria-hidden="true">›</span></>}
+                  <Link to={lienSeance(null)} className="page-seance__retour">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+                    {prog.nom || (modele ? 'Modèle' : 'Programme')} · Semaine {semIdx + 1}
+                  </Link>
+                </nav>
+                <div className="page-seance__pager">
+                  {seIdx > 0
+                    ? <Link to={lienSeance(semaine.seances[seIdx - 1].id)} className="page-seance__fleche" aria-label="Séance précédente"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></Link>
+                    : <span className="page-seance__fleche" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></span>}
+                  <span className="page-seance__position">Séance {seIdx + 1} sur {semaine.seances.length}</span>
+                  {seIdx < semaine.seances.length - 1
+                    ? <Link to={lienSeance(semaine.seances[seIdx + 1].id)} className="page-seance__fleche" aria-label="Séance suivante"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></Link>
+                    : <span className="page-seance__fleche" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></span>}
+                </div>
               </div>
-              <p className="surtitre">{modele ? '' : `${prog.nom || 'Programme'} · `}Semaine {semIdx + 1} · Séance {String(seIdx + 1).padStart(2, '0')} · {seance.jour}</p>
-              <h2 id="page-seance-titre" className="titre titre--section page-seance__titre">{seance.titre || `Séance ${seIdx + 1}`}</h2>
+              <div className="page-seance__titre-ligne">
+                <h2 id="page-seance-titre" className="page-seance__titre">{seance.titre || `Séance ${seIdx + 1}`}</h2>
+                <span className="page-seance__jour">{seance.jour}</span>
+              </div>
               <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
                 majSeance={majSeance} majBloc={majBloc} majElement={majElement}
                 retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
