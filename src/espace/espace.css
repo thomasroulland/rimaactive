@@ -1202,3 +1202,11 @@ button.calendrier__jour:focus-visible { outline: 2px solid var(--encre); outline
 .photo-coache--vermillon { background: #ffd9cd; border-color: #ffc2b0; }
 .photo-coache--craie { background: #ece8df; border-color: #e0dbd0; }
 .photo-coache:has(.photo-coache__img) { background: var(--craie); border-color: #ece9e3; }
+
+/* Photos : forme qui brille pendant le chargement, puis l'image arrive en fondu (14 novembre 2026) */
+.photo-attente { background: linear-gradient(100deg, #ebe8e1 30%, #f6f4ef 50%, #ebe8e1 70%) 0 0 / 300% 100% #ebe8e1 !important; animation: photo-brille 1.3s ease-in-out infinite; color: transparent; }
+img.photo-attente { opacity: 1; }
+.photo-arrivee { animation: photo-fondu .35s ease both; }
+@keyframes photo-brille { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@keyframes photo-fondu { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .photo-attente { animation: none; } .photo-arrivee { animation: none; } }
