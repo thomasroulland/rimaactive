@@ -1,4 +1,42 @@
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import logoCraie from '../../assets/rimaactive-mot-craie.svg'
+import { CONTACT } from '../../components/liens.js'
+import '../coache.css'
+
+// Ce fichier est chargé avec le site (écran d'attente avant l'espace) : il ne doit importer ni Firebase ni le reste de l'espace.
+
+// L'espace (hors coach) s'affiche à ses tailles naturelles : il le dit au script de mise à l'échelle de index.html
+// dès son premier rendu et le retire quand il disparaît (voir window.__rimaZoom).
+export function EspaceZoom() {
+  const { pathname } = useLocation()
+  const actif = !/^\/espace\/coach(\/|$)/.test(pathname)
+  useLayoutEffect(() => {
+    window.__rimaZoom?.(actif)
+    return () => window.__rimaZoom?.(false)
+  }, [actif])
+  return null
+}
+
+// Premier écran de /espace, pendant le chargement du code de l'espace : la barre noire et le squelette.
+export function SqChargementEspace() {
+  return (
+    <div className="ec-coque">
+      <header className="ec-bandeau">
+        <div className="ec-bandeau__ligne"><img className="ec-logo" src={logoCraie} alt="Rimaactive" width="128" height="30" /></div>
+      </header>
+      <main className="ec-main"><Squelette /></main>
+      <footer className="ec-pied">
+        <div className="ec-pied__ligne"><span>Marie Sillas · Coach sportive diplômée</span><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></div>
+      </footer>
+    </div>
+  )
+}
+
+// Squelettes qui se suivent (page d'attente, puis session, puis données) : le suivant s'affiche tout de suite et
+// la brillance continue au même endroit (phase prise sur l'horloge), sans blanc ni redémarrage.
+let enCours = 0
+let dejaVu = false
 
 // Squelettes de chargement du coaché : des formes grises, de la taille des vrais éléments, qui brillent doucement.
 // La zone annonce « Chargement… » aux lecteurs d'écran ; les formes, elles, sont cachées (aria-hidden).
@@ -11,8 +49,18 @@ export function Forme({ l = '100%', h = 16, r, className = '' }) {
 
 // Zone annoncée : `classe` (ex. « ec-page ») pose la mise en page de la page, `interieur` celle du contenu.
 function Zone({ classe = 'ec-page', interieur, children }) {
+  const [direct] = useState(() => dejaVu) // un squelette est déjà passé juste avant : pas de délai
+  const [decalage] = useState(() => `-${Math.round(performance.now() % 1600)}ms`)
+  useEffect(() => {
+    enCours += 1
+    dejaVu = true
+    return () => {
+      enCours -= 1
+      setTimeout(() => { if (enCours === 0) dejaVu = false }, 300)
+    }
+  }, [])
   return (
-    <div className={`${classe} ec-sq-zone`} role="status" aria-live="polite">
+    <div className={`${classe} ec-sq-zone${direct ? ' ec-sq-zone--direct' : ''}`} style={{ '--sq-decalage': decalage }} role="status">
       <span className="ec-invisible">Chargement…</span>
       <div className={interieur} aria-hidden="true">{children}</div>
     </div>
@@ -183,7 +231,7 @@ export function SqGalerie() {
     <Zone classe="ec-sq-fond" interieur="ec-galerie">
       {[0, 1, 2].map((i) => (
         <div key={i} className="ec-sq-carte" style={{ padding: 10 }}>
-          <Forme h={0} className="ec-sq--photo" />
+          <Forme h={null} className="ec-sq--photo" />
           <Ligne l="60%" h={16} />
         </div>
       ))}

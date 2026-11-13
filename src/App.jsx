@@ -6,6 +6,7 @@ import Cgv from './pages/Cgv.jsx'
 import Offres from './pages/Offres.jsx'
 import Contact from './pages/Contact.jsx'
 import InformationsLegales from './pages/InformationsLegales.jsx'
+import { EspaceZoom, SqChargementEspace } from './espace/client/Squelette.jsx'
 
 // L'espace client et coach (et Firebase) ne se charge que sur /espace
 const EspaceLazy = lazy(() => import('./espace/EspaceApp.jsx'))
@@ -40,7 +41,7 @@ export default function App() {
           <Route path="*" element={<Accueil />} />
         </Route>
         {/* l'espace a sa propre coque (barre noire et pied) : ni menu ni pied du site */}
-        <Route path="espace/*" element={<Suspense fallback={<p className="section" role="status">Chargement…</p>}><EspaceLazy /></Suspense>} />
+        <Route path="espace/*" element={<><EspaceZoom /><Suspense fallback={<SqChargementEspace />}><EspaceLazy /></Suspense></>} />
       </Routes>
     </>
   )

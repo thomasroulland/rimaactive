@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { meilleuresCharges, regularite, semaineCourante } from '../donnees/calculs.js'
 import { bilanSeance, dateSeance } from '../donnees/progression.js'
 import { evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
@@ -36,12 +36,14 @@ export default function MaProgression({ uid, programme, programmes, faites, sean
 function Rubrique({ id, titre, children }) {
   const racine = useRef(null)
   const minuterie = useRef(null)
+  useEffect(() => () => clearTimeout(minuterie.current), [])
 
   const basculer = (e) => {
     const d = racine.current
     if (!d || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     e.preventDefault()
     clearTimeout(minuterie.current)
+    const duree = parseFloat(getComputedStyle(d).getPropertyValue('--ec-duree-lent')) || 300 // la même durée que le CSS
     const fin = (ouvert) => {
       d.open = ouvert
       d.removeAttribute('data-etat')
@@ -54,12 +56,12 @@ function Rubrique({ id, titre, children }) {
         void d.offsetHeight // la hauteur 0 est appliquée avant de lancer le mouvement
       }
       d.dataset.etat = 'deplie'
-      minuterie.current = setTimeout(() => fin(true), 320)
+      minuterie.current = setTimeout(() => fin(true), duree)
     } else {
       d.dataset.etat = 'deplie'
       void d.offsetHeight
       d.dataset.etat = 'replie'
-      minuterie.current = setTimeout(() => fin(false), 320)
+      minuterie.current = setTimeout(() => fin(false), duree)
     }
   }
 

@@ -568,7 +568,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* arrivée : le contenu monte de 8 px en apparaissant */
-  .ec-page, .espace-connexion__carte, .ec-panneau { animation: ec-entree 240ms var(--ec-courbe); }
+  .ec-page:not(.ec-sq-zone), .espace-connexion__carte, .ec-panneau { animation: ec-entree 240ms var(--ec-courbe); }
   .ec-menu { animation: ec-menu-entree 180ms var(--ec-courbe); transform-origin: top right; }
   .ec-fenetre[open] { animation: ec-fenetre-entree 280ms var(--ec-courbe); }
   .espace-connexion .espace-message:not(:empty) { animation: ec-entree var(--ec-duree) var(--ec-courbe); }
@@ -602,13 +602,13 @@ select.ec-champ { appearance: auto; min-width: 0; }
 
 /* ---------- Squelettes de chargement ---------- */
 .ec-sq-zone { animation: ec-fondu var(--ec-duree) var(--ec-courbe) 150ms backwards; } /* rien du tout si le chargement est instantané */
-.ec-page.ec-sq-zone { animation: ec-fondu var(--ec-duree) var(--ec-courbe) 150ms backwards; }
+.ec-sq-zone--direct { animation: none; } /* squelette qui en suit un autre : pas de blanc entre les deux */
 .ec-sq { position: relative; display: block; flex: none; overflow: hidden; background: var(--ec-gris-sq); border-radius: 8px; }
 .ec-sq::after {
   content: ""; position: absolute; inset: 0; transform: translateX(-100%);
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
 }
-@media (prefers-reduced-motion: no-preference) { .ec-sq::after { animation: ec-brille 1.6s ease-in-out infinite; } }
+@media (prefers-reduced-motion: no-preference) { .ec-sq::after { animation: ec-brille 1.6s ease-in-out var(--sq-decalage, 0ms) infinite; } }
 @keyframes ec-brille { to { transform: translateX(100%); } }
 .ec-sq--rond { border-radius: 50%; }
 .ec-sq--pilule { border-radius: 999px; }
@@ -632,6 +632,6 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-sq-seance-droite { flex: 1 1 300px; min-width: 0; }
 .ec-sq-cases { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
 @media (max-width: 759px) { .ec-sq-noire { height: 220px; } }
-.ec-sq--photo { height: auto !important; aspect-ratio: 3 / 4; border-radius: 12px; }
+.ec-sq--photo { height: auto; aspect-ratio: 3 / 4; border-radius: 12px; }
 .ec-sq-fond { min-width: 0; }
 .ec-sq-carte--rang { flex-direction: row; align-items: center; gap: 16px; min-height: 88px; padding: 16px 18px; }

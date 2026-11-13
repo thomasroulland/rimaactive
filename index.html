@@ -34,12 +34,12 @@
         }
         // L'espace (connexion, tableau de bord du coaché…) garde ses tailles naturelles : pas de zoom.
         // Seul l'espace coach reste mis à l'échelle comme avant.
-        function dansEspaceCoache() {
-          var chemin = window.location.pathname
-          return /^\/espace(\/|$)/.test(chemin) && !/^\/espace\/coach(\/|$)/.test(chemin)
-        }
+        // C'est l'espace lui-même qui prévient, quand il s'affiche et quand il disparaît : window.__rimaZoom(true / false).
+        // Cela évite tout saut de taille pendant le chargement de l'espace ou de la page du site qui le remplace.
+        // Avant le démarrage de React, l'adresse décide (pas de saut au chargement direct de /espace).
+        var dansEspace = /^\/espace(\/|$)/.test(window.location.pathname) && !/^\/espace\/coach(\/|$)/.test(window.location.pathname)
         function ajuster() {
-          if (dansEspaceCoache()) {
+          if (dansEspace) {
             racine.style.zoom = '1'
             racine.style.removeProperty('--ecran') // retombe sur 100svh (styles.css)
             racine.style.setProperty('--vw', window.innerWidth / 100 + 'px')
@@ -58,17 +58,13 @@
           // le contenu occupe toute la largeur disponible, avec la même marge que l'en-tête de chaque côté
           racine.style.setProperty('--largeur', Math.max(1240, largeur - 2 * Math.min(80, largeur * 0.05)) + 'px')
         }
+        window.__rimaZoom = function (actif) {
+          if (dansEspace === !!actif) return
+          dansEspace = !!actif
+          ajuster()
+        }
         ajuster()
         window.addEventListener('resize', ajuster)
-        // Navigation sans rechargement (site <-> espace) : le routeur passe par pushState / replaceState, le bouton « précédent » par popstate.
-        ;['pushState', 'replaceState'].forEach(function (nom) {
-          var original = window.history[nom]
-          window.history[nom] = function () {
-            var retour = original.apply(this, arguments)
-            ajuster()
-            return retour
-          }
-        })
         window.addEventListener('popstate', ajuster)
       })()
     </script>
