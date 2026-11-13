@@ -54,6 +54,7 @@ export default function EditeurProgramme() {
   const [confirmation, setConfirmation] = useState(null)
   const [gestion, setGestion] = useState(false) // fenêtre « Gérer le programme »
   const [gererTypes, setGererTypes] = useState(false) // fenêtre « Types de séance »
+  const [renommer, setRenommer] = useState(false) // nom du programme en cours de modification
   const reglages = useReglages()
   const [aOuvrir, setAOuvrir] = useState(null) // copie créée : ouverte dès qu'elle arrive du serveur
   const supprime = useRef(null) // programme supprimé : ne pas le rouvrir avant que la liste se mette à jour
@@ -374,19 +375,42 @@ export default function EditeurProgramme() {
           )}
           {!modele && !seance && (
             <div className="prog-outils">
-              {programmes.length > 1 ? (
-                <div className="champ-groupe prog-outils__choix">
-                  <label htmlFor="prog-choix">Programme affiché</label>
-                  <select id="prog-choix" className="champ" value={prog.id} onChange={(e) => {
-                    const cible = programmes.find((p) => p.id === e.target.value)
-                    const go = () => { ouvrir(cible); aller({ semaine: 1 }, true) }
-                    if (modifie) demander({ ...QUITTER, action: go })
-                    else go()
-                  }}>
-                    {ordreProgrammes(programmes, aujourdhuiIso()).map((p) => <option key={p.id} value={p.id}>{p.nom || 'Programme sans nom'} · {etatProgramme(p)} · début {dateCourte(p.debut)}</option>)}
-                  </select>
+              {/* nom (liste ou champ à renommer) et début : une seule ligne, plus de carte à part (14 novembre 2026) */}
+              <div className="prog-outils__gauche">
+                {renommer ? (
+                  <div className="champ-groupe prog-outils__choix">
+                    <label htmlFor="prog-nom">Nom du programme</label>
+                    <span className="prog-outils__renommer">
+                      <input id="prog-nom" className="champ" autoComplete="off" autoFocus value={prog.nom}
+                        onChange={(e) => { const v = e.target.value; muter((p) => { p.nom = v }) }}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') setRenommer(false) }} />
+                      <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setRenommer(false)}>OK</button>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="champ-groupe prog-outils__choix">
+                    <label htmlFor="prog-choix">Programme</label>
+                    <span className="prog-outils__renommer">
+                      {programmes.length > 1 ? (
+                        <select id="prog-choix" className="champ" value={prog.id} onChange={(e) => {
+                          const cible = programmes.find((p) => p.id === e.target.value)
+                          const go = () => { ouvrir(cible); aller({ semaine: 1 }, true) }
+                          if (modifie) demander({ ...QUITTER, action: go })
+                          else go()
+                        }}>
+                          {ordreProgrammes(programmes, aujourdhuiIso()).map((p) => <option key={p.id} value={p.id}>{(p.id === prog.id ? prog.nom : p.nom) || 'Programme sans nom'} · {etatProgramme(p)}</option>)}
+                        </select>
+                      ) : <span id="prog-choix" className="champ prog-outils__nom">{prog.nom || 'Programme sans nom'}</span>}
+                      <button type="button" className="prog-outils__crayon" aria-label="Renommer le programme" title="Renommer" onClick={() => setRenommer(true)}>
+                        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" /></svg>
+                      </button>
+                    </span>
+                  </div>
+                )}
+                <div className="prog-outils__debut">
+                  <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })} lundis={lundisAutour(prog.debut)} />
                 </div>
-              ) : <span />}
+              </div>
               <div className="prog-outils__actions">
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setGestion(true)}>Gérer le programme</button>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => {
@@ -401,17 +425,6 @@ export default function EditeurProgramme() {
           {alerteVerrous}
 
           {!seance && (<>
-          {!modele && (
-          <div className="espace-carte espace-params espace-params--programme">
-            <div className="champ-groupe espace-param espace-param--large">
-              <label htmlFor="prog-nom">Nom du programme</label>
-              <input id="prog-nom" className="champ" autoComplete="off" value={prog.nom} onChange={(e) => { const v = e.target.value; muter((p) => { p.nom = v }) }} />
-            </div>
-            <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })}
-              lundis={lundisAutour(prog.debut)}
-              aide={verrous?.size > 0 ? 'Toutes les séances suivent le nouveau début ; celles déjà faites gardent leur date.' : ''} />
-          </div>
-          )}
 
           <div className="espace-semaines">
             <div role="group" aria-label="Semaines" className="espace-pastilles">

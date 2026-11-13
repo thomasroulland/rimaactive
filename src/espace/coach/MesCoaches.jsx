@@ -2,7 +2,7 @@ import PhotoCoache from './PhotoCoache.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { inviterClient, renvoyerInvitation } from '../depots.js'
-import { aujourdhuiIso } from '../donnees/calculs.js'
+import { ajoutJours, aujourdhuiIso, ecartJours } from '../donnees/calculs.js'
 import { dateSeance } from '../donnees/progression.js'
 import { suiviCoache } from '../donnees/alertes.js'
 import { useDonneesCoach } from './donneesCoach.js'
@@ -11,6 +11,15 @@ import Picto from '../../components/Picto.jsx'
 
 const STATUTS = { 'invité': 'Invité', actif: 'Actif', 'en pause': 'En pause' }
 const VIDE = { prenom: '', nom: '', email: '' }
+// Filtres (remis le 14 novembre 2026) : « Programme à faire » = pas de programme, ou programme fini ou qui finit dans 14 jours
+const FILTRES = [
+  ['tous', 'Tous'],
+  ['regarder', 'À regarder'],
+  ['programme', 'Programme à faire'],
+  ['invites', 'Invités'],
+  ['pause', 'En pause'],
+]
+const BIENTOT = 14
 
 // « Mes coachés », d'après la maquette PDF de Marie (13 novembre 2026) : en-tête, encadré « À regarder » (les points
 // d'attention de chaque coaché), puis une carte par coaché : semaine, programme, avancement, semaines, dernière visio, alertes.
@@ -18,13 +27,17 @@ export default function MesCoaches() {
   const { clients, programmes, seances, erreur: erreurDonnees } = useDonneesCoach()
   const [dialogue, setDialogue] = useState(false)
   const [message, setMessage] = useState('')
+  const [filtre, setFiltre] = useState('tous')
   const aujourdhui = aujourdhuiIso()
 
   const fiches = (clients ?? []).map((c) => {
     const programme = c.programme ? (programmes ?? []).find((p) => p.id === c.programme.id) ?? null : null
     const siennes = (seances ?? []).filter((s) => s.client === c.uid)
     const { resume, alertes } = suiviCoache({ programme, seances: siennes, visio: c.derniereVisio ?? null, aujourdhui, actif: c.statut === 'actif' })
-    return { ...c, programmeComplet: programme, resume, alertes }
+    const fin = programme?.debut ? ajoutJours(programme.debut, (programme.semaines?.length ?? 0) * 7 - 1) : null
+    const resteJours = fin ? ecartJours(aujourdhui, fin) : null
+    const aFaire = c.statut === 'actif' && (!programme || resteJours <= BIENTOT)
+    return { ...c, programmeComplet: programme, resume, alertes, resteJours, aFaire }
   })
   // ordre : d'abord ceux qui ont des points à regarder, puis ceux qui ont un programme, puis par nom
   fiches.sort((a, b) => (b.alertes.length > 0) - (a.alertes.length > 0) || !!b.programmeComplet - !!a.programmeComplet
@@ -32,6 +45,15 @@ export default function MesCoaches() {
   const aRegarder = fiches.filter((f) => f.alertes.length > 0)
   const points = aRegarder.reduce((t, f) => t + f.alertes.length, 0)
   const nb = fiches.length
+  const garde = {
+    tous: () => true,
+    regarder: (f) => f.alertes.length > 0,
+    programme: (f) => f.aFaire,
+    invites: (f) => f.statut === 'invité',
+    pause: (f) => f.statut === 'en pause',
+  }
+  const compte = Object.fromEntries(FILTRES.map(([id]) => [id, fiches.filter(garde[id]).length]))
+  const visibles = fiches.filter(garde[filtre])
   const resumeTete = clients === null ? ' '
     : `${nb} coaché${nb > 1 ? 's' : ''} · ${points === 0 ? 'rien à regarder' : `${points} point${points > 1 ? 's' : ''} à regarder`}`
 
@@ -80,8 +102,18 @@ export default function MesCoaches() {
 
         {clients && nb === 0 && <p className="espace-texte">Aucun coaché pour l’instant. Invitez votre premier client.</p>}
         {clients && nb > 0 && (
-          <ul className="cartes-coaches">
-            {fiches.map((c) => {
+          <div className="filtres-coaches mes-coaches__filtres" role="group" aria-label="Afficher">
+            {FILTRES.map(([id, nom]) => (
+              <button key={id} type="button" className="filtre-coaches" aria-pressed={filtre === id} onClick={() => setFiltre(id)}>
+                {nom} <span className="filtre-coaches__nb">{compte[id]}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        {clients && nb > 0 && visibles.length === 0 && <p className="espace-texte">Aucun coaché dans cette catégorie.</p>}
+        {clients && nb > 0 && (
+          <ul className="cartes-coaches" key={filtre}>
+            {visibles.map((c) => {
               const r = c.resume
               const p = c.programmeComplet
               const visio = c.derniereVisio?.date
@@ -104,6 +136,9 @@ export default function MesCoaches() {
                         </span>
                       </div>
                     </>
+                  )}
+                  {p && c.resteJours !== null && c.resteJours <= BIENTOT && (
+                    <p className="carte-coache__fin">{c.resteJours < 0 ? 'Programme terminé : prévoyez la suite' : c.resteJours === 0 ? 'Dernier jour du programme : prévoyez la suite' : `Se termine dans ${c.resteJours} jour${c.resteJours > 1 ? 's' : ''} : prévoyez la suite`}</p>
                   )}
                   <p className="carte-coache__visio">{visio ? `Dernier bilan : ${c.derniereVisio.semaine ? `S${c.derniereVisio.semaine} · ` : ''}${dateSeance(visio)}` : 'Aucun bilan noté'}</p>
                   {c.alertes.length
