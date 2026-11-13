@@ -130,3 +130,47 @@ export function dateLongue(iso) {
   return new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
     .format(new Date(versJour(iso) * MS_JOUR))
 }
+
+// Tonnage (14 novembre 2026) : somme charge × répétitions des séries faites (une série sans charge ou sans
+// répétitions chiffrées ne compte pas). `filtre(elementId)` : ne garder que certains éléments.
+export function tonnage(sf, filtre = () => true) {
+  let total = 0
+  for (const [elementId, lignes] of Object.entries(sf?.series ?? {})) {
+    if (!filtre(elementId)) continue
+    for (const l of lignes ?? []) {
+      if (!l || l.fait === false) continue
+      const c = nombre(l.charge); const r = nombre(l.reps)
+      if (Number.isNaN(c) || Number.isNaN(r) || c <= 0 || r <= 0) continue
+      total += c * r
+    }
+  }
+  return Math.round(total * 10) / 10
+}
+
+// Tonnage de chaque séance terminée (toutes, ou pour un exercice), par date croissante ; les séances à 0 sont omises
+export function tonnages(seancesFaites, exoIdParElement = null, exoId = null) {
+  const filtre = exoId ? (el) => exoIdParElement.get(el) === exoId : () => true
+  return (seancesFaites ?? [])
+    .filter((sf) => sf.statut === 'terminée')
+    .map((sf) => ({ date: sf.date, charge: tonnage(sf, filtre) }))
+    .filter((p) => p.charge > 0)
+    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+}
+
+// Calendrier d'un mois (14 novembre 2026) : semaines du lundi au dimanche qui couvrent le mois.
+// mois : 1 à 12. Renvoie [[{ date: 'AAAA-MM-JJ', dansLeMois }, … 7], …].
+export function grilleMois(annee, mois) {
+  const p = (x) => String(x).padStart(2, '0')
+  const premier = `${annee}-${p(mois)}-01`
+  const debut = lundiDe(premier)
+  const dernierJour = new Date(Date.UTC(annee, mois, 0)).getUTCDate()
+  const fin = `${annee}-${p(mois)}-${p(dernierJour)}`
+  const semaines = []
+  for (let d = debut; d <= fin; d = ajoutJours(d, 7)) {
+    semaines.push(Array.from({ length: 7 }, (_, i) => {
+      const date = ajoutJours(d, i)
+      return { date, dansLeMois: date.slice(0, 7) === premier.slice(0, 7) }
+    }))
+  }
+  return semaines
+}

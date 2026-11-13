@@ -15,6 +15,8 @@ const MESSAGES = {
   envoi: 'Les photos n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.',
   taille: 'Photo trop lourde (20 Mo maximum).',
   'permission-denied': 'Vous n’avez pas le droit de faire cela.',
+  'pdf-format': 'Le fichier joint doit être un PDF.',
+  'pdf-taille': 'PDF trop lourd (10 Mo maximum).',
 }
 
 export function messageErreur(code) {

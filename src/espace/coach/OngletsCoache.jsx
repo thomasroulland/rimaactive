@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ajouterBilan, ajouterNoteCoach, ecouterBilans, ecouterMesMesures, ecouterMesPhotos, ecouterNotesCoach,
-  majProfilSportif, supprimerBilan, supprimerNoteCoach,
+  majProfilSportif, supprimerBilan, supprimerNoteCoach, urlPdf,
 } from '../depots.js'
-import { aujourdhuiIso, listeSeances, meilleuresCharges, regularite } from '../donnees/calculs.js'
+import { aujourdhuiIso, grilleMois, listeSeances, regularite, tonnage, tonnages } from '../donnees/calculs.js'
 import { dateComplete, dateSeance, evolutionMesures } from '../donnees/progression.js'
 import { exercicesDe, detailSeance, texteSerie } from '../donnees/seances.js'
 import { chiffresCoache, effortParSemaine, suiviCoache } from '../donnees/alertes.js'
@@ -14,7 +14,6 @@ import { messageErreur } from '../erreurs.js'
 import { useCoache } from './EnteteCoache.jsx'
 import { Courbe, DialogueSuppression, SeanceFaite, trouverSeance } from './FicheClient.jsx'
 import PhotoStockee from './PhotoStockee.jsx'
-import { basculerDetails } from '../../components/basculerDetails.js'
 
 // Onglets de la fiche d'un coaché, d'après la maquette coach de Marie (13 novembre 2026).
 // Les données communes (coaché, programmes, séances) viennent de la page commune (useCoache).
@@ -123,47 +122,148 @@ function ProfilSportif({ client, uid }) {
   )
 }
 
-// ---------- Historique ----------
+// ---------- Historique : calendrier du mois (14 novembre 2026) ----------
+const MOIS_NOMS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+const JOURS_COURTS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.']
+
 export function Historique() {
-  const { client, programmes, seances } = useCoache()
+  const { client, uid, programmes, seances } = useCoache()
+  const [bilans, setBilans] = useState([])
+  useEffect(() => ecouterBilans(uid, setBilans, () => setBilans([])), [uid])
   const terminees = (seances ?? []).filter((s) => s.statut === 'terminée')
+  const aujourdhui = aujourdhuiIso()
+  // mois affiché : celui de la dernière séance faite (sinon le mois en cours)
+  const derniere = terminees.map((s) => s.date).filter(Boolean).sort().pop() ?? aujourdhui
+  const [mois, setMois] = useState(null)
+  const [choisi, setChoisi] = useState(null)
+  const courant = mois ?? { a: Number(derniere.slice(0, 4)), m: Number(derniere.slice(5, 7)) }
   if (seances === null) return <p className="espace-texte" role="status">Chargement…</p>
-  if (!terminees.length) return <p className="espace-texte">Aucune séance faite pour l’instant.</p>
+
+  const parJour = new Map()
+  const ajouter = (date, x) => { if (!date) return; if (!parJour.has(date)) parJour.set(date, []); parJour.get(date).push(x) }
+  terminees.forEach((sf) => ajouter(sf.date, { genre: 'seance', sf }))
+  ;(bilans ?? []).forEach((b) => ajouter(b.date, { genre: 'bilan', b }))
+  const grille = grilleMois(courant.a, courant.m)
+  const prefixe = `${courant.a}-${String(courant.m).padStart(2, '0')}`
+  const duMois = terminees.filter((s) => s.date?.startsWith(prefixe))
+  const tonnageMois = duMois.reduce((t, sf) => t + tonnage(sf), 0)
+  const bilansMois = (bilans ?? []).filter((b) => b.date?.startsWith(prefixe)).length
+  const jourChoisi = choisi && parJour.has(choisi) ? choisi : null
+  const changerMois = (pas) => {
+    const d = new Date(Date.UTC(courant.a, courant.m - 1 + pas, 1))
+    setMois({ a: d.getUTCFullYear(), m: d.getUTCMonth() + 1 }); setChoisi(null)
+  }
+  const titreSeance = (sf) => trouverSeance(programmes, sf)?.titre || (trouverSeance(programmes, sf) ? 'Séance' : 'Séance retirée')
+
   return (
-    <ul className="historique">
-      {terminees.map((sf) => {
-        const s = trouverSeance(programmes, sf)
-        const p = (programmes ?? []).find((x) => x.id === sf.programme)
-        const sem = p ? (p.semaines ?? []).findIndex((w) => (w.seances ?? []).some((x) => x.id === sf.seance)) + 1 : 0
-        const bilan = [Number.isInteger(sf.effort) ? `effort ${sf.effort}` : '', sf.ressenti].filter(Boolean).join(' · ')
-        return (
-          <li key={sf.id}>
-            <details className="historique__seance espace-carte">
-              <summary onClick={(e) => basculerDetails(e, e.currentTarget.nextElementSibling)}>
-                <span className="historique__titre">{dateSeance(sf.date)} · {s ? s.titre || 'Séance' : 'Séance retirée du programme'}</span>
-                <span className="espace-aide">{sem ? `S${sem}` : ''}{bilan ? ` · ${bilan}` : ''}</span>
-              </summary>
-              <div className="historique__detail">
-                <ul className="historique__lignes">
-                  {detailSeance(s, sf.series).map((x) => (
-                    <li key={x.cle}><strong>{x.nom}</strong> · {x.lignes.map((l) => texteSerie(l)).join(' / ')}</li>
-                  ))}
-                </ul>
-                <ul className="fiche-liste"><SeanceFaite sf={sf} seance={s} prenom={client.prenom} /></ul>
-              </div>
-            </details>
-          </li>
-        )
-      })}
-    </ul>
+    <div className="onglet-pile historique-cal">
+      <div className="espace-carte calendrier">
+        <div className="calendrier__tete">
+          <button type="button" className="calendrier__fleche" aria-label="Mois précédent" onClick={() => changerMois(-1)}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          </button>
+          <h2 className="calendrier__mois" aria-live="polite">{MOIS_NOMS[courant.m - 1]} {courant.a}</h2>
+          <button type="button" className="calendrier__fleche" aria-label="Mois suivant" onClick={() => changerMois(1)}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+          <button type="button" className="lien-souligne calendrier__auj" onClick={() => { setMois({ a: Number(aujourdhui.slice(0, 4)), m: Number(aujourdhui.slice(5, 7)) }); setChoisi(aujourdhui) }}>Aujourd’hui</button>
+        </div>
+        <p className="calendrier__resume">
+          <span><strong>{duMois.length}</strong> séance{duMois.length > 1 ? 's' : ''} faite{duMois.length > 1 ? 's' : ''}</span>
+          <span><strong>{bilansMois}</strong> bilan{bilansMois > 1 ? 's' : ''}</span>
+          {tonnageMois > 0 && <span><strong>{frNombre(Math.round(tonnageMois))} kg</strong> soulevés</span>}
+        </p>
+        <table className="calendrier__grille">
+          <caption className="sr-only">Séances faites et bilans de {client.prenom}, {MOIS_NOMS[courant.m - 1]} {courant.a}</caption>
+          <thead><tr>{JOURS_COURTS.map((j) => <th key={j} scope="col">{j}</th>)}</tr></thead>
+          <tbody key={prefixe}>
+            {grille.map((sem) => (
+              <tr key={sem[0].date}>
+                {sem.map(({ date, dansLeMois }) => {
+                  const evts = parJour.get(date) ?? []
+                  const nbS = evts.filter((e) => e.genre === 'seance').length
+                  const nbB = evts.length - nbS
+                  const etiquette = `${Number(date.slice(8))} ${MOIS_NOMS[Number(date.slice(5, 7)) - 1]}${nbS ? `, ${nbS} séance${nbS > 1 ? 's' : ''}` : ''}${nbB ? `, ${nbB} bilan${nbB > 1 ? 's' : ''}` : ''}`
+                  const contenu = (
+                    <>
+                      <span className="calendrier__num">{Number(date.slice(8))}</span>
+                      <span className="calendrier__evts">
+                        {evts.slice(0, 2).map((e, i) => (
+                          <span key={i} className={`calendrier__pastille calendrier__pastille--${e.genre}`}>{e.genre === 'seance' ? titreSeance(e.sf) : (e.b.titre || 'Bilan')}</span>
+                        ))}
+                        {evts.length > 2 && <span className="calendrier__plus">+{evts.length - 2}</span>}
+                      </span>
+                    </>
+                  )
+                  const classes = `calendrier__jour${dansLeMois ? '' : ' calendrier__jour--hors'}${date === aujourdhui ? ' calendrier__jour--auj' : ''}${jourChoisi === date ? ' calendrier__jour--choisi' : ''}`
+                  return (
+                    <td key={date}>
+                      {evts.length
+                        ? <button type="button" className={classes} aria-label={etiquette} aria-pressed={jourChoisi === date} onClick={() => setChoisi(jourChoisi === date ? null : date)}>{contenu}</button>
+                        : <span className={classes} aria-label={etiquette}>{contenu}</span>}
+                    </td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="calendrier__legende"><span className="calendrier__pastille calendrier__pastille--seance">Séance faite</span><span className="calendrier__pastille calendrier__pastille--bilan">Bilan</span></p>
+      </div>
+
+      {jourChoisi && (
+        <section className="calendrier__detail" aria-labelledby="cal-detail" key={jourChoisi}>
+          <h2 id="cal-detail" className="espace-sous-titre">{dateComplete(jourChoisi)}</h2>
+          {parJour.get(jourChoisi).map((e, i) => e.genre === 'seance' ? (
+            <article key={i} className="espace-carte fiche-carte">
+              <SeanceDetail sf={e.sf} programmes={programmes} prenom={client.prenom} />
+            </article>
+          ) : (
+            <article key={i} className="espace-carte fiche-carte">
+              <p className="calendrier__pastille calendrier__pastille--bilan">Bilan</p>
+              <h3 className="bilan__titre">{e.b.titre || 'Bilan'}</h3>
+              {e.b.texte && <p className="fiche-carte__texte">{e.b.texte}</p>}
+              {e.b.ajuster && <p className="espace-verrou"><strong>À ajuster :</strong> {e.b.ajuster}</p>}
+              {e.b.pdf?.chemin && <LienPdf pdf={e.b.pdf} />}
+            </article>
+          ))}
+        </section>
+      )}
+      {!terminees.length && !(bilans ?? []).length && <p className="espace-texte">Aucune séance faite ni bilan pour l’instant.</p>}
+    </div>
   )
 }
 
-// ---------- Bilans visio ----------
+// Détail d'une séance faite (calendrier) : titre, semaine, effort, séries, commentaires
+function SeanceDetail({ sf, programmes, prenom }) {
+  const s = trouverSeance(programmes, sf)
+  const p = (programmes ?? []).find((x) => x.id === sf.programme)
+  const sem = p ? (p.semaines ?? []).findIndex((w) => (w.seances ?? []).some((x) => x.id === sf.seance)) + 1 : 0
+  const t = tonnage(sf)
+  const infos = [sem ? `Semaine ${sem}` : '', Number.isInteger(sf.effort) ? `effort ${sf.effort}/10` : '', sf.ressenti, t > 0 ? `${frNombre(Math.round(t))} kg soulevés` : ''].filter(Boolean).join(' · ')
+  return (
+    <>
+      <p className="calendrier__pastille calendrier__pastille--seance">Séance faite</p>
+      <h3 className="bilan__titre">{s ? s.titre || 'Séance' : 'Séance retirée du programme'}</h3>
+      {infos && <p className="espace-aide">{infos}</p>}
+      <ul className="historique__lignes">
+        {detailSeance(s, sf.series).map((x) => (
+          <li key={x.cle}><strong>{x.nom}</strong> · {x.lignes.map((l) => texteSerie(l)).join(' / ')}</li>
+        ))}
+      </ul>
+      <ul className="fiche-liste historique__detail"><SeanceFaite sf={sf} seance={s} prenom={prenom} /></ul>
+    </>
+  )
+}
+
+// ---------- Bilans (en visio ou en présentiel) ----------
 export function Bilans() {
   const { client, uid, enCours, progEnCours } = useCoache()
   const [bilans, setBilans] = useState(null)
-  const [vi, setVi] = useState({ date: aujourdhuiIso(), semaine: String(enCours?.semaine || 1), texte: '', ajuster: '' })
+  const [vi, setVi] = useState({ titre: '', date: aujourdhuiIso(), semaine: String(enCours?.semaine || 1), texte: '', ajuster: '' })
+  const [pdf, setPdf] = useState(null)
+  const [envoi, setEnvoi] = useState(false)
+  const champPdf = useRef(null)
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
   const [aSupprimer, setASupprimer] = useState(null)
@@ -173,28 +273,33 @@ export function Bilans() {
 
   async function enregistrer(e) {
     e.preventDefault()
-    if (!vi.texte.trim()) { setErreur('Écrivez le compte rendu avant d’enregistrer.'); return }
+    if (!vi.titre.trim()) { setErreur('Donnez un titre au bilan.'); return }
+    if (!vi.texte.trim() && !pdf) { setErreur('Écrivez le compte rendu ou joignez un PDF avant d’enregistrer.'); return }
     if (vi.date > aujourdhuiIso()) { setErreur('Choisissez une date passée ou aujourd’hui.'); return }
     setErreur(''); setMessage('')
-    const bilan = { date: vi.date, semaine: nbSem ? Number(vi.semaine) : null, texte: vi.texte.trim(), ajuster: vi.ajuster.trim() }
+    const bilan = { titre: vi.titre.trim(), date: vi.date, semaine: nbSem ? Number(vi.semaine) : null, texte: vi.texte.trim(), ajuster: vi.ajuster.trim() }
     const derniere = plusRecent([...(bilans ?? []), bilan])
+    setEnvoi(true)
     try {
-      await ajouterBilan(uid, bilan, { date: derniere.date, semaine: derniere.semaine ?? null })
-      setVi({ ...vi, texte: '', ajuster: '' }); setMessage('Compte rendu enregistré.')
-    } catch (err) { setErreur(messageErreur(err.code)) }
+      await ajouterBilan(uid, bilan, { date: derniere.date, semaine: derniere.semaine ?? null }, pdf)
+      setVi({ ...vi, titre: '', texte: '', ajuster: '' }); setPdf(null); if (champPdf.current) champPdf.current.value = ''
+      setMessage('Bilan enregistré.')
+    } catch (err) { setErreur(messageErreur(err.code)) } finally { setEnvoi(false) }
   }
   async function supprimer(b) {
     const restants = (bilans ?? []).filter((x) => x.id !== b.id)
     const d = plusRecent(restants)
-    try { await supprimerBilan(uid, b.id, d ? { date: d.date, semaine: d.semaine ?? null } : null); setASupprimer(null); setMessage('Compte rendu supprimé.') } catch (err) { setErreur(messageErreur(err.code)) }
+    try { await supprimerBilan(uid, b.id, d ? { date: d.date, semaine: d.semaine ?? null } : null, b.pdf); setASupprimer(null); setMessage('Bilan supprimé.') } catch (err) { setErreur(messageErreur(err.code)) }
   }
 
   return (
     <div className="onglet-pile">
       <p className="espace-aide">Vos comptes rendus des bilans faits avec {client.prenom}. Visibles uniquement par vous.</p>
       <form className="espace-carte fiche-carte" onSubmit={enregistrer} aria-labelledby="t-visio">
-        <h2 id="t-visio" className="fiche-carte__titre">Nouveau compte rendu</h2>
+        <h2 id="t-visio" className="fiche-carte__titre">Nouveau bilan</h2>
         <div className="formulaire-grille">
+          <div className="champ-groupe formulaire-grille__large"><label htmlFor="vi-titre">Titre</label>
+            <input id="vi-titre" className="champ" autoComplete="off" value={vi.titre} placeholder="Ex. Bilan de fin de mois, bilan postural…" onChange={(e) => setVi({ ...vi, titre: e.target.value })} /></div>
           <div className="champ-groupe"><label htmlFor="vi-date">Date du bilan</label>
             <input id="vi-date" type="date" className="champ" value={vi.date} max={aujourdhuiIso()} onChange={(e) => setVi({ ...vi, date: e.target.value })} /></div>
           {nbSem > 0 && (
@@ -207,25 +312,58 @@ export function Bilans() {
             <textarea id="vi-texte" className="champ" rows={5} value={vi.texte} placeholder="Forme, sommeil, motivation, douleurs, ressenti sur les séances…" onChange={(e) => setVi({ ...vi, texte: e.target.value })} /></div>
           <div className="champ-groupe formulaire-grille__large"><label htmlFor="vi-ajuster">À ajuster dans le programme (facultatif)</label>
             <textarea id="vi-ajuster" className="champ" rows={2} value={vi.ajuster} onChange={(e) => setVi({ ...vi, ajuster: e.target.value })} /></div>
+          <div className="champ-groupe formulaire-grille__large">
+            <span className="bilan-pdf__lib" id="vi-pdf-lib">PDF joint (facultatif)</span>
+            <div className="bilan-pdf">
+              <input ref={champPdf} id="vi-pdf" className="sr-only" type="file" accept="application/pdf" aria-labelledby="vi-pdf-lib"
+                onChange={(e) => { setPdf(e.target.files?.[0] ?? null); setErreur('') }} />
+              <label htmlFor="vi-pdf" className="lien-souligne bilan-pdf__choisir">{pdf ? 'Changer de PDF' : 'Joindre un PDF'}</label>
+              {pdf && <span className="bilan-pdf__nom">{pdf.name}<button type="button" className="bilan-pdf__retirer" aria-label="Retirer le PDF" onClick={() => { setPdf(null); champPdf.current.value = '' }}>×</button></span>}
+              <span className="espace-aide">10 Mo maximum. Visible par vous seule.</span>
+            </div>
+          </div>
         </div>
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
-        <button type="submit" className="bouton bouton--principal">Enregistrer le compte rendu</button>
+        <button type="submit" className="bouton bouton--principal" disabled={envoi}>{envoi ? 'Enregistrement…' : 'Enregistrer le bilan'}</button>
       </form>
-      {bilans !== null && bilans.length === 0 && <p className="espace-texte">Aucun compte rendu pour l’instant.</p>}
+      {bilans !== null && bilans.length === 0 && <p className="espace-texte">Aucun bilan pour l’instant.</p>}
       {(bilans ?? []).map((b) => (
         <article key={b.id} className="espace-carte fiche-carte">
           <div className="fiche-carte__tete">
-            <p className="fiche-carte__fort">{b.semaine ? `S${b.semaine} · ` : ''}{dateComplete(b.date)}</p>
+            <div>
+              <h3 className="bilan__titre">{b.titre || 'Bilan'}</h3>
+              <p className="espace-aide">{b.semaine ? `Semaine ${b.semaine} · ` : ''}{dateComplete(b.date)}</p>
+            </div>
             {aSupprimer === b.id
               ? <span className="espace-actions"><button type="button" className="lien-souligne" onClick={() => supprimer(b)}>Confirmer la suppression</button><button type="button" className="espace-lien" onClick={() => setASupprimer(null)}>Annuler</button></span>
               : <button type="button" className="espace-lien" onClick={() => setASupprimer(b.id)}>Supprimer</button>}
           </div>
-          <p className="fiche-carte__texte">{b.texte}</p>
+          {b.texte && <p className="fiche-carte__texte">{b.texte}</p>}
           {b.ajuster && <p className="espace-verrou"><strong>À ajuster :</strong> {b.ajuster}</p>}
+          {b.pdf?.chemin && <LienPdf pdf={b.pdf} />}
         </article>
       ))}
     </div>
+  )
+}
+
+// Lien vers le PDF d'un bilan (adresse demandée au moment du clic)
+function LienPdf({ pdf }) {
+  const [erreur, setErreur] = useState('')
+  async function ouvrir() {
+    setErreur('')
+    const fenetre = window.open('', '_blank')
+    try { const url = await urlPdf(pdf.chemin); if (fenetre) fenetre.location = url; else window.location.href = url } catch { fenetre?.close(); setErreur('Impossible d’ouvrir le PDF. Réessayez.') }
+  }
+  return (
+    <p className="bilan-pdf__lien">
+      <button type="button" className="lien-souligne" onClick={ouvrir}>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /></svg>
+        {pdf.nom || 'PDF du bilan'}
+      </button>
+      {erreur && <span className="espace-message espace-message--erreur" role="alert">{erreur}</span>}
+    </p>
   )
 }
 
@@ -239,8 +377,11 @@ export function Stats() {
   const reg = progEnCours ? regularite(progEnCours, faites) : []
   const efforts = effortParSemaine(progEnCours, seances)
   const { exoIdParElement, noms } = exercicesDe(programmes ?? [])
+  // tonnage (charge × répétitions des séries faites) : par séance, puis exercice par exercice
+  const parSeance = tonnages(seances ?? [])
+  const total = parSeance.reduce((t, p) => t + p.charge, 0)
   const courbes = [...noms.entries()]
-    .map(([exoId, nom]) => ({ exoId, nom, points: meilleuresCharges(seances ?? [], exoIdParElement, exoId) }))
+    .map(([exoId, nom]) => ({ exoId, nom, points: tonnages(seances ?? [], exoIdParElement, exoId) }))
     .filter((c) => c.points.length > 0).sort((a, b) => a.nom.localeCompare(b.nom, 'fr'))
   const COL = [['poids', 'Poids', 'kg'], ['taille', 'Taille', 'cm'], ['hanches', 'Hanches', 'cm'], ['poitrine', 'Poitrine', 'cm'], ['bras', 'Bras', 'cm'], ['cuisse', 'Cuisse', 'cm']]
 
@@ -273,9 +414,22 @@ export function Stats() {
         </Carte>
       </div>
       <section aria-labelledby="t-ch" className="onglet-pile">
-        <h2 id="t-ch" className="espace-sous-titre">Charges (meilleure série)</h2>
-        {courbes.length === 0 ? <p className="espace-aide">Pas encore de charges enregistrées.</p> : (
-          <ul className="fiche-liste fiche-courbes stats-courbes">{courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-8)} />)}</ul>
+        <div className="suivi-titre">
+          <h2 id="t-ch" className="espace-sous-titre">Tonnage</h2>
+          <span className="espace-aide">charge × répétitions des séries faites</span>
+        </div>
+        {parSeance.length === 0 ? <p className="espace-aide">Pas encore de séries avec charge et répétitions.</p> : (
+          <>
+            <dl className="tonnage-chiffres">
+              <div className="espace-carte"><dt>Tonnage total</dt><dd>{frNombre(Math.round(total))} kg</dd></div>
+              <div className="espace-carte"><dt>Moyenne par séance</dt><dd>{frNombre(Math.round(total / parSeance.length))} kg</dd></div>
+              <div className="espace-carte"><dt>Dernière séance</dt><dd>{frNombre(Math.round(parSeance[parSeance.length - 1].charge))} kg</dd></div>
+            </dl>
+            <ul className="fiche-liste fiche-courbes stats-courbes">
+              <Courbe nom="Toutes les séances" points={parSeance.slice(-10)} libelle="tonnage par séance" />
+              {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-8)} libelle="tonnage par séance" />)}
+            </ul>
+          </>
         )}
       </section>
       <Carte titre="Poids et mensurations" id="t-mes" classe="mesures-coache">

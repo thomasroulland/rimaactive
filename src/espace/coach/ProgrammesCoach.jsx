@@ -10,7 +10,7 @@ import { useDonneesCoach } from './donneesCoach.js'
 import Confirmation from './Confirmation.jsx'
 import { dateCourte } from '../donnees/seances.js'
 
-// Page « Programmes » (maquette coach, 13 novembre 2026 ; mise en page revue le 14) : les modèles réutilisables (créer, modifier, dupliquer,
+// Page « Modèles » (anciennement « Programmes », renommée le 14 novembre 2026) (maquette coach, 13 novembre 2026 ; mise en page revue le 14) : les modèles réutilisables (créer, modifier, dupliquer,
 // affecter à un coaché qui en reçoit sa propre copie), puis les programmes de chaque coaché.
 export default function ProgrammesCoach() {
   return (
@@ -18,7 +18,7 @@ export default function ProgrammesCoach() {
       <div className="conteneur espace-coach progs">
         <header className="progs__tete">
           <p className="surtitre">Espace coach</p>
-          <h1 className="titre titre--section">Programmes</h1>
+          <h1 className="titre titre--section">Modèles</h1>
           <p className="espace-texte">Vos modèles réutilisables. Affectez-en un à un coaché : il reçoit sa propre copie, que vous pouvez ensuite ajuster dans sa fiche.</p>
         </header>
         <Modeles />

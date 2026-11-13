@@ -131,3 +131,30 @@ describe('regularite', () => {
     ])
   })
 })
+
+import { tonnage, tonnages } from '../../src/espace/donnees/calculs.js'
+describe('tonnage', () => {
+  const sf = (date, series) => ({ statut: 'terminée', date, series })
+  it('somme charge × répétitions des séries faites', () => {
+    expect(tonnage(sf('2026-11-02', { a: [{ charge: '60', reps: '10' }, { charge: '62,5', reps: '8', fait: true }, { charge: '70', reps: '5', fait: false }], b: [{ charge: '', reps: '12' }] }))).toBe(1100)
+  })
+  it('par séance et par exercice', () => {
+    const s = [sf('2026-11-05', { a: [{ charge: '50', reps: '10' }], b: [{ charge: '20', reps: '10' }] }), sf('2026-11-02', { a: [{ charge: '40', reps: '10' }] })]
+    expect(tonnages(s)).toEqual([{ date: '2026-11-02', charge: 400 }, { date: '2026-11-05', charge: 700 }])
+    expect(tonnages(s, new Map([['a', 'X'], ['b', 'Y']]), 'Y')).toEqual([{ date: '2026-11-05', charge: 200 }])
+  })
+})
+
+import { grilleMois } from '../../src/espace/donnees/calculs.js'
+describe('grilleMois', () => {
+  it('novembre 2026 : du lundi 26 octobre au dimanche 6 décembre', () => {
+    const g = grilleMois(2026, 11)
+    expect(g).toHaveLength(6)
+    expect(g[0][0]).toEqual({ date: '2026-10-26', dansLeMois: false })
+    expect(g[0][6]).toEqual({ date: '2026-11-01', dansLeMois: true })
+    expect(g[5][6].date).toBe('2026-12-06')
+  })
+  it('février 2027 commence un lundi : 4 semaines', () => {
+    expect(grilleMois(2027, 2)).toHaveLength(4)
+  })
+})

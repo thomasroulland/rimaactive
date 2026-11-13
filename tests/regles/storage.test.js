@@ -115,3 +115,22 @@ describe('compte sans rôle (inscription libre)', () => {
     await assertFails(uploadBytes(ref(sansRole, 'clients/A/x.jpg'), octets(10), jpeg))
   })
 })
+
+describe('bilans/{uid}/** (PDF joints aux bilans)', () => {
+  const pdf = { contentType: 'application/pdf' }
+  it('le coach envoie, lit et supprime un PDF', async () => {
+    await assertSucceeds(uploadBytes(ref(coach, 'bilans/A/b.pdf'), octets(10), pdf))
+    await assertSucceeds(getBytes(ref(coach, 'bilans/A/b.pdf')))
+    await assertSucceeds(deleteObject(ref(coach, 'bilans/A/b.pdf')))
+  })
+  it('refuse un autre format ou plus de 10 Mo', async () => {
+    await assertFails(uploadBytes(ref(coach, 'bilans/A/b.jpg'), octets(10), jpeg))
+    await assertFails(uploadBytes(ref(coach, 'bilans/A/gros.pdf'), octets(10 * MO + 1), pdf))
+  })
+  it('le coaché ne lit ni n’écrit les PDF de bilan, même les siens', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => { await uploadBytes(ref(ctx.storage(), 'bilans/A/b.pdf'), octets(10), pdf) })
+    await assertFails(getBytes(ref(A, 'bilans/A/b.pdf')))
+    await assertFails(uploadBytes(ref(A, 'bilans/A/c.pdf'), octets(10), pdf))
+    await assertFails(getBytes(ref(anon, 'bilans/A/b.pdf')))
+  })
+})

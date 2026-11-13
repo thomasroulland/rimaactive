@@ -11,7 +11,7 @@ import { PageCoache } from './EnteteCoache.jsx'
 export const LIENS_COACH = [
   { to: '/espace/coach', label: 'Mes coachés', end: true },
   { to: '/espace/coach/exercices', label: 'Banque d’exercices' },
-  { to: '/espace/coach/programmes', label: 'Programmes' },
+  { to: '/espace/coach/modeles', label: 'Modèles' },
 ]
 
 // Espace coach : l'écran choisi
@@ -20,7 +20,8 @@ export default function EspaceCoach({ profil }) {
     <>
       <Routes>
         <Route index element={<MesCoaches profil={profil} />} />
-        <Route path="programmes" element={<ProgrammesCoach />} />
+        <Route path="modeles" element={<ProgrammesCoach />} />
+        <Route path="programmes" element={<Navigate to="/espace/coach/modeles" replace />} />
         <Route path="modeles/:modeleId" element={<EditeurProgramme />} />
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />

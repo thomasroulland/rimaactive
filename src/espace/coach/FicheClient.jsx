@@ -275,7 +275,7 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
 }
 
 // Courbe de la meilleure charge de chaque séance : ligne encre, points vermillon, axes nommés. Pas de bibliothèque.
-export function Courbe({ nom, points }) {
+export function Courbe({ nom, points, libelle = 'meilleure charge par séance' }) {
   const L = 300; const H = 170; const g = 44; const d = 14; const h = 14; const b = 32
   const val = (p) => parseFloat(String(p.charge).replace(',', '.')) || 0
   const valeurs = points.map(val)
@@ -292,7 +292,7 @@ export function Courbe({ nom, points }) {
         <h3 className="espace-element__titre">{nom}</h3>
         <p className="client-courbe__derniere">{fr(dernier.charge)} kg{dernier.reps ? ` × ${dernier.reps}` : ''}</p>
       </div>
-      <svg className="fiche-svg" viewBox={`0 0 ${L} ${H}`} role="img" aria-label={`${nom}, meilleure charge par séance : ${description}`}>
+      <svg className="fiche-svg" viewBox={`0 0 ${L} ${H}`} role="img" aria-label={`${nom}, ${libelle} : ${description}`}>
         <line className="fiche-svg__axe" x1={g} x2={L - d} y1={h} y2={h} />
         <line className="fiche-svg__axe" x1={g} x2={L - d} y1={H - b} y2={H - b} />
         <text className="fiche-svg__txt" x={g - 8} y={h + 4} textAnchor="end">{fr(max)} kg</text>

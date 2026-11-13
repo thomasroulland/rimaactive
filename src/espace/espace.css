@@ -1016,3 +1016,65 @@ a.lien-souligne:hover::after { transform: translateX(3px) rotate(45deg); }
   .ajout-seance__menu { animation: ajout-menu .18s cubic-bezier(.3, .7, .2, 1); transform-origin: bottom left; }
   @keyframes ajout-menu { from { opacity: 0; transform: translateY(4px) scale(.97); } }
 }
+/* Statistiques : chiffres du tonnage */
+.tonnage-chiffres { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 0; }
+.tonnage-chiffres > div { padding: 16px 20px; gap: 4px; }
+.tonnage-chiffres dt { font-size: 13px; font-weight: 600; color: var(--gris-chaud); }
+.tonnage-chiffres dd { margin: 0; font-size: 28px; line-height: 1.1; font-weight: 900; letter-spacing: -0.03em; color: var(--vermillon); }
+/* Bilans : titre, PDF joint */
+.bilan__titre { margin: 0; font-size: 17px; line-height: 22px; font-weight: 800; }
+.bilan-pdf__lib { font-size: 14px; font-weight: 600; color: var(--gris-chaud); }
+.bilan-pdf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.bilan-pdf__choisir { cursor: pointer; }
+.bilan-pdf input:focus-visible + .bilan-pdf__choisir { outline: 2px solid var(--encre); outline-offset: 2px; }
+.bilan-pdf__nom { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 12px; border-radius: 999px; background: var(--craie); font-size: 14px; font-weight: 600; max-width: 100%; overflow-wrap: anywhere; }
+.bilan-pdf__retirer { width: 26px; height: 26px; border: 0; border-radius: 50%; background: none; font-size: 18px; line-height: 1; cursor: pointer; color: var(--gris-chaud); }
+.bilan-pdf__retirer:hover { background: var(--blanc); color: var(--encre); }
+.bilan-pdf__lien { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.bilan-pdf__lien .lien-souligne svg { flex: none; }
+
+/* ---------- Historique en calendrier (14 novembre 2026) ---------- */
+.calendrier { gap: 14px; align-items: stretch; padding: 22px 24px; }
+.calendrier__tete { display: flex; align-items: center; gap: 8px; }
+.calendrier__mois { margin: 0 6px; min-width: 9ch; font-size: 24px; line-height: 30px; font-weight: 900; letter-spacing: -0.03em; text-transform: capitalize; }
+.calendrier__fleche { display: inline-grid; place-items: center; width: 38px; height: 38px; border: 1px solid #e6e2da; border-radius: 50%; background: var(--blanc); color: var(--encre); cursor: pointer; transition: background .2s ease; }
+.calendrier__fleche:hover { background: var(--craie); }
+.calendrier__fleche:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.calendrier__auj { margin-left: auto; }
+.calendrier__resume { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--gris-chaud); }
+.calendrier__resume strong { color: var(--encre); }
+.calendrier__grille { width: 100%; border-collapse: separate; border-spacing: 6px; table-layout: fixed; margin: 0 -6px; width: calc(100% + 12px); }
+.calendrier__grille th { padding: 0 0 2px; font-size: 12px; font-weight: 700; color: var(--gris-chaud); text-align: left; padding-left: 8px; }
+.calendrier__grille td { padding: 0; vertical-align: top; }
+.calendrier__jour { box-sizing: border-box; width: 100%; height: 96px; display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 6px 7px; border: 1px solid #f0ede7; border-radius: 12px; background: var(--craie); font: inherit; text-align: left; color: var(--encre); overflow: hidden; }
+button.calendrier__jour { cursor: pointer; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+button.calendrier__jour:hover { border-color: #cfcac1; background: var(--blanc); }
+button.calendrier__jour:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.calendrier__jour--hors { opacity: .45; }
+.calendrier__jour--auj .calendrier__num { background: var(--encre); color: var(--blanc); }
+.calendrier__jour--choisi { border-color: var(--encre) !important; background: var(--blanc) !important; }
+.calendrier__num { align-self: flex-start; min-width: 24px; height: 24px; display: inline-grid; place-items: center; padding: 0 6px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+.calendrier__evts { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.calendrier__pastille { display: inline-block; max-width: 100%; margin: 0; padding: 2px 8px; border-radius: 999px; font-size: 11px; line-height: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; align-self: flex-start; }
+.calendrier__pastille--seance { background: var(--encre); color: var(--blanc); }
+.calendrier__pastille--bilan { background: var(--jaune); color: var(--encre); }
+.calendrier__plus { font-size: 11px; font-weight: 700; color: var(--gris-chaud); padding-left: 4px; }
+.calendrier__legende { margin: 0; display: flex; gap: 8px; }
+.calendrier__detail { display: flex; flex-direction: column; gap: 12px; }
+.calendrier__detail .fiche-carte { gap: 8px; }
+.calendrier__detail .historique__detail .fiche-seance__tete, .calendrier__detail .historique__detail .fiche-seance__bilan, .calendrier__detail .historique__detail .fiche-detail { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .calendrier__detail { animation: espace-monte .35s cubic-bezier(.3, .7, .2, 1); }
+  .calendrier__grille tbody { animation: onglet-entre .3s cubic-bezier(.3, .7, .2, 1); }
+}
+@media (max-width: 640px) {
+  .calendrier { padding: 16px 12px; }
+  .calendrier__grille { border-spacing: 3px; margin: 0 -3px; width: calc(100% + 6px); }
+  .calendrier__grille th { padding-left: 2px; font-size: 11px; }
+  .calendrier__jour { height: 54px; padding: 4px; border-radius: 9px; align-items: center; }
+  .calendrier__num { align-self: center; font-size: 12px; min-width: 22px; height: 22px; }
+  .calendrier__evts { flex-direction: row; justify-content: center; gap: 3px; }
+  .calendrier__evts .calendrier__pastille { width: 8px; height: 8px; padding: 0; font-size: 0; }
+  .calendrier__plus { display: none; }
+  .calendrier__legende .calendrier__pastille { width: auto; height: auto; padding: 2px 8px; font-size: 11px; }
+}

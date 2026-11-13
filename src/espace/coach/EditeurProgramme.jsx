@@ -358,9 +358,9 @@ export default function EditeurProgramme() {
             />
           {modele && !seance && (
             <header className="modele-tete">
-              <Link to="/espace/coach/programmes" className="espace-retour">
+              <Link to="/espace/coach/modeles" className="espace-retour">
                 <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
-                Programmes
+                Modèles
               </Link>
               <p className="surtitre">Modèle de programme</p>
               {/* le nom se modifie directement dans le titre (plus de carte à part) */}
@@ -487,7 +487,7 @@ export default function EditeurProgramme() {
               {/* haut de la séance resserré : fil (programme › semaine), flèches entre séances, titre + jour */}
               <div className="page-seance__nav">
                 <nav className="page-seance__fil" aria-label="Où suis-je">
-                  {modele && <><Link to="/espace/coach/programmes">Programmes</Link><span aria-hidden="true">›</span></>}
+                  {modele && <><Link to="/espace/coach/modeles">Modèles</Link><span aria-hidden="true">›</span></>}
                   <Link to={lienSeance(null)} className="page-seance__retour">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
                     {prog.nom || (modele ? 'Modèle' : 'Programme')} · Semaine {semIdx + 1}

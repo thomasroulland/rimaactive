@@ -34,6 +34,14 @@ service firebase.storage {
       allow delete: if clientOuCoach(uid);
     }
 
+    // PDF joints aux bilans : le coach seulement (PDF, 10 Mo au plus).
+    match /bilans/{uid}/{fichier=**} {
+      allow read, delete: if estCoach();
+      allow create, update: if estCoach() && request.resource != null
+        && request.resource.contentType == 'application/pdf'
+        && request.resource.size <= 10 * 1024 * 1024;
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }

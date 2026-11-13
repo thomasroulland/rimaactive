@@ -496,12 +496,29 @@ const listeDe = (uid, nom, rappel, erreur) => onSnapshot(
 )
 // Comptes rendus des visios (coach seulement). La plus récente devient « derniereVisio » du profil (liste Mes coachés).
 export function ecouterBilans(uid, rappel, erreur) { return listeDe(uid, 'bilans', rappel, erreur) }
-export async function ajouterBilan(uid, bilan, derniere) {
-  await addDoc(collection(db, 'utilisateurs', uid, 'bilans'), { ...bilan, creeLe: serverTimestamp() })
+// Un bilan peut avoir un PDF joint (14 novembre 2026) : rangé dans Storage `bilans/{uid}/…`, lisible par le coach seulement.
+export const PDF_MAX = 10 * 1024 * 1024
+export async function ajouterBilan(uid, bilan, derniere, pdf = null) {
+  let fichier = null
+  if (pdf) {
+    if (pdf.type !== 'application/pdf') { const e = new Error('pdf'); e.code = 'pdf-format'; throw e }
+    if (pdf.size > PDF_MAX) { const e = new Error('pdf'); e.code = 'pdf-taille'; throw e }
+    const chemin = `bilans/${uid}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.pdf`
+    await uploadBytes(ref(stockage, chemin), pdf, { contentType: 'application/pdf' })
+    fichier = { chemin, nom: pdf.name }
+  }
+  try {
+    await addDoc(collection(db, 'utilisateurs', uid, 'bilans'), { ...bilan, pdf: fichier, creeLe: serverTimestamp() })
+  } catch (e) {
+    if (fichier) { try { await deleteObject(ref(stockage, fichier.chemin)) } catch { /* déjà absent */ } }
+    throw e
+  }
   if (derniere) await updateDoc(doc(db, 'utilisateurs', uid), { derniereVisio: derniere })
 }
-export async function supprimerBilan(uid, id, derniere) {
+export function urlPdf(chemin) { return getDownloadURL(ref(stockage, chemin)) }
+export async function supprimerBilan(uid, id, derniere, pdf = null) {
   await deleteDoc(doc(db, 'utilisateurs', uid, 'bilans', id))
+  if (pdf?.chemin) { try { await deleteObject(ref(stockage, pdf.chemin)) } catch { /* déjà absent */ } }
   await updateDoc(doc(db, 'utilisateurs', uid), { derniereVisio: derniere ?? null })
 }
 // Notes privées du coach (le coaché ne les voit pas)

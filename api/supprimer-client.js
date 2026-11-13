@@ -33,6 +33,7 @@ export default async function handler(req, res) {
 
     // 1. Photos d'abord : un bucket faux ou introuvable arrête tout ici, sans rien avoir effacé.
     await bucket.deleteFiles({ prefix: `clients/${uid}/`, force: true })
+    await bucket.deleteFiles({ prefix: `bilans/${uid}/`, force: true })
     // 2. Séances, programmes, mesures et photos.
     for (const collection of ['seancesFaites', 'programmes']) {
       const lot = await db.collection(collection).where('client', '==', uid).get()
