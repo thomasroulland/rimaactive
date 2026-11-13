@@ -175,7 +175,7 @@
 .ec-tdb__qui { display: flex; align-items: center; gap: 14px; }
 .ec-tdb__texte { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .ec-gris { color: var(--ec-gris); }
-.ec-erreur { margin: 0; font: 400 14px/20px var(--font-sans); color: #b42318; }
+.ec-erreur { margin: 0; font: 400 14px/20px var(--font-sans); color: var(--ec-encre); padding-left: 10px; border-left: 3px solid var(--ec-vermillon); }
 .ec-fichier { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
 .ec-invisible { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .ec-avatar-bloc { flex: none; }
@@ -242,7 +242,7 @@
 .ec-sous-titre { margin-top: -8px; }
 .ec-gras { font-weight: 600; }
 .ec-h4 { margin: 0; font: 800 17px/22px var(--font-sans); }
-.ec-erreur-texte { color: #b42318; }
+.ec-erreur-texte { color: var(--ec-encre); padding-left: 10px; border-left: 3px solid var(--ec-vermillon); }
 .ec-lien {
   background: none; border: 0; padding: 0; min-height: 44px; font: 700 15px/22px var(--font-sans); color: var(--ec-encre);
   text-decoration: underline; text-decoration-color: var(--ec-vermillon); text-decoration-thickness: 2px; text-underline-offset: 4px; cursor: pointer;
@@ -320,9 +320,9 @@ a.ec-histo__carte:hover .ec-histo__numero { color: var(--ec-encre); }
 .ec-prog__tete { display: flex; flex-direction: column; gap: 12px; }
 .ec-prog__rubrique { display: flex; flex-direction: column; gap: 16px; }
 .ec-prog .ec-h2 { font-weight: 700; line-height: 36px; letter-spacing: -0.02em; }
-.ec-frise { display: flex; gap: 6px; padding: 2px; }
+.ec-frise { display: flex; gap: 8px; padding: 2px; overflow-x: auto; scroll-snap-type: x proximity; overscroll-behavior-x: contain; }
 .ec-etape {
-  flex: 1 1 0; min-width: 0; min-height: 76px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px;
+  flex: 1 0 220px; min-width: 220px; scroll-snap-align: start; min-height: 76px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px;
   padding: 10px 12px; box-sizing: border-box; border: 2px solid var(--ec-encre); border-radius: 16px; background: var(--blanc); color: var(--ec-encre);
   font-family: var(--font-sans); text-align: left; cursor: pointer; position: relative; overflow-wrap: anywhere;
 }
@@ -334,7 +334,7 @@ a.ec-histo__carte:hover .ec-histo__numero { color: var(--ec-encre); }
 .ec-etape__etat { font: 600 13px/18px var(--font-sans); }
 .ec-etape__dates { font: 400 13px/18px var(--font-sans); color: var(--ec-gris); }
 .ec-etape-vide {
-  flex: 1 1 0; min-width: 0; min-height: 76px; margin: 0; box-sizing: border-box; display: flex; align-items: center; padding: 10px 14px;
+  flex: 1 0 220px; min-width: 220px; scroll-snap-align: start; min-height: 76px; margin: 0; box-sizing: border-box; display: flex; align-items: center; padding: 10px 14px;
   border-radius: 16px; background: var(--blanc); border: 2px solid var(--ec-repli-filet); font: 600 14px/20px var(--font-sans); color: var(--ec-gris);
 }
 .ec-bilan { background: var(--blanc); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }

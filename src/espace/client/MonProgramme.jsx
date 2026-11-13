@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement, blocsDuClient, dateSeance, seancesDeLaSemaine } from '../donnees/progression.js'
@@ -27,6 +27,13 @@ export default function MonProgramme({ profil, programmes, programme, seances })
   const [semaineChoisie, setSemaineChoisie] = useState(null)
   const index = choisi !== null && blocs[choisi] ? choisi : defaut
   const bloc = blocs[index]
+  const frise = useRef(null)
+  // Au chargement, le bloc en cours est amené dans la frise (on ne fait défiler que la frise, jamais la page).
+  useEffect(() => {
+    const f = frise.current
+    const b = f?.querySelector('[data-bloc-courant]')
+    if (f && b) f.scrollLeft = Math.max(0, b.offsetLeft - f.offsetLeft - 2)
+  }, [blocs.length, defaut])
   const nom = [profil?.prenom, profil?.nom].filter(Boolean).join(' ')
 
   const choisirBloc = (i) => { setChoisi(i); setSemaineChoisie(null) }
@@ -45,13 +52,14 @@ export default function MonProgramme({ profil, programmes, programme, seances })
 
       <section className="ec-prog__rubrique" aria-labelledby="titre-blocs">
         <h2 id="titre-blocs" className="ec-h2">Mes blocs</h2>
-        <div className="ec-frise" role="group" aria-label={`Mes blocs de ${nbSemaines || 4} semaines`}>
+        <div className="ec-frise" ref={frise} role="group" aria-label={`Mes blocs de ${nbSemaines || 4} semaines`}>
           {blocs.map((b, i) => (
             <button
               key={b.programme.id}
               type="button"
               className={`ec-etape ${ETATS[b.etat]}`}
               aria-pressed={i === index}
+              data-bloc-courant={i === defaut ? '' : undefined}
               aria-label={`Bloc ${i + 1}, ${etatTexte(b)}`}
               onClick={() => choisirBloc(i)}
             >

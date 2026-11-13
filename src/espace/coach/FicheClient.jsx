@@ -189,6 +189,12 @@ function SeanceFaite({ sf, seance }) {
           </>
         ) : <span>En cours, pas encore terminée</span>}
       </p>
+      {sf.commentaire && (
+        <p className="espace-verrou espace-verrou--fort fiche-douleur fiche-commentaire">
+          Commentaire du client : {sf.commentaire}
+        </p>
+      )}
+      {terminee && sf.fc && <p className="fiche-seance__bilan"><span>Fréquence cardiaque : {sf.fc}</span></p>}
       {douleur && (
         <p className="espace-verrou espace-verrou--fort fiche-douleur">
           Douleur signalée{douleur.endroit ? ` : ${douleur.endroit}` : ''}.{douleur.note ? ` ${douleur.note}` : ''}
