@@ -57,6 +57,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const [fiche, setFiche] = useState(null)
   const minuterie = useRef(null)
   const enAttente = useRef(carteVide())
+  const termine = useRef(false) // « Enregistrer ma séance » déjà envoyé depuis cet écran
 
   const programme = programmes.find((p) => p.id === programmeId)
   const liste = listeSeances(programme)
@@ -65,6 +66,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const verrou = fait?.statut === 'terminée'
 
   const erreurEnvoi = (e) => {
+    // refus tardif d'une écriture partie avant ou pendant l'enregistrement : la séance est bien enregistrée
+    if (e?.code === 'permission-denied' && termine.current) return
     setRefus(e?.code === 'permission-denied'
       ? 'Séance déjà enregistrée.'
       : 'Vos notes n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.')
@@ -149,6 +152,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   }
 
   const terminer = (fin) => {
+    if (termine.current) return
+    termine.current = true
     clearTimeout(minuterie.current)
     enAttente.current = carteVide()
     setRefus('')
@@ -264,7 +269,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
           )}
         </div>
 
-        <FinDeSeance key={fait?.statut} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer} />
+        {/* clé stable pendant la saisie : la première écriture (statut « en cours ») ne doit pas effacer effort, ressenti, commentaire */}
+        <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer} />
       </div>
 
       <Consignes element={fiche} fermer={() => setFiche(null)} />

@@ -477,7 +477,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
   font: 400 15px/22px var(--font-sans); text-align: center; padding: 16px; box-sizing: border-box;
 }
 .ec-points { position: absolute; left: 0; right: 0; bottom: 6px; display: flex; justify-content: center; }
-.ec-point { width: 36px; height: 44px; padding: 0; border: 0; background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.ec-point { width: 44px; height: 44px; padding: 0; border: 0; background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .ec-point span { width: 12px; height: 12px; border-radius: 50%; background: var(--ec-craie); box-shadow: 0 0 0 2px var(--ec-encre); }
 .ec-point[aria-pressed="true"] span { width: 14px; height: 14px; background: var(--ec-jaune); box-shadow: 0 0 0 2px var(--ec-jaune); }
 .ec-point:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: -2px; border-radius: 8px; }

@@ -12,6 +12,7 @@ const AIDE = 'Touchez une note : 5 modéré, 10 effort maximal.'
 export default function FinDeSeance({ course, fait, etat, envoyer }) {
   const terminee = fait?.statut === 'terminée'
   const [fin, setFin] = useState({ effort: null, ressenti: '', commentaire: '' })
+  const [envoye, setEnvoye] = useState(false) // un seul envoi, même après un double appui
   const v = terminee
     ? { effort: fait.effort ?? null, ressenti: fait.ressenti ?? '', commentaire: fait.commentaire ?? '' }
     : fin
@@ -19,6 +20,8 @@ export default function FinDeSeance({ course, fait, etat, envoyer }) {
 
   const valider = (e) => {
     e.preventDefault()
+    if (envoye) return
+    setEnvoye(true)
     envoyer(fin)
   }
 
@@ -34,7 +37,9 @@ export default function FinDeSeance({ course, fait, etat, envoyer }) {
                 disabled={terminee} onClick={() => maj('effort', n)}>{n}</button>
             ))}
           </div>
-          <p className="ec-petit ec-fin__aide" aria-live="polite">{v.effort ? `${v.effort} · ${NOMS[v.effort]}` : AIDE}</p>
+          {(v.effort || !terminee) && (
+            <p className="ec-petit ec-fin__aide" aria-live="polite">{v.effort ? `${v.effort} · ${NOMS[v.effort]}` : AIDE}</p>
+          )}
         </fieldset>
         <fieldset className="ec-fin__groupe">
           <legend className="ec-fin__legende">Mon ressenti</legend>
@@ -51,7 +56,7 @@ export default function FinDeSeance({ course, fait, etat, envoyer }) {
             placeholder={terminee ? '' : 'Sensations, douleurs, ce qui a été facile ou difficile'}
             onChange={(e) => maj('commentaire', e.target.value)} />
         </div>
-        {!terminee && <button type="submit" className="ec-bouton">Enregistrer ma séance</button>}
+        {!terminee && <button type="submit" className="ec-bouton" disabled={envoye}>Enregistrer ma séance</button>}
       </form>
       {etat && (
         <p role="status" className="ec-fin__etat">
