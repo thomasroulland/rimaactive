@@ -6,6 +6,10 @@ import {
 import { aujourdhuiIso, meilleuresCharges, regularite } from '../donnees/calculs.js'
 import { dateCourte, dateLongue, detailSeance, evolutionCharges, exercicesDe, fr, texteSerie } from '../donnees/seances.js'
 import { messageErreur } from '../erreurs.js'
+import { avancement } from '../donnees/progression.js'
+import { effortMoyen, frNombre, meilleurProgres } from '../donnees/resume.js'
+import EnteteCoache from './EnteteCoache.jsx'
+import { derniereVisite, noterVisite, nouvellesSeances } from './vus.js'
 
 const NB_POINTS = 8 // dernières séances montrées par exercice
 const STATUTS = { 'invité': 'Invité', actif: 'Actif', 'en pause': 'En pause' }
@@ -22,12 +26,17 @@ export default function FicheClient() {
   const [seances, setSeances] = useState(null)
   const [erreur, setErreur] = useState('')
   const [suppression, setSuppression] = useState(false)
+  const [tout, setTout] = useState(false) // toutes les séances, pas seulement les 8 dernières
 
   useEffect(() => {
     lireProfil(uid).then(setClient).catch(() => { setClient(null); setErreur('Impossible de charger ce coaché. Vérifiez votre connexion.') })
   }, [uid])
   useEffect(() => ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.')), [uid])
   useEffect(() => ecouterSeancesClient(uid, setSeances, () => setErreur('Impossible de charger les séances. Vérifiez votre connexion.')), [uid])
+
+  // dernière visite : lue une fois à l'arrivée (repères « Nouveau »), puis remplacée par maintenant
+  const [vuAvant] = useState(() => derniereVisite(uid))
+  useEffect(() => { if (seances) noterVisite(uid) }, [uid, seances])
 
   const retour = <Link to="/espace/coach" className="espace-retour"><Fleche /> Mes coachés</Link>
 
@@ -54,76 +63,86 @@ export default function FicheClient() {
     .filter((c) => c.points.length > 0)
     .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'))
 
+  const av = progEnCours ? avancement(progEnCours, faites) : null
+  const effort = effortMoyen(terminees)
+  const progres = meilleurProgres(programmes ?? [], seances ?? [])
+  const nouvelles = new Set(nouvellesSeances(seances, vuAvant).map((s) => s.id))
+
   return (
     <section className="section">
       <div className="conteneur espace-coach fiche-client">
-        {retour}
-        <header className="espace-coach__entete fiche-entete">
-          <span className="coache__initiales coache__initiales--grand" aria-hidden="true">{(client.prenom?.[0] ?? '') + (client.nom?.[0] ?? '')}</span>
-          <div className="fiche-identite">
-            <p className="surtitre">Fiche client</p>
-            <h1 className="titre titre--section">{client.prenom} {client.nom}</h1>
-            <p className="espace-texte">
-              <span className={`espace-statut espace-statut--${client.statut === 'actif' ? 'actif' : 'autre'}`}>{STATUTS[client.statut] ?? client.statut}</span>
-              {' '}<span className="fiche-email">{client.email}</span>
-            </p>
-          </div>
-        </header>
+        <EnteteCoache client={client} uid={uid} nouveautes={nouvelles.size}
+          actions={<Link to={`/espace/coach/clients/${uid}/programme`} className="bouton bouton--principal">{programmes?.length ? 'Modifier le programme' : 'Créer un programme'}</Link>} />
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
 
-        {/* Ordinateur : le programme et la suppression à gauche, les séances et les charges à droite */}
-        <div className="fiche-colonnes">
-          <div className="fiche-cote">
-          <section className="fiche-bloc" aria-labelledby="fiche-prog">
-            <h2 id="fiche-prog" className="espace-sous-titre">Programme en cours</h2>
-            <div className="espace-carte">
-              {programmes === null ? <p className="espace-texte" role="status">Chargement…</p> : enCours ? (
-                <>
-                  <p className="fiche-prog__nom">{enCours.nom}</p>
-                  <p className="espace-texte">
-                    {enCours.semaine === 0
-                      ? `Commence le ${dateLongue(enCours.debut)}.`
-                      : `Semaine ${enCours.semaine} sur ${enCours.nbSemaines}.`}
-                  </p>
-                  <Regularite semaines={regularite(progEnCours, faites)} />
-                </>
-              ) : (
-                <p className="espace-texte">Pas de programme publié pour l’instant.</p>
-              )}
-              <Link to={`/espace/coach/clients/${uid}/programme`} className="bouton bouton--principal">
-                {programmes && programmes.length > 0 ? 'Modifier le programme' : 'Créer un programme'}
-              </Link>
-            </div>
-          </section>
+        <ul className="chiffres-coache" aria-label="Chiffres clés">
+          <li className="espace-carte chiffre-coache">
+            {enCours
+              ? <><span className="chiffre-coache__val">{enCours.semaine === 0 ? '—' : enCours.semaine}<small>sur {enCours.nbSemaines}</small></span>
+                <span className="chiffre-coache__lib">{enCours.semaine === 0 ? `Commence le ${dateLongue(enCours.debut)}` : 'Semaine en cours'} · {enCours.nom}</span>
+                <span className="chiffre-coache__barre" aria-hidden="true"><span style={{ width: `${Math.round((Math.max(0, enCours.semaine) / Math.max(1, enCours.nbSemaines)) * 100)}%` }} /></span></>
+              : <><span className="chiffre-coache__val chiffre-coache__val--vide">—</span><span className="chiffre-coache__lib">Pas de programme publié</span></>}
+          </li>
+          <li className="espace-carte chiffre-coache">
+            <span className="chiffre-coache__val">{av ? av.faites : terminees.length}<small>{av ? `sur ${av.prevues}` : 'séances'}</small></span>
+            <span className="chiffre-coache__lib">{av ? 'séances faites dans ce programme' : 'séances faites'}</span>
+            {av && av.prevues > 0 && <span className="chiffre-coache__barre" aria-hidden="true"><span style={{ width: `${Math.round((av.faites / av.prevues) * 100)}%` }} /></span>}
+          </li>
+          <li className="espace-carte chiffre-coache">
+            {effort !== null
+              ? <><span className="chiffre-coache__val">{frNombre(effort)}<small>/ 10</small></span><span className="chiffre-coache__lib">effort moyen des 3 dernières séances</span></>
+              : <><span className="chiffre-coache__val chiffre-coache__val--vide">—</span><span className="chiffre-coache__lib">effort moyen, dès les premières séances</span></>}
+          </li>
+          <li className="espace-carte chiffre-coache">
+            {progres
+              ? <><span className="chiffre-coache__val">{frNombre(progres.ecart, true)}<small>kg</small></span><span className="chiffre-coache__lib">au {progres.nom.toLowerCase()} depuis le début</span></>
+              : <><span className="chiffre-coache__val chiffre-coache__val--vide">—</span><span className="chiffre-coache__lib">progrès de charge, dès deux séances notées</span></>}
+          </li>
+        </ul>
 
-          <section className="fiche-bloc fiche-danger" aria-labelledby="fiche-supp">
-            <h2 id="fiche-supp" className="espace-sous-titre">Supprimer ce client</h2>
-            <p className="espace-texte">Le compte, les programmes, les séances et les photos de {client.prenom} sont effacés définitivement.</p>
-            <button type="button" className="bouton bouton--secondaire" onClick={() => setSuppression(true)}>Supprimer ce client et ses données</button>
-          </section>
-          </div>
-          <div className="fiche-principal">
-          <section className="fiche-bloc" aria-labelledby="fiche-seances">
-            <h2 id="fiche-seances" className="espace-sous-titre">Séances faites</h2>
+        <div className="suivi-colonnes">
+          <section className="espace-carte suivi-seances" aria-labelledby="fiche-seances">
+            <div className="suivi-titre">
+              <h2 id="fiche-seances" className="espace-sous-titre">Dernières séances</h2>
+              <span className="espace-aide">Les plus récentes en premier</span>
+            </div>
             {seances === null ? <p className="espace-texte" role="status">Chargement…</p>
               : seances.length === 0 ? <p className="espace-texte">{client.prenom} n’a pas encore enregistré de séance.</p> : (
+                <>
                 <ul className="fiche-liste">
-                  {seances.map((s) => (
-                    <SeanceFaite key={s.id} sf={s} seance={trouverSeance(programmes, s)} />
+                  {seances.slice(0, tout ? seances.length : 8).map((s) => (
+                    <SeanceFaite key={s.id} sf={s} seance={trouverSeance(programmes, s)} prenom={client.prenom} nouvelle={nouvelles.has(s.id)} />
                   ))}
                 </ul>
+                {seances.length > 8 && !tout && (
+                  <button type="button" className="bouton bouton--secondaire bouton--compact suivi-plus" onClick={() => setTout(true)}>
+                    Voir les {seances.length - 8} séances plus anciennes
+                  </button>
+                )}
+                </>
               )}
           </section>
 
-          <section className="fiche-bloc" aria-labelledby="fiche-charges">
-            <h2 id="fiche-charges" className="espace-sous-titre">Charges (meilleure série)</h2>
-            {courbes.length === 0 ? <p className="espace-texte">Pas encore de charges enregistrées.</p> : (
-              <ul className="fiche-liste fiche-courbes">
-                {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-NB_POINTS)} />)}
-              </ul>
+          <div className="suivi-cote">
+            {progEnCours && (
+              <section className="espace-carte" aria-labelledby="fiche-reg">
+                <h2 id="fiche-reg" className="espace-sous-titre">Régularité</h2>
+                <Regularite semaines={regularite(progEnCours, faites)} />
+              </section>
             )}
-          </section>
-
+            {courbes.length > 0 && (
+              <section aria-labelledby="fiche-charges" className="suivi-courbes">
+                <h2 id="fiche-charges" className="sr-only">Charges (meilleure série)</h2>
+                <ul className="fiche-liste fiche-courbes">
+                  {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-NB_POINTS)} />)}
+                </ul>
+              </section>
+            )}
+            <section className="fiche-bloc fiche-danger" aria-labelledby="fiche-supp">
+              <h2 id="fiche-supp" className="espace-sous-titre">Supprimer ce client</h2>
+              <p className="espace-texte">Le compte, les programmes, les séances et les photos de {client.prenom} sont effacés définitivement.</p>
+              <button type="button" className="bouton bouton--secondaire" onClick={() => setSuppression(true)}>Supprimer ce client et ses données</button>
+            </section>
           </div>
         </div>
       </div>
@@ -159,7 +178,7 @@ function Regularite({ semaines }) {
   )
 }
 
-function SeanceFaite({ sf, seance }) {
+function SeanceFaite({ sf, seance, prenom, nouvelle }) {
   const [texte, setTexte] = useState(sf.commentaireCoach ?? '')
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
@@ -189,7 +208,7 @@ function SeanceFaite({ sf, seance }) {
   return (
     <li className="espace-carte fiche-seance">
       <div className="fiche-seance__tete">
-        <h3 className="espace-element__titre">{seance ? seance.titre || 'Séance' : 'Séance retirée du programme'}</h3>
+        <h3 className="espace-element__titre">{seance ? seance.titre || 'Séance' : 'Séance retirée du programme'}{nouvelle && <span className="repere-nouveau">Nouveau</span>}</h3>
         <p className="fiche-seance__date">{dateLongue(sf.date)}</p>
       </div>
       <p className="fiche-seance__bilan">
@@ -222,6 +241,8 @@ function SeanceFaite({ sf, seance }) {
         </p>
       )}
       {detail.length > 0 && (
+        <details className="fiche-detail">
+          <summary>Détail des séries · {detail.length} exercice{detail.length > 1 ? 's' : ''}</summary>
         <ul className="fiche-exos">
           {detail.map((x) => (
             <li key={x.cle} className="fiche-exo">
@@ -236,14 +257,14 @@ function SeanceFaite({ sf, seance }) {
             </li>
           ))}
         </ul>
+        </details>
       )}
       <form className="fiche-commentaire" onSubmit={enregistrer}>
-        <div className="champ-groupe">
-          <label htmlFor={id}>Votre commentaire</label>
-          <textarea id={id} className="champ" rows={3} value={texte} onChange={(e) => { setTexte(e.target.value); setMessage('') }} />
-        </div>
-        <div className="espace-actions">
-          <button type="submit" className="bouton bouton--secondaire bouton--compact" disabled={!modifie}>Enregistrer le commentaire</button>
+        <label htmlFor={id} className="sr-only">Votre réponse à {prenom}</label>
+        <div className="fiche-repondre">
+          <textarea id={id} className="champ" rows={1} placeholder={`Répondre à ${prenom}…`} value={texte}
+            onChange={(e) => { setTexte(e.target.value); setMessage('') }} />
+          <button type="submit" className="bouton bouton--principal bouton--compact" disabled={!modifie}>{enregistre ? 'Mettre à jour' : 'Envoyer'}</button>
         </div>
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>

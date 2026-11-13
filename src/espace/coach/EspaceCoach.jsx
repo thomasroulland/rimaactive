@@ -4,6 +4,7 @@ import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
 import FicheClient from './FicheClient.jsx'
 import EditeurProgramme from './EditeurProgramme.jsx'
+import MesuresCoache from './MesuresCoache.jsx'
 
 // Pages de l'espace coach : elles sont dans la barre de menu, comme partout (13 novembre 2026)
 export const LIENS_COACH = [
@@ -22,6 +23,7 @@ export default function EspaceCoach() {
         <Route path="exercices/:id" element={<FicheExercice />} />
         <Route path="clients/:uid" element={<FicheClient />} />
         <Route path="clients/:uid/programme" element={<EditeurProgramme />} />
+        <Route path="clients/:uid/mesures" element={<MesuresCoache />} />
         <Route path="*" element={<Navigate to="/espace/coach" replace />} />
       </Routes>
     </>

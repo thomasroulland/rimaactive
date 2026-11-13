@@ -8,6 +8,8 @@ import {
   garderSeancesFaites,
 } from '../donnees/programme.js'
 import { dateLongue } from '../donnees/calculs.js'
+import { lignesExercice } from '../donnees/seances.js'
+import EnteteCoache from './EnteteCoache.jsx'
 import { messageErreur } from '../erreurs.js'
 import CreationProgramme, { ChoixDebut } from './CreationProgramme.jsx'
 import EditeurSeance from './EditeurSeance.jsx'
@@ -24,13 +26,6 @@ function copieLocale(p) {
   const copie = structuredClone({ ...p })
   delete copie.majLe // réécrit par le serveur à chaque enregistrement
   return copie
-}
-
-function resumeSeance(s) {
-  if (s.type === 'course') return ['Course', s.distance, s.temps].filter(Boolean).join(' · ')
-  const noms = (s.blocs ?? []).flatMap((b) => b.elements ?? []).map((e) => e.nom)
-  if (noms.length === 0) return 'Aucun exercice'
-  return `${noms.length} exercice${noms.length > 1 ? 's' : ''} · ${noms.slice(0, 3).join(', ')}${noms.length > 3 ? '…' : ''}`
 }
 
 // Créer / modifier le programme d'un coaché (/espace/coach/clients/:uid/programme).
@@ -50,6 +45,16 @@ export default function EditeurProgramme() {
   const [envoi, setEnvoi] = useState(false)
   const [confirmation, setConfirmation] = useState(null)
   const version = useRef(0)
+  const panneau = useRef(null)
+  // une séance qui s'ouvre : son panneau vient à l'écran (sur téléphone, il remplace la liste)
+  const seanceOuverte = params.get('seance')
+  useEffect(() => {
+    if (!seanceOuverte) return
+    const el = panneau.current
+    if (!el) return
+    const haut = el.getBoundingClientRect().top
+    if (haut < 0 || haut > window.innerHeight * 0.6) el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+  }, [seanceOuverte])
 
   const creation = params.get('nouveau') === '1'
   const nbSem = prog?.semaines.length ?? 0
@@ -241,11 +246,7 @@ export default function EditeurProgramme() {
     return (
       <section className="section">
         <div className="conteneur espace-coach">
-          {retourCoaches}
-          <header>
-            <p className="surtitre">Programme de {nomClient}</p>
-            <h1 className="titre titre--section">Nouveau programme</h1>
-          </header>
+          <EnteteCoache client={client} uid={uid} chemin={[{ label: 'Nouveau programme' }]} />
           {messages}
           <CreationProgramme prenom={client.prenom} creer={creer} envoi={envoi}
             annuler={prog ? () => aller({ semaine: semIdx + 1 }) : null} />
@@ -265,7 +266,9 @@ export default function EditeurProgramme() {
       <div className="conteneur espace-barre__ligne">
         <p className="espace-barre__etat">
           <span className={`espace-statut espace-statut--${publie ? 'actif' : 'autre'}`}>{publie ? 'Publié' : 'Brouillon'}</span>
-          <span>{modifie ? 'Modifications non enregistrées.' : publie ? 'Votre coaché voit ce programme.' : 'Votre coaché ne le voit pas encore.'}</span>
+          {modifie
+            ? <span className="espace-barre__modifie">Modifications non enregistrées</span>
+            : <span>{publie ? 'Votre coaché voit ce programme.' : 'Votre coaché ne le voit pas encore.'}</span>}
         </p>
         <div className="espace-actions">
           {publie ? (
@@ -285,67 +288,45 @@ export default function EditeurProgramme() {
     </div>
   )
 
-  // ---------- Vue séance ----------
-  if (seance) {
-    const majSeance = (cle, v) => muter((p) => { p.semaines[semIdx].seances[seIdx][cle] = v })
-    const majBloc = (bi, cle, v) => muter((p) => { p.semaines[semIdx].seances[seIdx].blocs[bi][cle] = v })
-    const majElement = (bi, ei, cle, v) => muter((p) => { p.semaines[semIdx].seances[seIdx].blocs[bi].elements[ei][cle] = v })
-    return (
-      <>
-        <section className="section espace-section--barre">
-          <div className="conteneur espace-coach">
-            <Link to={`?semaine=${semIdx + 1}`} className="espace-retour"><Fleche /> Semaine S{semIdx + 1}</Link>
-            <header>
-              <p className="surtitre">{nomClient} · {prog.nom} · S{semIdx + 1}</p>
-              <h1 className="titre titre--section">{seance.titre || `Séance ${seIdx + 1}`}</h1>
-            </header>
-            {messages}
-            {alerteVerrous}
-            <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices}
-              majSeance={majSeance} majBloc={majBloc} majElement={majElement}
-              retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
-              ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
-          </div>
-        </section>
-        {barre}
-        {dialogue}
-      </>
-    )
-  }
+  const majSeance = (cle, v) => muter((p) => { p.semaines[semIdx].seances[seIdx][cle] = v })
+  const majBloc = (bi, cle, v) => muter((p) => { p.semaines[semIdx].seances[seIdx].blocs[bi][cle] = v })
+  const majElement = (bi, ei, cle, v) => muter((p) => { p.semaines[semIdx].seances[seIdx].blocs[bi].elements[ei][cle] = v })
+  const lienSeance = (id) => `?semaine=${semIdx + 1}${id ? `&seance=${id}` : ''}`
+  const chemin = [
+    { label: `Programme « ${prog.nom || 'sans nom'} »`, to: '?semaine=1' },
+    { label: `Semaine ${semIdx + 1}`, to: seance ? lienSeance(null) : null },
+    ...(seance ? [{ label: seance.titre || `Séance ${seIdx + 1}` }] : []),
+  ]
 
-  // ---------- Vue programme / semaine ----------
+  // ---------- Vue programme : la semaine en colonnes ; une séance ouverte s'affiche dans un panneau à droite ----------
   return (
     <>
       <section className="section espace-section--barre">
         <div className="conteneur espace-coach">
-          {retourCoaches}
-          <header className="espace-coach__entete">
-            <div>
-              <p className="surtitre">Programme de {nomClient}</p>
-              <h1 className="titre titre--section">{prog.nom || 'Programme sans nom'}</h1>
-              <p className="espace-texte">{nbSem} semaines · début le {dateLongue(prog.debut)}</p>
-            </div>
-            <div className="espace-actions">
-              {programmes.length > 1 && (
-                <div className="champ-groupe espace-autres">
-                  <label htmlFor="prog-choix">Programme affiché</label>
-                  <select id="prog-choix" className="champ" value={prog.id} onChange={(e) => {
-                    const cible = programmes.find((p) => p.id === e.target.value)
-                    const go = () => { ouvrir(cible); aller({ semaine: 1 }, true) }
-                    if (modifie) demander({ ...QUITTER, action: go })
-                    else go()
-                  }}>
-                    {programmes.map((p) => <option key={p.id} value={p.id}>{p.nom} ({p.statut === 'publié' ? 'publié' : 'brouillon'}, {p.debut})</option>)}
-                  </select>
-                </div>
-              )}
-              <button type="button" className="bouton bouton--secondaire" onClick={() => {
-                const go = () => aller({ nouveau: true })
-                if (modifie) demander({ ...QUITTER, action: go })
-                else go()
-              }}>Créer un nouveau programme</button>
-            </div>
-          </header>
+          <EnteteCoache client={client} uid={uid} chemin={chemin}
+            infos={`${prog.nom || 'Programme sans nom'} · ${nbSem} semaine${nbSem > 1 ? 's' : ''} · début le ${dateLongue(prog.debut)}`}
+            actions={(
+              <>
+                {programmes.length > 1 && (
+                  <div className="champ-groupe espace-autres">
+                    <label htmlFor="prog-choix">Programme affiché</label>
+                    <select id="prog-choix" className="champ" value={prog.id} onChange={(e) => {
+                      const cible = programmes.find((p) => p.id === e.target.value)
+                      const go = () => { ouvrir(cible); aller({ semaine: 1 }, true) }
+                      if (modifie) demander({ ...QUITTER, action: go })
+                      else go()
+                    }}>
+                      {programmes.map((p) => <option key={p.id} value={p.id}>{p.nom} ({p.statut === 'publié' ? 'publié' : 'brouillon'}, {p.debut})</option>)}
+                    </select>
+                  </div>
+                )}
+                <button type="button" className="bouton bouton--secondaire" onClick={() => {
+                  const go = () => aller({ nouveau: true })
+                  if (modifie) demander({ ...QUITTER, action: go })
+                  else go()
+                }}>Nouveau programme</button>
+              </>
+            )} />
           {messages}
           {alerteVerrous}
 
@@ -367,10 +348,10 @@ export default function EditeurProgramme() {
                   S{i + 1}<span className="sr-only">, semaine {i + 1}</span>
                 </button>
               ))}
+              <button type="button" className="espace-pastille espace-pastille--plus" onClick={ajouterSemaine}>+ Semaine</button>
             </div>
             <div className="espace-actions">
               <button type="button" className="espace-lien" onClick={dupliquer}>Dupliquer la semaine</button>
-              <button type="button" className="espace-lien" onClick={ajouterSemaine}>Ajouter une semaine</button>
             </div>
           </div>
 
@@ -387,42 +368,61 @@ export default function EditeurProgramme() {
             </div>
           </div>
 
-          {semaine.seances.length === 0
-            ? <p className="espace-texte">Aucune séance cette semaine. Ajoutez-en une ci-dessous.</p>
-            : (
-              <ol className="espace-grille espace-seances">
-                {semaine.seances.map((s, i) => {
-                  const faite = verrous?.has(s.id)
-                  return (
-                    <li key={s.id} className="espace-carte espace-seance-carte">
-                      <div className="espace-seance-carte__tete">
-                        <span className="espace-seance-carte__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                        <span className="espace-seance-carte__jour">{s.jour}</span>
-                      </div>
-                      <h2 className="espace-seance-carte__titre">
-                        <span className="sr-only">Séance {i + 1} : </span>{s.titre || 'Séance sans titre'}
-                      </h2>
-                      <p className="espace-seance-carte__resume">{resumeSeance(s)}</p>
-                      {faite && <p className="espace-verrou espace-verrou--fort">Séance faite : non modifiable</p>}
-                      <div className="espace-actions">
-                        <Link to={`?semaine=${semIdx + 1}&seance=${s.id}`} className="bouton bouton--secondaire bouton--compact"
-                          aria-label={`${faite ? 'Voir la séance' : 'Modifier la séance'} ${i + 1}`}>
-                          {faite ? 'Voir la séance' : 'Modifier'}
-                        </Link>
-                        {!faite && verrous !== null && (
-                          <button type="button" className="espace-lien" onClick={() => supprimerSeance(s, i + 1)}>
-                            Supprimer<span className="sr-only"> la séance {i + 1}</span>
-                          </button>
-                        )}
-                      </div>
-                    </li>
-                  )
-                })}
-              </ol>
+          <div className={`editeur-semaine${seance ? ' editeur-semaine--ouverte' : ''}`}>
+            <div className="editeur-semaine__seances">
+              {semaine.seances.length === 0
+                ? <p className="espace-texte">Aucune séance cette semaine. Ajoutez-en une ci-dessous.</p>
+                : (
+                  <ol className="colonnes-seances">
+                    {semaine.seances.map((s, i) => {
+                      const faite = verrous?.has(s.id)
+                      const ouverte = seance?.id === s.id
+                      return (
+                        <li key={s.id} className={`colonne-seance${ouverte ? ' colonne-seance--ouverte' : ''}`}>
+                          <div className="colonne-seance__tete">
+                            <span className="colonne-seance__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                            <span className="colonne-seance__jour">{s.jour}</span>
+                          </div>
+                          <h2 className="colonne-seance__titre">
+                            <Link to={lienSeance(s.id)} className="colonne-seance__lien" aria-current={ouverte ? 'true' : undefined}>
+                              <span className="sr-only">Séance {i + 1} : </span>{s.titre || 'Séance sans titre'}
+                            </Link>
+                          </h2>
+                          <p className={`colonne-seance__etat${faite ? ' colonne-seance__etat--faite' : ''}`}>{faite ? '✓ Faite : non modifiable' : 'À faire'}</p>
+                          <ExercicesColonne seance={s} />
+                          {!faite && verrous !== null && (
+                            <button type="button" className="espace-lien colonne-seance__suppr" onClick={() => supprimerSeance(s, i + 1)}>
+                              Supprimer<span className="sr-only"> la séance {i + 1}</span>
+                            </button>
+                          )}
+                        </li>
+                      )
+                    })}
+                  </ol>
+                )}
+              <div className="espace-actions">
+                <button type="button" className="bouton bouton--secondaire" onClick={() => ajouterSeance('force')}>+ Séance de force</button>
+                <button type="button" className="bouton bouton--secondaire" onClick={() => ajouterSeance('course')}>+ Course</button>
+              </div>
+            </div>
+
+            {seance && (
+              <aside className="panneau-seance" aria-labelledby="panneau-titre" ref={panneau}>
+                <div className="panneau-seance__tete">
+                  <div>
+                    <p className="surtitre">Séance {String(seIdx + 1).padStart(2, '0')} · {seance.jour}</p>
+                    <h2 id="panneau-titre" className="panneau-seance__titre">{seance.titre || `Séance ${seIdx + 1}`}</h2>
+                  </div>
+                  <Link to={lienSeance(null)} className="panneau-seance__fermer" aria-label="Fermer la séance">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                  </Link>
+                </div>
+                <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices}
+                  majSeance={majSeance} majBloc={majBloc} majElement={majElement}
+                  retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
+                  ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
+              </aside>
             )}
-          <div className="espace-actions">
-            <button type="button" className="bouton bouton--secondaire" onClick={() => ajouterSeance('force')}>Ajouter une séance de force</button>
-            <button type="button" className="bouton bouton--secondaire" onClick={() => ajouterSeance('course')}>Ajouter une course</button>
           </div>
         </div>
       </section>
@@ -430,4 +430,22 @@ export default function EditeurProgramme() {
       {dialogue}
     </>
   )
+}
+
+// Exercices d'une séance, en abrégé dans sa colonne : code (A1, A2…), nom et ce qui est prévu
+function ExercicesColonne({ seance }) {
+  if (seance.type === 'course') {
+    const infos = [seance.distance, seance.temps, seance.objectif].filter(Boolean).join(' · ')
+    return <p className="colonne-seance__resume">Course{infos ? ` · ${infos}` : ''}</p>
+  }
+  const lignes = (seance.blocs ?? []).flatMap((b) => (b.elements ?? []).map((e, i) => ({ id: e.id, code: `${b.lettre}${i + 1}`, nom: e.nom, detail: lignesExercice(e, b.format === 'series').prescription })))
+  if (!lignes.length) return <p className="colonne-seance__resume">Aucun exercice pour l’instant</p>
+  return (
+    <ul className="colonne-seance__exos">
+      {lignes.map((l) => (
+        <li key={l.id}><b>{l.code}</b><span>{l.nom}{l.detail && <small>{l.detail}</small>}</span></li>
+      ))}
+    </ul>
+  )
+
 }
