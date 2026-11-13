@@ -29,6 +29,31 @@ export default function Layout() {
     return () => observateur.disconnect()
   }, [pathname])
 
+  // Les rubriques encore sous l'écran apparaissent en fondu, avec une légère montée, quand on y arrive
+  // (celles qui ont déjà leur propre entrée, les rangées de tuiles, ne sont pas concernées)
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const rubriques = [...document.querySelectorAll('main > section')].filter(
+      (r) => !r.querySelector('.tuiles') && r.getBoundingClientRect().top > window.innerHeight * 0.9,
+    )
+    if (!rubriques.length) return
+    const observateur = new IntersectionObserver(
+      (entrees) => {
+        entrees.forEach(({ isIntersecting, target }) => {
+          if (!isIntersecting) return
+          target.classList.add('apparition--vue')
+          observateur.unobserve(target)
+        })
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    )
+    rubriques.forEach((r) => { r.classList.add('apparition'); observateur.observe(r) })
+    return () => {
+      observateur.disconnect()
+      rubriques.forEach((r) => r.classList.remove('apparition', 'apparition--vue'))
+    }
+  }, [pathname])
+
   // Les photos des rubriques glissent un peu pendant le défilement
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return

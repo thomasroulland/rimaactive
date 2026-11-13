@@ -1,8 +1,8 @@
 /* Rimaactive — d'après la charte graphique (octobre 2026), section 13 « site web » */
 /* Rimaactive — d'après le design system Rimaactive (charte validée le 29 octobre 2026) */
 :root {
-  --vw: 1vw; /* 1 % de la largeur de l'écran, corrigé par la mise à l'échelle (index.html) */
-  --ecran: 100svh; /* hauteur de l'écran, corrigée sur grands écrans (voir zoom plus bas) */
+  --vw: 1vw; /* 1 % de la largeur de l'écran (plus de mise à l'échelle depuis le 13 novembre 2026) */
+  --ecran: 100svh; /* hauteur visible de l'écran */
   --fond-carte: var(--blanc); /* cartes blanches sur craie ; craie-fonce sur les rubriques blanches */
   --craie: #f4f3ef;
   --blanc: #ffffff;
@@ -19,7 +19,8 @@
   --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --gouttiere: clamp(20px, calc(5 * var(--vw)), 80px);
-  --largeur: 1240px;
+  /* largeur du contenu : 1240 px au moins, sinon toute la largeur moins la marge de l'en-tête (comme avant) */
+  --largeur: max(1240px, calc(100vw - 2 * var(--gouttiere)));
   --duree: 160ms;
   --rayon-s: 8px; /* étiquettes, champs */
   --arrondi: 16px; /* rayon-m : cartes du site, cadres photo */
@@ -46,8 +47,7 @@
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-padding-top: 96px; }
-/* Sur les écrans plus grands que la référence, tout le site est agrandi proportionnellement
-   (zoom et --ecran posés par le script « mise à l'échelle » de index.html) */
+/* Tailles de la charte sur tous les écrans : plus d'agrandissement automatique (13 novembre 2026) */
 body {
   margin: 0;
   background: var(--craie);
@@ -90,8 +90,9 @@ a:hover { color: var(--gris-chaud); }
 .titre--accueil { font-size: 52px; line-height: 54px; letter-spacing: -0.035em; color: var(--encre); }
 /* site-titre : 55 / 54, titres de section et des pages */
 /* titres de section : 44 / 46 partout (accueil, pied, M'écrire) ; titres de page : 55 / 54 */
-.titre--section { font-size: 44px; line-height: 46px; letter-spacing: -0.045em; }
-.titre--page { font-size: 55px; line-height: 54px; letter-spacing: -0.045em; }
+/* fluides : de la taille téléphone (36 px) à la taille de la charte, sans palier brusque */
+.titre--section { font-size: clamp(36px, calc(14px + 2.4vw), 44px); line-height: 1.045; letter-spacing: -0.045em; }
+.titre--page { font-size: clamp(36px, calc(16px + 3vw), 55px); line-height: 0.98; letter-spacing: -0.045em; }
 /* site-carte : 32 / 32 */
 .titre--tuile { font-size: 32px; line-height: 32px; letter-spacing: -0.04em; }
 @media (max-width: 600px) {
@@ -973,7 +974,7 @@ main > section.approche.section { --fond-rubrique: var(--craie-fonce); backgroun
   .offres--2 .offre__points:has(> li:nth-child(4)) { grid-template-columns: 1fr 1fr; column-gap: 16px; margin-bottom: 8px; }
   .offre__bouton { min-height: 0; height: 44px; }
   /* même hauteur de cartes d'une page à l'autre et d'un onglet à l'autre */
-  .offres--2 > .offre { min-height: 375px; } /* valeurs avant le zoom automatique du site */
+  .offres--2 > .offre { min-height: 375px; }
   .formules-page__grille--large .offre { min-height: 375px; } /* même hauteur de carte sur les trois pages */
   /* Individuel (trois cartes étroites, listes plus longues) : un peu plus serré pour tenir dans l'écran */
   .offre { padding-block: 14px; } /* même marge haute sur les trois pages : textes alignés d'une page à l'autre */
@@ -1826,3 +1827,39 @@ html:has(.offres-page__rubrique) { scroll-padding-top: calc(var(--hauteur-entete
 .heros__second { display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--craie); color: var(--craie); font-weight: 700; font-size: 15px; text-decoration: none; transition: background-color var(--duree) ease, color var(--duree) ease; }
 .heros__second:hover { background: var(--craie); color: var(--encre); }
 .heros__ecrire:focus-visible, .heros__second:focus-visible { outline: 2px solid var(--craie); outline-offset: 3px; }
+
+/* ---------- Tailles et finitions de la vitrine (13 novembre 2026, proposition) ---------- */
+/* Sélection et curseur de saisie aux couleurs de la charte (jaune derrière l'encre : lisible, jamais du jaune en texte) */
+::selection { background: var(--jaune); color: var(--encre); }
+input, textarea { caret-color: var(--vermillon); }
+/* Appui : les boutons s'enfoncent légèrement, sans rien décaler autour */
+.bouton, .entete__ecrire, .bascule button, .detail__fermer { -webkit-tap-highlight-color: transparent; }
+.bouton { transition: background-color var(--duree) ease, color var(--duree) ease, border-color var(--duree) ease, transform 120ms ease; }
+.bouton:active, .bascule button:active, .detail__fermer:active { transform: scale(0.97); }
+.entete__ecrire:active { transform: scale(0.97); }
+.bascule button { transition: background-color var(--duree) ease, color var(--duree) ease, transform 120ms ease; }
+/* Focus clavier : même anneau partout, arrondi comme l'élément */
+.bouton:focus-visible, .bascule button:focus-visible, .nav__lien:focus-visible, .entete__ecrire:focus-visible { outline-offset: 3px; }
+.question summary:focus-visible { outline-offset: -2px; border-radius: var(--arrondi); }
+/* Onglets de « Mes offres » : le trait vermillon s'élargit depuis le centre au lieu d'apparaître d'un coup */
+.offres-page__liens a, .offres-page__liens a:hover { border-bottom-color: transparent; }
+.offres-page__liens a::before { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 3px; border-radius: 2px;
+  background: var(--vermillon); transform: scaleX(0); transition: transform 0.25s cubic-bezier(.3, .7, .2, 1); }
+.offres-page__liens a[aria-current] { border-bottom-color: transparent; }
+.offres-page__liens a[aria-current]::before { transform: scaleX(1); }
+/* Détail d'une formule : il monte doucement au lieu de grossir */
+.detail[open] { animation: detail-monte 0.32s cubic-bezier(.2, .8, .2, 1); }
+@keyframes detail-monte { from { transform: translateY(16px); opacity: 0; } }
+.detail[open]::backdrop { animation: fondu 0.25s ease both; }
+/* Photos : jamais d'étirement */
+.tuile img, .offres-page__photo, .heros__photo, .approche__photo img { object-fit: cover; }
+/* Apparition des rubriques (fondu et légère montée, comme dans l'espace), posée par Layout.jsx.
+   Sans JavaScript ou avec « réduire les animations », tout est visible tout de suite. */
+.apparition { opacity: 0; transform: translateY(18px); }
+.apparition--vue { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.2, .8, .2, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .apparition { opacity: 1; transform: none; }
+  .bouton:active, .bascule button:active, .detail__fermer:active, .entete__ecrire:active { transform: none; }
+  .offres-page__liens a::before { transition: none; }
+  .detail[open], .detail[open]::backdrop { animation: none; }
+}

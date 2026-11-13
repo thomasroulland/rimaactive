@@ -378,3 +378,13 @@ textes, tailles et couleurs de la maquette font foi. **Rien n'est en ligne ni su
   « Notes enregistrées sur votre téléphone… », « Séance enregistrée sur votre téléphone… », « Vos notes n'ont pas pu être envoyées… »,
   « Séance déjà enregistrée. » ; libellés pour lecteurs d'écran « Voir les photos et consignes : {nom} », « Fermer la fiche ».
 - Coque : « Mon compte » et « Rimaactive, mon espace » (lecteurs d'écran seulement).
+
+## Vitrine : tailles et finitions (13 novembre 2026, proposition sur espace-client-spec, pas en ligne)
+- **Plus d'agrandissement automatique** (le script de `index.html` ne zoome plus) : les tailles de la charte partout ;
+  le contenu prend la largeur de l'écran (1240 px au moins, sinon toute la largeur moins la marge, variable `--largeur` dans `styles.css`) ;
+  titres de rubrique fluides de 36 (téléphone) à 44 px, titres de page de 36 à 55 px. Chaque rubrique tient toujours dans un écran
+  (vérifié en 1280 × 620, 1536 × 692, 1900 × 867, 1920 × 1080). `window.__rimaZoom` reste (sans effet) pour l'espace, coach compris.
+- **Finitions** (bloc « Tailles et finitions de la vitrine » à la fin de `styles.css`, apparitions dans `Layout.jsx`) : apparition
+  en fondu des rubriques, sélection et curseur aux couleurs de la charte, appui sur les boutons, trait vermillon des onglets qui s'élargit,
+  détail d'une formule qui monte au lieu de grossir. Rien n'est changé dans les textes, les photos ou l'ordre.
+- Si Marie refuse : annuler ce seul commit (`git revert`).
