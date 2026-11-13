@@ -649,14 +649,12 @@ a.tuile:hover .texte, a.tuile:hover .lien-fleche { color: var(--encre); }
 @media (min-width: 900px) {
   .page-contact { grid-template-columns: 1fr 1fr; }
   /* (sélecteur renforcé : passe avant .section.ecran-plein) */
-  main > .page-contact.page-contact { min-height: calc(100svh - var(--hauteur-entete) - 60px); /* tout l'écran, même grand (sans la limite de 880 px de --ecran) : la photo descend jusqu'au pied */ }
+  main > .page-contact.page-contact { min-height: calc(100svh - var(--hauteur-entete)); /* tout l'écran, même grand (sans la limite de 880 px de --ecran) : la photo descend jusqu'en bas, les mentions se posent à droite */ }
   .page-contact__photo { height: 100%; }
-  /* fondu de la photo dans le fond craie, côté formulaire et en bas (demande de Thomas, 14 novembre 2026) */
+  /* fondu de la photo dans le fond craie, seulement côté formulaire (demande de Thomas, 14 novembre 2026) */
   .page-contact__photo {
-    -webkit-mask-image: linear-gradient(to right, #000 62%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to right, #000 62%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
-    mask-composite: intersect;
+    -webkit-mask-image: linear-gradient(to right, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 62%, transparent 100%);
   }
   .page-contact__droite { padding: 24px max(var(--gouttiere), calc((100 * var(--vw) - var(--largeur)) / 2)) 24px 56px; }
   .page-contact .presentation-contact__lieu { max-width: none; margin-top: 8px; }
@@ -1756,7 +1754,7 @@ html:has(.offres-page__rubrique) { scroll-padding-top: calc(var(--hauteur-entete
 /* M'écrire (novembre 2026, demandé par Marie) : sur ordinateur, la photo descend jusqu'en bas de l'écran et la page
    ne défile pas ; la ligne des mentions se pose en bas, sous le formulaire seulement (à droite de la photo) */
 @media (min-width: 900px) {
-  .page-contact { min-height: calc(var(--ecran) - var(--hauteur-entete)); }
+  .page-contact { min-height: calc(100svh - var(--hauteur-entete)); }
   .page-contact__droite { padding-bottom: 52px; }
   .pied--mentions { position: fixed; bottom: 0; left: 40%; right: 0; z-index: 1; }
 }
