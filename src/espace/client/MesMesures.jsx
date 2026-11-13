@@ -4,6 +4,7 @@ import { dateComplete, evolutionMesures, nettoyerMesures } from '../donnees/prog
 import { fr } from '../donnees/seances.js'
 import { ajouterMesure, ecouterMesMesures, supprimerMesure } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
+import { SqTableau } from './Squelette.jsx'
 
 const CHAMPS = [
   ['poids', 'Poids (kg)'], ['taille', 'Tour de taille (cm)'], ['hanches', 'Tour de hanches (cm)'],
@@ -62,6 +63,7 @@ export default function MesMesures({ uid }) {
         <button type="submit" className="ec-bouton ec-bouton--seul">Enregistrer mes mesures</button>
         {message.texte && <p className={message.erreur ? 'ec-petit ec-erreur-texte' : 'ec-petit'} role={message.erreur ? 'alert' : 'status'}>{message.texte}</p>}
       </form>
+      {mesures === null && message.texte === '' && <SqTableau />}
       {mesures && liste.length === 0 && <p className="ec-texte ec-gris">Aucune mesure pour l’instant.</p>}
       {liste.length > 0 && (
         <>

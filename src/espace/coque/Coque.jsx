@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { CONTACT } from '../../components/liens.js'
 import logoCraie from '../../assets/rimaactive-mot-craie.svg'
 import { seDeconnecter } from '../firebase.js'
+import useGlissiere from './useGlissiere.js'
 import '../coache.css'
 
 // Coque de l'espace : barre noire (logo, liens, rond de compte), contenu, pied.
@@ -17,9 +18,7 @@ export default function Coque({ liens = [], compte = true, avatar = null, childr
             <img src={logoCraie} alt="" width="128" height="30" />
           </NavLink>
           {liens.length > 0 && (
-            <nav className="ec-nav" aria-label="Espace client">
-              {liens.map((lien) => <Onglet key={lien.to} lien={lien} />)}
-            </nav>
+            <Nav liens={liens} />
           )}
           {compte && <MenuCompte avatar={avatar} />}
         </div>
@@ -32,6 +31,16 @@ export default function Coque({ liens = [], compte = true, avatar = null, childr
         </div>
       </footer>
     </div>
+  )
+}
+
+function Nav({ liens }) {
+  const { pathname, state } = useLocation()
+  const ref = useGlissiere(`${pathname}|${state?.depuis ?? ''}`)
+  return (
+    <nav className="ec-nav ec-glisse" aria-label="Espace client" ref={ref}>
+      {liens.map((lien) => <Onglet key={lien.to} lien={lien} />)}
+    </nav>
   )
 }
 

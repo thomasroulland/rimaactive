@@ -36,6 +36,14 @@
   --ec-craie: #f4f3ef;
   --ec-largeur: 1120px;
   --ec-gouttiere: 20px;
+  /* mouvement : une seule famille de courbe, trois durées */
+  --ec-courbe: cubic-bezier(0.3, 0.7, 0.2, 1);
+  --ec-courbe-ressort: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ec-duree-vif: 150ms;
+  --ec-duree: 220ms;
+  --ec-duree-lent: 300ms;
+  --ec-ombre-survol: 0 14px 32px rgba(22, 21, 20, 0.12);
+  --ec-gris-sq: #e8e5de;
 }
 
 /* ---------- Coque ---------- */
@@ -119,13 +127,16 @@
 .ec-case-fait {
   appearance: none; -webkit-appearance: none; flex: none; position: relative; width: 44px; height: 44px; margin: 0;
   border: var(--ec-case-epaisseur) solid var(--ec-case-bord); border-radius: var(--ec-case-rayon); background: var(--blanc); cursor: pointer;
+  transition: background-color var(--ec-duree-vif) var(--ec-courbe), border-color var(--ec-duree-vif) var(--ec-courbe);
 }
 .ec-case-fait:hover { border-color: var(--ec-champ-bord-survol); }
 .ec-case-fait:checked { background: var(--ec-encre); border-color: var(--ec-encre); }
-.ec-case-fait:checked::after {
+.ec-case-fait::after {
   content: ""; position: absolute; left: 14px; top: 7px; width: 10px; height: 20px;
-  border: solid #fff; border-width: 0 3px 3px 0; transform: rotate(45deg);
+  border: solid #fff; border-width: 0 3px 3px 0; transform: rotate(45deg); opacity: 0;
+  transition: opacity var(--ec-duree-vif) var(--ec-courbe);
 }
+.ec-case-fait:checked::after { opacity: 1; }
 .ec-case-fait:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: 2px; }
 .ec-case-regul {
   flex: none; width: 24px; height: 24px; box-sizing: border-box; display: inline-block; background: var(--blanc);
@@ -199,6 +210,8 @@
 .ec-noire__surtitre { color: var(--ec-jaune); }
 .ec-noire__ligne { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; }
 .ec-noire__titre { margin: 0; flex: 1 1 260px; min-width: 0; font: 900 32px/1.05 var(--font-sans); letter-spacing: -0.04em; }
+/* directement dans la carte (colonne), « 260px » deviendrait une hauteur : le titre prend la hauteur de son texte */
+.ec-noire > .ec-noire__titre { flex: none; }
 .ec-noire__seul { align-self: flex-start; }
 .ec-noire__infos { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font: 400 15px/22px var(--font-sans); }
 .ec-noire__infos li { display: flex; align-items: center; gap: 6px; }
@@ -494,3 +507,131 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-zones__champs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
 .ec-zones__champs > div { min-width: 0; }
 .ec-zones__nom { text-align: center; }
+
+/* ---------- Mouvement ----------
+   Une courbe (--ec-courbe), trois durées (--ec-duree-*), transform et opacity. Les couleurs et l'opacité changent toujours ;
+   les déplacements (montée, survol, appui, glissement) sont réservés à « prefers-reduced-motion: no-preference ». */
+@keyframes ec-fondu { from { opacity: 0; } }
+@keyframes ec-entree { from { opacity: 0; transform: translateY(8px); } }
+@keyframes ec-menu-entree { from { opacity: 0; transform: translateY(-6px) scale(0.97); } }
+@keyframes ec-fenetre-entree { from { opacity: 0; transform: translateY(24px); } }
+
+/* couleurs : survol, choix, focus */
+.ec-onglet, .ec-rond, .ec-menu__bouton, .ec-ligne, .ec-ligne__meta, .ec-ligne__statut, .ec-lien, .ec-retour, .ec-partie,
+.ec-pastille, .ec-choix, .ec-effort, .ec-etape, .ec-fiche-bouton__img, .ec-repli > summary::after, .ec-point span {
+  transition: color var(--ec-duree-vif) var(--ec-courbe), background-color var(--ec-duree-vif) var(--ec-courbe),
+    border-color var(--ec-duree-vif) var(--ec-courbe), box-shadow var(--ec-duree-vif) var(--ec-courbe);
+}
+.ec-champ { transition: border-color var(--ec-duree-vif) var(--ec-courbe), box-shadow var(--ec-duree-vif) var(--ec-courbe); }
+.ec-bouton, .ec-pcarte, .ec-histo__carte {
+  transition: color var(--ec-duree-vif) var(--ec-courbe), background-color var(--ec-duree-vif) var(--ec-courbe),
+    border-color var(--ec-duree-vif) var(--ec-courbe), box-shadow var(--ec-duree) var(--ec-courbe), transform var(--ec-duree) var(--ec-courbe);
+}
+.ec-pcarte__meta, .ec-pcarte__statut, .ec-pcarte__numero, .ec-histo__meta, .ec-histo__note, .ec-histo__numero {
+  transition: color var(--ec-duree-vif) var(--ec-courbe);
+}
+.ec-bouton__fleche { transition: transform var(--ec-duree) var(--ec-courbe); }
+.ec-parties .ec-partie:hover { color: var(--ec-encre); }
+
+/* onglets : le trait vermillon glisse d'un onglet à l'autre (position mesurée par useGlissiere) */
+.ec-glisse { position: relative; }
+.ec-glisse::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: var(--glisse-l, 0px); background: var(--ec-vermillon);
+  transform: translateX(var(--glisse-x, 0px)); opacity: 0; pointer-events: none;
+}
+.ec-parties.ec-glisse::after { bottom: -1px; }
+.ec-glisse[data-pret]::after { opacity: 1; }
+.ec-glisse[data-pret] > [aria-pressed="true"], .ec-glisse[data-pret] > [aria-current="page"] { border-bottom-color: transparent; }
+
+/* cartes cliquables : ombre douce au survol (souris seulement) */
+@media (hover: hover) {
+  .ec-pcarte:hover, a.ec-histo__carte:hover { box-shadow: var(--ec-ombre-survol); }
+  .ec-repli > summary:hover::after { border-color: var(--ec-champ-bord-focus); }
+}
+
+/* « Ma progression » : sections qui se replient en douceur (la hauteur suit le contenu) */
+.ec-repli__zone { display: grid; grid-template-rows: 1fr; }
+.ec-repli__interieur { min-height: 0; }
+.ec-repli[data-etat] .ec-repli__zone { transition: grid-template-rows var(--ec-duree-lent) var(--ec-courbe); }
+.ec-repli[data-etat] .ec-repli__interieur { overflow: hidden; transition: opacity var(--ec-duree) var(--ec-courbe); }
+.ec-repli[data-etat="replie"] .ec-repli__zone { grid-template-rows: 0fr; }
+.ec-repli[data-etat="replie"] .ec-repli__interieur { opacity: 0; }
+
+/* page : arrivée en fondu */
+.ec-page, .espace-connexion__carte { animation: ec-fondu var(--ec-duree) var(--ec-courbe); }
+.ec-menu { animation: ec-fondu var(--ec-duree-vif) var(--ec-courbe); }
+.ec-fenetre[open] { animation: ec-fondu var(--ec-duree-lent) var(--ec-courbe); }
+.ec-fenetre[open]::backdrop { animation: ec-fondu var(--ec-duree-lent) var(--ec-courbe); }
+.espace-connexion .espace-message:not(:empty) { animation: ec-fondu var(--ec-duree) var(--ec-courbe); }
+.espace-connexion .espace-lien { transition: color var(--ec-duree-vif) var(--ec-courbe), background-color var(--ec-duree-vif) var(--ec-courbe); }
+.espace-connexion .espace-lien:hover { text-decoration-color: var(--ec-vermillon); text-decoration-thickness: 2px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* arrivée : le contenu monte de 8 px en apparaissant */
+  .ec-page, .espace-connexion__carte, .ec-panneau { animation: ec-entree 240ms var(--ec-courbe); }
+  .ec-menu { animation: ec-menu-entree 180ms var(--ec-courbe); transform-origin: top right; }
+  .ec-fenetre[open] { animation: ec-fenetre-entree 280ms var(--ec-courbe); }
+  .espace-connexion .espace-message:not(:empty) { animation: ec-entree var(--ec-duree) var(--ec-courbe); }
+
+  /* glissement du trait d'onglet */
+  .ec-glisse[data-pret]::after {
+    transition: transform var(--ec-duree-lent) var(--ec-courbe), width var(--ec-duree-lent) var(--ec-courbe), opacity var(--ec-duree) var(--ec-courbe);
+  }
+
+  /* appui */
+  .ec-bouton, .ec-choix, .ec-pastille, .ec-effort, .ec-etape, .ec-partie, .ec-menu__bouton, .ec-rond, .ec-fiche-bouton { transition-property: color, background-color, border-color, box-shadow, transform; transition-duration: var(--ec-duree-vif); transition-timing-function: var(--ec-courbe); }
+  .ec-bouton:active:not(:disabled), .ec-choix:active:not(:disabled), .ec-pastille:active, .ec-effort:active:not(:disabled), .ec-etape:active,
+  .ec-partie:active, .ec-menu__bouton:active:not(:disabled), .ec-rond:active, .ec-fiche-bouton:active,
+  .espace-connexion .bouton:active:not(:disabled) { transform: scale(0.97); }
+  .espace-connexion .bouton { transition: background-color var(--duree) ease, color var(--duree) ease, border-color var(--duree) ease, transform var(--ec-duree-vif) var(--ec-courbe); }
+  .ec-pcarte:active, a.ec-histo__carte:active { transform: scale(0.985); }
+
+  /* cases « Fait » et « Bloc fait » : la coche apparaît avec un petit ressort */
+  .ec-case-fait { transition: background-color var(--ec-duree-vif) var(--ec-courbe), border-color var(--ec-duree-vif) var(--ec-courbe), transform 320ms var(--ec-courbe-ressort); }
+  .ec-case-fait:active:not(:disabled) { transform: scale(0.9); }
+  .ec-case-fait::after { transform: rotate(45deg) scale(0.3); transition: opacity var(--ec-duree-vif) var(--ec-courbe), transform 320ms var(--ec-courbe-ressort); }
+  .ec-case-fait:checked::after { transform: rotate(45deg) scale(1); }
+}
+
+/* survol : cartes cliquables qui se soulèvent, flèche jaune qui avance (souris seulement) */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .ec-pcarte:hover, a.ec-histo__carte:hover { transform: translateY(-3px); }
+  .ec-pcarte:active, a.ec-histo__carte:active { transform: scale(0.985); }
+  .ec-bouton:hover .ec-bouton__fleche { transform: translate(2px, -2px); }
+}
+
+/* ---------- Squelettes de chargement ---------- */
+.ec-sq-zone { animation: ec-fondu var(--ec-duree) var(--ec-courbe) 150ms backwards; } /* rien du tout si le chargement est instantané */
+.ec-page.ec-sq-zone { animation: ec-fondu var(--ec-duree) var(--ec-courbe) 150ms backwards; }
+.ec-sq { position: relative; display: block; flex: none; overflow: hidden; background: var(--ec-gris-sq); border-radius: 8px; }
+.ec-sq::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+}
+@media (prefers-reduced-motion: no-preference) { .ec-sq::after { animation: ec-brille 1.6s ease-in-out infinite; } }
+@keyframes ec-brille { to { transform: translateX(100%); } }
+.ec-sq--rond { border-radius: 50%; }
+.ec-sq--pilule { border-radius: 999px; }
+.ec-sq--16 { border-radius: 16px; }
+.ec-sq--24 { border-radius: 24px; }
+.ec-sq-carte { background: var(--blanc); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.ec-sq-carte--24 { border-radius: 24px; padding: 24px; }
+.ec-sq-rang { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.ec-sq-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1; }
+.ec-sq-noire { height: 162px; }
+.ec-sq-semaine { display: flex; flex-direction: column; gap: 8px; }
+.ec-sq-semaine .ec-sq-rang { min-height: 60px; padding: 8px 4px; border-top: 1px solid var(--ec-repli-filet); }
+.ec-sq-frise { display: flex; gap: 8px; padding: 2px; overflow: hidden; }
+.ec-sq-frise > .ec-sq { flex: 1 0 220px; min-width: 220px; height: 76px; border-radius: 16px; }
+.ec-sq-pastilles { display: flex; flex-wrap: wrap; gap: 14px 8px; }
+.ec-sq-onglets { display: flex; gap: 8px; min-height: 48px; align-items: center; border-bottom: 1px solid var(--ec-repli-filet); }
+.ec-sq-rubrique { display: flex; flex-direction: column; gap: 16px; }
+.ec-sq-rubrique__tete { display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding-bottom: 6px; border-bottom: 1px solid var(--ec-repli-filet); }
+.ec-sq-seance-corps { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 32px; }
+.ec-sq-seance-gauche { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+.ec-sq-seance-droite { flex: 1 1 300px; min-width: 0; }
+.ec-sq-cases { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 759px) { .ec-sq-noire { height: 220px; } }
+.ec-sq--photo { height: auto !important; aspect-ratio: 3 / 4; border-radius: 12px; }
+.ec-sq-fond { min-width: 0; }
+.ec-sq-carte--rang { flex-direction: row; align-items: center; gap: 16px; min-height: 88px; padding: 16px 18px; }

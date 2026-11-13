@@ -7,6 +7,7 @@ import Accord from './Accord.jsx'
 import EspaceCoach from './coach/EspaceCoach.jsx'
 import EspaceClient from './client/EspaceClient.jsx'
 import { useUrlAvatar } from './client/Avatar.jsx'
+import Squelette from './client/Squelette.jsx'
 import './espace.css'
 
 // Racine de l'espace (chargée à la demande) : garde selon la session et le rôle.
@@ -14,7 +15,7 @@ export default function EspaceApp() {
   useTitre('Mon espace')
   const { utilisateur, profil, role, chargement } = useSession()
 
-  if (chargement) return <Coque compte={false}><p className="section espace-attente" role="status">Chargement…</p></Coque>
+  if (chargement) return <Coque compte={false}><Squelette /></Coque>
   if (!utilisateur) return <Coque compte={false}><Connexion /></Coque>
 
   if (role === 'coach') {

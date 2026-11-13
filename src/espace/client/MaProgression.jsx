@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { meilleuresCharges, regularite, semaineCourante } from '../donnees/calculs.js'
 import { bilanSeance, dateSeance } from '../donnees/progression.js'
 import { evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
@@ -30,11 +31,44 @@ export default function MaProgression({ uid, programme, programmes, faites, sean
   )
 }
 
+// Rubrique repliable : <details> (clavier et lecteurs d'écran inchangés), avec une hauteur qui s'anime à l'ouverture et à la fermeture.
+// data-etat : « replie » (hauteur 0) puis retiré à la fin du mouvement ; sans mouvement (préférence système), le <details> fait seul.
 function Rubrique({ id, titre, children }) {
+  const racine = useRef(null)
+  const minuterie = useRef(null)
+
+  const basculer = (e) => {
+    const d = racine.current
+    if (!d || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    e.preventDefault()
+    clearTimeout(minuterie.current)
+    const fin = (ouvert) => {
+      d.open = ouvert
+      d.removeAttribute('data-etat')
+    }
+    const replie = !d.open || d.dataset.etat === 'replie' // fermée, ou en train de se fermer : on (ré)ouvre
+    if (replie) {
+      if (!d.open) {
+        d.dataset.etat = 'replie'
+        d.open = true
+        void d.offsetHeight // la hauteur 0 est appliquée avant de lancer le mouvement
+      }
+      d.dataset.etat = 'deplie'
+      minuterie.current = setTimeout(() => fin(true), 320)
+    } else {
+      d.dataset.etat = 'deplie'
+      void d.offsetHeight
+      d.dataset.etat = 'replie'
+      minuterie.current = setTimeout(() => fin(false), 320)
+    }
+  }
+
   return (
-    <details className="ec-repli" open>
-      <summary><h2 id={id} className="ec-h2">{titre}</h2></summary>
-      <div className="ec-pile">{children}</div>
+    <details className="ec-repli" open ref={racine}>
+      <summary onClick={basculer}><h2 id={id} className="ec-h2">{titre}</h2></summary>
+      <div className="ec-repli__zone">
+        <div className="ec-repli__interieur"><div className="ec-pile">{children}</div></div>
+      </div>
     </details>
   )
 }

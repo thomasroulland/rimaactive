@@ -4,6 +4,7 @@ import { dateComplete } from '../donnees/progression.js'
 import { ajouterPhoto, ecouterMesPhotos, supprimerPhoto } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import { useUrlAvatar } from './Avatar.jsx'
+import { SqGalerie } from './Squelette.jsx'
 
 // Rubrique « Mes photos » : ajout (avec date), comparaison avant / après, galerie par date, suppression avec confirmation.
 export default function MesPhotos({ uid }) {
@@ -57,6 +58,7 @@ export default function MesPhotos({ uid }) {
         <label className="ec-bouton" htmlFor={idFichier} aria-busy={encours}>{encours ? 'Envoi en cours…' : 'Ajouter une photo'}</label>
       </div>
       {erreur && <p className="ec-erreur" role="alert">{erreur}</p>}
+      {photos === null && !erreur && <SqGalerie />}
       {photos && liste.length === 0 && <p className="ec-texte ec-gris">Aucune photo pour l’instant.</p>}
       {liste.length >= 2 && (
         <div className="ec-carte ec-pile ec-pile--serre">

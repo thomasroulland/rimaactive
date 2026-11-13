@@ -32,7 +32,20 @@
           z = Math.round(z * 20) / 20 // arrondi aux paliers de zoom usuels (90 %, 110 %…)
           return z > 0.2 && z < 5 ? z : 1
         }
+        // L'espace (connexion, tableau de bord du coaché…) garde ses tailles naturelles : pas de zoom.
+        // Seul l'espace coach reste mis à l'échelle comme avant.
+        function dansEspaceCoache() {
+          var chemin = window.location.pathname
+          return /^\/espace(\/|$)/.test(chemin) && !/^\/espace\/coach(\/|$)/.test(chemin)
+        }
         function ajuster() {
+          if (dansEspaceCoache()) {
+            racine.style.zoom = '1'
+            racine.style.removeProperty('--ecran') // retombe sur 100svh (styles.css)
+            racine.style.setProperty('--vw', window.innerWidth / 100 + 'px')
+            racine.style.removeProperty('--largeur') // retombe sur 1240px (styles.css)
+            return
+          }
           var z = zoomNavigateur()
           // taille qu'aurait la fenêtre à 100 % : c'est elle qui décide de l'agrandissement de base
           var echelle = Math.max(1, Math.min((window.innerWidth * z) / 1400, (window.innerHeight * z) / 630))
@@ -47,6 +60,16 @@
         }
         ajuster()
         window.addEventListener('resize', ajuster)
+        // Navigation sans rechargement (site <-> espace) : le routeur passe par pushState / replaceState, le bouton « précédent » par popstate.
+        ;['pushState', 'replaceState'].forEach(function (nom) {
+          var original = window.history[nom]
+          window.history[nom] = function () {
+            var retour = original.apply(this, arguments)
+            ajuster()
+            return retour
+          }
+        })
+        window.addEventListener('popstate', ajuster)
       })()
     </script>
   </head>

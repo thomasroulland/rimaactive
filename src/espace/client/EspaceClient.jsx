@@ -6,6 +6,7 @@ import { programmeAffiche } from '../donnees/progression.js'
 import TableauDeBord from './TableauDeBord.jsx'
 import MonProgramme from './MonProgramme.jsx'
 import Seance from './Seance.jsx'
+import Squelette from './Squelette.jsx'
 
 // Données du client en direct : programme affiché (en cours, sinon à venir, sinon le dernier), tous ses programmes publiés, ses séances faites.
 function useDonneesClient(uid) {
@@ -45,7 +46,7 @@ export default function EspaceClient({ uid, profil }) {
     <>
       {donnees.erreur && <p className="client-alerte" role="alert">{donnees.erreur}</p>}
       {donnees.chargement
-        ? <p className="client-page espace-attente" role="status">Chargement…</p>
+        ? <Squelette />
         : (
           <Routes>
             <Route index element={<TableauDeBord uid={uid} profil={profil} {...donnees} />} />
