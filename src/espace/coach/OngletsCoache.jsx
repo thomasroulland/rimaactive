@@ -212,25 +212,56 @@ export function Historique() {
       </div>
 
       {jourChoisi && (
-        <section className="calendrier__detail" aria-labelledby="cal-detail" key={jourChoisi}>
-          <h2 id="cal-detail" className="espace-sous-titre">{dateComplete(jourChoisi)}</h2>
-          {parJour.get(jourChoisi).map((e, i) => e.genre === 'seance' ? (
-            <article key={i} className="espace-carte fiche-carte">
-              <SeanceDetail sf={e.sf} programmes={programmes} prenom={client.prenom} />
-            </article>
-          ) : (
-            <article key={i} className="espace-carte fiche-carte">
-              <p className="calendrier__pastille calendrier__pastille--bilan">Bilan</p>
-              <h3 className="bilan__titre">{e.b.titre || 'Bilan'}</h3>
-              {e.b.texte && <p className="fiche-carte__texte">{e.b.texte}</p>}
-              {e.b.ajuster && <p className="espace-verrou"><strong>À ajuster :</strong> {e.b.ajuster}</p>}
-              {e.b.pdf?.chemin && <LienPdf pdf={e.b.pdf} />}
-            </article>
-          ))}
-        </section>
+        <JourCalendrier date={jourChoisi} evts={parJour.get(jourChoisi)} programmes={programmes} prenom={client.prenom}
+          jours={[...parJour.keys()].sort()} aller={setChoisi} fermer={() => setChoisi(null)} />
       )}
       {!terminees.length && !(bilans ?? []).length && <p className="espace-texte">Aucune séance faite ni bilan pour l’instant.</p>}
     </div>
+  )
+}
+
+// Fenêtre d'un jour du calendrier : séances faites et bilans de ce jour, flèches vers le jour précédent / suivant
+function JourCalendrier({ date, evts, programmes, prenom, jours, aller, fermer }) {
+  const ref = useRef(null)
+  useEffect(() => { const d = ref.current; if (d && !d.open) d.showModal() }, [])
+  const i = jours.indexOf(date)
+  const precedent = i > 0 ? jours[i - 1] : null
+  const suivant = i >= 0 && i < jours.length - 1 ? jours[i + 1] : null
+  const nbS = evts.filter((e) => e.genre === 'seance').length
+  const nbB = evts.length - nbS
+  return (
+    <dialog ref={ref} className="espace-dialogue jour-cal" aria-labelledby="jour-cal-titre" onClose={fermer}
+      onClick={(e) => { if (e.target === ref.current) ref.current.close() }}>
+      <header className="jour-cal__tete">
+        <button type="button" className="calendrier__fleche" aria-label="Jour précédent avec une activité" disabled={!precedent} onClick={() => aller(precedent)}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+        <div className="jour-cal__titres">
+          <h2 id="jour-cal-titre" className="jour-cal__date">{dateComplete(date)}</h2>
+          <p className="espace-aide">{[nbS ? `${nbS} séance${nbS > 1 ? 's' : ''} faite${nbS > 1 ? 's' : ''}` : '', nbB ? `${nbB} bilan${nbB > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ')}</p>
+        </div>
+        <button type="button" className="calendrier__fleche" aria-label="Jour suivant avec une activité" disabled={!suivant} onClick={() => aller(suivant)}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+        <button type="button" className="panneau-seance__fermer jour-cal__fermer" aria-label="Fermer" onClick={() => ref.current.close()}>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </header>
+      <div className="jour-cal__corps" key={date}>
+        {evts.map((e, k) => e.genre === 'seance' ? (
+          <article key={k} className="jour-cal__bloc"><SeanceDetail sf={e.sf} programmes={programmes} prenom={prenom} /></article>
+        ) : (
+          <article key={k} className="jour-cal__bloc">
+            <p className="calendrier__pastille calendrier__pastille--bilan">Bilan</p>
+            <h3 className="bilan__titre">{e.b.titre || 'Bilan'}</h3>
+            {e.b.semaine ? <p className="espace-aide">Semaine {e.b.semaine}</p> : null}
+            {e.b.texte && <p className="fiche-carte__texte">{e.b.texte}</p>}
+            {e.b.ajuster && <p className="espace-verrou"><strong>À ajuster :</strong> {e.b.ajuster}</p>}
+            {e.b.pdf?.chemin && <LienPdf pdf={e.b.pdf} />}
+          </article>
+        ))}
+      </div>
+    </dialog>
   )
 }
 

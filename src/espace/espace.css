@@ -1096,3 +1096,29 @@ button.calendrier__jour:focus-visible { outline: 2px solid var(--encre); outline
 .prog-outils__debut .champ-groupe { gap: 4px; }
 .prog-outils__debut .champ-groupe > label { font-size: 13px; font-weight: 600; color: var(--gris-chaud); }
 .prog-outils__debut .champ { min-height: 42px; padding-block: 6px; width: 100%; }
+
+/* Calendrier : fenêtre d'un jour (14 novembre 2026) */
+.espace-dialogue.jour-cal[open] { display: flex; flex-direction: column; gap: 0; width: min(680px, calc(100vw - 24px)); max-height: calc(100svh - 40px); padding: 0; overflow: hidden; }
+.jour-cal__tete { display: flex; align-items: center; gap: 10px; padding: 18px 20px 16px; border-bottom: 1px solid #ece9e3; background: var(--blanc); }
+.jour-cal__titres { flex: 1; min-width: 0; text-align: center; }
+.jour-cal__date { margin: 0; font-size: 22px; line-height: 28px; font-weight: 900; letter-spacing: -0.03em; }
+.jour-cal__titres .espace-aide { margin: 2px 0 0; }
+.jour-cal__fermer { margin-left: 4px; }
+.calendrier__fleche:disabled { opacity: .3; cursor: default; }
+.jour-cal__corps { display: flex; flex-direction: column; gap: 12px; padding: 18px 20px 22px; overflow: auto; background: var(--craie); }
+.jour-cal__bloc { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 18px 20px; border-radius: 16px; background: var(--blanc); }
+.jour-cal__bloc .bilan__titre { font-size: 19px; line-height: 24px; }
+.jour-cal__bloc .historique__lignes { list-style: none; margin: 4px 0 0; padding: 0; width: 100%; display: flex; flex-direction: column; }
+.jour-cal__bloc .historique__lignes li { padding: 9px 0; border-top: 1px solid #f0ede7; font-size: 15px; line-height: 22px; }
+.jour-cal__bloc .historique__detail { width: 100%; margin: 0; padding: 0; }
+.jour-cal__bloc .historique__detail .fiche-seance__tete, .jour-cal__bloc .historique__detail .fiche-seance__bilan, .jour-cal__bloc .historique__detail .fiche-detail { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .jour-cal__corps { animation: onglet-entre .25s cubic-bezier(.3, .7, .2, 1); }
+}
+@media (max-width: 560px) {
+  .espace-dialogue.jour-cal[open] { width: 100vw; max-width: 100vw; max-height: 92svh; margin: auto 0 0; border-radius: 22px 22px 0 0; }
+  .jour-cal__tete { padding: 14px 12px; gap: 6px; }
+  .jour-cal__date { font-size: 18px; line-height: 24px; }
+  .jour-cal__corps { padding: 14px 12px 20px; }
+  .jour-cal__bloc { padding: 14px 16px; }
+}
