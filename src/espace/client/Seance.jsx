@@ -39,6 +39,8 @@ function etatEnvoi(fait, enLigne) {
 const avecFait = (lignes) => (lignes ?? []).map((l) => ({ ...l, fait: l.fait !== false }))
 const lignesVides = (element) => preRemplir(element).map(() => ({ charge: '', reps: '', rpe: '', fait: false }))
 const carteVide = () => ({ series: {}, notes: {}, blocs: {} })
+const CHAMPS_SORTIE = ['distance', 'temps', 'fc', 'zones']
+const ZONES = ['Z1', 'Z2', 'Z3', 'Z4', 'Z5']
 
 // Une séance (maquette) : blocs et exercices, ou sortie de course, puis « Fin de séance ».
 // Une clé par séance : passer d'une séance à l'autre repart d'un écran neuf (notes en attente envoyées).
@@ -73,7 +75,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     clearTimeout(minuterie.current)
     const a = enAttente.current
     enAttente.current = carteVide()
-    const rien = ['series', 'notes', 'blocs'].every((k) => Object.keys(a[k]).length === 0) && a.distance == null && a.temps == null
+    const rien = ['series', 'notes', 'blocs'].every((k) => Object.keys(a[k]).length === 0) && CHAMPS_SORTIE.every((k) => a[k] == null)
     if (rien) return
     noterSeance(programmeId, seanceId, a).catch(erreurEnvoi)
   }
@@ -119,6 +121,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const sortie = {
     distance: modifs.course.distance ?? fait?.distance ?? '',
     temps: modifs.course.temps ?? fait?.temps ?? '',
+    fc: modifs.course.fc ?? fait?.fc ?? '',
+    zones: modifs.course.zones ?? ZONES.map((_, i) => fait?.zones?.[i] ?? ''),
   }
   const lignes = (el) => (series[el.id] ? avecFait(series[el.id]) : lignesVides(el))
   const retires = fusionnerNotes(seance, series).filter((e) => !e.element)
@@ -134,7 +138,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     serie: (el, i, cle, v) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? saisirSerie(l, cle, v, el) : l))),
     note: (id, v) => noter('notes', id, v),
     chargeSeule: (id, v) => noter('series', id, [{ charge: v, reps: '', rpe: '', fait: v.trim() !== '' }]),
-    bloc: (id, cle, v) => noter('blocs', id, { resultat: '', rpe: '', fait: false, note: '', ...blocs[id], [cle]: v }),
+    bloc: (id, cle, v) => noter('blocs', id, { resultat: '', reps: '', rpe: '', fait: false, note: '', ...blocs[id], [cle]: v }),
   }
   const saisirSortie = (cle, v) => {
     setRefus('')
@@ -208,11 +212,29 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                     <input id="sortie-temps" className="ec-champ" type="text" inputMode="numeric" autoComplete="off" placeholder={verrou ? '' : '0:30:00'}
                       value={sortie.temps} readOnly={verrou} onChange={(e) => saisirSortie('temps', e.target.value)} />
                   </div>
+                  <div>
+                    <label className="ec-etiquette" htmlFor="sortie-fc">FC moyenne (bpm)</label>
+                    <input id="sortie-fc" className="ec-champ" type="text" inputMode="numeric" autoComplete="off" placeholder={verrou ? '' : '140'}
+                      value={sortie.fc} readOnly={verrou} onChange={(e) => saisirSortie('fc', e.target.value)} />
+                  </div>
                 </div>
                 <div className="ec-sortie__allure" aria-live="polite">
                   <p className="ec-texte">Allure <strong>{allure.allure}</strong></p>
                   <p className="ec-texte">Vitesse <strong>{allure.vitesse}</strong></p>
                 </div>
+                <fieldset className="ec-zones">
+                  <legend className="ec-fin__legende ec-zones__legende">Temps passé par zone (%)</legend>
+                  <div className="ec-zones__champs">
+                    {ZONES.map((z, i) => (
+                      <div key={z}>
+                        <label className="ec-etiquette ec-zones__nom" htmlFor={`sortie-${z}`}>{z}</label>
+                        <input id={`sortie-${z}`} className="ec-champ ec-champ--serre" type="text" inputMode="numeric" autoComplete="off"
+                          value={sortie.zones[i]} readOnly={verrou}
+                          onChange={(e) => saisirSortie('zones', sortie.zones.map((v, j) => (j === i ? e.target.value : v)))} />
+                      </div>
+                    ))}
+                  </div>
+                </fieldset>
               </div>
             </section>
           ) : (

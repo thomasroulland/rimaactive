@@ -215,6 +215,12 @@ describe('nouvelles informations du coaché', () => {
     await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S6'), contenuFin(base('S6'), { effort: 7, ressenti: 'Bien', commentaire: 'Top' }), { merge: true }))
     await assertFails(setDoc(doc(A, 'seancesFaites/P1_S7'), { ...contenuFin(base('S7'), { effort: 7 }), douleur: { oui: false } }, { merge: true }))
   })
+  it('course : écrit fc et zones au fil de la saisie puis à la fin ; AMRAP : reps en plus', async () => {
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S8'), contenuNotes(base('S8'), { distance: '4,5', temps: '0:30:10', fc: '142', zones: ['10', '60', '30', '', ''] }), { merge: true }))
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S8'), contenuFin(base('S8'), { fc: '140', zones: ['', '100', '', '', ''] }), { merge: true }))
+    await assertSucceeds(setDoc(doc(A, 'seancesFaites/P1_S9'), contenuNotes(base('S9'), { blocs: { b1: { resultat: '5', reps: '7' } } }), { merge: true }))
+    await assertFails(setDoc(doc(A, 'seancesFaites/P1_S9'), { ...contenuNotes(base('S9'), {}), vitesse: '9' }, { merge: true }))
+  })
   it('avatar : son dossier seulement, seul', async () => {
     await assertSucceeds(updateDoc(doc(A, 'utilisateurs/A'), { avatar: 'clients/A/profil/p.jpg' }))
     await assertSucceeds(updateDoc(doc(A, 'utilisateurs/A'), { avatar: null }))

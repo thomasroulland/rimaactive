@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   dateLongue, dateCourte, prescription, resumeFormat, contenuNotes, contenuFin, RESSENTIS, evolutionCharges, statutSeance,
-  texteSerie, detailSeance, exercicesDe, lignesExercice, champResultat, avecChargeSeule, secondes, allureVitesse, saisirSerie,
+  texteSerie, detailSeance, exercicesDe, lignesExercice, champsResultat, avecChargeSeule, secondes, allureVitesse, saisirSerie,
 } from '../../src/espace/donnees/seances.js'
 
 const base = { client: 'A', programme: 'P1', seance: 'S1', date: '2026-11-16', majLe: 'T' }
@@ -45,7 +45,7 @@ describe('contenu écrit dans seancesFaites', () => {
     expect(contenuNotes(base, { notes: { e1: 'Dur' } }).notes).toEqual({ e1: 'Dur' })
     expect(contenuNotes(base, { notes: {} })).not.toHaveProperty('notes')
     expect(contenuNotes(base, { blocs: {} })).not.toHaveProperty('blocs')
-    expect(contenuNotes(base, { blocs: { b1: { resultat: '12', fait: true } } }).blocs).toEqual({ b1: { resultat: '12', rpe: '', fait: true, note: '' } })
+    expect(contenuNotes(base, { blocs: { b1: { resultat: '12', fait: true } } }).blocs).toEqual({ b1: { resultat: '12', reps: '', rpe: '', fait: true, note: '' } })
     expect(contenuFin(base, { effort: 5, notes: {}, blocs: {} })).not.toHaveProperty('notes')
     expect(contenuFin(base, { effort: 5, notes: {}, blocs: {} })).not.toHaveProperty('blocs')
     expect(contenuFin(base, { effort: 5, notes: { e1: 'Dur' } }).notes).toEqual({ e1: 'Dur' })
@@ -144,12 +144,13 @@ describe('écran de la séance', () => {
     expect(lignesExercice({ reps: '20 s', charge: '0', repos: '1 min' }, false)).toEqual({ prescription: '20 s · poids du corps', details: '' })
   })
 
-  it('résultat de bloc : libellé et aide selon le format', () => {
-    expect(champResultat({ format: 'emom', duree: '10' })).toEqual({ label: 'Minutes réussies', aide: 'sur 10' })
-    expect(champResultat({ format: 'amrap', duree: '12' })).toEqual({ label: 'Tours faits', aide: '' })
-    expect(champResultat({ format: 'tabata', tours: '8' })).toEqual({ label: 'Tours faits', aide: 'sur 8' })
-    expect(champResultat({ format: 'hiit' })).toEqual({ label: 'Tours faits', aide: '' })
-    expect(champResultat({ format: 'series' })).toBeNull()
+  it('résultat de bloc : champs, libellés et aides selon le format (maquette)', () => {
+    expect(champsResultat({ format: 'emom', duree: '10' })).toEqual([{ cle: 'resultat', label: 'Minutes réussies', aide: 'sur 10' }])
+    expect(champsResultat({ format: 'amrap', duree: '12' })).toEqual([
+      { cle: 'resultat', label: 'Tours complets', aide: '' }, { cle: 'reps', label: 'Reps en plus', aide: '' }])
+    expect(champsResultat({ format: 'tabata', tours: '8' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: 'sur 8' }])
+    expect(champsResultat({ format: 'hiit' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: '' }])
+    expect(champsResultat({ format: 'series' })).toEqual([])
   })
 
   it('charge seule : EMOM et AMRAP, sauf au poids du corps', () => {
@@ -180,5 +181,22 @@ describe('écran de la séance', () => {
   it('course : distance et temps gardés au fil de la saisie, seulement s’ils sont fournis', () => {
     expect(contenuNotes(base, { distance: ' 4,5 ', temps: '0:30:00' })).toMatchObject({ distance: '4,5', temps: '0:30:00' })
     expect(contenuNotes(base, { notes: { e1: 'x' } })).not.toHaveProperty('distance')
+  })
+
+  it('course : FC moyenne et zones (5 textes), seulement s’ils sont fournis', () => {
+    expect(contenuNotes(base, { fc: ' 142 ', zones: ['10', '', '70'] })).toMatchObject({ fc: '142', zones: ['10', '', '70', '', ''] })
+    expect(contenuFin(base, { effort: 6, fc: 140, zones: ['', '', '', '', '', 'trop'] })).toMatchObject({ fc: '140', zones: ['', '', '', '', ''] })
+    expect(contenuFin(base, { effort: 6 })).not.toHaveProperty('fc')
+    expect(contenuFin(base, { effort: 6 })).not.toHaveProperty('zones')
+    expect(contenuNotes(base, {})).not.toHaveProperty('zones')
+  })
+
+  it('AMRAP : « reps en plus » gardées dans le résultat du bloc', () => {
+    expect(contenuNotes(base, { blocs: { b1: { resultat: '5', reps: '7' } } }).blocs.b1).toEqual({ resultat: '5', reps: '7', rpe: '', fait: false, note: '' })
+    expect(contenuFin(base, { blocs: { b1: { resultat: '5' } } }).blocs.b1.reps).toBe('')
+  })
+
+  it('effort facultatif : null quand rien n’est choisi', () => {
+    expect(contenuFin(base, { ressenti: 'Bien' }).effort).toBeNull()
   })
 })

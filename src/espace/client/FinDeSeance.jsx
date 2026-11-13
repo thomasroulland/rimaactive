@@ -8,19 +8,17 @@ const AIDE = 'Touchez une note : 5 modéré, 10 effort maximal.'
 
 // Panneau « Fin de séance » (maquette) : effort global 5 à 10, ressenti, commentaire (« Mes sensations » en course),
 // « Enregistrer ma séance ». Séance terminée (`fait.statut === 'terminée'`) : même panneau en lecture seule.
-// `etat` : texte d'enregistrement (réseau) ; `envoyer(fin)` : { effort, ressenti, commentaire }.
+// `etat` : texte d'enregistrement (réseau) ; `envoyer(fin)` : { effort, ressenti, commentaire } (effort facultatif : null).
 export default function FinDeSeance({ course, fait, etat, envoyer }) {
   const terminee = fait?.statut === 'terminée'
   const [fin, setFin] = useState({ effort: null, ressenti: '', commentaire: '' })
-  const [erreur, setErreur] = useState('')
   const v = terminee
     ? { effort: fait.effort ?? null, ressenti: fait.ressenti ?? '', commentaire: fait.commentaire ?? '' }
     : fin
-  const maj = (cle, val) => { setErreur(''); setFin((f) => ({ ...f, [cle]: val })) }
+  const maj = (cle, val) => setFin((f) => ({ ...f, [cle]: val }))
 
   const valider = (e) => {
     e.preventDefault()
-    if (!fin.effort) { setErreur('Touchez une note d’effort pour enregistrer votre séance.'); return }
     envoyer(fin)
   }
 
@@ -36,9 +34,7 @@ export default function FinDeSeance({ course, fait, etat, envoyer }) {
                 disabled={terminee} onClick={() => maj('effort', n)}>{n}</button>
             ))}
           </div>
-          <p className={erreur ? 'ec-erreur ec-fin__aide' : 'ec-petit ec-fin__aide'} aria-live="polite">
-            {erreur || (v.effort ? `${v.effort} · ${NOMS[v.effort]}` : AIDE)}
-          </p>
+          <p className="ec-petit ec-fin__aide" aria-live="polite">{v.effort ? `${v.effort} · ${NOMS[v.effort]}` : AIDE}</p>
         </fieldset>
         <fieldset className="ec-fin__groupe">
           <legend className="ec-fin__legende">Mon ressenti</legend>

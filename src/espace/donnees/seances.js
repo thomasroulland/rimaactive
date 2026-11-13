@@ -71,7 +71,8 @@ function seriesPropres(series) {
   return out
 }
 
-// Notes par exercice : { [elementId]: texte } ; résultats par bloc : { [blocId]: { resultat, rpe, fait, note } }
+// Notes par exercice : { [elementId]: texte } ; résultats par bloc : { [blocId]: { resultat, reps, rpe, fait, note } }
+// (`reps` : « Reps en plus » d'un AMRAP)
 function notesPropres(notes) {
   const out = {}
   for (const [id, t] of Object.entries(notes ?? {})) out[id] = texte(t)
@@ -80,13 +81,18 @@ function notesPropres(notes) {
 function blocsPropres(blocs) {
   const out = {}
   for (const [id, b] of Object.entries(blocs ?? {})) {
-    out[id] = { resultat: texte(b?.resultat), rpe: texte(b?.rpe), fait: b?.fait === true, note: texte(b?.note) }
+    out[id] = { resultat: texte(b?.resultat), reps: texte(b?.reps), rpe: texte(b?.rpe), fait: b?.fait === true, note: texte(b?.note) }
   }
   return out
 }
 
 // Une carte `series`, `notes` ou `blocs` vide n'est jamais envoyée : avec { merge: true }, Firestore remplacerait tout le champ
 // et effacerait les notes déjà enregistrées (par exemple celles d'exercices que Marie a retirés entre-temps).
+// Course : temps passé par zone Z1 à Z5 (%), toujours 5 textes
+function zonesPropres(zones) {
+  return Array.from({ length: 5 }, (_, i) => texte(zones?.[i]).trim())
+}
+
 const aDesSeries = (series) => series != null && Object.keys(series).length > 0
 
 // Ajoute les cartes non vides (séries, notes, blocs) au contenu à écrire.
@@ -99,11 +105,13 @@ function ajouterCartes(out, donnees) {
 
 // Contenu écrit (fusion) pendant la séance : statut « en cours ».
 // `base` = { client, programme, seance, date, majLe } ; `donnees` = { series: { [elementId]: lignes } }
-// Course : `distance` et `temps` faits, gardés au fil de la saisie quand ils sont fournis.
+// Course : `distance`, `temps`, `fc` (FC moyenne) et `zones` (Z1 à Z5), gardés au fil de la saisie quand ils sont fournis.
 export function contenuNotes(base, donnees = {}) {
   const out = { client: base.client, programme: base.programme, seance: base.seance, date: base.date, statut: 'en cours', majLe: base.majLe }
   if (donnees.distance != null) out.distance = texte(donnees.distance).trim()
   if (donnees.temps != null) out.temps = texte(donnees.temps).trim()
+  if (donnees.fc != null) out.fc = texte(donnees.fc).trim()
+  if (donnees.zones != null) out.zones = zonesPropres(donnees.zones)
   return ajouterCartes(out, donnees)
 }
 
@@ -122,6 +130,8 @@ export function contenuFin(base, fin = {}) {
     temps: texte(fin.temps).trim(),
     majLe: base.majLe,
   }
+  if (fin.fc != null) out.fc = texte(fin.fc).trim()
+  if (fin.zones != null) out.zones = zonesPropres(fin.zones)
   return ajouterCartes(out, fin)
 }
 
@@ -215,14 +225,16 @@ export function lignesExercice(element, enSeries = true) {
   return { prescription: [volume, charge || (volume ? 'charge libre' : '')].filter(Boolean).join(' · '), details }
 }
 
-// Champ de « Mon résultat » d'un bloc EMOM, AMRAP, TABATA ou HIIT : libellé et aide (« sur 10 »)
-export function champResultat(bloc) {
+// Champs de « Mon résultat » d'un bloc (maquette) : [{ cle, label, aide }] ; `cle` = champ de `blocs[blocId]`.
+// EMOM : minutes réussies « sur {durée} » ; AMRAP : tours complets et reps en plus ; TABATA, HIIT : tours faits « sur {tours} ».
+export function champsResultat(bloc) {
   const f = bloc?.format
-  if (f === 'emom') return { label: 'Minutes réussies', aide: rempli(bloc.duree) ? `sur ${String(bloc.duree).trim()}` : '' }
-  if (f === 'amrap' || f === 'tabata' || f === 'hiit') {
-    return { label: 'Tours faits', aide: rempli(bloc.tours) ? `sur ${String(bloc.tours).trim()}` : '' }
+  if (f === 'emom') return [{ cle: 'resultat', label: 'Minutes réussies', aide: rempli(bloc.duree) ? `sur ${String(bloc.duree).trim()}` : '' }]
+  if (f === 'amrap') return [{ cle: 'resultat', label: 'Tours complets', aide: '' }, { cle: 'reps', label: 'Reps en plus', aide: '' }]
+  if (f === 'tabata' || f === 'hiit') {
+    return [{ cle: 'resultat', label: 'Tours faits', aide: rempli(bloc.tours) ? `sur ${String(bloc.tours).trim()}` : '' }]
   }
-  return null
+  return []
 }
 
 // Un exercice d'un bloc EMOM ou AMRAP a un champ « Charge (kg) », sauf au poids du corps (maquette)

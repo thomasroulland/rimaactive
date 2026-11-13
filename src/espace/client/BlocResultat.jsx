@@ -1,4 +1,4 @@
-import { champResultat, fr } from '../donnees/seances.js'
+import { champsResultat, fr } from '../donnees/seances.js'
 
 // Valeurs du RPE (maquette) : – , 5 à 10 par demi-points
 export const VALEURS_RPE = ['5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10']
@@ -16,22 +16,22 @@ export function ChoixRpe({ id, valeur, changer, lecture, libelle, classe = 'ec-c
 }
 
 // « Mon résultat » d'un bloc EMOM, AMRAP, TABATA ou HIIT (maquette) :
-// minutes réussies ou tours faits, RPE du bloc, case « Bloc fait », note. Enregistré dans `blocs[bloc.id]`.
+// minutes réussies, tours complets et reps en plus, ou tours faits ; RPE du bloc, case « Bloc fait », note. Enregistré dans `blocs[bloc.id]`.
 export default function BlocResultat({ bloc, resultat, lecture, changer }) {
-  const champ = champResultat(bloc)
+  const champs = champsResultat(bloc)
   const r = resultat ?? {}
   const id = `res-${bloc.id}`
   return (
     <div className="ec-resultat" role="group" aria-labelledby={`${id}-titre`}>
       <p id={`${id}-titre`} className="ec-resultat__titre">Mon résultat<span className="ec-invisible"> : bloc {bloc.lettre}</span></p>
       <div className="ec-resultat__ligne">
-        {champ && (
-          <div>
-            <label className="ec-etiquette" htmlFor={`${id}-res`}>{champ.label}</label>
-            <input id={`${id}-res`} className="ec-champ ec-champ--serre" type="text" inputMode="numeric" autoComplete="off"
-              value={r.resultat ?? ''} placeholder={lecture ? '' : champ.aide} readOnly={lecture} onChange={(e) => changer('resultat', e.target.value)} />
+        {champs.map((c) => (
+          <div key={c.cle}>
+            <label className="ec-etiquette" htmlFor={`${id}-${c.cle}`}>{c.label}</label>
+            <input id={`${id}-${c.cle}`} className="ec-champ ec-champ--serre" type="text" inputMode="numeric" autoComplete="off"
+              value={r[c.cle] ?? ''} placeholder={lecture ? '' : c.aide} readOnly={lecture} onChange={(e) => changer(c.cle, e.target.value)} />
           </div>
-        )}
+        ))}
         <div>
           <label className="ec-etiquette" htmlFor={`${id}-rpe`}>RPE du bloc</label>
           <ChoixRpe id={`${id}-rpe`} valeur={r.rpe} lecture={lecture} changer={(v) => changer('rpe', v)} />

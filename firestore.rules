@@ -73,7 +73,7 @@ service cloud.firestore {
 
     // Champs qu'un client peut écrire sur sa séance (jamais commentaireCoach ; client, programme, seance figés après création).
     function champsClient() {
-      return ['client', 'programme', 'seance', 'date', 'statut', 'series', 'notes', 'blocs', 'effort', 'ressenti', 'commentaire', 'distance', 'temps', 'majLe'];
+      return ['client', 'programme', 'seance', 'date', 'statut', 'series', 'notes', 'blocs', 'effort', 'ressenti', 'commentaire', 'distance', 'temps', 'fc', 'zones', 'majLe'];
     }
 
     match /seancesFaites/{id} {
