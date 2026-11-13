@@ -39,7 +39,8 @@ describe('ajouterAuBloc / retirerElement', () => {
     expect(r.semaines[0].seances[0].blocs.map((b) => [b.lettre, b.elements[0].nom])).toEqual([['A', 'Pompes']])
   })
   it('nouvelle séance du type demandé', () => {
-    expect(nouvelleSeance('course', 'Mercredi')).toMatchObject({ type: 'course', jour: 'Mercredi', blocs: [] })
+    expect(nouvelleSeance('course')).toMatchObject({ type: 'course', blocs: [] })
+    expect(nouvelleSeance('course').jour).toBeUndefined()
   })
 })
 

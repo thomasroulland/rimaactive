@@ -34,8 +34,8 @@ export function listeSeances(programme) {
   const out = []
   ;(programme?.semaines ?? []).forEach((sem, i) => {
     for (const seance of sem.seances ?? []) {
-      const j = Math.max(0, JOURS.indexOf(seance.jour))
-      out.push({ semaine: i + 1, seance, date: ajoutJours(programme.debut, i * 7 + j) })
+      // plus de jour : la séance est datée du début de sa semaine (le lundi), `fin` = dernier jour de la semaine
+      out.push({ semaine: i + 1, seance, date: ajoutJours(programme.debut, i * 7), fin: ajoutJours(programme.debut, i * 7 + 6) })
     }
   })
   return out

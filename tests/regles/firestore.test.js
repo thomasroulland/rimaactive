@@ -316,4 +316,10 @@ describe('bilans visio, notes privées et modèles : réservés au coach (13 nov
     await assertFails(setDoc(doc(A, 'modeles/M2'), { nom: 'x' }))
     await assertFails(getDoc(doc(anon, 'modeles/M1')))
   })
+  it('réglages : lus par coach et coaché, écrits par le coach seulement', async () => {
+    await assertSucceeds(setDoc(doc(coach, 'reglages/coach'), { types: [{ id: 'mob', nom: 'Mobilité' }] }))
+    await assertSucceeds(getDoc(doc(A, 'reglages/coach')))
+    await assertFails(setDoc(doc(A, 'reglages/coach'), { types: [] }))
+    await assertFails(getDoc(doc(anon, 'reglages/coach')))
+  })
 })

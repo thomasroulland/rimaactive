@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { LETTRES } from '../donnees/programme.js'
-import { CATEGORIES, MATERIELS } from '../donnees/banque.js'
+import useReglages from './useReglages.js'
 import { enregistrerExercice } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import { basculerDetails } from '../../components/basculerDetails.js'
 
 const simplifier = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-const VIDE = { nom: '', categorie: CATEGORIES[0], materiel: MATERIELS[MATERIELS.length - 1], consignes: '' }
+const VIDE = { nom: '', categorie: '', materiel: '', consignes: '' }
 
 // « Ajouter un exercice » (maquette coach) : recherche et catégories dans la banque, choix du bloc,
 // et création d'un nouvel exercice sans quitter la séance (fiche complétée plus tard dans la banque).
@@ -20,6 +20,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
   const [creationOuverte, setCreationOuverte] = useState(false)
   const [envoi, setEnvoi] = useState(false)
   const [erreur, setErreur] = useState('')
+  const reglages = useReglages()
   const blocChoisi = lettres.includes(bloc) || bloc === prochaine ? bloc : (lettres[0] ?? 'A')
 
   const t = simplifier(recherche.trim())
@@ -35,7 +36,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
     if (!nom) { setErreur('Donnez un nom à l’exercice.'); return }
     setEnvoi(true); setErreur('')
     try {
-      const exo = { ...nouvel, nom, consignes: nouvel.consignes.trim(), muscles: [], photos: [] }
+      const exo = { ...nouvel, nom, categorie: nouvel.categorie || reglages.categories[0] || '', materiel: nouvel.materiel || reglages.materiels[reglages.materiels.length - 1] || '', consignes: nouvel.consignes.trim(), muscles: [], photos: [] }
       const id = await enregistrerExercice(exo)
       ajouter(blocChoisi, { ...exo, id })
       setNouvel(VIDE); setCreationOuverte(false); setRecherche('')
@@ -64,7 +65,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
           value={recherche} onChange={(e) => setRecherche(e.target.value)} />
       </div>
       <div className="filtres-coaches espace-choix__filtres" role="group" aria-label="Catégorie">
-        {['Toutes', ...CATEGORIES].map((c) => (
+        {['Toutes', ...reglages.categories].map((c) => (
           <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
         ))}
       </div>
@@ -101,14 +102,14 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
           </div>
           <div className="champ-groupe">
             <label htmlFor="nx-cat">Catégorie</label>
-            <select id="nx-cat" className="champ" {...champ('categorie')}>{CATEGORIES.map((c) => <option key={c}>{c}</option>)}</select>
+            <select id="nx-cat" className="champ" {...champ('categorie')} value={nouvel.categorie || reglages.categories[0] || ''}>{reglages.categories.map((c) => <option key={c}>{c}</option>)}</select>
           </div>
           <div className="champ-groupe">
             <label htmlFor="nx-mat">Matériel</label>
-            <select id="nx-mat" className="champ" {...champ('materiel')}>{MATERIELS.map((m) => <option key={m}>{m}</option>)}</select>
+            <select id="nx-mat" className="champ" {...champ('materiel')} value={nouvel.materiel || reglages.materiels[reglages.materiels.length - 1] || ''}>{reglages.materiels.map((m) => <option key={m}>{m}</option>)}</select>
           </div>
           <div className="champ-groupe espace-choix__large">
-            <label htmlFor="nx-cons">Consignes importantes</label>
+            <label htmlFor="nx-cons">Consigne d’exécution</label>
             <input id="nx-cons" className="champ" autoComplete="off" {...champ('consignes')} />
           </div>
         </div>

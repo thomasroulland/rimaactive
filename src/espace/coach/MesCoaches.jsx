@@ -105,7 +105,7 @@ export default function MesCoaches() {
                       </div>
                     </>
                   )}
-                  <p className="carte-coache__visio">{visio ? `Dernière visio : ${c.derniereVisio.semaine ? `S${c.derniereVisio.semaine} · ` : ''}${dateSeance(visio)}` : 'Aucune visio notée'}</p>
+                  <p className="carte-coache__visio">{visio ? `Dernier bilan : ${c.derniereVisio.semaine ? `S${c.derniereVisio.semaine} · ` : ''}${dateSeance(visio)}` : 'Aucun bilan noté'}</p>
                   {c.alertes.length
                     ? <ul className="alertes">{c.alertes.map((a) => <li key={a}>{a}</li>)}</ul>
                     : <p className="carte-coache__calme">{p ? 'Aucune alerte' : c.statut === 'invité' ? `${c.prenom} n’a pas encore activé son compte.` : 'Pensez à lui créer un programme.'}</p>}

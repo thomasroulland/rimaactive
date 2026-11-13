@@ -73,7 +73,7 @@ describe('seancesDeLaSemaine', () => {
   it('séances, numéros, dates, faites', () => {
     const r = seancesDeLaSemaine(p, 2, new Set(['ps4']))
     expect(r.map((x) => x.numero)).toEqual([4, 5, 6])
-    expect(r.map((x) => x.date)).toEqual(['2026-11-23', '2026-11-25', '2026-11-27'])
+    expect(r.map((x) => x.date)).toEqual(['2026-11-23', '2026-11-23', '2026-11-23'])
     expect(r.map((x) => x.faite)).toEqual([true, false, false])
     expect(r[0].seance.id).toBe('ps4')
   })

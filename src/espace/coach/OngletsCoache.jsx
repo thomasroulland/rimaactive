@@ -47,8 +47,8 @@ export function Ensemble() {
       <dl className="chiffres-fiche">
         <div className="espace-carte"><dt>Séances faites sur {ch.prevues}</dt><dd>{ch.faites}</dd></div>
         <div className="espace-carte"><dt>Régularité des semaines passées</dt><dd>{ch.regularite === null ? '–' : `${ch.regularite} %`}</dd></div>
-        <div className="espace-carte"><dt>RPE moyen des séries</dt><dd>{ch.rpeMoyen === null ? '–' : frNombre(ch.rpeMoyen)}</dd></div>
-        <div className="espace-carte"><dt>Visios notées</dt><dd>{bilans ? bilans.length : '–'}</dd></div>
+        <div className="espace-carte"><dt>RPE moyen des séances</dt><dd>{ch.rpeMoyen === null ? '–' : frNombre(ch.rpeMoyen)}</dd></div>
+        <div className="espace-carte"><dt>Bilans notés</dt><dd>{bilans ? bilans.length : '–'}</dd></div>
       </dl>
       <div className="fiche-grille">
         <Carte titre="Alertes" id="t-alertes">
@@ -56,14 +56,14 @@ export function Ensemble() {
         </Carte>
         <Carte titre="Prochaine séance" id="t-prochaine">
           {prochaine
-            ? <><p className="fiche-carte__fort">{prochaine.seance.titre || 'Séance sans titre'}</p><p className="espace-aide">S{prochaine.semaine} · {dateSeance(prochaine.date)}</p></>
+            ? <><p className="fiche-carte__fort">{prochaine.seance.titre || 'Séance sans titre'}</p><p className="espace-aide">Semaine {prochaine.semaine}</p></>
             : <p className="espace-aide">{progEnCours ? 'Toutes les séances sont faites.' : 'Pas de programme en cours.'}</p>}
           <ProfilSportif client={client} uid={uid} />
         </Carte>
-        <Carte titre="Dernière visio" id="t-visio">
+        <Carte titre="Dernier bilan" id="t-visio">
           {dernier
             ? <><p className="espace-aide">{dernier.semaine ? `S${dernier.semaine} · ` : ''}{dateSeance(dernier.date)}</p><p className="fiche-carte__texte">{dernier.texte}{dernier.ajuster ? ` À ajuster : ${dernier.ajuster}` : ''}</p></>
-            : <p className="espace-aide">{client.derniereVisio?.date ? `S${client.derniereVisio.semaine ?? '?'} · ${dateSeance(client.derniereVisio.date)}` : 'Aucune visio notée.'}</p>}
+            : <p className="espace-aide">{client.derniereVisio?.date ? `S${client.derniereVisio.semaine ?? '?'} · ${dateSeance(client.derniereVisio.date)}` : 'Aucun bilan noté.'}</p>}
         </Carte>
       </div>
       {programmes !== null && (
@@ -191,11 +191,11 @@ export function Bilans() {
 
   return (
     <div className="onglet-pile">
-      <p className="espace-aide">Vos comptes rendus des bilans faits en visio avec {client.prenom}. Visibles uniquement par vous.</p>
+      <p className="espace-aide">Vos comptes rendus des bilans faits avec {client.prenom}. Visibles uniquement par vous.</p>
       <form className="espace-carte fiche-carte" onSubmit={enregistrer} aria-labelledby="t-visio">
         <h2 id="t-visio" className="fiche-carte__titre">Nouveau compte rendu</h2>
         <div className="formulaire-grille">
-          <div className="champ-groupe"><label htmlFor="vi-date">Date de la visio</label>
+          <div className="champ-groupe"><label htmlFor="vi-date">Date du bilan</label>
             <input id="vi-date" type="date" className="champ" value={vi.date} max={aujourdhuiIso()} onChange={(e) => setVi({ ...vi, date: e.target.value })} /></div>
           {nbSem > 0 && (
             <div className="champ-groupe"><label htmlFor="vi-sem">Semaine du programme</label>

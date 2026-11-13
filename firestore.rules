@@ -73,6 +73,12 @@ service cloud.firestore {
       allow read, write: if estCoach();
     }
 
+    // Listes réglables du coach (types de séance, catégories, matériels) : lues par tous les comptes, écrites par le coach
+    match /reglages/{id} {
+      allow read: if connecte();
+      allow write: if estCoach();
+    }
+
     match /exercices/{id} {
       allow read, write: if estCoach();
     }

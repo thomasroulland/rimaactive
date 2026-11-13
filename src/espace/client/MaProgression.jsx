@@ -5,6 +5,8 @@ import { evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
 import { Link } from 'react-router-dom'
 import { basculerDetails } from '../../components/basculerDetails.js'
 import MesPhotos from './MesPhotos.jsx'
+import useReglages from '../coach/useReglages.js'
+import { nomType } from '../donnees/reglages.js'
 import MesMesures from './MesMesures.jsx'
 
 const NB_POINTS = 6 // dernières séances montrées par exercice
@@ -127,6 +129,7 @@ function Courbe({ nom, points, libelle }) {
 
 // ---------- Mes séances ----------
 function Historique({ programmes, seances }) {
+  const { types } = useReglages()
   const lignes = seances
     .filter((s) => s.statut === 'terminée')
     .sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.id.localeCompare(b.id))
@@ -145,7 +148,7 @@ function Historique({ programmes, seances }) {
       {lignes.length > 0 && <ul className="ec-histo">
         {lignes.map(({ s, programme, trouve }) => {
           const titre = trouve?.seance.titre || (trouve ? 'Séance' : 'Séance faite')
-          const type = trouve?.seance.type === 'course' ? 'Course' : 'Force'
+          const type = nomType(trouve?.seance.type, types)
           // séance d'un programme supprimé par Marie : on garde la date et le bilan, et on le dit
           const quand = [dateSeance(s.date), trouve ? `semaine ${trouve.semaine}` : 'programme retiré', trouve ? type : ''].filter(Boolean).join(' · ')
           const bilan = bilanSeance(trouve?.seance.type, s)

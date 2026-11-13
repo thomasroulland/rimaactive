@@ -7,7 +7,7 @@ import Confirmation from './Confirmation.jsx'
 import { reduireImage } from '../donnees/photos.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
-import { CATEGORIES, MATERIELS } from '../donnees/banque.js'
+import useReglages from './useReglages.js'
 
 // Liste proposée par Claude, à faire valider par Marie
 export const MUSCLES = ['Quadriceps', 'Ischio-jambiers', 'Fessiers', 'Mollets', 'Pectoraux', 'Dos', 'Épaules', 'Biceps', 'Triceps', 'Abdominaux', 'Lombaires']
@@ -25,6 +25,7 @@ export default function FicheExercice() {
   const [envoi, setEnvoi] = useState(false)
   const [introuvable, setIntrouvable] = useState(false)
   const [confirmer, setConfirmer] = useState(false)
+  const reglages = useReglages()
   const champFichiers = useRef(null)
   const nouvellesRef = useRef([])
   nouvellesRef.current = nouvelles
@@ -32,7 +33,13 @@ export default function FicheExercice() {
   useEffect(() => {
     if (!id) return
     getDoc(doc(db, 'exercices', id))
-      .then((d) => (d.exists() ? setFiche({ ...VIDE, ...d.data() }) : setIntrouvable(true)))
+      .then((d) => {
+        if (!d.exists()) { setIntrouvable(true); return }
+        // un seul champ « Consigne d'exécution » (14 novembre 2026) : les anciens champs y sont regroupés
+        const x = d.data()
+        const morceaux = [x.execution, x.consignes, x.erreurs ? `Erreurs à éviter : ${x.erreurs}` : ''].map((t) => (t ?? '').trim()).filter(Boolean)
+        setFiche({ ...VIDE, ...x, consignes: morceaux.join('\n\n'), execution: '', erreurs: '' })
+      })
       .catch(() => setErreur('Impossible de charger cette fiche. Vérifiez votre connexion.'))
   }, [id])
 
@@ -149,24 +156,17 @@ export default function FicheExercice() {
             <div className="formulaire-ligne">
               <div className="champ-groupe">
                 <label htmlFor="exo-cat">Catégorie</label>
-                <select id="exo-cat" className="champ" value={fiche.categorie ?? 'Renforcement'} onChange={maj('categorie')}>{CATEGORIES.map((c) => <option key={c}>{c}</option>)}</select>
+                <select id="exo-cat" className="champ" value={fiche.categorie ?? 'Renforcement'} onChange={maj('categorie')}>{[...new Set([...reglages.categories, fiche.categorie].filter(Boolean))].map((c) => <option key={c}>{c}</option>)}</select>
               </div>
               <div className="champ-groupe">
                 <label htmlFor="exo-mat">Matériel</label>
-                <select id="exo-mat" className="champ" value={fiche.materiel ?? 'À préciser'} onChange={maj('materiel')}>{MATERIELS.map((m) => <option key={m}>{m}</option>)}</select>
+                <select id="exo-mat" className="champ" value={fiche.materiel ?? 'À préciser'} onChange={maj('materiel')}>{[...new Set([...reglages.materiels, fiche.materiel].filter(Boolean))].map((m) => <option key={m}>{m}</option>)}</select>
               </div>
             </div>
             <div className="champ-groupe">
-              <label htmlFor="exo-exe">Description de l’exécution</label>
-              <textarea id="exo-exe" className="champ" rows={3} value={fiche.execution ?? ''} onChange={maj('execution')} />
-            </div>
-            <div className="champ-groupe">
-              <label htmlFor="exo-consignes">Consignes techniques importantes</label>
-              <textarea id="exo-consignes" className="champ" rows={3} value={fiche.consignes} onChange={maj('consignes')} />
-            </div>
-            <div className="champ-groupe">
-              <label htmlFor="exo-erreurs">Erreurs à éviter</label>
-              <textarea id="exo-erreurs" className="champ" rows={2} value={fiche.erreurs ?? ''} onChange={maj('erreurs')} />
+              <label htmlFor="exo-consignes">Consigne d’exécution</label>
+              <textarea id="exo-consignes" className="champ espace-fiche__consigne" rows={8} value={fiche.consignes}
+                placeholder="Position de départ, mouvement, respiration, points à surveiller, erreurs à éviter…" onChange={maj('consignes')} />
             </div>
             <div className="champ-groupe">
               <label htmlFor="exo-video">Lien vidéo (facultatif)</label>

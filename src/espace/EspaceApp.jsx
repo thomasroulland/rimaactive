@@ -69,7 +69,7 @@ function Page({ titre, children }) {
 function EspaceDuCoach({ profil }) {
   const liens = useLiensCoach()
   return (
-    <Coque liens={liens} libelleCompte="Coach">
+    <Coque liens={liens}>
       <Routes>
         <Route path="coach/*" element={<EspaceCoach profil={profil} />} />
         <Route path="*" element={<Navigate to="/espace/coach" replace />} />

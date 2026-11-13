@@ -37,9 +37,10 @@ describe('listeSeances', () => {
     { id: 'w1', seances: [seance('a', 'Lundi')] },
     { id: 'w2', seances: [seance('b', 'Mercredi'), seance('c', 'Dimanche')] },
   ])
-  it('calcule les dates sans décalage', () => {
+  it('date chaque séance du début de sa semaine (plus de jour), fin = dernier jour de la semaine', () => {
     const l = listeSeances(p)
-    expect(l.map((x) => x.date)).toEqual(['2026-11-16', '2026-11-25', '2026-11-29'])
+    expect(l.map((x) => x.date)).toEqual(['2026-11-16', '2026-11-23', '2026-11-23'])
+    expect(l.map((x) => x.fin)).toEqual(['2026-11-22', '2026-11-29', '2026-11-29'])
     expect(l.map((x) => x.semaine)).toEqual([1, 2, 2])
     expect(l[1].seance.id).toBe('b')
   })
@@ -53,7 +54,7 @@ describe('etatAccueil', () => {
   it('bientot', () => expect(etatAccueil(p, new Set(), '2026-11-15')).toEqual({ type: 'bientot', debut: '2026-11-16' }))
   it('prochaine', () => {
     const e = etatAccueil(p, new Set(['a']), '2026-11-17')
-    expect(e).toMatchObject({ type: 'prochaine', semaine: 1, date: '2026-11-19' })
+    expect(e).toMatchObject({ type: 'prochaine', semaine: 1, date: '2026-11-16' })
     expect(e.seance.id).toBe('b')
     expect(etatAccueil(p, new Set(), '2026-11-16').seance.id).toBe('a')
   })

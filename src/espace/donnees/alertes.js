@@ -19,7 +19,6 @@ export function suiviCoache({ programme, seances, visio, aujourdhui, actif = fal
     const semaine = semaineCourante(programme.debut, aujourdhui, nb)
     const liste = listeSeances(programme)
     const faites = new Set(terminees.filter((s) => s.programme === programme.id).map((s) => s.seance))
-    const prevuesPassees = liste.filter((x) => x.date < aujourdhui && !faites.has(x.seance.id))
     const semaines = (programme.semaines ?? []).map((sem, i) => {
       const ids = (sem.seances ?? []).map((s) => s.id)
       const complete = ids.length > 0 && ids.every((id) => faites.has(id))
@@ -44,28 +43,25 @@ export function suiviCoache({ programme, seances, visio, aujourdhui, actif = fal
       const depuis = ecartJours(derniere && derniere > programme.debut ? derniere : programme.debut, aujourdhui)
       if (depuis >= SEUIL_SANS_SEANCE) alertes.push(`Aucune séance depuis ${depuis} jours`)
     }
-    if (prevuesPassees.length > 0) {
-      alertes.push(`${prevuesPassees.length} séance${prevuesPassees.length > 1 ? 's' : ''} prévue${prevuesPassees.length > 1 ? 's' : ''} non faite${prevuesPassees.length > 1 ? 's' : ''}`)
-    }
   }
 
   if (visio?.date) {
     const depuis = ecartJours(visio.date, aujourdhui)
-    if (programme && depuis > SEUIL_VISIO) alertes.push(`Dernière visio il y a ${depuis} jours`)
+    if (programme && depuis > SEUIL_VISIO) alertes.push(`Dernier bilan il y a ${depuis} jours`)
   }
   if (!programme && actif) alertes.unshift('Pas de programme en cours')
   return { resume, alertes }
 }
 
-// Chiffres de la vue d'ensemble (maquette coach) : séances faites, régularité des semaines passées, RPE moyen des séries
+// Chiffres de la vue d'ensemble (maquette coach) : séances faites, régularité des semaines passées, RPE moyen des séances
 export function chiffresCoache({ programme, seances, aujourdhui }) {
   const terminees = (seances ?? []).filter((s) => s.statut === 'terminée')
   const liste = programme ? listeSeances(programme) : []
   const faites = new Set(terminees.filter((s) => programme && s.programme === programme.id).map((s) => s.seance))
-  const passees = liste.filter((x) => x.date < aujourdhui)
+  const passees = liste.filter((x) => x.fin < aujourdhui) // semaines terminées
   const regularite = passees.length ? Math.round((passees.filter((x) => faites.has(x.seance.id)).length / passees.length) * 100) : null
-  const rpes = terminees.flatMap((s) => Object.values(s.series ?? {}).flat())
-    .filter((l) => l && l.fait !== false).map((l) => nombre(l.rpe)).filter((v) => !Number.isNaN(v))
+  // RPE moyen des séances : l'effort ressenti noté en fin de séance (demande de Thomas, 14 novembre 2026)
+  const rpes = terminees.map((s) => s.effort).filter((v) => Number.isInteger(v))
   const rpeMoyen = rpes.length ? Math.round((rpes.reduce((t, v) => t + v, 0) / rpes.length) * 10) / 10 : null
   return { faites: liste.filter((x) => faites.has(x.seance.id)).length, prevues: liste.length, regularite, rpeMoyen }
 }

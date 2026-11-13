@@ -63,7 +63,7 @@ export function PageCoache() {
 }
 
 // Onglets de la fiche (maquette coach) : [segment d'adresse, nom]
-export const ONGLETS = [['', 'Vue d’ensemble'], ['programme', 'Programme'], ['historique', 'Historique'], ['bilans', 'Bilans visio'], ['stats', 'Statistiques'], ['photos', 'Photos'], ['notes', 'Notes privées']]
+export const ONGLETS = [['', 'Vue d’ensemble'], ['programme', 'Programme'], ['historique', 'Historique'], ['bilans', 'Bilans'], ['stats', 'Statistiques'], ['photos', 'Photos'], ['notes', 'Notes privées']]
 
 function Tete({ client, uid, onglet, enCours, emplacement }) {
   const nom = `${client.prenom ?? ''} ${client.nom ?? ''}`.trim()

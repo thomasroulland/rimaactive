@@ -1,5 +1,5 @@
 import { resumeFormat } from '../donnees/seances.js'
-import { JOURS } from '../donnees/calculs.js'
+import useReglages from './useReglages.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice from './ChoixExercice.jsx'
 import { chargeIndicative } from '../donnees/banque.js'
@@ -34,6 +34,7 @@ function Champ({ id, label, valeur, changer, large, mode, multiligne, indice, ai
 export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, rpeSemaine, majSeance, majBloc, majElement, retirer, ajouter }) {
   const ids = (cle) => `se-${seance.id}-${cle}`
   const lettres = (seance.blocs ?? []).map((b) => b.lettre)
+  const { types } = useReglages()
 
   return (
     <div className="espace-seance">
@@ -47,14 +48,8 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
           <div className="champ-groupe espace-param">
             <label htmlFor={ids('type')}>Type</label>
             <select id={ids('type')} className="champ" value={seance.type} onChange={(e) => majSeance('type', e.target.value)}>
-              <option value="force">Force</option>
-              <option value="course">Course</option>
-            </select>
-          </div>
-          <div className="champ-groupe espace-param">
-            <label htmlFor={ids('jour')}>Jour</label>
-            <select id={ids('jour')} className="champ" value={seance.jour} onChange={(e) => majSeance('jour', e.target.value)}>
-              {JOURS.map((j) => <option key={j} value={j}>{j}</option>)}
+              {types.map((t) => <option key={t.id} value={t.id}>{t.nom}</option>)}
+              {!types.some((t) => t.id === seance.type) && <option value={seance.type}>Type supprimé</option>}
             </select>
           </div>
           <Champ id={ids('lieu')} label="Lieu" valeur={seance.lieu} changer={(v) => majSeance('lieu', v)} />
@@ -69,7 +64,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
           )}
         </div>
 
-        {seance.type === 'force' && (
+        {seance.type !== 'course' && (
           <>
             {(seance.blocs ?? []).length === 0 && (
               <p className="espace-texte">Aucun exercice pour l’instant. Ajoutez-en depuis votre banque.</p>
@@ -104,7 +99,8 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                 <ol className="espace-elements">
                   {(b.elements ?? []).map((el, ei) => (
                     <Element key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={b.format === 'series'} verrou={verrou} rm={rm} rpeSemaine={rpeSemaine}
-                      maj={(cle, v) => majElement(bi, ei, cle, v)} retirer={() => retirer(el)} />
+                      maj={(cle, v) => majElement(bi, ei, cle, v)} retirer={() => retirer(el)}
+                      photo={el.photos?.[0] || (exercices ?? []).find((x) => x.id === el.exoId)?.photos?.[0]} />
                   ))}
                 </ol>
               </section>
@@ -113,19 +109,19 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
         )}
       </fieldset>
 
-      {seance.type === 'force' && !verrou && <ChoixExercice exercices={exercices} lettres={lettres} ajouter={ajouter} />}
+      {seance.type !== 'course' && !verrou && <ChoixExercice exercices={exercices} lettres={lettres} ajouter={ajouter} />}
     </div>
   )
 }
 
-function Element({ element: el, code, series, verrou, rm, rpeSemaine, maj, retirer }) {
+function Element({ element: el, code, series, verrou, rm, rpeSemaine, maj, retirer, photo }) {
   const id = (cle) => `el-${el.id}-${cle}`
   const calculee = chargeIndicative(el.nom, el.pct, rm)
   const aideCharge = calculee !== null && String(el.charge ?? '').trim() === '' ? `≈ ${frNombre(calculee)} kg d’après le 1RM` : undefined
   return (
     <li className="espace-carte espace-element">
       <div className="espace-element__tete">
-        <PhotoStockee chemin={el.photos?.[0]} alt="" classe="espace-vignette" />
+        <PhotoStockee chemin={photo} alt="" classe="espace-vignette" />
         <div className="espace-element__nom">
           <span className="espace-element__code" aria-hidden="true">{code}</span>
           <h3 className="espace-element__titre"><span className="sr-only">{code} : </span>{el.nom}</h3>

@@ -969,3 +969,50 @@ a.lien-souligne:hover::after { transform: translateX(3px) rotate(45deg); }
 .lien-souligne.fiche-carte__modifier:hover { background: var(--blanc); }
 .modele__affecter-lien::after { margin-left: 0; }
 @media (prefers-reduced-motion: reduce) { .lien-souligne, a.lien-souligne::after { transition: none; } }
+/* colonnes de la semaine : vignette de l'exercice à gauche (14 novembre 2026) */
+.colonne-seance__exos li { grid-template-columns: 36px 1fr; align-items: center; }
+.colonne-seance__vignette { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; display: block; background: #e8e5de; }
+.colonne-seance__exos li b { margin-right: 4px; }
+
+/* Fenêtre « Gérer… » des listes (types de séance, catégories, matériels) */
+.espace-dialogue.gestion-listes[open] { display: flex; flex-direction: column; gap: 18px; width: min(560px, calc(100vw - 32px)); max-height: calc(100svh - 48px); overflow: auto; }
+.gestion-listes__partie { display: flex; flex-direction: column; gap: 10px; }
+.gestion-listes__partie + .gestion-listes__partie { padding-top: 16px; border-top: 1px solid #ece9e3; }
+.gestion-listes__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.gestion-listes__ligne { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 46px; padding: 4px 0; border-bottom: 1px solid #f0ede7; }
+.gestion-listes__nom { font-weight: 600; overflow-wrap: anywhere; }
+.gestion-listes__actions { display: flex; align-items: center; gap: 4px; flex: none; }
+.gestion-listes__icone { display: inline-grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; color: var(--gris-chaud); cursor: pointer; transition: background .2s ease, color .2s ease; }
+.gestion-listes__icone:hover { background: var(--craie); color: var(--encre); }
+.gestion-listes__icone--danger:hover { color: var(--vermillon); }
+.gestion-listes__icone:focus-visible, .gestion-listes__confirmer:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.gestion-listes__confirmer { min-height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--vermillon); color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.gestion-listes__edition, .gestion-listes__ajout { display: flex; align-items: center; gap: 8px; width: 100%; }
+.gestion-listes__edition .champ, .gestion-listes__ajout .champ { flex: 1; min-width: 0; min-height: 40px; padding-block: 6px; }
+.gestion-listes__ligne:has(.gestion-listes__edition) { padding-block: 6px; }
+/* banque : deux rangées de filtres (catégorie, matériel) */
+.banque-filtres { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px 14px; width: 100%; }
+.banque-filtres__lib { font-size: 14px; font-weight: 600; color: var(--gris-chaud); }
+.banque-filtres__bas { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; width: 100%; }
+.espace-fiche__consigne { min-height: 180px !important; }
+@media (max-width: 560px) { .banque-filtres { grid-template-columns: 1fr; gap: 6px; } }
+
+/* Éditeur de programme (14 novembre 2026) : barre « Programme affiché » + actions sous les onglets, « + Séance » avec types */
+.prog-outils { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 16px; }
+.prog-outils__choix { flex: 0 1 460px; min-width: 0; gap: 4px; }
+.prog-outils__choix > label { font-size: 13px; font-weight: 600; color: var(--gris-chaud); }
+.prog-outils__choix .champ { width: 100%; min-height: 42px; padding-block: 6px; }
+.prog-outils__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ajout-seance { position: relative; align-self: flex-start; }
+.ajout-seance__bouton { gap: 10px; }
+.ajout-seance__plus { width: 12px; height: 12px; background: linear-gradient(currentColor, currentColor) center / 12px 1.8px no-repeat, linear-gradient(currentColor, currentColor) center / 1.8px 12px no-repeat; }
+.ajout-seance__menu { position: absolute; z-index: 60; bottom: calc(100% + 8px); left: 0; min-width: 230px; display: flex; flex-direction: column; padding: 8px; border-radius: 16px; background: var(--blanc); border: 1px solid #ece9e3; box-shadow: 0 10px 30px rgba(22, 21, 20, 0.12); }
+.ajout-seance__titre { margin: 4px 10px 6px; font-size: 12px; font-weight: 700; color: var(--gris-chaud); }
+.ajout-seance__choix, .ajout-seance__gerer { text-align: left; min-height: 40px; padding: 0 12px; border: 0; border-radius: 10px; background: none; font: inherit; font-weight: 600; color: var(--encre); cursor: pointer; }
+.ajout-seance__choix:hover, .ajout-seance__gerer:hover { background: var(--craie); }
+.ajout-seance__gerer { margin-top: 4px; border-top: 1px solid #ece9e3; border-radius: 0 0 10px 10px; color: var(--gris-chaud); font-size: 14px; }
+.ajout-seance__choix:focus-visible, .ajout-seance__gerer:focus-visible { outline: 2px solid var(--encre); outline-offset: -2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .ajout-seance__menu { animation: ajout-menu .18s cubic-bezier(.3, .7, .2, 1); transform-origin: bottom left; }
+  @keyframes ajout-menu { from { opacity: 0; transform: translateY(4px) scale(.97); } }
+}

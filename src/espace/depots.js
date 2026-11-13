@@ -143,6 +143,14 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
       retire: exercice.retire ?? false,
       majLe: serverTimestamp(),
     })
+    // les programmes et modèles qui utilisent déjà cet exercice reprennent ses photos, consignes et muscles
+    // (sinon ils gardaient la copie faite le jour de l'ajout, sans les photos ajoutées ensuite)
+    await propagerExercice(id, {
+      nom: exercice.nom.trim(),
+      consignes: (exercice.consignes ?? '').trim(),
+      muscles: exercice.muscles ?? [],
+      photos: [...(exercice.photos ?? []), ...envoyees],
+    }).catch(() => { /* la fiche est enregistrée ; la mise à jour des programmes se refera au prochain enregistrement */ })
   } catch (e) {
     for (const chemin of envoyees) {
       try { await deleteObject(ref(stockage, chemin)) } catch { /* déjà absent */ }
@@ -159,6 +167,45 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
 // déjà l'exercice en gardent une copie (nom, consignes, chemins des photos) et ne changent pas.
 export function supprimerExercice(id) {
   return deleteDoc(doc(db, 'exercices', id))
+}
+
+// ---------- Réglages du coach (14 novembre 2026) ----------
+export function ecouterReglages(rappel, erreur) {
+  return onSnapshot(doc(db, 'reglages', 'coach'), (d) => rappel(d.exists() ? d.data() : null), erreur)
+}
+export function enregistrerReglages(reglages) {
+  return setDoc(doc(db, 'reglages', 'coach'), reglages, { merge: true })
+}
+// Renomme une catégorie ou un matériel dans toutes les fiches de la banque (champ 'categorie' ou 'materiel')
+export async function renommerDansBanque(champ, ancien, nouveau) {
+  const docs = await getDocs(query(collection(db, 'exercices'), where(champ, '==', ancien)))
+  for (const d of docs.docs) await updateDoc(doc(db, 'exercices', d.id), { [champ]: nouveau })
+}
+
+// Met à jour la copie d'un exercice dans tous les programmes et modèles qui l'utilisent (coach seulement).
+export async function propagerExercice(exoId, champs) {
+  for (const nom of ['programmes', 'modeles']) {
+    const docs = await getDocs(collection(db, nom))
+    for (const d of docs.docs) {
+      let change = false
+      const semaines = (d.data().semaines ?? []).map((w) => ({
+        ...w,
+        seances: (w.seances ?? []).map((se) => ({
+          ...se,
+          blocs: (se.blocs ?? []).map((b) => ({
+            ...b,
+            elements: (b.elements ?? []).map((el) => {
+              if (el.exoId !== exoId) return el
+              const nouveau = { ...el, ...champs }
+              if (JSON.stringify(nouveau) !== JSON.stringify(el)) change = true
+              return nouveau
+            }),
+          })),
+        })),
+      }))
+      if (change) await updateDoc(doc(db, nom, d.id), { semaines })
+    }
+  }
 }
 
 // « Retirer » : l'exercice sort de la banque, ses fichiers restent (les programmes gardent leur copie des chemins).

@@ -4,29 +4,20 @@ export function nouvelId() {
   return crypto.randomUUID()
 }
 
-const JOURS_PAR_DEFAUT = {
-  1: ['Lundi'],
-  2: ['Lundi', 'Jeudi'],
-  3: ['Lundi', 'Mercredi', 'Vendredi'],
-  4: ['Lundi', 'Mardi', 'Jeudi', 'Samedi'],
-  5: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
-  6: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-  7: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
-}
-
-function seanceVide(jour) {
+// Plus de jour (14 novembre 2026) : une séance appartient seulement à sa semaine, dans l'ordre.
+function seanceVide() {
   return {
-    id: nouvelId(), titre: '', jour, lieu: '', duree: '', objectif: '', type: 'force',
+    id: nouvelId(), titre: '', lieu: '', duree: '', objectif: '', type: 'force',
     consigne: '', distance: '', temps: '', blocs: [],
   }
 }
 
 export function nouveauProgramme({ client, nom, debut, semaines, parSemaine }) {
-  const jours = JOURS_PAR_DEFAUT[Math.min(Math.max(parSemaine, 1), 7)]
+  const nb = Math.min(Math.max(Number(parSemaine) || 1, 1), 7)
   return {
     client, nom, debut, parSemaine, statut: 'brouillon',
     semaines: Array.from({ length: semaines }, () => ({
-      id: nouvelId(), mot: '', rpe: '', seances: jours.map(seanceVide),
+      id: nouvelId(), mot: '', rpe: '', seances: Array.from({ length: nb }, seanceVide),
     })),
   }
 }
@@ -74,8 +65,8 @@ export function nouvelleSemaine(parSemaine) {
   return nouveauProgramme({ client: '', nom: '', debut: '', semaines: 1, parSemaine }).semaines[0]
 }
 
-export function nouvelleSeance(type = 'force', jour = 'Lundi') {
-  return { ...seanceVide(jour), type }
+export function nouvelleSeance(type = 'force') {
+  return { ...seanceVide(), type }
 }
 
 const CHAMPS_SEANCE = ['titre', 'lieu', 'duree', 'objectif', 'consigne', 'distance', 'temps']
@@ -130,4 +121,22 @@ export function garderSeancesFaites(local, serveur, faites) {
 export function dupliquerProgramme(programme, { nom, debut }) {
   const { id, majLe, ...reste } = structuredClone(programme) // eslint-disable-line no-unused-vars
   return { ...reste, nom, debut, statut: 'brouillon', semaines: (reste.semaines ?? []).map(copierSemaine) }
+}
+
+// Ordre des programmes d'un coaché dans l'éditeur (14 novembre 2026) : celui en cours d'abord, puis les prochains
+// (du plus proche au plus lointain), puis les passés (du plus récent au plus ancien). Dates 'AAAA-MM-JJ'.
+export function ordreProgrammes(programmes, aujourdhui) {
+  const fin = (p) => {
+    const d = new Date(`${p.debut || '1970-01-01'}T12:00:00Z`)
+    d.setUTCDate(d.getUTCDate() + (p.semaines?.length ?? 0) * 7 - 1)
+    return d.toISOString().slice(0, 10)
+  }
+  const rang = (p) => (!p.debut ? 2 : p.debut <= aujourdhui && aujourdhui <= fin(p) ? 0 : p.debut > aujourdhui ? 1 : 2)
+  return [...(programmes ?? [])].sort((a, b) => {
+    const r = rang(a) - rang(b)
+    if (r) return r
+    if (rang(a) === 1) return (a.debut || '').localeCompare(b.debut || '')
+    if (rang(a) === 0) return (a.statut === 'publié' ? 0 : 1) - (b.statut === 'publié' ? 0 : 1)
+    return (b.debut || '').localeCompare(a.debut || '')
+  })
 }

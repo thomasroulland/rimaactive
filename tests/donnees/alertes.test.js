@@ -15,14 +15,14 @@ describe('suiviCoache', () => {
     const { alertes } = suiviCoache({ programme: prog, seances: [fait('s1', '2026-11-02', 8), fait('s2', '2026-11-05', 7)], aujourdhui: '2026-11-06' })
     expect(alertes).toContain('Effort ressenti au-dessus du prévu en S1')
   })
-  it('signale les séances prévues non faites et l’absence de séance', () => {
+  it('signale l’absence de séance, pas les séances qui restent à faire', () => {
     const { alertes } = suiviCoache({ programme: prog, seances: [fait('s1', '2026-11-02', 6)], aujourdhui: '2026-11-13' })
     expect(alertes).toContain('Aucune séance depuis 11 jours')
-    expect(alertes).toContain('3 séances prévues non faites') // s2 (jeu. 5), s3 (lun. 9) et s4 (jeu. 12)
+    expect(alertes.some((a) => a.includes('non faite'))).toBe(false)
   })
   it('signale une visio trop ancienne, pas avant le seuil', () => {
-    expect(suiviCoache({ programme: prog, seances: [], visio: { date: '2026-10-20' }, aujourdhui: '2026-11-04' }).alertes).toContain('Dernière visio il y a 15 jours')
-    expect(suiviCoache({ programme: prog, seances: [], visio: { date: '2026-10-25' }, aujourdhui: '2026-11-04' }).alertes).not.toContain('Dernière visio il y a 10 jours')
+    expect(suiviCoache({ programme: prog, seances: [], visio: { date: '2026-10-20' }, aujourdhui: '2026-11-04' }).alertes).toContain('Dernier bilan il y a 15 jours')
+    expect(suiviCoache({ programme: prog, seances: [], visio: { date: '2026-10-25' }, aujourdhui: '2026-11-04' }).alertes).not.toContain('Dernier bilan il y a 10 jours')
   })
   it('sans programme : pas de résumé ni d’alerte', () => {
     expect(suiviCoache({ programme: null, seances: [], aujourdhui: '2026-11-04' })).toEqual({ resume: null, alertes: [] })
@@ -32,8 +32,8 @@ describe('suiviCoache', () => {
 import { chiffresCoache, effortParSemaine } from '../../src/espace/donnees/alertes.js'
 describe('chiffresCoache et effortParSemaine', () => {
   const s1 = { ...fait('s1', '2026-11-02', 7), series: { e: [{ rpe: '7', fait: true }, { rpe: '8' }, { rpe: '9', fait: false }] } }
-  it('compte les séances, la régularité des séances passées et le RPE moyen des séries faites', () => {
-    expect(chiffresCoache({ programme: prog, seances: [s1], aujourdhui: '2026-11-10' })).toEqual({ faites: 1, prevues: 4, regularite: 33, rpeMoyen: 7.5 })
+  it('compte les séances, la régularité des séances passées et le RPE moyen des séances (effort de fin de séance)', () => {
+    expect(chiffresCoache({ programme: prog, seances: [s1, fait('s2', '2026-11-05', 8)], aujourdhui: '2026-11-10' }).rpeMoyen).toBe(7.5)
   })
   it('compare le RPE visé à l’effort ressenti, semaine par semaine', () => {
     expect(effortParSemaine(prog, [s1, fait('s2', '2026-11-05', 6)])).toEqual([

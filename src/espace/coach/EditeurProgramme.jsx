@@ -6,14 +6,19 @@ import {
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
-  garderSeancesFaites,
+  garderSeancesFaites, ordreProgrammes,
 } from '../donnees/programme.js'
-import { dateLongue } from '../donnees/calculs.js'
+import { ajoutJours, aujourdhuiIso, dateLongue } from '../donnees/calculs.js'
+import { dateCourte } from '../donnees/seances.js'
+import { nomType } from '../donnees/reglages.js'
+import useReglages from './useReglages.js'
+import GestionListes from './GestionListes.jsx'
 import { lignesExercice } from '../donnees/seances.js'
 import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import { messageErreur } from '../erreurs.js'
 import CreationProgramme, { ChoixDebut } from './CreationProgramme.jsx'
 import EditeurSeance from './EditeurSeance.jsx'
+import PhotoStockee from './PhotoStockee.jsx'
 import Confirmation from './Confirmation.jsx'
 import GestionProgramme, { lundisAutour } from './GestionProgramme.jsx'
 import useGardeSortie from './useGardeSortie.js'
@@ -48,6 +53,8 @@ export default function EditeurProgramme() {
   const [envoi, setEnvoi] = useState(false)
   const [confirmation, setConfirmation] = useState(null)
   const [gestion, setGestion] = useState(false) // fenêtre « Gérer le programme »
+  const [gererTypes, setGererTypes] = useState(false) // fenêtre « Types de séance »
+  const reglages = useReglages()
   const [aOuvrir, setAOuvrir] = useState(null) // copie créée : ouverte dès qu'elle arrive du serveur
   const supprime = useRef(null) // programme supprimé : ne pas le rouvrir avant que la liste se mette à jour
   const version = useRef(0)
@@ -71,9 +78,9 @@ export default function EditeurProgramme() {
     : ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.'))), [uid, modele, modeleId])
   useEffect(() => ecouterExercices(setExercices, () => setExercices([])), [])
 
-  // Ouvre le programme le plus récent au premier chargement
+  // Ouvre d'abord le programme en cours, sinon le prochain, sinon le plus récent (14 novembre 2026)
   useEffect(() => {
-    const restants = (programmes ?? []).filter((p) => p.id !== supprime.current)
+    const restants = ordreProgrammes((programmes ?? []).filter((p) => p.id !== supprime.current), aujourdhuiIso())
     const voulu = restants.find((p) => p.id === params.get('programme')) // venu de la page « Programmes »
     if (!prog && !creation && restants.length) ouvrir(voulu ?? restants[0])
   }, [programmes, prog, creation])
@@ -220,7 +227,7 @@ export default function EditeurProgramme() {
   }
 
   function ajouterSeance(type) {
-    const s = nouvelleSeance(type, type === 'course' ? 'Mercredi' : 'Lundi')
+    const s = nouvelleSeance(type)
     muter((p) => { p.semaines[semIdx].seances.push(s) })
     aller({ semaine: semIdx + 1, seance: s.id })
   }
@@ -348,29 +355,7 @@ export default function EditeurProgramme() {
         <div className="conteneur espace-coach">
           <EnteteCoache client={client} uid={uid} chemin={chemin}
             infos={modele ? '' : `${prog.nom || 'Programme sans nom'} · ${nbSem} semaine${nbSem > 1 ? 's' : ''} · début le ${dateLongue(prog.debut)}`}
-            actions={(
-              <>
-                {programmes.length > 1 && (
-                  <div className="champ-groupe espace-autres">
-                    <label htmlFor="prog-choix">Programme affiché</label>
-                    <select id="prog-choix" className="champ" value={prog.id} onChange={(e) => {
-                      const cible = programmes.find((p) => p.id === e.target.value)
-                      const go = () => { ouvrir(cible); aller({ semaine: 1 }, true) }
-                      if (modifie) demander({ ...QUITTER, action: go })
-                      else go()
-                    }}>
-                      {programmes.map((p) => <option key={p.id} value={p.id}>{p.nom} ({p.statut === 'publié' ? 'publié' : 'brouillon'}, {p.debut})</option>)}
-                    </select>
-                  </div>
-                )}
-                <button type="button" className="bouton bouton--secondaire" onClick={() => setGestion(true)}>Gérer le programme</button>
-                <button type="button" className="bouton bouton--secondaire" onClick={() => {
-                  const go = () => aller({ nouveau: true })
-                  if (modifie) demander({ ...QUITTER, action: go })
-                  else go()
-                }}>Nouveau programme</button>
-              </>
-            )} />
+            />
           {modele && !seance && (
             <header className="modele-tete">
               <Link to="/espace/coach/programmes" className="espace-retour">
@@ -386,6 +371,31 @@ export default function EditeurProgramme() {
                 <svg className="modele-tete__crayon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" /></svg>
               </h1>
             </header>
+          )}
+          {!modele && !seance && (
+            <div className="prog-outils">
+              {programmes.length > 1 ? (
+                <div className="champ-groupe prog-outils__choix">
+                  <label htmlFor="prog-choix">Programme affiché</label>
+                  <select id="prog-choix" className="champ" value={prog.id} onChange={(e) => {
+                    const cible = programmes.find((p) => p.id === e.target.value)
+                    const go = () => { ouvrir(cible); aller({ semaine: 1 }, true) }
+                    if (modifie) demander({ ...QUITTER, action: go })
+                    else go()
+                  }}>
+                    {ordreProgrammes(programmes, aujourdhuiIso()).map((p) => <option key={p.id} value={p.id}>{p.nom || 'Programme sans nom'} · {etatProgramme(p)} · début {dateCourte(p.debut)}</option>)}
+                  </select>
+                </div>
+              ) : <span />}
+              <div className="prog-outils__actions">
+                <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setGestion(true)}>Gérer le programme</button>
+                <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => {
+                  const go = () => aller({ nouveau: true })
+                  if (modifie) demander({ ...QUITTER, action: go })
+                  else go()
+                }}>Nouveau programme</button>
+              </div>
+            </div>
           )}
           {messages}
           {alerteVerrous}
@@ -447,7 +457,7 @@ export default function EditeurProgramme() {
                         <li key={s.id} className={`colonne-seance${ouverte ? ' colonne-seance--ouverte' : ''}`}>
                           <div className="colonne-seance__tete">
                             <span className="colonne-seance__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                            <span className="colonne-seance__jour">{s.jour}</span>
+                            <span className="colonne-seance__jour">{nomType(s.type, reglages.types)}</span>
                           </div>
                           <h2 className="colonne-seance__titre">
                             <Link to={lienSeance(s.id)} className="colonne-seance__lien" aria-current={ouverte ? 'true' : undefined}>
@@ -455,7 +465,7 @@ export default function EditeurProgramme() {
                             </Link>
                           </h2>
                           <p className={`colonne-seance__etat${faite ? ' colonne-seance__etat--faite' : ''}`}>{faite ? '✓ Faite : non modifiable' : 'À faire'}</p>
-                          <ExercicesColonne seance={s} />
+                          <ExercicesColonne seance={s} banque={exercices} />
                           {!faite && verrous !== null && (
                             <button type="button" className="espace-lien colonne-seance__suppr" onClick={() => supprimerSeance(s, i + 1)}>
                               Supprimer<span className="sr-only"> la séance {i + 1}</span>
@@ -466,10 +476,7 @@ export default function EditeurProgramme() {
                     })}
                   </ol>
                 )}
-              <div className="espace-actions">
-                <button type="button" className="bouton bouton--secondaire" onClick={() => ajouterSeance('force')}>+ Séance de force</button>
-                <button type="button" className="bouton bouton--secondaire" onClick={() => ajouterSeance('course')}>+ Course</button>
-              </div>
+              <AjoutSeance types={reglages.types} ajouter={ajouterSeance} gerer={() => setGererTypes(true)} />
             </div>
 
           </div>
@@ -498,7 +505,7 @@ export default function EditeurProgramme() {
               </div>
               <div className="page-seance__titre-ligne">
                 <h2 id="page-seance-titre" className="page-seance__titre">{seance.titre || `Séance ${seIdx + 1}`}</h2>
-                <span className="page-seance__jour">{seance.jour}</span>
+                <span className="page-seance__jour">{nomType(seance.type, reglages.types)}</span>
               </div>
               <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
                 majSeance={majSeance} majBloc={majBloc} majElement={majElement}
@@ -510,6 +517,7 @@ export default function EditeurProgramme() {
       </section>
       {barre}
       {dialogue}
+      {gererTypes && <GestionListes titre="Types de séance" reglages={reglages} fermer={() => setGererTypes(false)} listes={[{ cle: 'types', titre: 'Types de séance' }]} />}
       {gestion && (
         <GestionProgramme prog={prog} prenom={client.prenom} aDesModifs={modifie} fermer={() => setGestion(false)}
           fait={(action, d) => {
@@ -525,17 +533,59 @@ export default function EditeurProgramme() {
 }
 
 // Exercices d'une séance, en abrégé dans sa colonne : code (A1, A2…), nom et ce qui est prévu
-function ExercicesColonne({ seance }) {
+// État d'un programme dans la liste « Programme affiché »
+function etatProgramme(p) {
+  if (p.statut !== 'publié') return 'brouillon'
+  const auj = aujourdhuiIso()
+  if (auj < p.debut) return 'à venir'
+  if (auj > ajoutJours(p.debut, (p.semaines?.length ?? 0) * 7 - 1)) return 'terminé'
+  return 'en cours'
+}
+
+// « + Séance » : un seul bouton, qui ouvre la liste des types (et « Gérer les types »)
+function AjoutSeance({ types, ajouter, gerer }) {
+  const [ouvert, setOuvert] = useState(false)
+  const zone = useRef(null)
+  useEffect(() => {
+    if (!ouvert) return undefined
+    const fermer = (e) => { if (!zone.current?.contains(e.target)) setOuvert(false) }
+    const echap = (e) => { if (e.key === 'Escape') setOuvert(false) }
+    document.addEventListener('pointerdown', fermer)
+    document.addEventListener('keydown', echap)
+    return () => { document.removeEventListener('pointerdown', fermer); document.removeEventListener('keydown', echap) }
+  }, [ouvert])
+  return (
+    <div className="ajout-seance" ref={zone}>
+      <button type="button" className="bouton bouton--secondaire ajout-seance__bouton" aria-expanded={ouvert} aria-haspopup="true" onClick={() => setOuvert(!ouvert)}>
+        <span aria-hidden="true" className="ajout-seance__plus" /> Séance
+      </button>
+      {ouvert && (
+        <div className="ajout-seance__menu" role="group" aria-label="Type de la nouvelle séance">
+          <p className="ajout-seance__titre">Type de séance</p>
+          {types.map((t) => (
+            <button key={t.id} type="button" className="ajout-seance__choix" onClick={() => { setOuvert(false); ajouter(t.id) }}>{t.nom}</button>
+          ))}
+          <button type="button" className="ajout-seance__gerer" onClick={() => { setOuvert(false); gerer() }}>Gérer les types…</button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// photo d'un élément : sa copie, sinon la photo actuelle de la fiche dans la banque
+const photoDe = (e, banque) => e.photos?.[0] || (banque ?? []).find((x) => x.id === e.exoId)?.photos?.[0] || null
+
+function ExercicesColonne({ seance, banque }) {
   if (seance.type === 'course') {
     const infos = [seance.distance, seance.temps, seance.objectif].filter(Boolean).join(' · ')
     return <p className="colonne-seance__resume">Course{infos ? ` · ${infos}` : ''}</p>
   }
-  const lignes = (seance.blocs ?? []).flatMap((b) => (b.elements ?? []).map((e, i) => ({ id: e.id, code: `${b.lettre}${i + 1}`, nom: e.nom, detail: lignesExercice(e, b.format === 'series').prescription })))
+  const lignes = (seance.blocs ?? []).flatMap((b) => (b.elements ?? []).map((e, i) => ({ id: e.id, photo: photoDe(e, banque), code: `${b.lettre}${i + 1}`, nom: e.nom, detail: lignesExercice(e, b.format === 'series').prescription })))
   if (!lignes.length) return <p className="colonne-seance__resume">Aucun exercice pour l’instant</p>
   return (
     <ul className="colonne-seance__exos">
       {lignes.map((l) => (
-        <li key={l.id}><b>{l.code}</b><span>{l.nom}{l.detail && <small>{l.detail}</small>}</span></li>
+        <li key={l.id}><PhotoStockee chemin={l.photo} alt="" classe="colonne-seance__vignette" /><span><b>{l.code}</b> {l.nom}{l.detail && <small>{l.detail}</small>}</span></li>
       ))}
     </ul>
   )

@@ -383,17 +383,17 @@ function Visio({ uid, client, majClient, semaine }) {
     try {
       await noterVisio(uid, visio)
       majClient({ derniereVisio: visio })
-      setMessage('Visio notée.')
+      setMessage('Bilan noté.')
     } catch (err) { setErreur(messageErreur(err.code)) }
     setEnvoi(false)
   }
   return (
     <section className="espace-carte visio" aria-labelledby="fiche-visio">
-      <h2 id="fiche-visio" className="espace-sous-titre">Visio</h2>
-      <p className="espace-texte">{v?.date ? `Dernière visio : ${v.semaine ? `S${v.semaine} · ` : ''}${dateSeance(v.date)}` : 'Aucune visio notée.'}</p>
+      <h2 id="fiche-visio" className="espace-sous-titre">Dernier bilan</h2>
+      <p className="espace-texte">{v?.date ? `Dernier bilan : ${v.semaine ? `S${v.semaine} · ` : ''}${dateSeance(v.date)}` : 'Aucun bilan noté.'}</p>
       <form className="visio__form" onSubmit={noter}>
         <div className="champ-groupe">
-          <label htmlFor="visio-date">Date de la visio</label>
+          <label htmlFor="visio-date">Date du bilan</label>
           <input id="visio-date" type="date" className="champ" value={date} max={aujourdhuiIso()} onChange={(e) => setDate(e.target.value)} />
         </div>
         <button type="submit" className="bouton bouton--secondaire bouton--compact" disabled={envoi}>{envoi ? 'Enregistrement…' : 'Noter la visio'}</button>

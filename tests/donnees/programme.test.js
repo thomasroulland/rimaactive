@@ -11,19 +11,20 @@ describe('nouvelId', () => {
 })
 
 describe('nouveauProgramme', () => {
-  it('brouillon avec séances vides et jours par défaut', () => {
+  it('brouillon avec séances vides, sans jour', () => {
     const p = nouveauProgramme({ client: 'u1', nom: 'Reprise', debut: '2026-11-16', semaines: 4, parSemaine: 3 })
     expect(p).toMatchObject({ client: 'u1', nom: 'Reprise', debut: '2026-11-16', parSemaine: 3, statut: 'brouillon' })
     expect(p.semaines).toHaveLength(4)
-    expect(p.semaines[0].seances.map((s) => s.jour)).toEqual(['Lundi', 'Mercredi', 'Vendredi'])
+    expect(p.semaines[0].seances).toHaveLength(3)
+    expect(p.semaines[0].seances.every((s) => s.jour === undefined)).toBe(true)
     expect(p.semaines[0].seances[0].blocs).toEqual([])
     const ids = p.semaines.flatMap((w) => [w.id, ...w.seances.map((s) => s.id)])
     expect(new Set(ids).size).toBe(ids.length)
   })
   it('une et deux séances par semaine', () => {
-    const j = (n) => nouveauProgramme({ client: 'u', nom: 'n', debut: '2026-11-16', semaines: 1, parSemaine: n }).semaines[0].seances.map((s) => s.jour)
-    expect(j(1)).toEqual(['Lundi'])
-    expect(j(2)).toEqual(['Lundi', 'Jeudi'])
+    const j = (n) => nouveauProgramme({ client: 'u', nom: 'n', debut: '2026-11-16', semaines: 1, parSemaine: n }).semaines[0].seances
+    expect(j(1)).toHaveLength(1)
+    expect(j(2)).toHaveLength(2)
     expect(j(7)).toHaveLength(7)
   })
 })
@@ -86,5 +87,14 @@ describe('dupliquerProgramme', () => {
     expect(c.semaines[0].seances[0].id).not.toBe(p.semaines[0].seances[0].id)
     expect(c.semaines[0].seances[0].blocs[0].elements[0].id).not.toBe(p.semaines[0].seances[0].blocs[0].elements[0].id)
     expect(c.semaines[0].seances[0].blocs[0].elements[0].exoId).toBe('squat')
+  })
+})
+
+import { ordreProgrammes } from '../../src/espace/donnees/programme.js'
+describe('ordreProgrammes', () => {
+  const p = (id, debut, nb = 4, statut = 'publié') => ({ id, debut, statut, semaines: Array.from({ length: nb }, () => ({})) })
+  it('en cours, puis prochains (plus proche d’abord), puis passés (plus récent d’abord)', () => {
+    const liste = [p('passe1', '2026-09-01'), p('futur2', '2027-01-04'), p('encours', '2026-11-02'), p('futur1', '2026-12-07'), p('passe2', '2026-10-01')]
+    expect(ordreProgrammes(liste, '2026-11-14').map((x) => x.id)).toEqual(['encours', 'futur1', 'futur2', 'passe2', 'passe1'])
   })
 })

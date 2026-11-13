@@ -74,7 +74,6 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
   )
 }
 
-const JOURS = { Lundi: 'Lundi', Mardi: 'Mardi', Mercredi: 'Mercredi', Jeudi: 'Jeudi', Vendredi: 'Vendredi', Samedi: 'Samedi', Dimanche: 'Dimanche' }
 
 function Bravo({ fait, suite, revoir }) {
   const p = suite?.prochaine
@@ -101,7 +100,7 @@ function Bravo({ fait, suite, revoir }) {
       {p && (
         <Link className="ec-bravo__suite" to={`/espace/seance/${suite.programmeId}/${p.seance.id}`}>
           <span>
-            <span className="ec-surtitre ec-bravo__surtitre">Prochaine séance{p.seance.jour ? ` · ${JOURS[p.seance.jour] ?? p.seance.jour}` : ''}</span>
+            <span className="ec-surtitre ec-bravo__surtitre">Prochaine séance</span>
             <span className="ec-bravo__nom">{p.seance.titre || 'Ma prochaine séance'}</span>
           </span>
           <span className="ec-bouton ec-bravo__voir">Voir</span>
