@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { nouveautesParClient, useDonneesCoach, useVisites } from './donneesCoach.js'
+import ProgrammesCoach from './ProgrammesCoach.jsx'
 import MesCoaches from './MesCoaches.jsx'
 import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
@@ -12,6 +12,7 @@ import { PageCoache } from './EnteteCoache.jsx'
 export const LIENS_COACH = [
   { to: '/espace/coach', label: 'Mes coachés', end: true },
   { to: '/espace/coach/exercices', label: 'Banque d’exercices' },
+  { to: '/espace/coach/programmes', label: 'Programmes' },
 ]
 
 // Espace coach : l'écran choisi
@@ -20,6 +21,7 @@ export default function EspaceCoach({ profil }) {
     <>
       <Routes>
         <Route index element={<MesCoaches profil={profil} />} />
+        <Route path="programmes" element={<ProgrammesCoach />} />
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />
         <Route path="exercices/:id" element={<FicheExercice />} />
@@ -35,10 +37,7 @@ export default function EspaceCoach({ profil }) {
   )
 }
 
-// Pages du coach avec, sur « Mes coachés », le nombre de coachés qui ont du nouveau
+// Pages du coach (maquette PDF : pas de pastille de nombre dans la barre ; les points à regarder sont sur « Mes coachés »)
 export function useLiensCoach() {
-  const { seances } = useDonneesCoach()
-  useVisites()
-  const n = [...nouveautesParClient(seances).values()].filter((l) => l.length > 0).length
-  return LIENS_COACH.map((l) => (l.end && n > 0 ? { ...l, badge: n } : l))
+  return LIENS_COACH
 }

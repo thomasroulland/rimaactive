@@ -40,7 +40,7 @@ export function PageCoache() {
     )
   }
   return (
-    <Contexte.Provider value={{ client, uid, setEntete, emplacement }}>
+    <Contexte.Provider value={{ client, uid, setEntete, emplacement, majClient: (maj) => setClient((c) => ({ ...c, ...maj })) }}>
       <section className="section">
         <div className="conteneur espace-coach">
           <Tete client={client} uid={uid} {...entete} onglet={onglet} emplacement={setEmplacement} />

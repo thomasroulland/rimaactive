@@ -423,3 +423,8 @@ export function depublierProgramme(id) {
 export function supprimerProgramme(id) {
   return deleteDoc(doc(db, 'programmes', id))
 }
+
+// Dernière visio avec un coaché, notée par le coach sur le profil du coaché ({ date, semaine })
+export function noterVisio(uid, visio) {
+  return updateDoc(doc(db, 'utilisateurs', uid), { derniereVisio: visio })
+}

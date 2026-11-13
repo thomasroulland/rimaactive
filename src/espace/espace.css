@@ -632,3 +632,64 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
 .gestion__ligne .bouton { min-height: 46px; }
 .gestion__partie--danger .bouton--principal { background: var(--encre); border-color: var(--encre); color: var(--craie); }
 .gestion__partie--danger .bouton--principal:hover { background: #2b2927; border-color: #2b2927; color: var(--craie); }
+
+/* =====================================================================================
+   Mes coachés d'après la maquette PDF de Marie (13 novembre 2026) : peu de contraste, filets fins, lisible
+   ===================================================================================== */
+.mes-coaches__tete { border-bottom: 0; padding-bottom: 0; }
+.mes-coaches__tete .surtitre { margin-bottom: 4px; }
+.lien-souligne { display: inline-flex; align-items: center; min-height: 32px; color: var(--encre); font-weight: 700; font-size: 14px; text-decoration: underline; text-decoration-color: var(--vermillon); text-decoration-thickness: 2px; text-underline-offset: 5px; white-space: nowrap; }
+.lien-souligne:hover { color: var(--gris-chaud); }
+.alertes { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; line-height: 19px; font-weight: 600; color: var(--encre); }
+.alertes li { display: flex; align-items: baseline; gap: 8px; }
+.alertes li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--vermillon); transform: translateY(-1px); }
+/* À regarder */
+.a-regarder { padding: 20px 22px 8px; border-radius: 16px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+.a-regarder__titre { margin: 0 0 4px; padding-bottom: 12px; border-bottom: 1px solid #ece9e3; font-size: 19px; line-height: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.a-regarder__liste { list-style: none; margin: 0; padding: 0; }
+.a-regarder__ligne { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 14px 0; }
+.a-regarder__ligne + .a-regarder__ligne { border-top: 1px solid #ece9e3; }
+.a-regarder__nom { margin: 0 0 6px; font-size: 15px; line-height: 20px; font-weight: 800; }
+/* cartes */
+.cartes-coaches { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+.carte-coache { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 20px 20px 22px; border-radius: 16px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease; }
+.carte-coache:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(22, 21, 20, 0.09); }
+.carte-coache:has(.carte-coache__lien:focus-visible) { outline: 2px solid var(--encre); outline-offset: 2px; }
+.carte-coache__tete { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.carte-coache__nom { margin: 0; font-size: 20px; line-height: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.carte-coache__lien { color: var(--encre); text-decoration: none; }
+.carte-coache__lien::after { content: ""; position: absolute; inset: 0; border-radius: inherit; } /* toute la carte ouvre la fiche */
+.carte-coache__lien:focus-visible { outline: none; }
+.carte-coache__semaine { flex: none; font-size: 13px; line-height: 18px; color: var(--coach-texte-doux, #6b665f); }
+.carte-coache__programme { margin: 0; font-size: 14px; line-height: 20px; color: var(--coach-texte-doux, #6b665f); }
+.carte-coache__barre { display: block; height: 5px; border-radius: 999px; background: #ebe8e1; overflow: hidden; }
+.carte-coache__barre > span { display: block; height: 100%; border-radius: inherit; background: #2b2927; }
+.carte-coache__ligne { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.carte-coache__faites { font-size: 13px; line-height: 18px; font-weight: 600; }
+.carte-coache__semaines { display: flex; gap: 4px; }
+.case-semaine { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #cfcac2; background: var(--blanc); }
+.case-semaine--passee { border-color: #57534e; }
+.case-semaine--faite { border-color: #2b2927; background: #2b2927 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 75% no-repeat; }
+.carte-coache__visio, .carte-coache__calme { margin: 0; font-size: 13px; line-height: 18px; color: var(--coach-texte-doux, #6b665f); }
+.carte-coache__action { position: relative; z-index: 1; align-self: flex-start; }
+@media (prefers-reduced-motion: reduce) { .carte-coache { transition: none; } .carte-coache:hover { transform: none; } }
+/* pastille « COACH » à la place du rond du compte */
+.entete .ec-rond.ec-rond--libelle { width: auto; padding: 0 14px; border-radius: 999px; }
+.ec-rond__libelle { font: 700 11px/1 var(--font-sans); letter-spacing: 0.16em; text-transform: uppercase; }
+/* page Programmes */
+.programmes-coach { display: grid; gap: 14px; }
+.programmes-coach__groupe { padding: 18px 22px 10px; border-radius: 16px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+.programmes-coach__tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid #ece9e3; }
+.programmes-coach__nom { margin: 0; font-size: 18px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.programmes-coach__liste { list-style: none; margin: 0; padding: 0; }
+.programme-ligne { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+.programme-ligne + .programme-ligne { border-top: 1px solid #ece9e3; }
+.programme-ligne__lien { display: flex; flex-direction: column; gap: 2px; min-width: 0; color: var(--encre); text-decoration: none; }
+.programme-ligne__lien:hover .programme-ligne__nom { text-decoration: underline; text-decoration-color: var(--vermillon); text-underline-offset: 4px; }
+.programme-ligne__nom { font-size: 15px; line-height: 20px; font-weight: 700; }
+.programme-ligne__infos { font-size: 13px; line-height: 18px; color: var(--coach-texte-doux, #6b665f); }
+/* visio (fiche) */
+.visio { align-items: stretch; gap: 10px; }
+.visio__form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
+.visio__form .champ-groupe { flex: 1 1 160px; }
+.visio__form .champ { min-height: 44px; }

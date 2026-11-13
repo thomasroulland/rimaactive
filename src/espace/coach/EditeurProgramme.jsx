@@ -71,7 +71,8 @@ export default function EditeurProgramme() {
   // Ouvre le programme le plus récent au premier chargement
   useEffect(() => {
     const restants = (programmes ?? []).filter((p) => p.id !== supprime.current)
-    if (!prog && !creation && restants.length) ouvrir(restants[0])
+    const voulu = restants.find((p) => p.id === params.get('programme')) // venu de la page « Programmes »
+    if (!prog && !creation && restants.length) ouvrir(voulu ?? restants[0])
   }, [programmes, prog, creation])
 
   // Verrous en direct : une séance terminée pendant l'édition se verrouille aussitôt

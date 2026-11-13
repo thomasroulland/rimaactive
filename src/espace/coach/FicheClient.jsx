@@ -6,6 +6,8 @@ import {
 import { aujourdhuiIso, meilleuresCharges, regularite } from '../donnees/calculs.js'
 import { dateCourte, dateLongue, detailSeance, evolutionCharges, exercicesDe, fr, texteSerie } from '../donnees/seances.js'
 import { messageErreur } from '../erreurs.js'
+import { noterVisio } from '../depots.js'
+import { dateSeance } from '../donnees/progression.js'
 import { avancement } from '../donnees/progression.js'
 import { effortMoyen, frNombre, meilleurProgres } from '../donnees/resume.js'
 import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
@@ -21,7 +23,7 @@ const Fleche = () => (
 export default function FicheClient() {
   const { uid } = useParams()
   const navigate = useNavigate()
-  const { client } = useCoache()
+  const { client, majClient } = useCoache()
   const [programmes, setProgrammes] = useState(null)
   const [seances, setSeances] = useState(null)
   const [erreur, setErreur] = useState('')
@@ -121,6 +123,7 @@ export default function FicheClient() {
           </section>
 
           <div className="suivi-cote">
+            <Visio uid={uid} client={client} majClient={majClient} semaine={enCours?.semaine ?? 0} />
             {progEnCours && (
               <section className="espace-carte" aria-labelledby="fiche-reg">
                 <h2 id="fiche-reg" className="espace-sous-titre">Régularité</h2>
@@ -362,4 +365,40 @@ function heure(ts) {
   const d = ts?.toDate?.()
   if (!d) return ''
   return `${d.getHours()} h ${String(d.getMinutes()).padStart(2, '0')}`
+}
+
+// Dernière visio avec le coaché (maquette PDF) : notée par Marie, affichée sur « Mes coachés »
+function Visio({ uid, client, majClient, semaine }) {
+  const [date, setDate] = useState(aujourdhuiIso())
+  const [message, setMessage] = useState('')
+  const [erreur, setErreur] = useState('')
+  const [envoi, setEnvoi] = useState(false)
+  const v = client.derniereVisio
+  async function noter(e) {
+    e.preventDefault()
+    if (!date || date > aujourdhuiIso()) { setErreur('Choisissez une date passée ou aujourd’hui.'); return }
+    setEnvoi(true); setErreur(''); setMessage('')
+    const visio = { date, semaine: semaine || null }
+    try {
+      await noterVisio(uid, visio)
+      majClient({ derniereVisio: visio })
+      setMessage('Visio notée.')
+    } catch (err) { setErreur(messageErreur(err.code)) }
+    setEnvoi(false)
+  }
+  return (
+    <section className="espace-carte visio" aria-labelledby="fiche-visio">
+      <h2 id="fiche-visio" className="espace-sous-titre">Visio</h2>
+      <p className="espace-texte">{v?.date ? `Dernière visio : ${v.semaine ? `S${v.semaine} · ` : ''}${dateSeance(v.date)}` : 'Aucune visio notée.'}</p>
+      <form className="visio__form" onSubmit={noter}>
+        <div className="champ-groupe">
+          <label htmlFor="visio-date">Date de la visio</label>
+          <input id="visio-date" type="date" className="champ" value={date} max={aujourdhuiIso()} onChange={(e) => setDate(e.target.value)} />
+        </div>
+        <button type="submit" className="bouton bouton--secondaire bouton--compact" disabled={envoi}>{envoi ? 'Enregistrement…' : 'Noter la visio'}</button>
+      </form>
+      <p className="espace-message" role="status">{message}</p>
+      <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
+    </section>
+  )
 }
