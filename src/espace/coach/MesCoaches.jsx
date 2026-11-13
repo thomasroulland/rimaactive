@@ -21,8 +21,8 @@ const FILTRES = [
 ]
 const BIENTOT = 14
 
-// « Mes coachés », d'après la maquette PDF de Marie (13 novembre 2026) : en-tête, encadré « À regarder » (les points
-// d'attention de chaque coaché), puis une carte par coaché : semaine, programme, avancement, semaines, dernière visio, alertes.
+// « Mes coachés », d'après la maquette PDF de Marie (13 novembre 2026) : en-tête, bandeau de chiffres, filtres (l'encadré
+// « À regarder » a été retiré le 14 novembre : les alertes restent sur chaque carte et dans le filtre « À regarder »), puis une carte par coaché : semaine, programme, avancement, semaines, dernière visio, alertes.
 export default function MesCoaches() {
   const { clients, programmes, seances, erreur: erreurDonnees } = useDonneesCoach()
   const [dialogue, setDialogue] = useState(false)
@@ -87,31 +87,6 @@ export default function MesCoaches() {
             <div><dt>Points à regarder</dt><dd className={points ? 'bandeau-coach__vermillon' : ''}>{points}</dd></div>
             <div><dt>Programmes à préparer</dt><dd>{compte.programme}</dd></div>
           </dl>
-        )}
-        {clients && nb > 0 && (
-          <section className={`a-regarder${aRegarder.length ? ' a-regarder--points' : ' a-regarder--calme'}`} aria-labelledby="a-regarder-titre">
-            <h2 id="a-regarder-titre" className="a-regarder__titre">À regarder</h2>
-            {aRegarder.length === 0 && (
-              <p className="a-regarder__calme">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-                Rien d’important pour l’instant : tous vos coachés sont dans les clous.
-              </p>
-            )}
-            {aRegarder.length > 0 && <ul className="a-regarder__liste">
-              {aRegarder.map((c) => (
-                <li key={c.uid} className="a-regarder__ligne">
-                  <PhotoCoache client={c} taille={36} />
-                  <div className="a-regarder__corps">
-                    <p className="a-regarder__nom">{c.prenom} {c.nom}</p>
-                    <ul className="alertes">{c.alertes.map((a) => <li key={a}>{a}</li>)}</ul>
-                  </div>
-                  {c.programmeComplet
-                    ? <Link to={`/espace/coach/clients/${c.uid}`} className="lien-souligne">Ouvrir la fiche<span className="sr-only"> de {c.prenom} {c.nom}</span></Link>
-                    : <Link to={`/espace/coach/clients/${c.uid}/programme`} className="lien-souligne">Créer un programme<span className="sr-only"> pour {c.prenom} {c.nom}</span></Link>}
-                </li>
-              ))}
-            </ul>}
-          </section>
         )}
 
         {clients && nb === 0 && <p className="espace-texte">Aucun coaché pour l’instant. Invitez votre premier client.</p>}
