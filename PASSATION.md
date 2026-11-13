@@ -388,3 +388,12 @@ textes, tailles et couleurs de la maquette font foi. **Rien n'est en ligne ni su
   en fondu des rubriques, sélection et curseur aux couleurs de la charte, appui sur les boutons, trait vermillon des onglets qui s'élargit,
   détail d'une formule qui monte au lieu de grossir. Rien n'est changé dans les textes, les photos ou l'ordre.
 - Si Marie refuse : annuler ce seul commit (`git revert`).
+
+## Une seule structure partout, espace coach refait (13 novembre 2026, propositions sur espace-client-spec, pas en ligne)
+- **Mise à l'échelle** (`index.html`) : jusqu'à 1536 × 720 (l'écran de Marie), les tailles de la charte ; au-delà, tout grandit
+  en proportion, 1,5 fois au plus. La même règle sur le site, la connexion, l'espace coaché et l'espace coach. Largeur du contenu : 1240 px.
+- **Une seule barre de menu** (`Entete.jsx`), utilisée aussi par l'espace (`Coque.jsx`, `Squelette.jsx`) : 64 px, logo 128 px, menu en 15 px.
+  Dans l'espace coach, « Mes coachés » et « Banque d'exercices » sont dans la barre ; sur téléphone, l'espace garde ses pages sur une 2e ligne.
+  Un seul pied de page (`Pied.jsx`) partout.
+- **Espace coach refait** (`espace.css`, `MesCoaches.jsx`, `FicheClient.jsx`) : cartes de coachés (initiales, statut, barre d'avancement),
+  fiche client en deux colonnes, style adouci (contours fins et clairs, « Actif » en pastille claire à point vermillon).

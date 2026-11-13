@@ -19,10 +19,34 @@
     <link rel="preload" href="/fonts/HankenGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <title>Rimaactive · Accueil</title>
     <script>
-      // Plus d'agrandissement automatique (13 novembre 2026) : le site garde les tailles de la charte
-      // sur tous les écrans, et la mise en page s'adapte en CSS (--ecran, --vw, --largeur dans styles.css).
-      // window.__rimaZoom reste pour l'espace, qui l'appelle encore : il ne fait plus rien.
-      window.__rimaZoom = function () {}
+      // Mise à l'échelle (13 novembre 2026) : jusqu'à l'écran de Marie (1536 × 720 à 100 %), les tailles de la charte ;
+      // au-delà, tout grandit en proportion (1,5 fois au plus) pour remplir les grands écrans.
+      // La même règle partout : site, connexion, espace coaché et espace coach.
+      // Le zoom du navigateur (Ctrl + / Ctrl −) reste libre : il s'ajoute par-dessus.
+      ;(function () {
+        var racine = document.documentElement
+        var REF_L = 1536, REF_H = 720, MAX = 1.5
+        function zoomNavigateur() {
+          // la fenêtre (outerWidth) ne change pas quand on zoome, la page (innerWidth) si : leur rapport donne le zoom
+          if (!window.outerWidth || !window.innerWidth) return 1
+          var z = Math.round((window.outerWidth / window.innerWidth) * 20) / 20
+          return z > 0.2 && z < 5 ? z : 1
+        }
+        function ajuster() {
+          var z = zoomNavigateur()
+          // taille qu'aurait la fenêtre à 100 % : c'est elle qui décide de l'agrandissement
+          var echelle = Math.max(1, Math.min(MAX, (window.innerWidth * z) / REF_L, (window.innerHeight * z) / REF_H))
+          echelle = Math.round(echelle * 100) / 100
+          racine.style.zoom = echelle
+          // le zoom agrandit aussi la hauteur et la largeur d'écran : on les ramène aux vraies dimensions visibles
+          racine.style.setProperty('--ecran', 'calc(100svh / ' + echelle + ')')
+          racine.style.setProperty('--vw', window.innerWidth / echelle / 100 + 'px')
+        }
+        // gardé pour l'espace, qui l'appelle encore : la règle est la même partout, il n'a plus rien à faire
+        window.__rimaZoom = function () {}
+        ajuster()
+        window.addEventListener('resize', ajuster)
+      })()
     </script>
   </head>
   <body>

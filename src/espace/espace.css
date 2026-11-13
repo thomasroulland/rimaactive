@@ -42,7 +42,7 @@
 .espace-case input:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
 .espace-lien-texte { color: var(--encre); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .espace-dialogue {
-  width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto;
+  width: min(480px, calc(100 * var(--vw) - 32px)); max-height: calc(var(--ecran) - 32px); overflow: auto;
   border: 0; border-radius: 20px; padding: 24px; background: var(--blanc); color: var(--encre);
   box-shadow: 0 30px 80px rgba(22, 21, 20, 0.3);
 }
@@ -436,3 +436,7 @@
   .fiche-principal { order: 2; }
   .fiche-danger { order: 3; }
 }
+/* éditeur : « Nom du programme » et « Début » alignés en haut (la date a une phrase d'aide dessous) */
+.espace-params--programme { align-items: start; }
+.espace-params input.champ, .espace-params select.champ { box-sizing: border-box; height: 46px; min-height: 46px; margin: 0; padding-block: 0; }
+.espace-params > .champ-groupe { gap: 4px; }

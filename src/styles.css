@@ -1497,7 +1497,7 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
 .offre__voir:hover { color: var(--vermillon); }
 .offre--sombre .offre__voir:hover { color: var(--jaune); }
 .offres--2 > .offre > .offre__voir, .offres--1 > .offre > .offre__voir { grid-column: 1; }
-.detail { border: 0; padding: 0; border-radius: 20px; background: var(--blanc); color: var(--encre); width: min(880px, calc(100vw - 32px)); max-height: calc(100dvh - 32px);
+.detail { border: 0; padding: 0; border-radius: 20px; background: var(--blanc); color: var(--encre); width: min(880px, calc(100 * var(--vw) - 32px)); max-height: calc(var(--ecran) - 32px);
   box-shadow: 0 30px 80px rgba(22, 21, 20, 0.3); }
 .detail[open] { animation: detail-ouvre 0.35s cubic-bezier(.2, .8, .2, 1); }
 @keyframes detail-ouvre { from { transform: scale(0.9); opacity: 0; } }
@@ -1887,4 +1887,9 @@ input, textarea { caret-color: var(--vermillon); }
   .entete--rangee .entete__barre { height: auto; min-height: var(--hauteur-entete); grid-template-columns: auto 1fr; row-gap: 0; padding-block: 10px 6px; }
   .entete--rangee .nav { display: flex; grid-column: 1 / -1; grid-row: 2; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding-top: 8px; }
   .entete--rangee .nav__lien { height: 34px; padding: 0 12px; font-size: 14px; }
+}
+/* Mes offres sur grand écran (13 novembre 2026) : le titre reste au même endroit dans les quatre rubriques (calées en haut),
+   mais la marge du haut grandit avec la hauteur de l'écran, pour que les cartes ne restent pas collées en haut avec un grand vide dessous */
+@media (min-width: 900px) and (min-height: 761px) {
+  .offres-page__rubrique { padding-top: clamp(44px, calc((var(--ecran) - var(--hauteur-entete) - var(--hauteur-bulles) - 470px) / 2), 140px); }
 }
