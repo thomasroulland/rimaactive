@@ -168,6 +168,11 @@ function SeanceFaite({ sf, seance }) {
   const id = `com-${sf.id}`
   const douleur = sf.douleur?.oui ? sf.douleur : null
   const detail = detailSeance(seance, sf.series)
+  // Notes écrites par le client sous chaque exercice pendant la séance (champ « notes », une par exercice)
+  const nomsElements = new Map((seance?.blocs ?? []).flatMap((bl) => (bl.elements ?? []).map((e) => [e.id, e.nom])))
+  const notesExos = Object.entries(sf.notes ?? {})
+    .filter(([, t]) => String(t ?? '').trim())
+    .map(([id, t]) => ({ id, nom: nomsElements.get(id) ?? 'Exercice retiré du programme', texte: String(t).trim() }))
   const terminee = sf.statut === 'terminée'
 
   // Optimiste, comme côté client : hors ligne la promesse ne se résout qu'au retour du réseau (le cache garde l'écriture).
@@ -201,6 +206,14 @@ function SeanceFaite({ sf, seance }) {
         <p className="espace-verrou espace-verrou--fort fiche-douleur fiche-commentaire">
           Commentaire du client : {sf.commentaire}
         </p>
+      )}
+      {notesExos.length > 0 && (
+        <div className="fiche-notes">
+          <p className="fiche-notes__titre">Notes du client sur les exercices</p>
+          <ul className="fiche-notes__liste">
+            {notesExos.map((n) => <li key={n.id}><strong>{n.nom}</strong> : {n.texte}</li>)}
+          </ul>
+        </div>
       )}
       {terminee && sf.fc && <p className="fiche-seance__bilan"><span>Fréquence cardiaque : {sf.fc}</span></p>}
       {douleur && (

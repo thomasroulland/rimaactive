@@ -63,7 +63,7 @@
 .ec-coque--client .ec-bandeau :focus-visible { outline-color: var(--ec-barre-texte); }
 
 /* ---------- Coque ---------- */
-.ec-coque { min-height: 100vh; min-height: var(--ecran, 100dvh); display: flex; flex-direction: column; background: var(--ec-craie); color: var(--ec-encre); }
+.ec-coque { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; background: var(--ec-craie); color: var(--ec-encre); }
 .ec-main { flex: 1 0 auto; width: 100%; }
 .ec-bandeau { background: var(--ec-barre); color: var(--ec-barre-texte); }
 .ec-bandeau :focus-visible { outline-color: var(--ec-barre-texte); }
@@ -731,3 +731,28 @@ select.ec-champ { appearance: auto; min-width: 0; }
 /* Bloc choisi (Mon programme) : contour doux au lieu du trait noir, une légère ombre le distingue (13 novembre 2026) */
 .ec-etape[aria-pressed="true"] { border-color: var(--ec-champ-bord-survol); box-shadow: 0 6px 18px rgba(22, 21, 20, 0.07); }
 .ec-statut--encours { border-color: var(--ec-champ-bord-survol); }
+/* coche « Fait » : centrée dans sa case, quelle que soit l'épaisseur du contour (13 novembre 2026) */
+.ec-case-fait::after { display: none; }
+.ec-case-fait:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  background-position: center; background-size: 24px 24px; background-repeat: no-repeat;
+}
+
+/* ---------- Bulle de confirmation (snackbar), 13 novembre 2026 ---------- */
+.snack {
+  position: fixed; left: 50%; bottom: 96px; z-index: 60; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px; max-width: min(560px, calc(100vw - 32px));
+  padding: 12px 10px 12px 14px; border-radius: 14px; background: var(--ec-encre); color: var(--ec-craie);
+  box-shadow: 0 14px 36px rgba(22, 21, 20, 0.22); font: 600 15px/21px var(--font-sans);
+  animation: snack-entre 0.35s var(--ec-courbe) both, snack-sort 0.3s ease 3.5s forwards;
+}
+.snack--erreur { animation: snack-entre 0.35s var(--ec-courbe) both, snack-sort 0.3s ease 5.5s forwards; }
+.snack__icone { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--ec-jaune); color: var(--ec-encre); }
+.snack--erreur .snack__icone { background: var(--ec-vermillon); color: var(--ec-encre); }
+.snack__texte { flex: 1; min-width: 0; }
+.snack__fermer { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: rgba(244, 243, 239, 0.7); cursor: pointer; }
+.snack__fermer:hover { background: rgba(244, 243, 239, 0.12); color: var(--ec-craie); }
+@keyframes snack-entre { from { opacity: 0; transform: translate(-50%, 16px); } }
+@keyframes snack-sort { to { opacity: 0; transform: translate(-50%, 8px); } }
+@media (max-width: 599px) { .snack { bottom: 84px; } }
+@media (prefers-reduced-motion: reduce) { .snack, .snack--erreur { animation: none; } }

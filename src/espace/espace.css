@@ -449,3 +449,7 @@
 .coache__initiales--grand { width: 60px; height: 60px; font-size: 22px; }
 .fiche-colonnes, .fiche-cote, .fiche-principal { gap: 24px; }
 .fiche-bloc { gap: 12px; }
+/* notes du client par exercice (fiche client) */
+.fiche-notes { display: grid; gap: 6px; padding: 12px 16px; border-radius: 12px; background: var(--craie); border-left: 2px solid var(--vermillon); }
+.fiche-notes__titre { margin: 0; font-size: 13px; line-height: 18px; font-weight: 700; color: var(--gris-chaud); }
+.fiche-notes__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; line-height: 20px; }

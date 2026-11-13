@@ -398,3 +398,10 @@ textes, tailles et couleurs de la maquette font foi. **Rien n'est en ligne ni su
   Un seul pied de page (`Pied.jsx`) partout.
 - **Espace coach refait** (`espace.css`, `MesCoaches.jsx`, `FicheClient.jsx`) : cartes de coachés (initiales, statut, barre d'avancement),
   fiche client en deux colonnes, style adouci (contours fins et clairs, « Actif » en pastille claire à point vermillon).
+
+## Dimensions, dernière décision (13 novembre 2026, proposition sur espace-client-spec)
+- **Plus aucun agrandissement automatique**, ni sur le site ni dans l'espace : les tailles de la charte sur tous les écrans
+  (demande de Thomas : « les mêmes dimensions que l'espace »). Les règles « 1,5 fois / 2 fois » ci-dessus sont abandonnées.
+- **Hauteur d'un écran limitée à 880 px** (`--ecran` dans `styles.css`) : jusqu'à 880 px de haut (l'écran de Marie compris),
+  chaque rubrique remplit l'écran comme avant ; au-delà, les rubriques ne remplissent plus l'écran et s'enchaînent,
+  sans aimantation au défilement. Écart à la règle « une rubrique = un écran » : à faire valider par Marie.

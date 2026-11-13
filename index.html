@@ -19,41 +19,10 @@
     <link rel="preload" href="/fonts/HankenGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <title>Rimaactive · Accueil</title>
     <script>
-      // Mise à l'échelle (13 novembre 2026) : jusqu'à l'écran de Marie (1536 × 720 à 100 %), les tailles de la charte ;
-      // au-delà, tout grandit en proportion pour remplir les grands écrans : 1,5 fois au plus, 2 fois sur les très grands (3000 px et plus, 4K à 100 %).
-      // Seulement le site vitrine : l'espace (connexion, coaché, coach) garde ses tailles normales sur tous les écrans,
-      // pour voir plus de choses d'un coup (13 novembre 2026). L'espace le signale avec window.__rimaZoom(true / false).
-      // Le zoom du navigateur (Ctrl + / Ctrl −) reste libre : il s'ajoute par-dessus.
-      ;(function () {
-        var racine = document.documentElement
-        var REF_L = 1536, REF_H = 720
-        // avant le démarrage de React, l'adresse décide (pas de saut de taille en arrivant directement sur /espace)
-        var dansEspace = /^\/espace(\/|$)/.test(window.location.pathname)
-        function zoomNavigateur() {
-          // la fenêtre (outerWidth) ne change pas quand on zoome, la page (innerWidth) si : leur rapport donne le zoom
-          if (!window.outerWidth || !window.innerWidth) return 1
-          var z = Math.round((window.outerWidth / window.innerWidth) * 20) / 20
-          return z > 0.2 && z < 5 ? z : 1
-        }
-        function ajuster() {
-          var z = zoomNavigateur()
-          // taille qu'aurait la fenêtre à 100 % : c'est elle qui décide de l'agrandissement
-          var MAX = window.innerWidth * z >= 3000 ? 2 : 1.5
-          var echelle = dansEspace ? 1 : Math.max(1, Math.min(MAX, (window.innerWidth * z) / REF_L, (window.innerHeight * z) / REF_H))
-          echelle = Math.round(echelle * 100) / 100
-          racine.style.zoom = echelle
-          // le zoom agrandit aussi la hauteur et la largeur d'écran : on les ramène aux vraies dimensions visibles
-          racine.style.setProperty('--ecran', 'calc(100svh / ' + echelle + ')')
-          racine.style.setProperty('--vw', window.innerWidth / echelle / 100 + 'px')
-        }
-        window.__rimaZoom = function (actif) {
-          if (dansEspace === !!actif) return
-          dansEspace = !!actif
-          ajuster()
-        }
-        ajuster()
-        window.addEventListener('resize', ajuster)
-      })()
+      // Plus d'agrandissement automatique (13 novembre 2026) : le site et l'espace gardent les tailles de la charte sur tous
+      // les écrans. Sur les grands écrans, les rubriques ne remplissent plus tout l'écran : leur hauteur est limitée
+      // (--ecran, dans styles.css). window.__rimaZoom reste pour l'espace, qui l'appelle encore : il ne fait plus rien.
+      window.__rimaZoom = function () {}
     </script>
   </head>
   <body>

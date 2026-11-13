@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import Entete from '../../components/Entete.jsx'
 import Pied from '../../components/Pied.jsx'
+import Snack from './Snack.jsx'
 import { seDeconnecter } from '../firebase.js'
 import '../coache.css'
 
@@ -16,6 +17,7 @@ export default function Coque({ liens = [], compte = true, avatar = null, site =
       {/* La même barre que le site (13 novembre 2026) : un seul composant partout */}
       <BarreEspace liens={liens} site={site} compte={compte} avatar={avatar} />
       <main id="contenu" className="ec-main">{children}</main>
+      <Snack />
       <Pied />
     </div>
   )
