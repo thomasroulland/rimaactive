@@ -728,3 +728,6 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-coque--client .espace-connexion .espace-lien:hover { text-decoration-color: var(--ec-vermillon); text-decoration-thickness: 2px; }
 /* Fin de séance : sur ordinateur, le panneau reste en vue pendant qu'on descend dans les exercices */
 @media (min-width: 1000px) { .ec-fin { position: sticky; top: 24px; } }
+/* Bloc choisi (Mon programme) : contour doux au lieu du trait noir, une légère ombre le distingue (13 novembre 2026) */
+.ec-etape[aria-pressed="true"] { border-color: var(--ec-champ-bord-survol); box-shadow: 0 6px 18px rgba(22, 21, 20, 0.07); }
+.ec-statut--encours { border-color: var(--ec-champ-bord-survol); }
