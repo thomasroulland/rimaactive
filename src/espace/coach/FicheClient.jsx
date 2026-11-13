@@ -153,7 +153,7 @@ export default function FicheClient() {
   )
 }
 
-function trouverSeance(programmes, sf) {
+export function trouverSeance(programmes, sf) {
   const p = (programmes ?? []).find((x) => x.id === sf.programme)
   for (const sem of p?.semaines ?? []) {
     const s = (sem.seances ?? []).find((x) => x.id === sf.seance)
@@ -162,7 +162,7 @@ function trouverSeance(programmes, sf) {
   return null
 }
 
-function Regularite({ semaines }) {
+export function Regularite({ semaines }) {
   return (
     <ul className="fiche-reg" aria-label="Régularité">
       {semaines.map((s) => (
@@ -178,7 +178,7 @@ function Regularite({ semaines }) {
   )
 }
 
-function SeanceFaite({ sf, seance, prenom, nouvelle }) {
+export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
   const [texte, setTexte] = useState(sf.commentaireCoach ?? '')
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
@@ -274,7 +274,7 @@ function SeanceFaite({ sf, seance, prenom, nouvelle }) {
 }
 
 // Courbe de la meilleure charge de chaque séance : ligne encre, points vermillon, axes nommés. Pas de bibliothèque.
-function Courbe({ nom, points }) {
+export function Courbe({ nom, points }) {
   const L = 300; const H = 170; const g = 44; const d = 14; const h = 14; const b = 32
   const val = (p) => parseFloat(String(p.charge).replace(',', '.')) || 0
   const valeurs = points.map(val)
@@ -313,7 +313,7 @@ function Courbe({ nom, points }) {
 }
 
 // Suppression : le coach doit retaper le prénom du client.
-function DialogueSuppression({ client, uid, fermer, fini }) {
+export function DialogueSuppression({ client, uid, fermer, fini }) {
   const ref = useRef(null)
   const [saisie, setSaisie] = useState('')
   const [envoi, setEnvoi] = useState(false)

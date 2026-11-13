@@ -428,3 +428,29 @@ export function supprimerProgramme(id) {
 export function noterVisio(uid, visio) {
   return updateDoc(doc(db, 'utilisateurs', uid), { derniereVisio: visio })
 }
+
+// ---------- Fiche coaché (maquette coach, 13 novembre 2026) : bilans visio, notes privées, profil sportif ----------
+const listeDe = (uid, nom, rappel, erreur) => onSnapshot(
+  collection(db, 'utilisateurs', uid, nom),
+  (s) => rappel(s.docs.map((d) => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.creeLe?.toMillis?.() ?? 0) - (a.creeLe?.toMillis?.() ?? 0))),
+  erreur,
+)
+// Comptes rendus des visios (coach seulement). La plus récente devient « derniereVisio » du profil (liste Mes coachés).
+export function ecouterBilans(uid, rappel, erreur) { return listeDe(uid, 'bilans', rappel, erreur) }
+export async function ajouterBilan(uid, bilan, derniere) {
+  await addDoc(collection(db, 'utilisateurs', uid, 'bilans'), { ...bilan, creeLe: serverTimestamp() })
+  if (derniere) await updateDoc(doc(db, 'utilisateurs', uid), { derniereVisio: derniere })
+}
+export async function supprimerBilan(uid, id, derniere) {
+  await deleteDoc(doc(db, 'utilisateurs', uid, 'bilans', id))
+  await updateDoc(doc(db, 'utilisateurs', uid), { derniereVisio: derniere ?? null })
+}
+// Notes privées du coach (le coaché ne les voit pas)
+export function ecouterNotesCoach(uid, rappel, erreur) { return listeDe(uid, 'notesCoach', rappel, erreur) }
+export function ajouterNoteCoach(uid, texte, date) {
+  return addDoc(collection(db, 'utilisateurs', uid, 'notesCoach'), { texte, date, creeLe: serverTimestamp() })
+}
+export function supprimerNoteCoach(uid, id) { return deleteDoc(doc(db, 'utilisateurs', uid, 'notesCoach', id)) }
+// Objectif et 1RM du coaché, renseignés par le coach sur son profil
+export function majProfilSportif(uid, champs) { return updateDoc(doc(db, 'utilisateurs', uid), champs) }

@@ -38,8 +38,8 @@ export default async function handler(req, res) {
       const lot = await db.collection(collection).where('client', '==', uid).get()
       await Promise.all(lot.docs.map((d) => d.ref.delete()))
     }
-    // Mesures et photos de progression (sous-collections du profil).
-    for (const sous of ['mesures', 'photos']) {
+    // Mesures et photos de progression, bilans visio et notes privées du coach (sous-collections du profil).
+    for (const sous of ['mesures', 'photos', 'bilans', 'notesCoach']) {
       const lot = await db.collection(`utilisateurs/${uid}/${sous}`).get()
       await Promise.all(lot.docs.map((d) => d.ref.delete()))
     }

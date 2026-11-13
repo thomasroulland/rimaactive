@@ -59,6 +59,18 @@ service cloud.firestore {
           && request.resource.data.chemin is string
           && request.resource.data.chemin.matches('clients/' + uid + '/progression/[^/]+');
       }
+      // Bilans visio et notes privées : écrits et lus par le coach seulement ; le coaché ne les voit pas.
+      match /bilans/{id} {
+        allow read, write: if estCoach();
+      }
+      match /notesCoach/{id} {
+        allow read, write: if estCoach();
+      }
+    }
+
+    // Modèles de programmes réutilisables (page « Programmes » du coach)
+    match /modeles/{id} {
+      allow read, write: if estCoach();
     }
 
     match /exercices/{id} {

@@ -693,3 +693,57 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
 .visio__form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
 .visio__form .champ-groupe { flex: 1 1 160px; }
 .visio__form .champ { min-height: 44px; }
+
+/* =====================================================================================
+   Fiche d'un coaché à 7 onglets, d'après la maquette coach (13 novembre 2026)
+   ===================================================================================== */
+.coache-tete__identite .surtitre { margin-bottom: 4px; }
+.coache-tete__objectif { margin: 8px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 16px; line-height: 24px; color: var(--coach-texte-doux, #6b665f); }
+.onglets-coache { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 4px 24px; }
+.onglets-coache::-webkit-scrollbar { display: none; }
+.onglets-coache a { flex: none; }
+.onglet-pile { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.chiffres-fiche { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.chiffres-fiche > div { padding: 16px 18px; display: flex; flex-direction: column-reverse; gap: 6px; align-items: flex-start; }
+.chiffres-fiche dt { font-size: 13px; line-height: 18px; font-weight: 600; color: var(--coach-texte-doux, #6b665f); }
+.chiffres-fiche dd { margin: 0; font-weight: 800; font-size: 36px; line-height: 38px; letter-spacing: -0.03em; color: var(--vermillon); }
+.fiche-grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; align-items: start; }
+.fiche-carte { align-items: stretch; gap: 10px; padding: 20px 22px; }
+.fiche-carte__titre { margin: 0; font-size: 19px; line-height: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.fiche-carte__sous { margin: 8px 0 0; padding-top: 12px; border-top: 1px solid #ece9e3; font-size: 15px; line-height: 20px; font-weight: 800; }
+.fiche-carte__fort { margin: 0; font-size: 16px; line-height: 22px; font-weight: 800; }
+.fiche-carte__texte { margin: 0; font-size: 15px; line-height: 24px; white-space: pre-line; }
+.fiche-carte__tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.fiche-carte__modifier { align-self: flex-start; padding: 0; border: 0; background: none; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; }
+.profil-sportif { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid #ece9e3; }
+.profil-sportif__rm { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.profil-sportif .champ { min-height: 42px; }
+.formulaire-grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 16px; }
+.formulaire-grille__large { grid-column: 1 / -1; }
+.fiche-carte > .bouton { align-self: flex-start; }
+/* historique */
+.historique { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.historique__seance { padding: 0; gap: 0; align-items: stretch; }
+.historique__seance > summary { list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding: 16px 20px; cursor: pointer; }
+.historique__seance > summary::-webkit-details-marker { display: none; }
+.historique__seance > summary::after { content: "+"; margin-left: auto; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; border: 1px solid #d9d5cd; font-size: 14px; color: var(--gris-chaud); }
+.historique__seance[open] > summary::after { content: "\2212"; }
+.historique__titre { font-weight: 800; font-size: 16px; line-height: 22px; }
+.historique__detail { padding: 0 20px 18px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #ece9e3; }
+.historique__lignes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 4px; font-size: 14px; line-height: 21px; }
+.historique__detail .fiche-seance { padding: 0; background: none; box-shadow: none; }
+.historique__detail .fiche-seance__tete, .historique__detail .fiche-seance__bilan, .historique__detail .fiche-detail { display: none; }
+/* statistiques */
+.stats-liste { list-style: none; margin: 0; padding: 0; display: grid; }
+.stats-liste li { display: flex; align-items: center; gap: 12px; padding: 9px 0; font-size: 14px; line-height: 20px; }
+.stats-liste li + li { border-top: 1px solid #ece9e3; }
+.stats-liste li > :last-child { margin-left: auto; }
+.stats-liste__sem { width: 30px; font-weight: 700; color: var(--gris-chaud); }
+.stats-liste__haut { color: var(--encre); font-weight: 700; }
+.stats-courbes { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important; }
+/* photos : avant / après */
+.comparaison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.comparaison__cote { display: flex; flex-direction: column; gap: 10px; }
+.comparaison__img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; background: var(--craie-fonce); }
+@media (max-width: 599px) { .profil-sportif__rm { grid-template-columns: 1fr; } }
+.formulaire-grille textarea.champ, .fiche-carte textarea.champ { min-height: 0; height: auto; padding-block: 10px; resize: vertical; }

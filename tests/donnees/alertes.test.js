@@ -28,3 +28,17 @@ describe('suiviCoache', () => {
     expect(suiviCoache({ programme: null, seances: [], aujourdhui: '2026-11-04' })).toEqual({ resume: null, alertes: [] })
   })
 })
+
+import { chiffresCoache, effortParSemaine } from '../../src/espace/donnees/alertes.js'
+describe('chiffresCoache et effortParSemaine', () => {
+  const s1 = { ...fait('s1', '2026-11-02', 7), series: { e: [{ rpe: '7', fait: true }, { rpe: '8' }, { rpe: '9', fait: false }] } }
+  it('compte les séances, la régularité des séances passées et le RPE moyen des séries faites', () => {
+    expect(chiffresCoache({ programme: prog, seances: [s1], aujourdhui: '2026-11-10' })).toEqual({ faites: 1, prevues: 4, regularite: 33, rpeMoyen: 7.5 })
+  })
+  it('compare le RPE visé à l’effort ressenti, semaine par semaine', () => {
+    expect(effortParSemaine(prog, [s1, fait('s2', '2026-11-05', 6)])).toEqual([
+      { semaine: 1, vise: 6, ressenti: 6.5, ecart: 0.5 },
+      { semaine: 2, vise: null, ressenti: null, ecart: null },
+    ])
+  })
+})

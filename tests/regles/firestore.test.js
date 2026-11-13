@@ -292,3 +292,28 @@ describe('« Fin de séance » après le retrait de tous les exercices', () => {
     if (!d.series?.e1?.length || d.series.e1[0].charge !== '40') throw new Error(`notes de e1 perdues : ${JSON.stringify(d.series)}`)
   })
 })
+
+describe('bilans visio, notes privées et modèles : réservés au coach (13 novembre 2026)', () => {
+  it('le coach écrit et lit un bilan et une note privée', async () => {
+    await assertSucceeds(setDoc(doc(coach, 'utilisateurs/A/bilans/b1'), { date: '2026-11-10', semaine: 2, texte: 'Bonne forme' }))
+    await assertSucceeds(getDoc(doc(coach, 'utilisateurs/A/bilans/b1')))
+    await assertSucceeds(setDoc(doc(coach, 'utilisateurs/A/notesCoach/n1'), { texte: 'Genou à surveiller' }))
+    await assertSucceeds(deleteDoc(doc(coach, 'utilisateurs/A/notesCoach/n1')))
+  })
+  it('le coaché ne lit ni n’écrit ses bilans ni les notes privées', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'utilisateurs/A/bilans/b1'), { texte: 'x' })
+      await setDoc(doc(ctx.firestore(), 'utilisateurs/A/notesCoach/n1'), { texte: 'x' })
+    })
+    await assertFails(getDoc(doc(A, 'utilisateurs/A/bilans/b1')))
+    await assertFails(getDoc(doc(A, 'utilisateurs/A/notesCoach/n1')))
+    await assertFails(setDoc(doc(A, 'utilisateurs/A/bilans/b2'), { texte: 'x' }))
+    await assertFails(getDocs(collection(A, 'utilisateurs/A/notesCoach')))
+  })
+  it('modèles : coach oui, coaché et anonyme non', async () => {
+    await assertSucceeds(setDoc(doc(coach, 'modeles/M1'), { nom: 'Force', semaines: [] }))
+    await assertFails(getDoc(doc(A, 'modeles/M1')))
+    await assertFails(setDoc(doc(A, 'modeles/M2'), { nom: 'x' }))
+    await assertFails(getDoc(doc(anon, 'modeles/M1')))
+  })
+})
