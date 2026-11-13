@@ -6,11 +6,12 @@ import { enregistrerExercice, retirerExercice, nouvelIdExercice } from '../depot
 import { reduireImage } from '../donnees/photos.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
+import { CATEGORIES, MATERIELS } from '../donnees/banque.js'
 
 // Liste proposée par Claude, à faire valider par Marie
 export const MUSCLES = ['Quadriceps', 'Ischio-jambiers', 'Fessiers', 'Mollets', 'Pectoraux', 'Dos', 'Épaules', 'Biceps', 'Triceps', 'Abdominaux', 'Lombaires']
 
-const VIDE = { nom: '', consignes: '', muscles: [], photos: [], retire: false }
+const VIDE = { nom: '', categorie: 'Renforcement', materiel: 'À préciser', execution: '', consignes: '', erreurs: '', video: '', muscles: [], photos: [], retire: false }
 
 // Fiche d'un exercice : création (/nouveau) ou modification (/:id)
 export default function FicheExercice() {
@@ -102,10 +103,10 @@ export default function FicheExercice() {
     try {
       if (fiche.retire) {
         await enregistrerExercice({ ...fiche, id, retire: false }, nouvelles.map((n) => n.fichier))
-        navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim()} » est de retour dans la banque.` } })
+        navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim()} » est désarchivé : il revient dans la recherche des séances.` } })
       } else {
         await retirerExercice(id)
-        navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim()} » est retiré de la banque. Les programmes qui l’utilisent ne changent pas.` } })
+        navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim()} » est archivé. Les séances qui l’utilisent déjà ne changent pas.` } })
       }
     } catch (e) {
       setErreur(messageErreur(e.code ?? e.message))
@@ -123,7 +124,7 @@ export default function FicheExercice() {
         <header>
           <p className="surtitre">{id ? 'Fiche exercice' : 'Nouvel exercice'}</p>
           <h1 className="titre titre--section">{fiche.nom || 'Nouvel exercice'}</h1>
-          {fiche.retire && <p className="espace-texte espace-verrou">Cet exercice est retiré de la banque. Les programmes qui l’utilisent déjà ne changent pas.</p>}
+          {fiche.retire && <p className="espace-texte espace-verrou">Exercice archivé : il n’apparaît plus dans la recherche des séances. Les séances qui l’utilisent déjà ne changent pas.</p>}
         </header>
 
         <form className="espace-fiche" onSubmit={enregistrer} noValidate>
@@ -132,12 +133,34 @@ export default function FicheExercice() {
               <label htmlFor="exo-nom">Nom de l’exercice</label>
               <input id="exo-nom" className="champ" autoComplete="off" required value={fiche.nom} onChange={maj('nom')} />
             </div>
+            <div className="formulaire-ligne">
+              <div className="champ-groupe">
+                <label htmlFor="exo-cat">Catégorie</label>
+                <select id="exo-cat" className="champ" value={fiche.categorie ?? 'Renforcement'} onChange={maj('categorie')}>{CATEGORIES.map((c) => <option key={c}>{c}</option>)}</select>
+              </div>
+              <div className="champ-groupe">
+                <label htmlFor="exo-mat">Matériel</label>
+                <select id="exo-mat" className="champ" value={fiche.materiel ?? 'À préciser'} onChange={maj('materiel')}>{MATERIELS.map((m) => <option key={m}>{m}</option>)}</select>
+              </div>
+            </div>
             <div className="champ-groupe">
-              <label htmlFor="exo-consignes">Consignes</label>
-              <textarea id="exo-consignes" className="champ" rows={6} value={fiche.consignes} onChange={maj('consignes')} />
+              <label htmlFor="exo-exe">Description de l’exécution</label>
+              <textarea id="exo-exe" className="champ" rows={3} value={fiche.execution ?? ''} onChange={maj('execution')} />
+            </div>
+            <div className="champ-groupe">
+              <label htmlFor="exo-consignes">Consignes techniques importantes</label>
+              <textarea id="exo-consignes" className="champ" rows={3} value={fiche.consignes} onChange={maj('consignes')} />
+            </div>
+            <div className="champ-groupe">
+              <label htmlFor="exo-erreurs">Erreurs à éviter</label>
+              <textarea id="exo-erreurs" className="champ" rows={2} value={fiche.erreurs ?? ''} onChange={maj('erreurs')} />
+            </div>
+            <div className="champ-groupe">
+              <label htmlFor="exo-video">Lien vidéo (facultatif)</label>
+              <input id="exo-video" className="champ" type="url" inputMode="url" placeholder="https://…" value={fiche.video ?? ''} onChange={maj('video')} />
             </div>
             <fieldset className="champ-groupe">
-              <legend>Muscles sollicités</legend>
+              <legend>Groupes musculaires sollicités</legend>
               <div className="espace-muscles">
                 {MUSCLES.map((m) => (
                   <label key={m} className="espace-case">
@@ -191,7 +214,7 @@ export default function FicheExercice() {
               <Link to="/espace/coach/exercices" className="bouton bouton--secondaire">Annuler</Link>
               {id && (
                 <button type="button" className="espace-lien" disabled={envoi} onClick={changerRetrait}>
-                  {fiche.retire ? 'Remettre dans la banque' : 'Retirer de la banque'}
+                  {fiche.retire ? 'Désarchiver l’exercice' : 'Archiver l’exercice'}
                 </button>
               )}
             </div>

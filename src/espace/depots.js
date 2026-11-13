@@ -132,7 +132,12 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
     }
     await setDoc(doc(db, 'exercices', id), {
       nom: exercice.nom.trim(),
+      categorie: exercice.categorie ?? 'Renforcement',
+      materiel: exercice.materiel ?? 'À préciser',
+      execution: (exercice.execution ?? '').trim(),
       consignes: (exercice.consignes ?? '').trim(),
+      erreurs: (exercice.erreurs ?? '').trim(),
+      video: (exercice.video ?? '').trim(),
       muscles: exercice.muscles ?? [],
       photos: [...(exercice.photos ?? []), ...envoyees],
       retire: exercice.retire ?? false,

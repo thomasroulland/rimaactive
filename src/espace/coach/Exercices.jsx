@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ecouterExercices } from '../depots.js'
 import PhotoStockee from './PhotoStockee.jsx'
+import { CATEGORIES } from '../donnees/banque.js'
 import Picto from '../../components/Picto.jsx'
 
 const simple = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -12,6 +13,7 @@ export default function Exercices() {
   const [erreur, setErreur] = useState('')
   const [recherche, setRecherche] = useState('')
   const [retires, setRetires] = useState(false)
+  const [categorie, setCategorie] = useState('Toutes')
   const message = useLocation().state?.message ?? ''
 
   useEffect(() => ecouterExercices(setExercices, () => setErreur('Impossible de charger la banque. Vérifiez votre connexion.')), [])
@@ -19,9 +21,9 @@ export default function Exercices() {
   const liste = useMemo(() => {
     if (!exercices) return []
     const q = simple(recherche.trim())
-    return exercices.filter((e) => (retires || !e.retire) && (
-      !q || simple(e.nom).includes(q) || (e.muscles ?? []).some((m) => simple(m).includes(q))))
-  }, [exercices, recherche, retires])
+    return exercices.filter((e) => (retires || !e.retire) && (categorie === 'Toutes' || e.categorie === categorie) && (
+      !q || simple(e.nom).includes(q) || simple(e.materiel).includes(q) || simple(e.categorie).includes(q) || (e.muscles ?? []).some((m) => simple(m).includes(q))))
+  }, [exercices, recherche, retires, categorie])
 
   const actifs = exercices?.filter((e) => !e.retire).length ?? 0
   const resume = exercices === null ? ' ' : actifs === 0 ? 'Aucun exercice pour l’instant.' : actifs === 1 ? '1 exercice dans la banque.' : `${actifs} exercices dans la banque.`
@@ -45,12 +47,17 @@ export default function Exercices() {
 
         <div className="espace-carte espace-recherche">
           <div className="champ-groupe">
-            <label htmlFor="exo-recherche">Rechercher par nom ou par muscle</label>
-            <input id="exo-recherche" className="champ" type="search" autoComplete="off" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
+            <label htmlFor="exo-recherche">Rechercher</label>
+            <input id="exo-recherche" className="champ" type="search" autoComplete="off" placeholder="Nom, muscle, matériel…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
+          </div>
+          <div className="filtres-coaches" role="group" aria-label="Catégorie">
+            {['Toutes', ...CATEGORIES].map((c) => (
+              <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
+            ))}
           </div>
           <label className="espace-case">
             <input type="checkbox" checked={retires} onChange={(e) => setRetires(e.target.checked)} />
-            Afficher les exercices retirés
+            Afficher les exercices archivés
           </label>
         </div>
 
@@ -61,8 +68,8 @@ export default function Exercices() {
                 <Link to={`/espace/coach/exercices/${e.id}`} className="espace-carte espace-exo">
                   <PhotoStockee chemin={e.photos?.[0]} alt="" classe="espace-exo__photo" vide="Pas encore de photo" />
                   <span className="espace-exo__nom">{e.nom}</span>
-                  <span className="espace-exo__muscles">{(e.muscles ?? []).join(', ') || 'Muscles non précisés'}</span>
-                  {e.retire && <span className="espace-statut">Retiré</span>}
+                  <span className="espace-exo__muscles">{[e.categorie, e.materiel].filter(Boolean).join(' · ') || (e.muscles ?? []).join(', ') || 'Catégorie à préciser'}</span>
+                  {e.retire && <span className="espace-statut">Archivé</span>}
                 </Link>
               </li>
             ))}
