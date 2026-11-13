@@ -14,6 +14,7 @@ import { messageErreur } from '../erreurs.js'
 import CreationProgramme, { ChoixDebut } from './CreationProgramme.jsx'
 import EditeurSeance from './EditeurSeance.jsx'
 import Confirmation from './Confirmation.jsx'
+import GestionProgramme from './GestionProgramme.jsx'
 import useGardeSortie from './useGardeSortie.js'
 
 const MAX_SEMAINES = 12
@@ -44,6 +45,9 @@ export default function EditeurProgramme() {
   const [erreur, setErreur] = useState('')
   const [envoi, setEnvoi] = useState(false)
   const [confirmation, setConfirmation] = useState(null)
+  const [gestion, setGestion] = useState(false) // fenêtre « Gérer le programme »
+  const [aOuvrir, setAOuvrir] = useState(null) // copie créée : ouverte dès qu'elle arrive du serveur
+  const supprime = useRef(null) // programme supprimé : ne pas le rouvrir avant que la liste se mette à jour
   const version = useRef(0)
   const panneau = useRef(null)
   // une séance qui s'ouvre : son panneau vient à l'écran (sur téléphone, il remplace la liste)
@@ -66,7 +70,8 @@ export default function EditeurProgramme() {
 
   // Ouvre le programme le plus récent au premier chargement
   useEffect(() => {
-    if (!prog && !creation && programmes?.length) ouvrir(programmes[0])
+    const restants = (programmes ?? []).filter((p) => p.id !== supprime.current)
+    if (!prog && !creation && restants.length) ouvrir(restants[0])
   }, [programmes, prog, creation])
 
   // Verrous en direct : une séance terminée pendant l'édition se verrouille aussitôt
@@ -77,6 +82,12 @@ export default function EditeurProgramme() {
     return ecouterVerrous(progId, (v) => { setVerrous(v); setErreurVerrous('') },
       () => setErreurVerrous('Impossible de vérifier les séances déjà faites : la modification des séances est bloquée. Rechargez la page.'))
   }, [progId])
+
+  // Copie créée depuis « Gérer le programme » : ouverte dès qu'elle arrive du serveur
+  useEffect(() => {
+    const p = aOuvrir && programmes?.find((x) => x.id === aOuvrir)
+    if (p) { ouvrir(p); setAOuvrir(null); aller({ semaine: 1 }, true) }
+  }, [aOuvrir, programmes]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Statut venu du serveur (publication depuis un autre onglet) : jamais réécrit par l'éditeur
   useEffect(() => {
@@ -317,6 +328,7 @@ export default function EditeurProgramme() {
                     </select>
                   </div>
                 )}
+                <button type="button" className="bouton bouton--secondaire" onClick={() => setGestion(true)}>Gérer le programme</button>
                 <button type="button" className="bouton bouton--secondaire" onClick={() => {
                   const go = () => aller({ nouveau: true })
                   if (modifie) demander({ ...QUITTER, action: go })
@@ -334,7 +346,7 @@ export default function EditeurProgramme() {
             </div>
             <ChoixDebut id="prog-debut" valeur={prog.debut} changer={(v) => muter((p) => { p.debut = v })}
               desactive={verrous === null || verrous.size > 0}
-              aide={verrous?.size > 0 ? 'Des séances sont déjà faites : la date de début ne change plus.' : ''} />
+              aide={verrous?.size > 0 ? 'Des séances sont déjà faites : pour décaler les dates, utilisez « Gérer le programme ».' : ''} />
           </div>
 
           <div className="espace-semaines">
@@ -425,6 +437,16 @@ export default function EditeurProgramme() {
       </section>
       {barre}
       {dialogue}
+      {gestion && (
+        <GestionProgramme prog={prog} prenom={client.prenom} aDesModifs={modifie} fermer={() => setGestion(false)}
+          fait={(action, d) => {
+            setGestion(false) // fermée ici : l'éditeur peut se redessiner avant que la fenêtre ait signalé sa fermeture
+            if (action === 'decale') { ouvrir({ ...prog, debut: d.debut }); setMessage(`Dates décalées : le programme commence le ${dateLongue(d.debut)}.`) }
+            if (action === 'depublie') { ouvrir({ ...prog, statut: 'brouillon' }); setMessage(`Programme repassé en brouillon : ${client.prenom} ne le voit plus.`) }
+            if (action === 'duplique') { setAOuvrir(d.id); setMessage('Copie créée en brouillon.') }
+            if (action === 'supprime') { supprime.current = prog.id; setProg(null); setModifie(false); setMessage('Programme supprimé.'); aller({ semaine: 1 }, true) }
+          }} />
+      )}
     </>
   )
 }

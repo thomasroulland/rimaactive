@@ -70,3 +70,21 @@ describe('ajouterElement', () => {
     expect(e.nom).toBe('Squat'); expect(e.muscles).toEqual(['jambes']); expect(e.photos).toEqual(['a.jpg'])
   })
 })
+
+describe('dupliquerProgramme', () => {
+  it('copie tout en brouillon, avec de nouveaux identifiants, le nom et le début choisis', async () => {
+    const { nouveauProgramme, ajouterAuBloc, dupliquerProgramme } = await import('../../src/espace/donnees/programme.js')
+    let p = nouveauProgramme({ client: 'A', nom: 'Force', debut: '2026-11-02', semaines: 2, parSemaine: 2 })
+    p = ajouterAuBloc(p, { s: 0, se: 0 }, 'A', { id: 'squat', nom: 'Squat' })
+    const original = { id: 'P1', majLe: 'x', statut: 'publié', ...p }
+    const c = dupliquerProgramme({ ...original, statut: 'publié' }, { nom: 'Force (suite)', debut: '2026-11-30' })
+    expect(c.id).toBeUndefined()
+    expect(c.majLe).toBeUndefined()
+    expect(c).toMatchObject({ nom: 'Force (suite)', debut: '2026-11-30', statut: 'brouillon', client: 'A' })
+    expect(c.semaines).toHaveLength(2)
+    expect(c.semaines[0].id).not.toBe(p.semaines[0].id)
+    expect(c.semaines[0].seances[0].id).not.toBe(p.semaines[0].seances[0].id)
+    expect(c.semaines[0].seances[0].blocs[0].elements[0].id).not.toBe(p.semaines[0].seances[0].blocs[0].elements[0].id)
+    expect(c.semaines[0].seances[0].blocs[0].elements[0].exoId).toBe('squat')
+  })
+})

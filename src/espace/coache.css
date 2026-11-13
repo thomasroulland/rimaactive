@@ -804,3 +804,14 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-bravo__voir { justify-content: center; }
 .ec-bravo__actions { width: 100%; }
 .ec-bravo__actions > * { flex: 1 1 180px; justify-content: center; }
+
+/* Cases d'état des séances (Ma semaine, Ma régularité), 13 novembre 2026 : même style que la case « Fait » de la séance.
+   Faite : case encre et coche blanche ; en cours : point vermillon au centre ; à faire : case vide. */
+.ec-case-regul { position: relative; border-radius: 7px; background-position: center; background-repeat: no-repeat; }
+.ec-case-regul.cochee {
+  box-shadow: none; background-color: var(--ec-encre); border-color: var(--ec-encre);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  background-size: 70% 70%; background-repeat: no-repeat; background-position: center;
+}
+.ec-case-regul.encours { background-image: none; background-color: var(--blanc); border-color: var(--ec-champ-bord-survol); }
+.ec-case-regul.encours::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--ec-vermillon); }

@@ -125,3 +125,9 @@ export function garderSeancesFaites(local, serveur, faites) {
   }
   return p
 }
+
+// Copie complète d'un programme, en brouillon, avec de nouveaux identifiants partout (13 novembre 2026)
+export function dupliquerProgramme(programme, { nom, debut }) {
+  const { id, majLe, ...reste } = structuredClone(programme) // eslint-disable-line no-unused-vars
+  return { ...reste, nom, debut, statut: 'brouillon', semaines: (reste.semaines ?? []).map(copierSemaine) }
+}

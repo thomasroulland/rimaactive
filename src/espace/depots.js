@@ -410,3 +410,16 @@ export function ecouterSeancesTerminees(rappel, erreur) {
 export function ecouterTousProgrammes(rappel, erreur) {
   return onSnapshot(collection(db, 'programmes'), (s) => rappel(s.docs.map((d) => ({ id: d.id, ...d.data() }))), erreur)
 }
+
+// ---------- Gestion d'un programme par le coach (13 novembre 2026) ----------
+export function decalerProgramme(id, debut) {
+  return updateDoc(doc(db, 'programmes', id), { debut, majLe: serverTimestamp() })
+}
+// Le programme repasse en brouillon : le coaché ne le voit plus (les règles ne lui montrent que les programmes publiés)
+export function depublierProgramme(id) {
+  return updateDoc(doc(db, 'programmes', id), { statut: 'brouillon', majLe: serverTimestamp() })
+}
+// Les séances déjà faites restent (elles apparaissent comme « Séance retirée du programme » dans le suivi)
+export function supprimerProgramme(id) {
+  return deleteDoc(doc(db, 'programmes', id))
+}
