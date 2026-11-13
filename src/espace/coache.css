@@ -878,3 +878,5 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .connexion__aide { margin-top: 2px; padding-top: 12px; }
   .ec-coque--client .espace-connexion.connexion { padding-block: 16px; }
 }
+/* deuxième affichage juste après le premier (fin du chargement de l'espace) : pas de nouvelle animation */
+.connexion--sans-entree .espace-connexion__carte, .connexion--sans-entree .connexion__photo { animation: none !important; }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import photo from '../assets/heros-squat-nb.jpg'
 import symbole from '../assets/rimaactive-symbole-vermillon.svg'
@@ -8,6 +8,10 @@ import './espace.css'
 // Firebase n'est chargé qu'au moment d'envoyer : ce formulaire peut s'afficher avant le reste de l'espace
 const firebaseAuth = () => Promise.all([import('firebase/auth'), import('./firebase.js')])
 
+// La page de connexion est d'abord affichée pendant le chargement de l'espace (Squelette.jsx), puis l'espace la
+// réaffiche une fois chargé : sans ce repère, son animation d'arrivée se jouait deux fois de suite.
+let dernierAffichage = 0
+
 // Page de connexion : e-mail, mot de passe, « Mot de passe oublié ? »
 export default function Connexion() {
   const [email, setEmail] = useState('')
@@ -16,6 +20,8 @@ export default function Connexion() {
   const [erreur, setErreur] = useState('')
   const [info, setInfo] = useState('')
   const [voir, setVoir] = useState(false)
+  const [sansEntree] = useState(() => Date.now() - dernierAffichage < 2000)
+  useEffect(() => { dernierAffichage = Date.now() }, [])
 
   async function seConnecter(event) {
     event.preventDefault()
@@ -45,7 +51,7 @@ export default function Connexion() {
   // Mise en page (14 novembre 2026) : une grande carte en deux parties, la photo noir et blanc du site à gauche
   // (bandeau en haut sur téléphone), le formulaire à droite ; la page remplit la hauteur de l'écran.
   return (
-    <section className="section espace-connexion connexion">
+    <section className={`section espace-connexion connexion${sansEntree ? ' connexion--sans-entree' : ''}`}>
       <div className="conteneur">
         <div className="espace-carte espace-connexion__carte connexion__carte">
           <div className="connexion__visuel">
