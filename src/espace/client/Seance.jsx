@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { listeSeances, fusionnerNotes, preRemplir } from '../donnees/calculs.js'
+import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
+import { avancement } from '../donnees/progression.js'
 import { allureVitesse, saisirSerie } from '../donnees/seances.js'
 import { noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
@@ -270,7 +271,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
         </div>
 
         {/* clé stable pendant la saisie : la première écriture (statut « en cours ») ne doit pas effacer effort, ressenti, commentaire */}
-        <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer} />
+        <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
+          suite={suiteDe(programme, seances)} vientDeFinir={termine.current} />
       </div>
 
       <Consignes element={fiche} fermer={() => setFiche(null)} />
@@ -283,3 +285,12 @@ const Fleche = () => (
     <path d="M216 128H40M112 56l-72 72 72 72" />
   </svg>
 )
+
+// Pour l'écran de fin : rang de la séance et prochaine séance du programme
+function suiteDe(programme, seances) {
+  if (!programme) return null
+  const faites = new Set(seances.filter((s) => s.statut === 'terminée' && s.programme === programme.id).map((s) => s.seance))
+  const av = avancement(programme, faites)
+  const etat = etatAccueil(programme, faites, aujourdhuiIso())
+  return { faites: av.faites, prevues: av.prevues, programmeId: programme.id, prochaine: etat.type === 'prochaine' ? etat : null }
+}

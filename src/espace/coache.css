@@ -759,3 +759,48 @@ select.ec-champ { appearance: auto; min-width: 0; }
 /* rubriques repliables : pendant la fermeture, l'icône repasse tout de suite au « + » ; l'ancienne animation est retirée */
 .ec-repli[data-ferme] > summary::after { content: "+"; }
 .ec-repli__zone { display: block; }
+
+/* ---------- Ma progression (page à part) et tableau de bord sans onglets, 13 novembre 2026 ---------- */
+.ec-progression { display: flex; flex-direction: column; gap: 24px; }
+.ec-progression__tete .ec-surtitre { margin-bottom: 6px; }
+.ec-chiffres { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.ec-chiffre { display: flex; flex-direction: column; gap: 4px; padding: var(--ec-pad); border-radius: 16px; background: var(--blanc); box-shadow: var(--ec-ombre-repos); }
+.ec-chiffre__val { font: 900 34px/38px var(--font-sans); letter-spacing: -0.04em; color: var(--ec-encre); }
+.ec-chiffre__val small { margin-left: 4px; font-size: 15px; font-weight: 600; letter-spacing: 0; color: var(--ec-gris); }
+.ec-chiffre__val--vide { color: #b9b4ab; }
+.ec-chiffre__lib { font: 600 13px/18px var(--font-sans); color: var(--ec-gris); }
+.ec-chiffre__barre { display: block; height: 6px; margin-top: 8px; border-radius: 999px; background: var(--ec-craie-fonce); overflow: hidden; }
+.ec-chiffre__barre > span { display: block; height: 100%; border-radius: inherit; background: var(--ec-vermillon); }
+@media (max-width: 599px) {
+  .ec-chiffres { grid-template-columns: 1fr; }
+  .ec-chiffre { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .ec-chiffre__val { font-size: 28px; line-height: 32px; }
+  .ec-chiffre__barre { flex-basis: 100%; margin-top: 4px; }
+}
+.ec-tdb__semaine { display: flex; flex-direction: column; gap: 14px; }
+
+/* ---------- Écran de fin de séance (13 novembre 2026) ---------- */
+.ec-bouton--clair { background: var(--blanc); border: 1px solid var(--ec-champ-bord); color: var(--ec-encre); }
+.ec-bouton--clair:hover { background: var(--ec-craie); border-color: var(--ec-champ-bord-survol); color: var(--ec-encre); }
+.ec-bravo { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 32px 24px 26px; }
+.ec-bravo__rond { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 6px; border-radius: 50%; background: var(--ec-jaune); color: var(--ec-encre); }
+.ec-bravo__titre { margin: 0; font: 900 28px/32px var(--font-sans); letter-spacing: -0.04em; }
+.ec-bravo__tags { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.ec-bravo__tags li { padding: 3px 11px; border-radius: 999px; background: var(--ec-craie); font: 600 13px/20px var(--font-sans); }
+.ec-bravo__suite { width: 100%; margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 16px; background: var(--ec-encre); color: var(--ec-craie); text-align: left; text-decoration: none; }
+.ec-bravo__suite > span:first-child { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.ec-bravo__surtitre { color: var(--ec-jaune); }
+.ec-bravo__nom { font: 800 18px/22px var(--font-sans); letter-spacing: -0.02em; }
+.ec-bravo__voir { flex: none; }
+.ec-bravo__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
+@media (prefers-reduced-motion: no-preference) {
+  .ec-bravo { animation: ec-bravo-entre 0.4s var(--ec-courbe) both; }
+  .ec-bravo__rond { animation: ec-bravo-rond 0.5s var(--ec-courbe-ressort) 0.1s both; }
+  @keyframes ec-bravo-entre { from { opacity: 0; transform: translateY(12px); } }
+  @keyframes ec-bravo-rond { from { transform: scale(0.4); opacity: 0; } }
+}
+/* prochaine séance : à la verticale, le bouton sur toute la largeur (la colonne de fin est étroite sur ordinateur) */
+.ec-bravo__suite { flex-direction: column; align-items: stretch; gap: 12px; }
+.ec-bravo__voir { justify-content: center; }
+.ec-bravo__actions { width: 100%; }
+.ec-bravo__actions > * { flex: 1 1 180px; justify-content: center; }

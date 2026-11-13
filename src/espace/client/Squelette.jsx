@@ -92,15 +92,6 @@ function Tete() {
   )
 }
 
-function Onglets() {
-  return (
-    <div className="ec-sq-onglets">
-      <Forme l={130} h={20} />
-      <Forme l={140} h={20} />
-    </div>
-  )
-}
-
 function Semaine() {
   return (
     <div className="ec-sq-carte ec-sq-carte--24 ec-sq-semaine">
@@ -137,8 +128,7 @@ function Tableau({ progression }) {
   return (
     <Zone interieur="ec-tdb">
       <Tete />
-      <span className="ec-sq ec-sq--24 ec-sq-noire" />
-      <Onglets />
+      {!progression && <span className="ec-sq ec-sq--24 ec-sq-noire" />}
       {progression ? <Rubriques /> : <Semaine />}
     </Zone>
   )
@@ -260,5 +250,6 @@ export default function Squelette() {
   const { pathname, search } = useLocation()
   if (pathname.startsWith('/espace/seance/')) return <Seance />
   if (pathname.startsWith('/espace/programme')) return <Programme />
+  if (pathname.startsWith('/espace/progression')) return <Tableau progression />
   return <Tableau progression={new URLSearchParams(search).get('onglet') === 'progression'} />
 }

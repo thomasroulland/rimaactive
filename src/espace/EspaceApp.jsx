@@ -58,6 +58,7 @@ function EspaceCoache({ uid, profil }) {
 const LIENS_CLIENT = [
   { to: '/espace', label: 'Tableau de bord' },
   { to: '/espace/programme', label: 'Mon programme' },
+  { to: '/espace/progression', label: 'Ma progression' },
 ]
 
 function Page({ titre, children }) {

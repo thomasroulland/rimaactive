@@ -5,6 +5,7 @@ import { aujourdhuiIso } from '../donnees/calculs.js'
 import { programmeAffiche } from '../donnees/progression.js'
 import TableauDeBord from './TableauDeBord.jsx'
 import MonProgramme from './MonProgramme.jsx'
+import PageProgression from './PageProgression.jsx'
 import Seance from './Seance.jsx'
 import Squelette from './Squelette.jsx'
 
@@ -51,6 +52,7 @@ export default function EspaceClient({ uid, profil }) {
           <Routes>
             <Route index element={<TableauDeBord uid={uid} profil={profil} {...donnees} />} />
             <Route path="programme" element={<MonProgramme profil={profil} {...donnees} />} />
+            <Route path="progression" element={<PageProgression uid={uid} profil={profil} {...donnees} />} />
             <Route path="seance/:programmeId/:seanceId" element={<Seance {...donnees} />} />
             <Route path="*" element={<Navigate to="/espace" replace />} />
           </Routes>
