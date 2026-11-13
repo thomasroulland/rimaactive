@@ -6,7 +6,6 @@ import Connexion from './Connexion.jsx'
 import Accord from './Accord.jsx'
 import EspaceCoach, { useLiensCoach } from './coach/EspaceCoach.jsx'
 import EspaceClient from './client/EspaceClient.jsx'
-import { useUrlAvatar } from './client/Avatar.jsx'
 import Squelette from './client/Squelette.jsx'
 import './espace.css'
 import { lireIndice } from './indiceSession.js'
@@ -38,9 +37,9 @@ export default function EspaceApp() {
 }
 
 function EspaceCoache({ uid, profil }) {
-  const avatar = useUrlAvatar(profil?.avatar)
+  // dans la barre : le pictogramme « compte », pas la photo de profil (choix de Thomas, 14 novembre 2026)
   return (
-    <Coque liens={LIENS_CLIENT} avatar={avatar} client>
+    <Coque liens={LIENS_CLIENT} client>
       <EspaceClient uid={uid} profil={profil} />
     </Coque>
   )

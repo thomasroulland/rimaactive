@@ -155,6 +155,12 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
   return id
 }
 
+// Supprimer définitivement une fiche. Ses photos restent dans Storage : les programmes qui utilisent
+// déjà l'exercice en gardent une copie (nom, consignes, chemins des photos) et ne changent pas.
+export function supprimerExercice(id) {
+  return deleteDoc(doc(db, 'exercices', id))
+}
+
 // « Retirer » : l'exercice sort de la banque, ses fichiers restent (les programmes gardent leur copie des chemins).
 export async function retirerExercice(id) {
   await updateDoc(doc(db, 'exercices', id), { retire: true, majLe: serverTimestamp() })

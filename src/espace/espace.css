@@ -822,3 +822,4 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
   background: linear-gradient(currentColor, currentColor) center / 10px 1.5px no-repeat,
               linear-gradient(currentColor, currentColor) center / 1.5px 10px no-repeat;
 }
+.espace-lien--danger { color: var(--vermillon, #e8401c); }
