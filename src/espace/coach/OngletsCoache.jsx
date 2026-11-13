@@ -9,6 +9,7 @@ import { dateComplete, dateSeance, evolutionMesures } from '../donnees/progressi
 import { exercicesDe, detailSeance, texteSerie } from '../donnees/seances.js'
 import { chiffresCoache, effortParSemaine, suiviCoache } from '../donnees/alertes.js'
 import { frNombre } from '../donnees/resume.js'
+import { RM_SUIVIS } from '../donnees/banque.js'
 import { messageErreur } from '../erreurs.js'
 import { useCoache } from './EnteteCoache.jsx'
 import { Courbe, DialogueSuppression, SeanceFaite, trouverSeance } from './FicheClient.jsx'
@@ -17,7 +18,7 @@ import PhotoStockee from './PhotoStockee.jsx'
 // Onglets de la fiche d'un coaché, d'après la maquette coach de Marie (13 novembre 2026).
 // Les données communes (coaché, programmes, séances) viennent de la page commune (useCoache).
 
-const RM = ['Squat', 'Soulevé de terre', 'Développé couché', 'Développé militaire']
+const RM = RM_SUIVIS
 const Carte = ({ titre, id, children, classe = '' }) => (
   <section className={`espace-carte fiche-carte ${classe}`} aria-labelledby={id}>
     <h2 id={id} className="fiche-carte__titre">{titre}</h2>

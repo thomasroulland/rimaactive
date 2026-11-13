@@ -2,6 +2,8 @@ import { resumeFormat } from '../donnees/seances.js'
 import { JOURS } from '../donnees/calculs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice from './ChoixExercice.jsx'
+import { chargeIndicative } from '../donnees/banque.js'
+import { frNombre } from '../donnees/resume.js'
 
 export const FORMATS = [
   ['series', 'Séries classiques'],
@@ -14,20 +16,22 @@ export const FORMATS = [
 // réglages proposés quand on choisit TABATA ou HIIT (maquette de Marie) : travail, repos, tours
 const REGLAGES_FORMAT = { tabata: { travail: '20', repos: '10', tours: '8' }, hiit: { travail: '40', repos: '20', tours: '6' } }
 
-function Champ({ id, label, valeur, changer, large, mode, multiligne }) {
+function Champ({ id, label, valeur, changer, large, mode, multiligne, indice, aide }) {
   return (
     <div className={`champ-groupe espace-param${large ? ' espace-param--large' : ''}`}>
       <label htmlFor={id}>{label}</label>
       {multiligne
         ? <textarea id={id} className="champ" rows={3} value={valeur ?? ''} onChange={(e) => changer(e.target.value)} />
-        : <input id={id} className="champ" autoComplete="off" inputMode={mode} value={valeur ?? ''} onChange={(e) => changer(e.target.value)} />}
+        : <input id={id} className="champ" autoComplete="off" inputMode={mode} value={valeur ?? ''} placeholder={indice}
+          aria-describedby={aide ? `${id}-aide` : undefined} onChange={(e) => changer(e.target.value)} />}
+      {aide && <span id={`${id}-aide`} className="espace-param__aide">{aide}</span>}
     </div>
   )
 }
 
 // Éditeur d'une séance : champs de la séance, puis (force) blocs et exercices, ou (course) distance et temps.
 // `verrou` : séance faite, tout est en lecture seule.
-export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, majSeance, majBloc, majElement, retirer, ajouter }) {
+export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, rpeSemaine, majSeance, majBloc, majElement, retirer, ajouter }) {
   const ids = (cle) => `se-${seance.id}-${cle}`
   const lettres = (seance.blocs ?? []).map((b) => b.lettre)
 
@@ -99,7 +103,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                 </div>
                 <ol className="espace-elements">
                   {(b.elements ?? []).map((el, ei) => (
-                    <Element key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={b.format === 'series'} verrou={verrou}
+                    <Element key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={b.format === 'series'} verrou={verrou} rm={rm} rpeSemaine={rpeSemaine}
                       maj={(cle, v) => majElement(bi, ei, cle, v)} retirer={() => retirer(el)} />
                   ))}
                 </ol>
@@ -114,8 +118,10 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
   )
 }
 
-function Element({ element: el, code, series, verrou, maj, retirer }) {
+function Element({ element: el, code, series, verrou, rm, rpeSemaine, maj, retirer }) {
   const id = (cle) => `el-${el.id}-${cle}`
+  const calculee = chargeIndicative(el.nom, el.pct, rm)
+  const aideCharge = calculee !== null && String(el.charge ?? '').trim() === '' ? `≈ ${frNombre(calculee)} kg d’après le 1RM` : undefined
   return (
     <li className="espace-carte espace-element">
       <div className="espace-element__tete">
@@ -130,9 +136,9 @@ function Element({ element: el, code, series, verrou, maj, retirer }) {
       <div className="espace-params">
         {series && <Champ id={id('series')} label="Séries" mode="numeric" valeur={el.series} changer={(v) => maj('series', v)} />}
         <Champ id={id('reps')} label={series ? 'Répétitions' : 'Répétitions ou durée'} valeur={el.reps} changer={(v) => maj('reps', v)} />
-        <Champ id={id('charge')} label="Charge (kg)" mode="decimal" valeur={el.charge} changer={(v) => maj('charge', v)} />
+        <Champ id={id('charge')} label="Charge (kg)" mode="decimal" valeur={el.charge} indice={calculee !== null ? frNombre(calculee) : undefined} aide={aideCharge} changer={(v) => maj('charge', v)} />
         <Champ id={id('pct')} label="% 1RM" mode="decimal" valeur={el.pct} changer={(v) => maj('pct', v)} />
-        {series && <Champ id={id('rpe')} label="RPE" mode="decimal" valeur={el.rpe} changer={(v) => maj('rpe', v)} />}
+        {series && <Champ id={id('rpe')} label="RPE cible" mode="decimal" valeur={el.rpe} indice={rpeSemaine || undefined} aide={rpeSemaine && String(el.rpe ?? '').trim() === '' ? `RPE de la semaine : ${rpeSemaine}` : undefined} changer={(v) => maj('rpe', v)} />}
         {series && <Champ id={id('repos')} label="Repos" valeur={el.repos} changer={(v) => maj('repos', v)} />}
         {series && <Champ id={id('tempo')} label="Tempo" valeur={el.tempo} changer={(v) => maj('tempo', v)} />}
         <Champ id={id('commentaire')} label="Commentaire pour cette séance" large valeur={el.commentaire} changer={(v) => maj('commentaire', v)} />

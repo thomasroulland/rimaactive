@@ -767,3 +767,17 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
 .espace-recherche .champ-groupe { max-width: none; flex: none; }
 .espace-fiche__champs .formulaire-ligne { width: 100%; }
 .espace-fiche textarea.champ { min-height: 0; height: auto; padding-block: 10px; }
+
+/* Ajouter un exercice : catégories et création sans quitter la séance (maquette coach) */
+.espace-choix__filtres { margin-top: -4px; }
+.espace-choix__creer { border-top: 1px solid var(--filet); padding-top: 12px; display: grid; gap: 12px; }
+.espace-choix__creer > summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; gap: 8px; list-style: none; }
+.espace-choix__creer > summary::-webkit-details-marker { display: none; }
+.espace-choix__creer > summary::before { content: '+'; display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--filet); border-radius: 50%; font-weight: 500; transition: transform .2s ease; }
+.espace-choix__creer[open] > summary::before { transform: rotate(45deg); }
+.espace-choix__creer > .bouton { justify-self: start; }
+.espace-choix__form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px 16px; }
+.espace-choix__large { grid-column: 1 / -1; }
+@media (prefers-reduced-motion: reduce) { .espace-choix__creer > summary::before { transition: none; } }
+.espace-param__aide { font-size: 13px; line-height: 18px; color: var(--gris-chaud); }
+.espace-element .espace-params { align-items: start; }

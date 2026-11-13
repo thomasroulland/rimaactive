@@ -453,7 +453,7 @@ export default function EditeurProgramme() {
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </Link>
                 </div>
-                <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices}
+                <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
                   majSeance={majSeance} majBloc={majBloc} majElement={majElement}
                   retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
                   ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
