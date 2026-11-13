@@ -22,7 +22,7 @@ export default function MesCoaches() {
   const fiches = (clients ?? []).map((c) => {
     const programme = c.programme ? (programmes ?? []).find((p) => p.id === c.programme.id) ?? null : null
     const siennes = (seances ?? []).filter((s) => s.client === c.uid)
-    const { resume, alertes } = suiviCoache({ programme, seances: siennes, visio: c.derniereVisio ?? null, aujourdhui })
+    const { resume, alertes } = suiviCoache({ programme, seances: siennes, visio: c.derniereVisio ?? null, aujourdhui, actif: c.statut === 'actif' })
     return { ...c, programmeComplet: programme, resume, alertes }
   })
   // ordre : d'abord ceux qui ont des points à regarder, puis ceux qui ont un programme, puis par nom
@@ -67,7 +67,9 @@ export default function MesCoaches() {
                     <p className="a-regarder__nom">{c.prenom} {c.nom}</p>
                     <ul className="alertes">{c.alertes.map((a) => <li key={a}>{a}</li>)}</ul>
                   </div>
-                  <Link to={`/espace/coach/clients/${c.uid}`} className="lien-souligne">Ouvrir la fiche<span className="sr-only"> de {c.prenom} {c.nom}</span></Link>
+                  {c.programmeComplet
+                    ? <Link to={`/espace/coach/clients/${c.uid}`} className="lien-souligne">Ouvrir la fiche<span className="sr-only"> de {c.prenom} {c.nom}</span></Link>
+                    : <Link to={`/espace/coach/clients/${c.uid}/programme`} className="lien-souligne">Créer un programme<span className="sr-only"> pour {c.prenom} {c.nom}</span></Link>}
                 </li>
               ))}
             </ul>}

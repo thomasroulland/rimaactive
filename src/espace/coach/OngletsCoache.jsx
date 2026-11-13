@@ -36,7 +36,7 @@ export function Ensemble() {
   useEffect(() => ecouterBilans(uid, setBilans, () => setBilans([])), [uid])
   const aujourdhui = aujourdhuiIso()
   const ch = chiffresCoache({ programme: progEnCours, seances, aujourdhui })
-  const { alertes } = suiviCoache({ programme: progEnCours, seances, visio: client.derniereVisio ?? null, aujourdhui })
+  const { alertes } = suiviCoache({ programme: progEnCours, seances, visio: client.derniereVisio ?? null, aujourdhui, actif: client.statut === 'actif' })
   const faites = new Set((seances ?? []).filter((s) => s.statut === 'terminée').map((s) => s.seance))
   const prochaine = progEnCours ? listeSeances(progEnCours).find((x) => !faites.has(x.seance.id)) : null
   const dernier = bilans?.[0]

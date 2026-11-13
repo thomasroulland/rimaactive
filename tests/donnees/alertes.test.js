@@ -42,3 +42,10 @@ describe('chiffresCoache et effortParSemaine', () => {
     ])
   })
 })
+
+describe('suiviCoache sans programme', () => {
+  it('signale un coaché actif sans programme, pas un invité', () => {
+    expect(suiviCoache({ programme: null, seances: [], visio: null, aujourdhui: '2026-11-13', actif: true }).alertes).toEqual(['Pas de programme en cours'])
+    expect(suiviCoache({ programme: null, seances: [], visio: null, aujourdhui: '2026-11-13' }).alertes).toEqual([])
+  })
+})

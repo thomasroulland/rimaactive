@@ -8,7 +8,8 @@ const nombre = (v) => parseFloat(String(v ?? '').replace(',', '.'))
 
 // programme : le programme en cours (document complet) ou null ; seances : les séances terminées du coaché ;
 // visio : { date, semaine } ou null.
-export function suiviCoache({ programme, seances, visio, aujourdhui }) {
+// `actif` : coaché au compte activé et pas en pause (sans programme, c'est un point à regarder)
+export function suiviCoache({ programme, seances, visio, aujourdhui, actif = false }) {
   const terminees = (seances ?? []).filter((s) => s.statut === 'terminée')
   const alertes = []
   let resume = null
@@ -52,6 +53,7 @@ export function suiviCoache({ programme, seances, visio, aujourdhui }) {
     const depuis = ecartJours(visio.date, aujourdhui)
     if (programme && depuis > SEUIL_VISIO) alertes.push(`Dernière visio il y a ${depuis} jours`)
   }
+  if (!programme && actif) alertes.unshift('Pas de programme en cours')
   return { resume, alertes }
 }
 

@@ -805,3 +805,20 @@ table.sr-only { display: block; max-width: 1px; max-height: 1px; }
 }
 .a-regarder__calme { display: flex; align-items: center; gap: 10px; margin: 0; padding: 14px 0 12px; font-size: 15px; line-height: 22px; color: var(--gris-chaud); }
 .a-regarder__calme svg { flex: none; color: var(--encre); }
+
+/* Moins d'espace vide (14 novembre 2026) : haut de page, page de séance, « Ajouter un exercice » */
+.ec-main > .section:has(> .espace-coach) { padding-top: 16px; }
+.page-seance { gap: 6px; }
+.page-seance > .surtitre { margin: 6px 0 0; }
+.page-seance__titre { margin: 0 0 6px; }
+.espace-choix { gap: 14px; padding-top: 18px; }
+.espace-choix__tete { align-items: center; }
+.espace-choix__tete .espace-sous-titre { margin: 0; }
+.espace-choix .champ-groupe.espace-choix__bloc { width: auto; display: flex; flex-direction: row; align-items: center; gap: 10px; }
+.espace-choix .espace-choix__bloc .champ { width: 200px; }
+/* « + » dessiné (centré au pixel près, quelle que soit la police) */
+.espace-choix__creer > summary::before {
+  content: ''; box-sizing: border-box;
+  background: linear-gradient(currentColor, currentColor) center / 10px 1.5px no-repeat,
+              linear-gradient(currentColor, currentColor) center / 1.5px 10px no-repeat;
+}
