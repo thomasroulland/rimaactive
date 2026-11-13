@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
-import { CONTACT } from '../../components/liens.js'
-import logoCraie from '../../assets/rimaactive-mot-craie.svg'
+import { useLocation } from 'react-router-dom'
+import Entete from '../../components/Entete.jsx'
+import Pied from '../../components/Pied.jsx'
 import { seDeconnecter } from '../firebase.js'
-import useGlissiere from './useGlissiere.js'
 import '../coache.css'
 
-// Coque de l'espace : barre noire (logo, liens, rond de compte), contenu, pied.
+// Coque de l'espace : la barre et le pied du site (un seul composant partout), le contenu entre les deux.
 // `compte` : afficher le rond de compte et son menu (faux avant la connexion). `avatar` : adresse d'une photo de profil.
 // `site` : menu du site (Accueil, Mes offres, M'écrire) à la place des liens de l'espace (connexion, accord).
 // `client` : écrans du coaché (sélection, curseur et focus aux couleurs de la charte) ; les écrans du coach n'en ont pas.
@@ -14,48 +13,29 @@ export default function Coque({ liens = [], compte = true, avatar = null, site =
   return (
     <div className={`ec-coque${client ? ' ec-coque--client' : ''}`}>
       <a className="lien-evitement" href="#contenu">Aller au contenu</a>
-      <header className="ec-bandeau">
-        <div className="ec-bandeau__ligne">
-          <NavLink to="/espace" className="ec-logo" aria-label="Rimaactive, mon espace">
-            <img src={logoCraie} alt="" width="128" height="30" />
-          </NavLink>
-          {site ? <NavSite /> : liens.length > 0 && <Nav liens={liens} />}
-          {compte && <MenuCompte avatar={avatar} />}
-        </div>
-      </header>
+      {/* La même barre que le site (13 novembre 2026) : un seul composant partout */}
+      <BarreEspace liens={liens} site={site} compte={compte} avatar={avatar} />
       <main id="contenu" className="ec-main">{children}</main>
-      <footer className="ec-pied">
-        <div className="ec-pied__ligne">
-          <span>Marie Sillas · Coach sportive diplômée</span>
-          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-        </div>
-      </footer>
+      <Pied />
     </div>
   )
 }
 
-function Nav({ liens }) {
+function BarreEspace({ liens, site, compte, avatar }) {
   const { pathname, state } = useLocation()
-  const ref = useGlissiere(`${pathname}|${state?.depuis ?? ''}`)
+  // Sur une séance, l'onglet d'où l'on vient reste allumé (maquette) : « Mon programme » si la séance a été ouverte
+  // depuis Mon programme, sinon « Tableau de bord »
+  const surSeance = pathname.startsWith('/espace/seance/')
+  const depuis = state?.depuis === 'programme' ? '/espace/programme' : '/espace'
+  const pages = site ? undefined : liens.map((l) => (surSeance ? { ...l, courant: l.to === depuis } : l))
   return (
-    <nav className="ec-nav ec-glisse" aria-label="Espace client" ref={ref}>
-      {liens.map((lien) => <Onglet key={lien.to} lien={lien} />)}
-    </nav>
-  )
-}
-
-// Menu du site sur la connexion et l'accord : mêmes mots que la barre du site, au style de la barre de l'espace
-function NavSite() {
-  return (
-    <nav className="ec-nav ec-nav--site" aria-label="Menu du site">
-      <Link to="/" className="ec-onglet">Accueil</Link>
-      <Link to="/offres" className="ec-onglet">Mes offres</Link>
-      <Link to="/contact" className="ec-onglet ec-ecrire">M’écrire
-        <span className="ec-ecrire__rond" aria-hidden="true">
-          <svg width="10" height="10" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round"><path d="M72 184L184 72M88 72h96v96" /></svg>
-        </span>
-      </Link>
-    </nav>
+    <Entete
+      liens={pages}
+      ecrire={site}
+      accueil={site ? '/' : '/espace'}
+      rangee={!site}
+      compte={compte ? <MenuCompte avatar={avatar} /> : undefined}
+    />
   )
 }
 
@@ -114,15 +94,4 @@ function MenuCompte({ avatar }) {
       )}
     </div>
   )
-}
-
-// Onglet de la barre. Sur une séance, l'onglet d'où l'on vient reste souligné (maquette) :
-// « Mon programme » si la séance a été ouverte depuis Mon programme, sinon « Tableau de bord ».
-function Onglet({ lien }) {
-  const { pathname, state } = useLocation()
-  if (pathname.startsWith('/espace/seance/')) {
-    const actif = lien.to === (state?.depuis === 'programme' ? '/espace/programme' : '/espace')
-    return <Link to={lien.to} className="ec-onglet" aria-current={actif ? 'page' : undefined}>{lien.label}</Link>
-  }
-  return <NavLink to={lien.to} end={lien.to === '/espace'} className="ec-onglet">{lien.label}</NavLink>
 }

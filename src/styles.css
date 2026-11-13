@@ -19,8 +19,8 @@
   --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --gouttiere: clamp(20px, calc(5 * var(--vw)), 80px);
-  /* largeur du contenu : 1240 px au moins, sinon toute la largeur moins la marge de l'en-tête (comme avant) */
-  --largeur: max(1240px, calc(100vw - 2 * var(--gouttiere)));
+  /* largeur du contenu : 1240 px (charte), la même partout, site et espace */
+  --largeur: 1240px;
   --duree: 160ms;
   --rayon-s: 8px; /* étiquettes, champs */
   --arrondi: 16px; /* rayon-m : cartes du site, cadres photo */
@@ -1862,4 +1862,29 @@ input, textarea { caret-color: var(--vermillon); }
   .bouton:active, .bascule button:active, .detail__fermer:active, .entete__ecrire:active { transform: none; }
   .offres-page__liens a::before { transition: none; }
   .detail[open], .detail[open]::backdrop { animation: none; }
+}
+
+/* ---------- Une seule barre de menu, la même partout (site, connexion, espace coaché, espace coach), 13 novembre 2026 ----------
+   Le style choisi par Marie (barre encre, pilules, « M'écrire » à la pastille jaune), aux dimensions de la barre de l'espace. */
+:root { --hauteur-entete: 64px; }
+.entete__logo img { height: 26px; }
+.nav { gap: 6px; }
+.nav__lien { height: 36px; padding: 0 16px; font-size: 15px; }
+.entete__ecrire { height: 36px; font-size: 15px; }
+.entete__ecrire svg { width: 10px; height: 10px; padding: 6px; }
+.entete__droite { gap: 12px; }
+/* le rond du compte (lien « Mon espace » sur le site, menu du compte une fois connecté) : même rond, au bout de la barre */
+.entete__compte, .entete .ec-rond { position: static; transform: none; width: 36px; height: 36px; border: 1px solid rgba(244, 243, 239, 0.28); border-radius: 50%; background: transparent; color: var(--craie); }
+.entete .ec-compte { order: 0; margin: 0; }
+.entete .ec-rond:hover { background: var(--craie); border-color: var(--craie); color: var(--encre); }
+.entete .ec-rond svg { width: 22px; height: 22px; }
+/* l'espace se pose sous la barre comme les pages du site */
+.ec-main > .section { padding-block: 32px 64px; }
+@media (max-width: 960px) {
+  :root { --hauteur-entete: 56px; }
+  .entete__logo img { height: 22px; }
+  /* espace : sur téléphone, les pages restent visibles sur une seconde ligne (pas de bouton « Menu ») */
+  .entete--rangee .entete__barre { height: auto; min-height: var(--hauteur-entete); grid-template-columns: auto 1fr; row-gap: 0; padding-block: 10px 6px; }
+  .entete--rangee .nav { display: flex; grid-column: 1 / -1; grid-row: 2; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding-top: 8px; }
+  .entete--rangee .nav__lien { height: 34px; padding: 0 12px; font-size: 14px; }
 }

@@ -4,7 +4,7 @@ import useSession from './useSession.js'
 import useTitre from '../components/useTitre.js'
 import Connexion from './Connexion.jsx'
 import Accord from './Accord.jsx'
-import EspaceCoach from './coach/EspaceCoach.jsx'
+import EspaceCoach, { LIENS_COACH } from './coach/EspaceCoach.jsx'
 import EspaceClient from './client/EspaceClient.jsx'
 import { useUrlAvatar } from './client/Avatar.jsx'
 import Squelette from './client/Squelette.jsx'
@@ -20,7 +20,7 @@ export default function EspaceApp() {
 
   if (role === 'coach') {
     return (
-      <Coque liens={[]}>
+      <Coque liens={LIENS_COACH}>
         <Routes>
           <Route path="coach/*" element={<EspaceCoach />} />
           <Route path="*" element={<Navigate to="/espace/coach" replace />} />

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import logoCraie from '../../assets/rimaactive-mot-craie.svg'
-import { CONTACT } from '../../components/liens.js'
+import Entete from '../../components/Entete.jsx'
+import Pied from '../../components/Pied.jsx'
 import '../coache.css'
 
 // Ce fichier est chargé avec le site (écran d'attente avant l'espace) : il ne doit importer ni Firebase ni le reste de l'espace.
@@ -22,13 +22,9 @@ export function EspaceZoom() {
 export function SqChargementEspace() {
   return (
     <div className="ec-coque">
-      <header className="ec-bandeau">
-        <div className="ec-bandeau__ligne"><img className="ec-logo" src={logoCraie} alt="Rimaactive" width="128" height="30" /></div>
-      </header>
+      <Entete liens={[]} ecrire={false} accueil="/espace" rangee compte={null} />
       <main className="ec-main"><Squelette /></main>
-      <footer className="ec-pied">
-        <div className="ec-pied__ligne"><span>Marie Sillas · Coach sportive diplômée</span><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></div>
-      </footer>
+      <Pied />
     </div>
   )
 }

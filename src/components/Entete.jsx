@@ -4,10 +4,13 @@ import logoCraie from '../assets/rimaactive-mot-craie.svg'
 import { PAGES_MENU } from './liens.js'
 import Picto from './Picto.jsx'
 
-// Barre de menu : logo « rimaactive » à gauche, les pages en bulles au centre, « M'écrire » à droite.
-// Sur l'accueil et les pages de formules, tant qu'on n'a pas défilé, elle se fond dans la photo (logo et textes
-// clairs) ; dès qu'on défile, et sur les autres pages, elle passe en craie. Seules les couleurs changent.
-export default function Entete() {
+// Barre de menu, la même sur tout le site et dans l'espace (13 novembre 2026) : logo à gauche, le menu, « M'écrire »
+// et le rond du compte à droite.
+// `liens` : les pages du menu (celles du site par défaut, celles de l'espace une fois connecté).
+// `ecrire` : afficher « M'écrire ». `compte` : ce qui se met dans le rond de droite (par défaut, le lien « Mon espace »).
+// `accueil` : où mène le logo. `rangee` : sur téléphone, les liens restent visibles sur une seconde ligne (espace),
+// au lieu du bouton « Menu » (site).
+export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accueil = '/', rangee = false }) {
   const { pathname } = useLocation()
   // pages qui commencent par une photo plein cadre : les trois pages de formules
   const surPhoto = useSurPhoto(false)
@@ -15,6 +18,7 @@ export default function Entete() {
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
   // Sur la page M'écrire elle-même, il est caché aussi (on y est déjà) ; sa place est gardée pour que rien ne bouge
   const ecrireVisible = useEcrireVisible(pathname === '/') && pathname !== '/contact'
+  const avecMenu = !rangee && liens.length > 0
   // « Accueil » ramène toujours tout en haut de l'accueil, même quand on y est déjà
   const versLeHaut = (page) => () => { if (page.to === pathname) window.scrollTo({ top: 0, behavior: 'smooth' }) }
   // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
@@ -27,29 +31,35 @@ export default function Entete() {
   }, [ouvert])
 
   return (
-    <header className={`entete ${surPhoto && !ouvert ? 'entete--sur-photo' : ''}`}>
+    <header className={`entete ${surPhoto && !ouvert ? 'entete--sur-photo' : ''} ${rangee ? 'entete--rangee' : ''}`}>
       <div className="entete__barre">
         {/* Barre encre (choix de Marie, 11 novembre 2026) : logo craie. Le logo ramène en haut de l'accueil (utile surtout sur téléphone, où le menu est replié) */}
-        <Link to="/" className="entete__logo" aria-label="Rimaactive, retour à l’accueil"
-          onClick={() => { setOuvert(false); if (pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
-          <img src={logoCraie} alt="Rimaactive, Marie Sillas coach sportive" width="104" height="21" />
+        <Link to={accueil} className="entete__logo" aria-label="Rimaactive, retour à l’accueil"
+          onClick={() => { setOuvert(false); if (pathname === accueil) window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+          <img src={logoCraie} alt="Rimaactive, Marie Sillas coach sportive" width="128" height="26" />
         </Link>
         {/* Menu à droite, à côté de « M'écrire » (11 novembre 2026) ; mots simples ; la page en cours est dans une pilule encre ; au survol le jaune monte et le mot « roule » vers le haut (choix de Marie, novembre 2026) */}
         <nav className="nav" aria-label="Menu principal">
-          {PAGES_MENU.map((page) => (
-            <NavLink key={page.to} to={page.to} end={page.to === '/'} className="nav__lien" onClick={versLeHaut(page)}>
-              <span className="roule" data-texte={page.label}>{page.label}</span>
-            </NavLink>
-          ))}
+          {liens.map((page) => {
+            const mot = <span className="roule" data-texte={page.label}>{page.label}</span>
+            // `courant` fixé par l'espace (sur une séance, l'onglet d'où l'on vient reste allumé)
+            return page.courant === undefined
+              ? <NavLink key={page.to} to={page.to} end={page.end ?? (page.to === '/' || page.to === '/espace')} className="nav__lien" onClick={versLeHaut(page)}>{mot}</NavLink>
+              : <Link key={page.to} to={page.to} className="nav__lien" aria-current={page.courant ? 'page' : undefined}>{mot}</Link>
+          })}
         </nav>
         <div className="entete__droite">
           {/* « M'écrire » : collé au menu, séparé par un trait fin, texte craie, flèche dans une pastille jaune (choix de Marie, 11 novembre 2026) */}
-          <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>
+          {ecrire && <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>}
           {/* Espace de connexion : mène à /espace (connexion, puis espace client ou coach). Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}
-          <Link to="/espace" className="entete__compte" aria-label="Mon espace" title="Mon espace">
-            <Picto nom="user-circle" taille={22} />
-          </Link>
-          <button
+          {compte === undefined
+            ? (
+              <Link to="/espace" className="entete__compte" aria-label="Mon espace" title="Mon espace">
+                <Picto nom="user-circle" taille={24} />
+              </Link>
+            )
+            : compte}
+          {avecMenu && <button
             type="button"
             className="menu-bouton"
             aria-expanded={ouvert}
@@ -57,17 +67,17 @@ export default function Entete() {
             onClick={() => setOuvert((o) => !o)}
           >
             {ouvert ? 'Fermer' : 'Menu'}
-          </button>
+          </button>}
         </div>
       </div>
-      <nav id="menu-mobile" className={`menu-mobile ${ouvert ? 'ouvert' : ''}`} aria-label="Menu mobile">
-        {PAGES_MENU.map((page) => (
-          <NavLink key={page.to} to={page.to} end={page.to === '/'} onClick={versLeHaut(page)}>
+      {avecMenu && <nav id="menu-mobile" className={`menu-mobile ${ouvert ? 'ouvert' : ''}`} aria-label="Menu mobile">
+        {liens.map((page) => (
+          <NavLink key={page.to} to={page.to} end={page.end ?? (page.to === '/' || page.to === '/espace')} onClick={versLeHaut(page)}>
             {page.label}
             <Fleche />
           </NavLink>
         ))}
-      </nav>
+      </nav>}
     </header>
   )
 }
