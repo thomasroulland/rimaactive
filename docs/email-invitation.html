@@ -1,41 +1,87 @@
-<!-- E-mail « Créez votre mot de passe » (modèle « Réinitialisation du mot de passe » de Firebase Authentication).
-     Charte Rimaactive : fond craie, carte blanche, encre, filet vermillon, bouton jaune signal en pilule.
-     À coller dans la console Firebase : Authentication > Modèles > Réinitialisation du mot de passe > Message.
-     Remplacer ADRESSE-DU-SITE par l'adresse du site en ligne (le logo est dans public/email/).
+<!-- E-mail « Créez votre mot de passe » (modèle « Réinitialisation du mot de passe » de Firebase Authentication,
+     ou e-mail envoyé par le site si la console Firebase refuse de modifier ses modèles).
+     Charte Rimaactive : fond craie, bandeau encre avec le logo blanc, filet vermillon, grands numéros vermillon,
+     bouton jaune signal en pilule, police Hanken Grotesk (repli Helvetica/Arial).
+     Remplacer ADRESSE-DU-SITE par l'adresse du site en ligne, sans https:// (les logos sont dans public/email/).
      Firebase remplace %LINK% par le lien personnel du client. Mise en page en tableaux et styles en ligne :
      c'est ce que lisent correctement Gmail, Outlook et les applications de messagerie. -->
 <div style="margin:0;padding:0;background:#F4F3EF;">
+  <!-- texte d'aperçu (affiché sous l'objet dans la boîte de réception) -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#F4F3EF;">Choisissez votre mot de passe : votre programme vous attend.</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F4F3EF;">
     <tr>
-      <td align="center" style="padding:32px 16px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+      <td align="center" style="padding:32px 12px 40px 12px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;">
+
+          <!-- bandeau encre + logo -->
           <tr>
-            <td style="padding:0 4px 24px 4px;">
-              <img src="https://ADRESSE-DU-SITE/email/rimaactive-logo.png" width="130" height="26" alt="Rimaactive" style="display:block;border:0;width:130px;height:26px;">
+            <td style="background:#161514;border-radius:20px 20px 0 0;padding:28px 36px 26px 36px;">
+              <img src="https://ADRESSE-DU-SITE/email/rimaactive-logo-blanc.png" width="140" height="28" alt="Rimaactive" style="display:block;border:0;width:140px;height:28px;">
             </td>
           </tr>
+          <tr><td style="height:4px;background:#FF4A1C;font-size:0;line-height:0;">&nbsp;</td></tr>
+
+          <!-- carte -->
           <tr>
-            <td style="background:#FFFFFF;border-radius:16px;padding:40px 32px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;">
-              <h1 style="margin:0 0 20px 0;font-size:30px;line-height:32px;font-weight:900;letter-spacing:-1px;color:#161514;">Votre espace Rimaactive est prêt</h1>
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px 0;"><tr><td style="width:56px;height:4px;background:#FF4A1C;font-size:0;line-height:0;">&nbsp;</td></tr></table>
-              <p style="margin:0 0 16px 0;font-size:16px;line-height:26px;color:#57534E;">Bonjour,</p>
-              <p style="margin:0 0 28px 0;font-size:16px;line-height:26px;color:#57534E;">Je vous ai ouvert votre espace Rimaactive&nbsp;: vous y retrouverez votre programme et vos séances. Pour y accéder, choisissez votre mot de passe.</p>
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+            <td style="background:#FFFFFF;border-radius:0 0 20px 20px;padding:40px 36px 36px 36px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;">
+              <p style="margin:0 0 10px 0;font-size:12px;line-height:16px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#57534E;">Votre espace client</p>
+              <h1 style="margin:0 0 18px 0;font-size:34px;line-height:36px;font-weight:900;letter-spacing:-1.4px;color:#161514;">Bienvenue chez Rimaactive&nbsp;!</h1>
+              <p style="margin:0 0 26px 0;font-size:16px;line-height:26px;color:#57534E;">Bonjour,<br>je vous ai ouvert votre espace personnel. Il ne reste qu’une étape&nbsp;: choisir votre mot de passe.</p>
+
+              <!-- bouton -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 34px 0;">
                 <tr>
                   <td align="center" bgcolor="#F2C230" style="border-radius:999px;">
-                    <a href="%LINK%" style="display:inline-block;padding:15px 28px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;font-size:16px;line-height:20px;font-weight:700;color:#161514;text-decoration:none;border-radius:999px;">Créer mon mot de passe</a>
+                    <a href="%LINK%" style="display:inline-block;padding:16px 32px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;font-size:16px;line-height:20px;font-weight:700;color:#161514;text-decoration:none;border-radius:999px;">Créer mon mot de passe&nbsp;&nbsp;→</a>
                   </td>
                 </tr>
               </table>
-              <p style="margin:0 0 16px 0;font-size:14px;line-height:22px;color:#57534E;">Ce lien n’est valable que peu de temps. S’il a expiré, ouvrez la page de connexion de votre espace et cliquez sur «&nbsp;Mot de passe oublié&nbsp;?&nbsp;»&nbsp;: vous recevrez un nouveau lien.</p>
-              <p style="margin:0 0 32px 0;font-size:14px;line-height:22px;color:#57534E;">Le bouton ne fonctionne pas&nbsp;? Copiez ce lien dans votre navigateur&nbsp;:<br><a href="%LINK%" style="color:#161514;text-decoration:underline;word-break:break-all;">%LINK%</a></p>
-              <p style="margin:0;font-size:16px;line-height:26px;color:#161514;">Sportivement,<br><strong>Marie Sillas</strong><br><span style="color:#57534E;">Coach sportive · Houdan (78)</span></p>
+
+              <!-- ce qui l'attend -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 30px 0;border-top:1px solid #ECE9E3;">
+                <tr>
+                  <td width="52" valign="top" style="padding:18px 0 0 0;font-size:24px;line-height:26px;font-weight:900;letter-spacing:-1px;color:#FF4A1C;">01</td>
+                  <td valign="top" style="padding:18px 0 0 0;font-size:15px;line-height:22px;color:#57534E;"><strong style="color:#161514;">Votre programme</strong><br>semaine par semaine, préparé pour vous.</td>
+                </tr>
+                <tr>
+                  <td width="52" valign="top" style="padding:16px 0 0 0;font-size:24px;line-height:26px;font-weight:900;letter-spacing:-1px;color:#FF4A1C;">02</td>
+                  <td valign="top" style="padding:16px 0 0 0;font-size:15px;line-height:22px;color:#57534E;"><strong style="color:#161514;">Vos séances</strong><br>chaque exercice expliqué, vos charges et vos ressentis notés.</td>
+                </tr>
+                <tr>
+                  <td width="52" valign="top" style="padding:16px 0 0 0;font-size:24px;line-height:26px;font-weight:900;letter-spacing:-1px;color:#FF4A1C;">03</td>
+                  <td valign="top" style="padding:16px 0 0 0;font-size:15px;line-height:22px;color:#57534E;"><strong style="color:#161514;">Votre progression</strong><br>vos courbes, vos mesures et vos photos, au même endroit.</td>
+                </tr>
+              </table>
+
+              <!-- encadré pratique -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 30px 0;">
+                <tr>
+                  <td style="background:#F4F3EF;border-radius:14px;padding:16px 18px;font-size:13px;line-height:20px;color:#57534E;">
+                    Ce lien n’est valable que peu de temps. S’il a expiré, ouvrez la page de connexion de votre espace et cliquez sur «&nbsp;Mot de passe oublié&nbsp;?&nbsp;».<br><br>
+                    Le bouton ne marche pas&nbsp;? Copiez ce lien dans votre navigateur&nbsp;:<br>
+                    <a href="%LINK%" style="color:#161514;text-decoration:underline;word-break:break-all;">%LINK%</a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- signature -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="border-left:3px solid #FF4A1C;padding:2px 0 2px 14px;font-size:15px;line-height:22px;color:#161514;">
+                    À très vite,<br><strong>Marie Sillas</strong><br><span style="color:#57534E;">Coach sportive · Houdan (78)</span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
+
+          <!-- pied -->
           <tr>
-            <td style="padding:24px 4px 0 4px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#57534E;">
-              Vous recevez cet e-mail parce que Marie Sillas vous a invité(e) dans votre espace de coaching. Si vous n’attendiez pas ce message, ignorez-le simplement&nbsp;: rien ne sera fait.<br>
-              <a href="mailto:marie.sillas.coaching@outlook.com" style="color:#57534E;text-decoration:underline;">marie.sillas.coaching@outlook.com</a>
+            <td align="center" style="padding:26px 20px 0 20px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;color:#57534E;">
+              <img src="https://ADRESSE-DU-SITE/email/rimaactive-logo.png" width="90" height="18" alt="Rimaactive" style="display:block;margin:0 auto 12px auto;border:0;width:90px;height:18px;opacity:0.6;">
+              Vous recevez cet e-mail parce que Marie Sillas vous a invité(e) dans votre espace de coaching.<br>
+              Vous n’attendiez pas ce message&nbsp;? Ignorez-le simplement&nbsp;: rien ne sera fait.<br>
+              <a href="mailto:marie.sillas.coaching@outlook.com" style="color:#161514;text-decoration:underline;">marie.sillas.coaching@outlook.com</a>
             </td>
           </tr>
         </table>
