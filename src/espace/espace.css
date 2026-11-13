@@ -453,3 +453,8 @@
 .fiche-notes { display: grid; gap: 6px; padding: 12px 16px; border-radius: 12px; background: var(--craie); border-left: 2px solid var(--vermillon); }
 .fiche-notes__titre { margin: 0; font-size: 13px; line-height: 18px; font-weight: 700; color: var(--gris-chaud); }
 .fiche-notes__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; line-height: 20px; }
+/* barre d'enregistrement de l'éditeur : toujours en bas de la fenêtre, même quand la page est courte (13 novembre 2026) ;
+   la place est réservée sous le bas de page pour qu'elle ne cache rien */
+.espace-barre { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; }
+.ec-coque:has(.espace-barre) { padding-bottom: 72px; }
+@media (max-width: 599px) { .ec-coque:has(.espace-barre) { padding-bottom: 120px; } }
