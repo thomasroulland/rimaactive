@@ -58,8 +58,9 @@ export default function FicheClient() {
     <section className="section">
       <div className="conteneur espace-coach fiche-client">
         {retour}
-        <header className="espace-coach__entete">
-          <div>
+        <header className="espace-coach__entete fiche-entete">
+          <span className="coache__initiales coache__initiales--grand" aria-hidden="true">{(client.prenom?.[0] ?? '') + (client.nom?.[0] ?? '')}</span>
+          <div className="fiche-identite">
             <p className="surtitre">Fiche client</p>
             <h1 className="titre titre--section">{client.prenom} {client.nom}</h1>
             <p className="espace-texte">
@@ -70,54 +71,61 @@ export default function FicheClient() {
         </header>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
 
-        <section className="fiche-bloc" aria-labelledby="fiche-prog">
-          <h2 id="fiche-prog" className="espace-sous-titre">Programme en cours</h2>
-          <div className="espace-carte">
-            {programmes === null ? <p className="espace-texte" role="status">Chargement…</p> : enCours ? (
-              <>
-                <p className="fiche-prog__nom">{enCours.nom}</p>
-                <p className="espace-texte">
-                  {enCours.semaine === 0
-                    ? `Commence le ${dateLongue(enCours.debut)}.`
-                    : `Semaine ${enCours.semaine} sur ${enCours.nbSemaines}.`}
-                </p>
-                <Regularite semaines={regularite(progEnCours, faites)} />
-              </>
-            ) : (
-              <p className="espace-texte">Pas de programme publié pour l’instant.</p>
-            )}
-            <Link to={`/espace/coach/clients/${uid}/programme`} className="bouton bouton--principal">
-              {programmes && programmes.length > 0 ? 'Modifier le programme' : 'Créer un programme'}
-            </Link>
-          </div>
-        </section>
+        {/* Ordinateur : le programme et la suppression à gauche, les séances et les charges à droite */}
+        <div className="fiche-colonnes">
+          <div className="fiche-cote">
+          <section className="fiche-bloc" aria-labelledby="fiche-prog">
+            <h2 id="fiche-prog" className="espace-sous-titre">Programme en cours</h2>
+            <div className="espace-carte">
+              {programmes === null ? <p className="espace-texte" role="status">Chargement…</p> : enCours ? (
+                <>
+                  <p className="fiche-prog__nom">{enCours.nom}</p>
+                  <p className="espace-texte">
+                    {enCours.semaine === 0
+                      ? `Commence le ${dateLongue(enCours.debut)}.`
+                      : `Semaine ${enCours.semaine} sur ${enCours.nbSemaines}.`}
+                  </p>
+                  <Regularite semaines={regularite(progEnCours, faites)} />
+                </>
+              ) : (
+                <p className="espace-texte">Pas de programme publié pour l’instant.</p>
+              )}
+              <Link to={`/espace/coach/clients/${uid}/programme`} className="bouton bouton--principal">
+                {programmes && programmes.length > 0 ? 'Modifier le programme' : 'Créer un programme'}
+              </Link>
+            </div>
+          </section>
 
-        <section className="fiche-bloc" aria-labelledby="fiche-seances">
-          <h2 id="fiche-seances" className="espace-sous-titre">Séances faites</h2>
-          {seances === null ? <p className="espace-texte" role="status">Chargement…</p>
-            : seances.length === 0 ? <p className="espace-texte">{client.prenom} n’a pas encore enregistré de séance.</p> : (
-              <ul className="fiche-liste">
-                {seances.map((s) => (
-                  <SeanceFaite key={s.id} sf={s} seance={trouverSeance(programmes, s)} />
-                ))}
+          <section className="fiche-bloc fiche-danger" aria-labelledby="fiche-supp">
+            <h2 id="fiche-supp" className="espace-sous-titre">Supprimer ce client</h2>
+            <p className="espace-texte">Le compte, les programmes, les séances et les photos de {client.prenom} sont effacés définitivement.</p>
+            <button type="button" className="bouton bouton--secondaire" onClick={() => setSuppression(true)}>Supprimer ce client et ses données</button>
+          </section>
+          </div>
+          <div className="fiche-principal">
+          <section className="fiche-bloc" aria-labelledby="fiche-seances">
+            <h2 id="fiche-seances" className="espace-sous-titre">Séances faites</h2>
+            {seances === null ? <p className="espace-texte" role="status">Chargement…</p>
+              : seances.length === 0 ? <p className="espace-texte">{client.prenom} n’a pas encore enregistré de séance.</p> : (
+                <ul className="fiche-liste">
+                  {seances.map((s) => (
+                    <SeanceFaite key={s.id} sf={s} seance={trouverSeance(programmes, s)} />
+                  ))}
+                </ul>
+              )}
+          </section>
+
+          <section className="fiche-bloc" aria-labelledby="fiche-charges">
+            <h2 id="fiche-charges" className="espace-sous-titre">Charges (meilleure série)</h2>
+            {courbes.length === 0 ? <p className="espace-texte">Pas encore de charges enregistrées.</p> : (
+              <ul className="fiche-liste fiche-courbes">
+                {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-NB_POINTS)} />)}
               </ul>
             )}
-        </section>
+          </section>
 
-        <section className="fiche-bloc" aria-labelledby="fiche-charges">
-          <h2 id="fiche-charges" className="espace-sous-titre">Charges (meilleure série)</h2>
-          {courbes.length === 0 ? <p className="espace-texte">Pas encore de charges enregistrées.</p> : (
-            <ul className="fiche-liste fiche-courbes">
-              {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-NB_POINTS)} />)}
-            </ul>
-          )}
-        </section>
-
-        <section className="fiche-bloc fiche-danger" aria-labelledby="fiche-supp">
-          <h2 id="fiche-supp" className="espace-sous-titre">Supprimer ce client</h2>
-          <p className="espace-texte">Le compte, les programmes, les séances et les photos de {client.prenom} sont effacés définitivement.</p>
-          <button type="button" className="bouton bouton--secondaire" onClick={() => setSuppression(true)}>Supprimer ce client et ses données</button>
-        </section>
+          </div>
+        </div>
       </div>
       {suppression && (
         <DialogueSuppression client={client} uid={uid} fermer={() => setSuppression(false)} fini={() => navigate('/espace/coach', { replace: true })} />

@@ -28,7 +28,7 @@ export default function MesCoaches() {
             <h1 className="titre titre--section">Mes coachés</h1>
             <p className="espace-texte">{resume}</p>
           </div>
-          <button type="button" className="bouton bouton--principal" onClick={() => { setMessage(''); setDialogue(true) }}>
+          <button type="button" className="bouton bouton--principal espace-coach__action" onClick={() => { setMessage(''); setDialogue(true) }}>
             <Picto nom="users" taille={20} /> Inviter un client
           </button>
         </header>
@@ -37,37 +37,42 @@ export default function MesCoaches() {
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
 
         {clients && nb > 0 && (
-          <ul className="espace-grille">
-            {clients.map((c) => (
-              <li key={c.uid} className="espace-carte espace-client">
-                <div className="espace-client__tete">
-                  <h2 className="espace-client__nom"><Link to={`/espace/coach/clients/${c.uid}`} className="espace-client__lien">{c.prenom} {c.nom}</Link></h2>
-                  <span className={`espace-statut espace-statut--${c.statut === 'actif' ? 'actif' : 'autre'}`}>{STATUTS[c.statut] ?? c.statut}</span>
-                </div>
-                <p className="espace-client__ligne">{c.email}</p>
-                <p className="espace-client__ligne">
-                  {c.programme ? (
-                    <>
-                      {c.programme.nom}
-                      <span className="espace-client__semaine">
-                        {c.programme.semaine === 0
-                          ? 'Commence bientôt'
-                          : `Semaine ${c.programme.semaine} sur ${c.programme.nbSemaines}`}
-                      </span>
-                    </>
-                  ) : 'Pas de programme en cours'}
-                </p>
-                <div className="espace-actions espace-client__action">
-                  <Link to={`/espace/coach/clients/${c.uid}`} className="bouton bouton--secondaire bouton--compact">
-                    Voir la fiche<span className="sr-only"> de {c.prenom} {c.nom}</span>
-                  </Link>
-                  <Link to={`/espace/coach/clients/${c.uid}/programme`} className="bouton bouton--secondaire bouton--compact">
-                    {c.nbProgrammes > 0 ? 'Ouvrir le programme' : 'Créer un programme'}
-                    <span className="sr-only"> de {c.prenom} {c.nom}</span>
-                  </Link>
-                </div>
-              </li>
-            ))}
+          <ul className="espace-grille coaches">
+            {clients.map((c) => {
+              const p = c.programme
+              const avance = p && p.nbSemaines ? Math.min(1, Math.max(0, p.semaine / p.nbSemaines)) : 0
+              return (
+                <li key={c.uid} className="coache">
+                  <div className="coache__tete">
+                    <span className="coache__initiales" aria-hidden="true">{(c.prenom?.[0] ?? '') + (c.nom?.[0] ?? '')}</span>
+                    <div className="coache__identite">
+                      {/* toute la carte ouvre la fiche (lien étiré) */}
+                      <h2 className="coache__nom"><Link to={`/espace/coach/clients/${c.uid}`} className="coache__lien">{c.prenom} {c.nom}</Link></h2>
+                      <p className="coache__email">{c.email}</p>
+                    </div>
+                    <span className={`espace-statut espace-statut--${c.statut === 'actif' ? 'actif' : 'autre'}`}>{STATUTS[c.statut] ?? c.statut}</span>
+                  </div>
+                  <div className="coache__programme">
+                    {p ? (
+                      <>
+                        <p className="coache__prog-ligne">
+                          <span className="coache__prog-nom">{p.nom}</span>
+                          <span>{p.semaine === 0 ? 'Commence bientôt' : `Semaine ${p.semaine} sur ${p.nbSemaines}`}</span>
+                        </p>
+                        <span className="coache__barre" aria-hidden="true"><span style={{ width: `${Math.round(avance * 100)}%` }} /></span>
+                      </>
+                    ) : <p className="coache__prog-ligne coache__prog-ligne--vide">Pas de programme en cours</p>}
+                  </div>
+                  <div className="coache__actions">
+                    <span className="coache__voir" aria-hidden="true">Voir la fiche</span>
+                    <Link to={`/espace/coach/clients/${c.uid}/programme`} className="coache__programme-lien">
+                      {c.nbProgrammes > 0 ? 'Ouvrir le programme' : 'Créer un programme'}
+                      <span className="sr-only"> de {c.prenom} {c.nom}</span>
+                    </Link>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         )}
       </div>

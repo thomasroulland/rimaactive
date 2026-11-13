@@ -255,3 +255,184 @@
 .fiche-svg__txt { fill: var(--gris-chaud); font-size: 12px; font-weight: 600; font-family: inherit; }
 .fiche-danger { border-top: 1px solid var(--filet); padding-top: 24px; align-items: flex-start; }
 @media (min-width: 900px) { .fiche-courbes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* =====================================================================================
+   Espace coach : refonte (13 novembre 2026, proposition)
+   Même structure que le site : en-tête de page (surtitre, titre 44 px, une phrase, l'action principale à droite),
+   cartes blanches arrondies (16 px), à plat au repos ; celles qu'on peut ouvrir se soulèvent au survol.
+   ===================================================================================== */
+.ec-main > .section { padding-block: 40px 72px; }
+.espace-coach { gap: 28px; }
+.espace-coach__entete { align-items: flex-end; padding-bottom: 24px; border-bottom: 1px solid var(--filet); }
+.espace-coach__entete .titre--section { margin-top: 2px; }
+.espace-coach__entete .espace-texte { margin-top: 10px; }
+.espace-coach__entete > .bouton, .espace-coach__entete > a.bouton { flex: none; }
+.espace-retour { margin-bottom: -12px; font-size: 15px; color: var(--gris-chaud); transition: color var(--duree) ease; }
+.espace-retour:hover { color: var(--encre); text-decoration: none; }
+.espace-retour svg { transition: transform var(--duree) ease; }
+.espace-retour:hover svg { transform: translateX(-3px); }
+.espace-sous-titre { font-size: 22px; line-height: 26px; }
+.espace-carte { border: 1px solid transparent; box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+.espace-statut { min-height: 26px; padding: 0 11px; font-size: 13px; }
+.espace-statut--autre { background: var(--craie-fonce); }
+
+/* ---------- Mes coachés : une carte par coaché ---------- */
+.coaches { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+.coache {
+  position: relative; display: flex; flex-direction: column; gap: 20px; padding: 24px;
+  background: var(--blanc); border-radius: var(--arrondi); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04);
+  transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease;
+}
+.coache:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(22, 21, 20, 0.1); }
+.coache__tete { display: flex; align-items: center; gap: 14px; }
+.coache__initiales {
+  flex: none; display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px;
+  border-radius: 50%; background: var(--craie-fonce); color: var(--encre); font-weight: 900; font-size: 17px;
+  letter-spacing: -0.02em; text-transform: uppercase;
+}
+.coache__initiales--grand { width: 72px; height: 72px; font-size: 26px; }
+.coache__identite { flex: 1; min-width: 0; }
+.coache__nom { margin: 0; font-size: 20px; line-height: 24px; font-weight: 900; letter-spacing: -0.02em; }
+.coache__lien { color: var(--encre); text-decoration: none; }
+.coache__lien::after { content: ""; position: absolute; inset: 0; border-radius: inherit; } /* toute la carte est cliquable */
+.coache__lien:focus-visible { outline: none; }
+.coache:has(.coache__lien:focus-visible) { outline: 2px solid var(--encre); outline-offset: 2px; }
+.coache__email { margin: 2px 0 0; font-size: 14px; line-height: 20px; color: var(--gris-chaud); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.coache__programme { display: grid; gap: 10px; padding: 16px; border-radius: 12px; background: var(--craie); }
+.coache__prog-ligne { margin: 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gris-chaud); }
+.coache__prog-nom { color: var(--encre); font-weight: 800; }
+.coache__prog-ligne--vide { justify-content: flex-start; }
+.coache__barre { display: block; height: 6px; border-radius: 999px; background: var(--craie-fonce); overflow: hidden; }
+.coache__barre > span { display: block; height: 100%; border-radius: inherit; background: var(--vermillon); }
+.coache__actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
+.coache__voir { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 15px; }
+.coache__voir::after { content: "→"; transition: transform var(--duree) ease; }
+.coache:hover .coache__voir::after { transform: translateX(4px); }
+/* le lien « programme » passe au-dessus du lien étiré */
+.coache__programme-lien {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px;
+  border-radius: 999px; border: 1px solid var(--encre); color: var(--encre); font-weight: 700; font-size: 14px; text-decoration: none;
+  transition: background-color var(--duree) ease, color var(--duree) ease;
+}
+.coache__programme-lien:hover { background: var(--encre); color: var(--craie); }
+@media (max-width: 599px) { .coaches { grid-template-columns: 1fr; } }
+
+/* ---------- Fiche client ---------- */
+.fiche-entete { justify-content: flex-start; align-items: center; gap: 20px; }
+.fiche-identite { min-width: 0; }
+.fiche-identite .espace-texte { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.fiche-colonnes { display: grid; gap: 32px; }
+.fiche-cote, .fiche-principal { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+@media (min-width: 1000px) {
+  .fiche-colonnes { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); align-items: start; gap: 40px; }
+  .fiche-cote { position: sticky; top: calc(var(--hauteur-entete) + 24px); }
+}
+.fiche-cote .espace-carte { align-items: stretch; }
+.fiche-cote .bouton { align-self: flex-start; }
+.fiche-reg { max-width: none; }
+.fiche-reg__sem { font-size: 15px; }
+.fiche-reg__point { width: 14px; height: 14px; border-width: 1.5px; }
+.fiche-reg__point--fait { background: var(--vermillon); border-color: var(--vermillon); }
+.fiche-seance { padding: 20px 24px; gap: 10px; }
+.fiche-seance .espace-element__titre { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; }
+.fiche-seance__bilan { font-size: 14px; gap: 6px 8px; }
+.fiche-seance__bilan > span { display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px; border-radius: 999px; background: var(--craie); }
+.fiche-seance .espace-verrou--fort { border-left-color: var(--vermillon); background: var(--craie); font-weight: 600; }
+.fiche-commentaire { border-top-color: var(--filet); }
+.fiche-commentaire textarea.champ { min-height: 64px; }
+.fiche-commentaire .champ-groupe > label { font-size: 14px; color: var(--gris-chaud); }
+.fiche-danger { border-top: 0; padding: 20px; border-radius: var(--arrondi); border: 1px dashed var(--filet); gap: 10px; }
+.fiche-danger .espace-sous-titre { font-size: 16px; line-height: 22px; }
+.fiche-danger .espace-texte { font-size: 14px; line-height: 22px; }
+.fiche-danger .bouton { min-height: 40px; padding: 8px 18px; font-size: 14px; border-width: 1px; border-color: var(--gris-controle); color: var(--encre); background: transparent; }
+.fiche-danger .bouton:hover { background: var(--encre); border-color: var(--encre); color: var(--craie); }
+.fiche-courbes { grid-template-columns: 1fr; }
+@media (min-width: 1200px) { .fiche-principal .fiche-courbes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- Banque d'exercices ---------- */
+.espace-recherche { flex-direction: row; flex-wrap: wrap; align-items: flex-end; gap: 12px 24px; padding: 16px 20px; }
+.espace-recherche .champ-groupe { flex: 1 1 320px; }
+.espace-recherche .espace-case { min-height: 48px; align-items: center; font-size: 15px; }
+.espace-grille--exos { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+.espace-exo { padding: 12px 12px 18px; gap: 10px; box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+.espace-exo:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(22, 21, 20, 0.1); }
+.espace-exo__photo, .espace-photo--vide { border-radius: 10px; }
+.espace-exo > :not(.espace-exo__photo):not(.espace-photo--vide) { margin-inline: 6px; }
+.espace-exo__nom { font-size: 18px; line-height: 22px; }
+.espace-exo__muscles { font-size: 13px; line-height: 18px; }
+.espace-fiche .espace-carte { padding: 24px; }
+
+/* ---------- Éditeur de programme ---------- */
+.espace-params .champ-groupe > label { color: var(--encre); }
+.espace-pastille { min-width: 48px; min-height: 40px; border-width: 1px; border-color: var(--filet); background: var(--blanc); font-size: 14px; transition: background-color var(--duree) ease, border-color var(--duree) ease, color var(--duree) ease; }
+.espace-pastille:hover { border-color: var(--encre); background: var(--blanc); }
+.espace-pastille[aria-pressed="true"] { background: var(--encre); border-color: var(--encre); color: var(--craie); }
+.espace-semaines .espace-lien { text-decoration: none; display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--encre); font-size: 14px; }
+.espace-semaines .espace-lien:hover { background: var(--encre); color: var(--craie); }
+.espace-seance-carte { padding: 22px 24px; gap: 6px; transition: transform 0.35s cubic-bezier(.3, .7, .2, 1), box-shadow 0.35s ease; }
+.espace-seance-carte:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(22, 21, 20, 0.1); }
+.espace-seance-carte__num { font-size: 36px; line-height: 36px; }
+.espace-seance-carte__jour { display: inline-flex; align-items: center; min-height: 26px; padding: 0 11px; border-radius: 999px; background: var(--craie); color: var(--encre); font-size: 13px; }
+.espace-seance-carte__titre { margin-top: 6px; }
+.espace-bloc__tete { border-bottom-width: 1px; border-bottom-color: var(--filet); }
+.espace-element { padding: 18px 20px; }
+.espace-barre { background: var(--blanc); }
+@media (prefers-reduced-motion: reduce) {
+  .coache, .espace-seance-carte, .coache__voir::after, .espace-retour svg { transition: none; }
+  .coache:hover, .espace-seance-carte:hover { transform: none; }
+}
+.espace-exo__photo, .espace-exo .espace-photo--vide { aspect-ratio: 16 / 10; }
+.fiche-commentaire textarea.champ { height: 72px; min-height: 56px; }
+
+/* ---------- Espace coach : style adouci (13 novembre 2026, demandé) ----------
+   Moins de contraste pour mieux lire : contours fins et clairs, pastilles douces, moins de noir plein.
+   Mêmes valeurs que l'espace coaché (variables --ec-* de coache.css). */
+.ec-main .section { --coach-texte-doux: #6b665f; }
+.ec-main .section .champ {
+  border: 1px solid var(--ec-champ-bord); border-radius: var(--ec-champ-rayon); background: var(--blanc);
+  transition: border-color var(--duree) ease, box-shadow var(--duree) ease;
+}
+.ec-main .section .champ:hover { background: var(--blanc); border-color: var(--ec-champ-bord-survol); }
+.ec-main .section .champ:focus { outline: none; border-color: var(--ec-champ-bord-focus); box-shadow: var(--ec-champ-halo); }
+.ec-main .section .champ-groupe > label, .ec-main .section .champ-groupe legend { font-weight: 600; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+.ec-main .section .espace-case input { width: 20px; height: 20px; }
+/* boutons secondaires : contour fin et clair, le noir n'arrive qu'au survol */
+.ec-main .section .bouton--secondaire, .coache__programme-lien, .espace-semaines .espace-lien {
+  border: 1px solid var(--ec-champ-bord); background: var(--blanc); color: var(--encre); font-weight: 600;
+}
+.ec-main .section .bouton--secondaire:hover, .coache__programme-lien:hover, .espace-semaines .espace-lien:hover {
+  background: var(--craie); border-color: var(--ec-champ-bord-survol); color: var(--encre);
+}
+.ec-main .section .bouton--principal:hover { background: #e9b81f; border-color: #e9b81f; color: var(--encre); }
+/* statuts : pastilles douces ; « Actif » se reconnaît à son point vermillon, pas à un fond noir */
+.espace-statut, .espace-statut--actif { background: var(--craie); color: var(--encre); font-weight: 600; border: 1px solid var(--filet); }
+.espace-statut--actif::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--vermillon); margin-right: 7px; }
+/* textes secondaires un peu plus doux, titres moins massifs */
+.espace-coach .espace-texte, .coache__email, .coache__prog-ligne, .fiche-seance__date, .espace-exo__muscles { color: var(--coach-texte-doux); }
+.coache__nom, .espace-exo__nom, .espace-seance-carte__titre, .fiche-prog__nom { font-weight: 800; }
+.espace-sous-titre { font-weight: 800; }
+.coache__initiales { font-weight: 700; color: var(--gris-chaud); }
+/* cartes : séparées par l'ombre légère plutôt que par des traits */
+.espace-coach__entete { border-bottom-color: var(--ec-repli-filet, var(--filet)); }
+.fiche-reg__ligne { border-top-color: #ece9e3; }
+.fiche-reg__point { border-color: var(--ec-champ-bord-survol); }
+.fiche-reg__sem { font-weight: 700; color: var(--gris-chaud); }
+.fiche-commentaire, .fiche-exo { border-top-color: #ece9e3; }
+.fiche-seance .espace-verrou--fort { border-left-width: 2px; }
+/* semaines S1… : la semaine affichée en craie foncée, contour fin */
+.espace-pastille { border-color: var(--ec-champ-bord); font-weight: 600; }
+.espace-pastille[aria-pressed="true"] { background: var(--craie-fonce); border-color: var(--ec-champ-bord-survol); color: var(--encre); font-weight: 700; }
+.espace-seance-carte__num { font-size: 28px; line-height: 30px; }
+.espace-bloc__tete { border-bottom-color: #ece9e3; }
+.espace-verrou { background: var(--craie); color: var(--gris-chaud); }
+.espace-barre { border-top-color: #ece9e3; box-shadow: 0 -6px 20px rgba(22, 21, 20, 0.04); }
+.espace-barre .espace-statut--actif, .espace-barre__etat .espace-statut { background: var(--craie); }
+.espace-dialogue { box-shadow: 0 24px 60px rgba(22, 21, 20, 0.18); }
+.espace-dialogue::backdrop { background: rgba(22, 21, 20, 0.4); }
+/* téléphone et tablette : la suppression du client passe tout en bas, après les séances */
+@media (max-width: 999px) {
+  .fiche-colonnes { display: flex; flex-direction: column; }
+  .fiche-cote { display: contents; }
+  .fiche-principal { order: 2; }
+  .fiche-danger { order: 3; }
+}
