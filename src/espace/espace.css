@@ -957,3 +957,15 @@ span.page-seance__fleche { opacity: .35; }
 .a-regarder__corps { flex: 1; min-width: 0; }
 .coache-tete__photo { align-self: center; }
 @media (max-width: 560px) { .coache-tete__photo { --taille: 56px !important; } }
+
+/* Liens d'action (« Créer un programme », « Ouvrir la fiche », « Modifier… ») : petite pilule douce
+   au lieu du soulignement vermillon (14 novembre 2026) */
+.lien-souligne { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border: 1px solid #e6e2da; border-radius: 999px; background: var(--craie); color: var(--encre); font: inherit; font-size: 14px; font-weight: 700; line-height: 1; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.lien-souligne:hover { background: var(--blanc); border-color: #cfcac1; color: var(--encre); box-shadow: 0 2px 8px rgba(22, 21, 20, 0.06); }
+.lien-souligne:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+a.lien-souligne::after { content: ''; flex: none; width: 7px; height: 7px; margin-right: 2px; border-top: 1.6px solid currentColor; border-right: 1.6px solid currentColor; transform: rotate(45deg); transition: transform .2s ease; }
+a.lien-souligne:hover::after { transform: translateX(3px) rotate(45deg); }
+.modele__actions .lien-souligne, .lien-souligne.fiche-carte__modifier { padding: 0 14px; border: 1px solid #e6e2da; background: var(--craie); font-size: 14px; }
+.lien-souligne.fiche-carte__modifier:hover { background: var(--blanc); }
+.modele__affecter-lien::after { margin-left: 0; }
+@media (prefers-reduced-motion: reduce) { .lien-souligne, a.lien-souligne::after { transition: none; } }
