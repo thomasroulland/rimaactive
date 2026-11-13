@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 // affiche un message d'enregistrement ou d'erreur, il réapparaît ici quelques secondes, bien visible.
 // Les écrans ne changent pas : la bulle lit leurs zones de message. Elle est cachée aux lecteurs d'écran,
 // qui annoncent déjà le message d'origine (role="status" / role="alert").
-const ZONES = '.espace-message, .ec-fin__etat, .ec-erreur'
+// La fin de séance n'est pas surveillée : elle a son propre écran de confirmation, et sa phrase « Séance enregistrée. »
+// reste affichée quand on rouvre une séance déjà faite (ce n'est pas un nouvel enregistrement).
+const ZONES = '.espace-message, .ec-erreur'
 const DUREE = 3800
 
 export default function Snack() {
