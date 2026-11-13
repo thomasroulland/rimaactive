@@ -98,3 +98,17 @@ describe('ordreProgrammes', () => {
     expect(ordreProgrammes(liste, '2026-11-14').map((x) => x.id)).toEqual(['encours', 'futur1', 'futur2', 'passe2', 'passe1'])
   })
 })
+
+import { rafraichirExercices } from '../../src/espace/donnees/programme.js'
+describe('rafraichirExercices', () => {
+  const prog = { semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'e1', exoId: 'X', nom: 'Squat', photos: [], consignes: '', muscles: [], series: '3' }, { id: 'e2', exoId: 'Z', nom: 'Autre' }] }] }] }] }
+  it('recopie la photo ajoutée plus tard dans la fiche, sans toucher au reste', () => {
+    const r = rafraichirExercices(prog, [{ id: 'X', nom: 'Squat', photos: ['exercices/X/a.jpg'], consignes: 'Dos droit', muscles: ['Quadriceps'] }])
+    const el = r.semaines[0].seances[0].blocs[0].elements
+    expect(el[0]).toMatchObject({ photos: ['exercices/X/a.jpg'], consignes: 'Dos droit', muscles: ['Quadriceps'], series: '3' })
+    expect(el[1]).toEqual({ id: 'e2', exoId: 'Z', nom: 'Autre' })
+  })
+  it('renvoie le même objet si tout est déjà à jour', () => {
+    expect(rafraichirExercices(prog, [{ id: 'X', nom: 'Squat', photos: [], consignes: '', muscles: [] }])).toBe(prog)
+  })
+})

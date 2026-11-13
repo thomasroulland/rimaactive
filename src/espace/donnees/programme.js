@@ -140,3 +140,34 @@ export function ordreProgrammes(programmes, aujourdhui) {
     return (b.debut || '').localeCompare(a.debut || '')
   })
 }
+
+// Recopie dans le programme les photos, consignes, muscles et nom actuels des fiches de la banque (14 novembre 2026) :
+// la copie faite à l'ajout d'un exercice ne suivait pas une photo ajoutée plus tard. Renvoie le même objet si rien ne change.
+export function rafraichirExercices(programme, banque) {
+  if (!programme || !banque?.length) return programme
+  const fiches = new Map(banque.map((e) => [e.id, e]))
+  let change = false
+  const semaines = (programme.semaines ?? []).map((w) => ({
+    ...w,
+    seances: (w.seances ?? []).map((s) => ({
+      ...s,
+      blocs: (s.blocs ?? []).map((b) => ({
+        ...b,
+        elements: (b.elements ?? []).map((el) => {
+          const f = fiches.get(el.exoId)
+          if (!f) return el
+          const nouveau = {
+            ...el,
+            nom: f.nom || el.nom,
+            photos: [...(f.photos ?? [])],
+            consignes: f.consignes ?? el.consignes ?? '',
+            muscles: [...(f.muscles ?? [])],
+          }
+          if (JSON.stringify(nouveau) !== JSON.stringify(el)) { change = true; return nouveau }
+          return el
+        }),
+      })),
+    })),
+  }))
+  return change ? { ...programme, semaines } : programme
+}

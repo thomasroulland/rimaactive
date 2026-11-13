@@ -6,7 +6,7 @@ import {
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
-  garderSeancesFaites, ordreProgrammes,
+  garderSeancesFaites, ordreProgrammes, rafraichirExercices,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue } from '../donnees/calculs.js'
 import { dateCourte } from '../donnees/seances.js'
@@ -85,6 +85,19 @@ export default function EditeurProgramme() {
     const voulu = restants.find((p) => p.id === params.get('programme')) // venu de la page « Programmes »
     if (!prog && !creation && restants.length) ouvrir(voulu ?? restants[0])
   }, [programmes, prog, creation])
+
+  // À l'ouverture : si la banque a des photos ou consignes plus récentes que la copie du programme, on les reprend
+  // et on invite à enregistrer (sinon le coaché ne les voit pas)
+  const dejaRafraichi = useRef(null)
+  useEffect(() => {
+    if (!prog || !exercices?.length || dejaRafraichi.current === prog.id) return
+    dejaRafraichi.current = prog.id
+    const r = rafraichirExercices(prog, exercices)
+    if (r !== prog) {
+      setProg(r); setModifie(true)
+      setMessage('Photos et consignes mises à jour depuis la banque d’exercices : enregistrez pour que votre coaché les voie.')
+    }
+  }, [prog, exercices])
 
   // Verrous en direct : une séance terminée pendant l'édition se verrouille aussitôt
   const progId = prog?.id
@@ -169,16 +182,17 @@ export default function EditeurProgramme() {
     setEnvoi(true); setErreur(''); setMessage('')
     try {
       if (modele) {
-        await enregistrerModele(prog)
+        await enregistrerModele(rafraichirExercices(prog, exercices))
         if (version.current === v) setModifie(false)
         setMessage('Modèle enregistré.')
         setEnvoi(false)
         return
       }
       const serveur = programmes?.find((p) => p.id === prog.id)
-      const aEcrire = garderSeancesFaites(prog, serveur, verrous)
+      // les séances faites gardent leur version du serveur, mais toutes reprennent les photos / consignes actuelles de la banque
+      const aEcrire = rafraichirExercices(garderSeancesFaites(prog, serveur, verrous), exercices)
       await enregistrerProgramme(aEcrire)
-      if (aEcrire !== prog) setProg((p) => garderSeancesFaites(p, serveur, verrous))
+      if (aEcrire !== prog) setProg((p) => rafraichirExercices(garderSeancesFaites(p, serveur, verrous), exercices))
       if (publier) {
         await publierProgramme(prog.id)
         setProg((p) => ({ ...p, statut: 'publié' }))
