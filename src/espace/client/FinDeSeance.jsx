@@ -76,8 +76,12 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
 }
 
 
-function Bravo({ fait, suite, records, revoir }) {
-  const p = suite?.prochaine
+// Écran épuré (14 novembre 2026, demande de Thomas) : coche, titre, une phrase, le record s'il y en a un, un seul bouton.
+// La prochaine séance est sur le tableau de bord ; « Revoir ma séance » reste en petit lien.
+function Bravo({ suite, records, revoir }) {
+  const phrase = !suite || !suite.prevues ? 'Marie la verra dans votre suivi.'
+    : suite.faites === suite.prevues ? 'Programme terminé, bravo !'
+      : `${suite.faites} séance${suite.faites > 1 ? 's' : ''} sur ${suite.prevues}, bravo !`
   return (
     <aside className="ec-fin ec-bravo" aria-labelledby="titre-bravo">
       <span className="ec-bravo__rond" aria-hidden="true">
@@ -85,46 +89,17 @@ function Bravo({ fait, suite, records, revoir }) {
       </span>
       <h2 id="titre-bravo" className="ec-bravo__titre">Séance enregistrée</h2>
       <p role="status" className="sr-only">Séance enregistrée.</p>
-      {suite && suite.prevues > 0 && (
-        <p className="ec-texte ec-gris">
-          {suite.faites === suite.prevues
-            ? 'Programme terminé, bravo ! Marie la verra dans votre suivi.'
-            : `Bravo, c’est votre ${suite.faites}${suite.faites === 1 ? 're' : 'e'} séance sur ${suite.prevues}. Marie la verra dans votre suivi.`}
-        </p>
-      )}
-      {(Number.isInteger(fait?.effort) || fait?.ressenti) && (
-        <ul className="ec-bravo__tags">
-          {Number.isInteger(fait.effort) && <li>Effort {fait.effort} sur 10</li>}
-          {fait.ressenti && <li>Ressenti : {fait.ressenti}</li>}
+      <p className="ec-texte ec-gris">{phrase}</p>
+      {records.length > 0 && (
+        <ul className="ec-records ec-records--court">
+          {records.slice(0, 2).map((r) => (
+            <li key={r.exoId}><Trophee /><span>Record : <strong>{r.nom} {frNombre(r.charge)} kg</strong> <span className="ec-gris">(avant {frNombre(r.ancien.charge)})</span></span></li>
+          ))}
+          {records.length > 2 && <li className="ec-gris ec-records__autres">et {records.length - 2} autre{records.length > 3 ? 's' : ''} record{records.length > 3 ? 's' : ''}, à voir dans « Ma progression »</li>}
         </ul>
       )}
-      {records.length > 0 && (
-        <div className="ec-records">
-          <p className="ec-surtitre ec-records__titre"><Trophee />{records.length > 1 ? `${records.length} nouveaux records` : 'Nouveau record'}</p>
-          <ul className="ec-records__liste">
-            {records.map((r) => (
-              <li key={r.exoId}>
-                <span className="ec-records__nom">{r.nom}</span>
-                <span className="ec-records__val">{frNombre(r.charge)} kg × {frNombre(r.reps)}</span>
-                <span className="ec-records__avant">avant : {frNombre(r.ancien.charge)} kg</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {p && (
-        <Link className="ec-bravo__suite" to={`/espace/seance/${suite.programmeId}/${p.seance.id}`}>
-          <span>
-            <span className="ec-surtitre ec-bravo__surtitre">Prochaine séance</span>
-            <span className="ec-bravo__nom">{p.seance.titre || 'Ma prochaine séance'}</span>
-          </span>
-          <span className="ec-bouton ec-bravo__voir">Voir</span>
-        </Link>
-      )}
-      <div className="ec-bravo__actions">
-        <button type="button" className="ec-bouton ec-bouton--clair" onClick={revoir}>Revoir ma séance</button>
-        <Link className="ec-bouton" to="/espace">Retour au tableau de bord</Link>
-      </div>
+      <Link className="ec-bouton ec-bravo__principal" to="/espace">Retour à l’accueil</Link>
+      <button type="button" className="ec-bravo__revoir" onClick={revoir}>Revoir ma séance</button>
     </aside>
   )
 }
