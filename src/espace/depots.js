@@ -132,13 +132,15 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
     }
     await setDoc(doc(db, 'exercices', id), {
       nom: exercice.nom.trim(),
-      categorie: exercice.categorie ?? 'Renforcement',
+      categorie: exercice.categorie ?? '',
       materiel: exercice.materiel ?? 'À préciser',
       execution: (exercice.execution ?? '').trim(),
       consignes: (exercice.consignes ?? '').trim(),
       erreurs: (exercice.erreurs ?? '').trim(),
       video: (exercice.video ?? '').trim(),
       muscles: exercice.muscles ?? [],
+      musclesSecondaires: exercice.musclesSecondaires ?? [],
+      lateralites: exercice.lateralites ?? [],
       photos: [...(exercice.photos ?? []), ...envoyees],
       retire: exercice.retire ?? false,
       majLe: serverTimestamp(),
@@ -149,6 +151,8 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
       nom: exercice.nom.trim(),
       consignes: (exercice.consignes ?? '').trim(),
       muscles: exercice.muscles ?? [],
+      musclesSecondaires: exercice.musclesSecondaires ?? [],
+      lateralites: exercice.lateralites ?? [],
       photos: [...(exercice.photos ?? []), ...envoyees],
     }).catch(() => { /* la fiche est enregistrée ; la mise à jour des programmes se refera au prochain enregistrement */ })
   } catch (e) {
@@ -182,6 +186,17 @@ export async function renommerDansBanque(champ, ancien, nouveau) {
   for (const d of docs.docs) await updateDoc(doc(db, 'exercices', d.id), { [champ]: nouveau })
 }
 
+// Renomme un muscle dans les fiches (muscles principaux et secondaires)
+export async function renommerMuscleDansBanque(ancien, nouveau) {
+  for (const champ of ['muscles', 'musclesSecondaires']) {
+    const docs = await getDocs(query(collection(db, 'exercices'), where(champ, 'array-contains', ancien)))
+    for (const d of docs.docs) {
+      const liste = (d.data()[champ] ?? []).map((m) => (m === ancien ? nouveau : m))
+      await updateDoc(doc(db, 'exercices', d.id), { [champ]: [...new Set(liste)] })
+    }
+  }
+}
+
 // Met à jour la copie d'un exercice dans tous les programmes et modèles qui l'utilisent (coach seulement).
 export async function propagerExercice(exoId, champs) {
   for (const nom of ['programmes', 'modeles']) {
@@ -197,6 +212,7 @@ export async function propagerExercice(exoId, champs) {
             elements: (b.elements ?? []).map((el) => {
               if (el.exoId !== exoId) return el
               const nouveau = { ...el, ...champs }
+              if (champs.lateralites && !champs.lateralites.includes(el.lateralite)) nouveau.lateralite = champs.lateralites[0] ?? ''
               if (JSON.stringify(nouveau) !== JSON.stringify(el)) change = true
               return nouveau
             }),

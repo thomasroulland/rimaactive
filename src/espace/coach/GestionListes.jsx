@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { enregistrerReglages, renommerDansBanque } from '../depots.js'
+import { enregistrerReglages, renommerDansBanque, renommerMuscleDansBanque } from '../depots.js'
 import { nouvelId } from '../donnees/programme.js'
 import { TYPES_DE_BASE } from '../donnees/reglages.js'
 import { messageErreur } from '../erreurs.js'
@@ -10,7 +10,7 @@ export default function GestionListes({ titre, listes, reglages, fermer }) {
   const ref = useRef(null)
   useEffect(() => { const d = ref.current; if (d && !d.open) d.showModal() }, [])
   return (
-    <dialog ref={ref} className={`espace-dialogue gestion-listes${listes.length > 1 ? ' gestion-listes--colonnes' : ''}`} aria-labelledby="gl-titre" onClose={fermer}
+    <dialog ref={ref} className={`espace-dialogue gestion-listes${listes.length > 1 ? ` gestion-listes--colonnes gestion-listes--${listes.length}` : ''}`} aria-labelledby="gl-titre" onClose={fermer}
       onClick={(e) => { if (e.target === ref.current) ref.current.close() }}>
       <div className="gestion__tete">
         <h2 id="gl-titre" className="titre titre--tuile">{titre}</h2>
@@ -60,7 +60,8 @@ function Liste({ cle, titre, seule, reglages }) {
     lancer(async () => {
       await ecrire(elements.map((x) => (x.id === edition.id ? { id: types ? x.id : nom, nom } : x)))
       // les fiches de la banque suivent le nouveau nom
-      if (!types) await renommerDansBanque(cle === 'categories' ? 'categorie' : 'materiel', ancien.nom, nom)
+      if (cle === 'muscles') await renommerMuscleDansBanque(ancien.nom, nom)
+      else if (!types) await renommerDansBanque(cle === 'categories' ? 'categorie' : 'materiel', ancien.nom, nom)
       setEdition(null)
     })
   }

@@ -101,7 +101,7 @@ describe('ordreProgrammes', () => {
 
 import { rafraichirExercices } from '../../src/espace/donnees/programme.js'
 describe('rafraichirExercices', () => {
-  const prog = { semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'e1', exoId: 'X', nom: 'Squat', photos: [], consignes: '', muscles: [], series: '3' }, { id: 'e2', exoId: 'Z', nom: 'Autre' }] }] }] }] }
+  const prog = { semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'e1', exoId: 'X', nom: 'Squat', photos: [], consignes: '', muscles: [], musclesSecondaires: [], lateralites: [], lateralite: '', series: '3' }, { id: 'e2', exoId: 'Z', nom: 'Autre' }] }] }] }] }
   it('recopie la photo ajoutée plus tard dans la fiche, sans toucher au reste', () => {
     const r = rafraichirExercices(prog, [{ id: 'X', nom: 'Squat', photos: ['exercices/X/a.jpg'], consignes: 'Dos droit', muscles: ['Quadriceps'] }])
     const el = r.semaines[0].seances[0].blocs[0].elements
@@ -110,5 +110,15 @@ describe('rafraichirExercices', () => {
   })
   it('renvoie le même objet si tout est déjà à jour', () => {
     expect(rafraichirExercices(prog, [{ id: 'X', nom: 'Squat', photos: [], consignes: '', muscles: [] }])).toBe(prog)
+  })
+})
+
+describe('rafraichirExercices et latéralité', () => {
+  it('garde la façon choisie si elle est encore possible, sinon prend la première cochée', () => {
+    const p = (lat) => ({ semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'e', exoId: 'L', nom: 'Leg extension', lateralites: ['bilateral', 'unilateral'], lateralite: lat }] }] }] }] })
+    const fiche = [{ id: 'L', nom: 'Leg extension', lateralites: ['bilateral', 'unilateral'] }]
+    expect(rafraichirExercices(p('unilateral'), fiche).semaines[0].seances[0].blocs[0].elements[0].lateralite).toBe('unilateral')
+    const r = rafraichirExercices(p('bstance'), fiche)
+    expect(r.semaines[0].seances[0].blocs[0].elements[0].lateralite).toBe('bilateral')
   })
 })

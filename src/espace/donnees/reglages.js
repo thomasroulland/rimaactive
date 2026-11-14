@@ -1,12 +1,12 @@
 // Listes réglables par le coach (14 novembre 2026) : types de séance, catégories et matériels de la banque.
 // Elles sont rangées dans le document Firestore `reglages/coach` ; sans ce document, on prend ces valeurs.
-import { CATEGORIES, MATERIELS } from './banque.js'
+import { CATEGORIES, MATERIELS, MUSCLES } from './banque.js'
 
 // « force » et « course » existent depuis le début : leurs séances gardent leur fonctionnement
 // (blocs d'exercices / distance et temps). Ils se renomment mais ne se suppriment pas.
 export const TYPES_DE_BASE = [{ id: 'force', nom: 'Force' }, { id: 'course', nom: 'Course' }]
 
-export const REGLAGES_PAR_DEFAUT = { types: TYPES_DE_BASE, categories: CATEGORIES, materiels: MATERIELS }
+export const REGLAGES_PAR_DEFAUT = { types: TYPES_DE_BASE, categories: CATEGORIES, materiels: MATERIELS, muscles: MUSCLES }
 
 export function completerReglages(d) {
   const types = Array.isArray(d?.types) && d.types.length ? d.types : TYPES_DE_BASE
@@ -16,6 +16,7 @@ export function completerReglages(d) {
     types: tous,
     categories: Array.isArray(d?.categories) ? d.categories : CATEGORIES,
     materiels: Array.isArray(d?.materiels) ? d.materiels : MATERIELS,
+    muscles: Array.isArray(d?.muscles) ? d.muscles : MUSCLES,
   }
 }
 

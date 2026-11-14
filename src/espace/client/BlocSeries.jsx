@@ -1,4 +1,5 @@
 import PhotoStockee from '../coach/PhotoStockee.jsx'
+import { nomLateralite } from '../donnees/banque.js'
 import { avecChargeSeule, fr, lignesExercice, resumeFormat } from '../donnees/seances.js'
 import BlocResultat, { ChoixRpe } from './BlocResultat.jsx'
 
@@ -43,7 +44,8 @@ function Exercice({ element, code, bloc, enSeries, lignes, note, lecture, action
       <div className="ec-sexo__tete">
         <div className="ec-sexo__texte">
           <p className="ec-sexo__code" aria-hidden="true">{code}{complet && <span className="ec-valide">Validé</span>}</p>
-          <h3 id={`${base}-nom`} className="ec-sexo__nom"><span className="ec-invisible">{code} : </span>{element.nom}</h3>
+          <h3 id={`${base}-nom`} className="ec-sexo__nom"><span className="ec-invisible">{code} : </span>{element.nom}
+            {element.lateralite && <span className="ec-lateralite">{nomLateralite(element.lateralite)}</span>}</h3>
           {prescription && <p className="ec-sexo__prescription">{prescription}</p>}
           {details && <p className="ec-petit">{details}</p>}
           {element.commentaire && <p className="ec-petit">{element.commentaire}</p>}

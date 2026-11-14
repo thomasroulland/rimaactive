@@ -51,7 +51,11 @@ export function ajouterElement(programme, { s, se, b }, exercice) {
     nom: exercice.nom,
     consignes: exercice.consignes ?? '',
     muscles: [...(exercice.muscles ?? [])],
+    musclesSecondaires: [...(exercice.musclesSecondaires ?? [])],
     photos: [...(exercice.photos ?? [])],
+    // façons possibles (fiche) et façon choisie pour cette séance : la première cochée par défaut
+    lateralites: [...(exercice.lateralites ?? [])],
+    lateralite: exercice.lateralites?.[0] ?? '',
     series: '', reps: '', charge: '', pct: '', rpe: '', repos: '', tempo: '', commentaire: '',
   })
   return p
@@ -162,6 +166,10 @@ export function rafraichirExercices(programme, banque) {
             photos: [...(f.photos ?? [])],
             consignes: f.consignes ?? el.consignes ?? '',
             muscles: [...(f.muscles ?? [])],
+            musclesSecondaires: [...(f.musclesSecondaires ?? [])],
+            lateralites: [...(f.lateralites ?? [])],
+            // la façon choisie reste, sauf si elle n'est plus possible sur la fiche
+            lateralite: (f.lateralites ?? []).includes(el.lateralite) ? el.lateralite : (f.lateralites?.[0] ?? ''),
           }
           if (JSON.stringify(nouveau) !== JSON.stringify(el)) { change = true; return nouveau }
           return el

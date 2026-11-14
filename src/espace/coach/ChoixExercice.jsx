@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { LETTRES } from '../donnees/programme.js'
 import useReglages from './useReglages.js'
 import ChoixAvecAjout from './ChoixAvecAjout.jsx'
+import MaterielPicto from './MaterielPicto.jsx'
 import { enregistrerExercice } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
@@ -85,6 +86,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
                 <span className="espace-choix__exo">{e.nom}</span>
                 <span className="espace-choix__muscles">{[e.categorie, e.materiel].filter(Boolean).join(' · ') || (e.muscles ?? []).join(', ')}</span>
               </span>
+              <MaterielPicto materiel={e.materiel} />
               <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => ajouter(blocChoisi, e)}>
                 Ajouter<span className="sr-only"> {e.nom} au bloc {blocChoisi}</span>
               </button>

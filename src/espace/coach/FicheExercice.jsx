@@ -9,11 +9,12 @@ import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import useReglages from './useReglages.js'
 import ChoixAvecAjout from './ChoixAvecAjout.jsx'
+import { LATERALITES } from '../donnees/banque.js'
 
 // Liste proposée par Claude, à faire valider par Marie
-export const MUSCLES = ['Quadriceps', 'Ischio-jambiers', 'Fessiers', 'Mollets', 'Pectoraux', 'Dos', 'Épaules', 'Biceps', 'Triceps', 'Abdominaux', 'Lombaires']
+export { MUSCLES } from '../donnees/banque.js'
 
-const VIDE = { nom: '', categorie: 'Renforcement', materiel: 'À préciser', execution: '', consignes: '', erreurs: '', video: '', muscles: [], photos: [], retire: false }
+const VIDE = { nom: '', categorie: '', materiel: '', execution: '', consignes: '', erreurs: '', video: '', muscles: [], musclesSecondaires: [], lateralites: [], photos: [], retire: false }
 
 // Fiche d'un exercice : création (/nouveau) ou modification (/:id)
 export default function FicheExercice() {
@@ -57,9 +58,19 @@ export default function FicheExercice() {
   if (!fiche) return <p className="section espace-attente" role="status">{erreur || 'Chargement…'}</p>
 
   const maj = (champ) => (e) => setFiche({ ...fiche, [champ]: e.target.value })
-  const basculerMuscle = (m) => setFiche({
-    ...fiche,
-    muscles: fiche.muscles.includes(m) ? fiche.muscles.filter((x) => x !== m) : [...fiche.muscles, m],
+  // un muscle est principal OU secondaire : le cocher d'un côté le retire de l'autre
+  const basculerMuscle = (m, champ) => setFiche((f) => {
+    const autre = champ === 'muscles' ? 'musclesSecondaires' : 'muscles'
+    const liste = f[champ] ?? []
+    return {
+      ...f,
+      [champ]: liste.includes(m) ? liste.filter((x) => x !== m) : [...liste, m],
+      [autre]: (f[autre] ?? []).filter((x) => x !== m),
+    }
+  })
+  const basculerLateralite = (k) => setFiche((f) => {
+    const l = f.lateralites ?? []
+    return { ...f, lateralites: LATERALITES.map(([id]) => id).filter((id) => (id === k ? !l.includes(k) : l.includes(id))) }
   })
 
   async function ajouter(event) {
@@ -100,7 +111,11 @@ export default function FicheExercice() {
     if (!fiche.nom.trim()) { setErreur('Donnez un nom à l’exercice avant d’enregistrer.'); return }
     setEnvoi(true); setErreur('')
     try {
-      await enregistrerExercice({ ...fiche, id: id ?? idCree }, nouvelles.map((n) => n.fichier))
+      await enregistrerExercice({
+        ...fiche, id: id ?? idCree,
+        categorie: fiche.categorie || reglages.categories[0] || '',
+        materiel: fiche.materiel || reglages.materiels[reglages.materiels.length - 1] || '',
+      }, nouvelles.map((n) => n.fichier))
       navigate('/espace/coach/exercices', { state: { message: `Fiche « ${fiche.nom.trim()} » enregistrée.` } })
     } catch (e) {
       setErreur(messageErreur(e.code ?? e.message))
@@ -169,17 +184,33 @@ export default function FicheExercice() {
               <label htmlFor="exo-video">Lien vidéo (facultatif)</label>
               <input id="exo-video" className="champ" type="url" inputMode="url" placeholder="https://…" value={fiche.video ?? ''} onChange={maj('video')} />
             </div>
-            <fieldset className="champ-groupe">
-              <legend>Groupes musculaires sollicités</legend>
-              <div className="espace-muscles">
-                {MUSCLES.map((m) => (
-                  <label key={m} className="espace-case">
-                    <input type="checkbox" checked={fiche.muscles.includes(m)} onChange={() => basculerMuscle(m)} />
-                    {m}
+            <fieldset className="champ-groupe fiche-lateralite">
+              <legend>Façons de le faire</legend>
+              <p className="espace-aide">Cochez ce qui est possible ; dans chaque séance, vous choisirez laquelle le coaché fait.</p>
+              <div className="fiche-lateralite__choix">
+                {LATERALITES.map(([k, nom]) => (
+                  <label key={k} className="pastille-case">
+                    <input type="checkbox" checked={(fiche.lateralites ?? []).includes(k)} onChange={() => basculerLateralite(k)} />
+                    <span>{nom}</span>
                   </label>
                 ))}
               </div>
             </fieldset>
+            {[['muscles', 'Muscles principaux', 'Les groupes musculaires prioritairement sollicités par l’exercice.'],
+              ['musclesSecondaires', 'Muscles secondaires', 'Les groupes qui participent significativement au mouvement sans être la cible principale.']].map(([champ, titre, aide]) => (
+              <fieldset key={champ} className="champ-groupe">
+                <legend>{titre}</legend>
+                <p className="espace-aide">{aide}</p>
+                <div className="espace-muscles">
+                  {[...new Set([...reglages.muscles, ...(fiche[champ] ?? [])])].map((m) => (
+                    <label key={m} className="espace-case">
+                      <input type="checkbox" checked={(fiche[champ] ?? []).includes(m)} onChange={() => basculerMuscle(m, champ)} />
+                      {m}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
           </div>
 
           <section className="espace-carte espace-fiche__photos" aria-labelledby="exo-photos-titre">

@@ -1210,3 +1210,23 @@ img.photo-attente { opacity: 1; }
 @keyframes photo-brille { from { background-position: 100% 0; } to { background-position: 0 0; } }
 @keyframes photo-fondu { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .photo-attente { animation: none; } .photo-arrivee { animation: none; } }
+/* trois listes (catégories, matériel, muscles) */
+.espace-dialogue.gestion-listes--3[open] { width: min(1120px, calc(100vw - 32px)); }
+@media (min-width: 900px) { .gestion-listes--3 .gestion-listes__colonnes { grid-template-columns: 1fr 1fr 1fr; } }
+@media (min-width: 760px) and (max-width: 899px) { .gestion-listes--3 .gestion-listes__colonnes { grid-template-columns: 1fr; } .gestion-listes--3 .gestion-listes__partie + .gestion-listes__partie { padding-left: 0; border-left: 0; margin-left: 0; padding-top: 16px; border-top: 1px solid #ece9e3; } }
+/* fiche : façons de faire (bilatéral, unilatéral, B-stance) en pastilles à cocher */
+.fiche-lateralite__choix { display: flex; flex-wrap: wrap; gap: 8px; }
+.pastille-case { position: relative; display: inline-flex; cursor: pointer; }
+.pastille-case input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.pastille-case span { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #e0dcd3; background: var(--blanc); font-weight: 700; font-size: 14px; transition: background .2s ease, border-color .2s ease, color .2s ease; }
+.pastille-case input:checked + span { background: var(--encre); border-color: var(--encre); color: var(--blanc); }
+.pastille-case input:checked + span::before { content: ''; width: 9px; height: 5px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(-45deg); }
+.pastille-case input:focus-visible + span { outline: 2px solid var(--encre); outline-offset: 2px; }
+.pastille-case:hover input:not(:checked) + span { border-color: #cfcac1; }
+.espace-fiche fieldset .espace-aide { margin: 0 0 4px; }
+/* pictogramme du matériel (banque, ajout d'exercice) */
+.materiel-picto { flex: none; display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--craie); border: 1px solid #ece9e3; color: var(--encre); }
+.espace-exo__ligne { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.espace-exo__ligne .espace-exo__nom { flex: 1; min-width: 0; padding-top: 4px; }
+.element-lateralite { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.pastille-case--petite span { min-height: 32px; padding: 0 12px; font-size: 13px; }

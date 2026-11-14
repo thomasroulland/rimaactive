@@ -30,3 +30,17 @@ describe('réglages', () => {
     expect(nomType('inconnu', [])).toBe('Séance')
   })
 })
+
+import { genreMateriel } from '../../src/espace/donnees/banque.js'
+describe('genreMateriel', () => {
+  it('reconnaît le matériel, même écrit autrement', () => {
+    expect(genreMateriel('Haltère')).toBe('haltere')
+    expect(genreMateriel('KB')).toBe('kettlebell')
+    expect(genreMateriel('Barre olympique')).toBe('barre')
+    expect(genreMateriel('Poids du corps')).toBe('corps')
+    expect(genreMateriel('Poulie')).toBe('machine')
+    expect(genreMateriel('Élastique')).toBe('elastique')
+    expect(genreMateriel('Médecine-ball')).toBe('autre')
+    expect(genreMateriel('À préciser')).toBe(null)
+  })
+})

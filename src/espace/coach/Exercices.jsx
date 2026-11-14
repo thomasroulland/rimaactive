@@ -4,6 +4,7 @@ import { ecouterExercices } from '../depots.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import useReglages from './useReglages.js'
 import GestionListes from './GestionListes.jsx'
+import MaterielPicto from './MaterielPicto.jsx'
 import Picto from '../../components/Picto.jsx'
 
 const simple = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -73,11 +74,11 @@ export default function Exercices() {
               <input type="checkbox" checked={retires} onChange={(e) => setRetires(e.target.checked)} />
               Afficher les exercices archivés
             </label>
-            <button type="button" className="lien-souligne" onClick={() => setGerer(true)}>Gérer les catégories et le matériel</button>
+            <button type="button" className="lien-souligne" onClick={() => setGerer(true)}>Gérer les catégories, le matériel et les muscles</button>
           </div>
         </div>
-        {gerer && <GestionListes titre="Catégories et matériel" reglages={reglages} fermer={() => setGerer(false)}
-          listes={[{ cle: 'categories', titre: 'Catégories' }, { cle: 'materiels', titre: 'Matériel' }]} />}
+        {gerer && <GestionListes titre="Catégories, matériel et muscles" reglages={reglages} fermer={() => setGerer(false)}
+          listes={[{ cle: 'categories', titre: 'Catégories' }, { cle: 'materiels', titre: 'Matériel' }, { cle: 'muscles', titre: 'Muscles' }]} />}
 
         {exercices && liste.length > 0 && (
           <ul className="espace-grille espace-grille--exos">
@@ -85,7 +86,10 @@ export default function Exercices() {
               <li key={e.id}>
                 <Link to={`/espace/coach/exercices/${e.id}`} className="espace-carte espace-exo">
                   <PhotoStockee chemin={e.photos?.[0]} alt="" classe="espace-exo__photo" vide="Pas encore de photo" />
-                  <span className="espace-exo__nom">{e.nom}</span>
+                  <span className="espace-exo__ligne">
+                    <span className="espace-exo__nom">{e.nom}</span>
+                    <MaterielPicto materiel={e.materiel} />
+                  </span>
                   <span className="espace-exo__muscles">{[e.categorie, e.materiel].filter(Boolean).join(' · ') || (e.muscles ?? []).join(', ') || 'Catégorie à préciser'}</span>
                   {e.retire && <span className="espace-statut">Archivé</span>}
                 </Link>

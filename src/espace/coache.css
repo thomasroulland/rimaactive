@@ -880,3 +880,5 @@ select.ec-champ { appearance: auto; min-width: 0; }
 }
 /* deuxième affichage juste après le premier (fin du chargement de l'espace) : pas de nouvelle animation */
 .connexion--sans-entree .espace-connexion__carte, .connexion--sans-entree .connexion__photo { animation: none !important; }
+/* séance du coaché : façon de faire l'exercice (bilatéral / unilatéral / B-stance) */
+.ec-lateralite { display: inline-flex; align-items: center; margin-left: 8px; padding: 2px 9px; border-radius: 999px; background: var(--ec-encre); color: #fff; font: 700 12px/18px var(--font-sans); vertical-align: 3px; }

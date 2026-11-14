@@ -2,7 +2,7 @@ import { resumeFormat } from '../donnees/seances.js'
 import useReglages from './useReglages.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice from './ChoixExercice.jsx'
-import { chargeIndicative } from '../donnees/banque.js'
+import { chargeIndicative, nomLateralite } from '../donnees/banque.js'
 import { frNombre } from '../donnees/resume.js'
 
 export const FORMATS = [
@@ -126,6 +126,17 @@ function Element({ element: el, code, series, verrou, rm, rpeSemaine, maj, retir
           <span className="espace-element__code" aria-hidden="true">{code}</span>
           <h3 className="espace-element__titre"><span className="sr-only">{code} : </span>{el.nom}</h3>
           {el.muscles?.length > 0 && <p className="espace-element__muscles">{el.muscles.join(', ')}</p>}
+          {(el.lateralites ?? []).length > 1 && !verrou && (
+            <div className="element-lateralite" role="radiogroup" aria-label={`Façon de faire : ${el.nom}`}>
+              {el.lateralites.map((k) => (
+                <label key={k} className="pastille-case pastille-case--petite">
+                  <input type="radio" name={`lat-${el.id}`} checked={el.lateralite === k} onChange={() => maj('lateralite', k)} />
+                  <span>{nomLateralite(k)}</span>
+                </label>
+              ))}
+            </div>
+          )}
+          {((el.lateralites ?? []).length === 1 || ((el.lateralites ?? []).length > 1 && verrou)) && el.lateralite && <p className="espace-element__muscles"><strong>{nomLateralite(el.lateralite)}</strong></p>}
         </div>
         {!verrou && <button type="button" className="espace-lien" onClick={retirer}>Retirer<span className="sr-only"> {el.nom}</span></button>}
       </div>
