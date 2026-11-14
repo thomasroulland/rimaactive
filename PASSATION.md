@@ -442,3 +442,10 @@ Demande de Marie. Branche `claude/intelligent-turing-ibefvz`, en attente de son 
   « Déplacements compris » ne s'affiche pas sur cet onglet. Les trois points « Compris » de la séance sont ceux de la séance à domicile.
 - Sous le titre Individuel : « À domicile ou à la salle ». « Compris pour chaque séance » devient « Compris » sur toutes les cartes.
 - Le formulaire M'écrire propose les quatre formules Individuel (il lit `page.cartes`).
+
+## Tailles « comme avant », sans agrandissement (14 novembre 2026, pas en ligne, en attente du « ok » de Marie)
+Marie, après la mise en ligne de l'agrandissement : « C'est un peu trop gros, réduis un peu les textes, le logo, etc. comme avant ».
+- L'agrandissement automatique est de nouveau retiré (`index.html`) : tailles de la charte sur tous les écrans.
+- Gardé : le logo à gauche (`.entete--site`), la phrase du haut à 13 px, et `--ecran: 100svh` sans limite de 880 px : chaque
+  rubrique remplit l'écran en hauteur (pas de bande beige), le contenu reste à sa taille, centré dans la rubrique.
+- Les offres Individuel (bouton « À domicile » / « À la salle », nouveaux prix, « Compris ») sont en ligne (accord de Marie).

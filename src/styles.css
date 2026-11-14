@@ -1,9 +1,9 @@
 /* Rimaactive — d'après la charte graphique (octobre 2026), section 13 « site web » */
 /* Rimaactive — d'après le design system Rimaactive (charte validée le 29 octobre 2026) */
 :root {
-  --vw: 1vw; /* 1 % de la largeur de l'écran ; recalculé par index.html quand le site vitrine est agrandi */
-  /* hauteur d'« un écran » pour les rubriques : l'écran visible. Sur le site vitrine, index.html agrandit tout sur les
-     grands écrans et recalcule --ecran et --vw (14 novembre 2026) : chaque rubrique remplit l'écran, sans bande vide */
+  --vw: 1vw; /* 1 % de la largeur de l'écran */
+  /* hauteur d'« un écran » pour les rubriques : toute la hauteur de l'écran, sans limite (14 novembre 2026, Marie : plus de
+     bande vide sous les rubriques sur les grands écrans) ; les tailles des textes ne changent pas */
   --ecran: 100svh;
   --fond-carte: var(--blanc); /* cartes blanches sur craie ; craie-fonce sur les rubriques blanches */
   --craie: #f4f3ef;
