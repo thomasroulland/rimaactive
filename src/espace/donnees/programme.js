@@ -179,3 +179,10 @@ export function rafraichirExercices(programme, banque) {
   }))
   return change ? { ...programme, semaines } : programme
 }
+
+// Un autre programme du même coaché commence après celui-ci (publié ou en préparation) : la suite est déjà prévue,
+// donc pas d'alerte « prévoyez la suite » (14 novembre 2026).
+export function aUneSuite(programme, programmes) {
+  if (!programme?.debut) return false
+  return (programmes ?? []).some((p) => p.id !== programme.id && p.client === programme.client && p.debut && p.debut > programme.debut)
+}

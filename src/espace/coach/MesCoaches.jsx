@@ -5,6 +5,7 @@ import { inviterClient, renvoyerInvitation } from '../depots.js'
 import { ajoutJours, aujourdhuiIso, ecartJours, lundiDe } from '../donnees/calculs.js'
 import { dateSeance } from '../donnees/progression.js'
 import { suiviCoache } from '../donnees/alertes.js'
+import { aUneSuite } from '../donnees/programme.js'
 import { useDonneesCoach } from './donneesCoach.js'
 import { messageErreur } from '../erreurs.js'
 import Picto from '../../components/Picto.jsx'
@@ -35,8 +36,9 @@ export default function MesCoaches() {
     const siennes = (seances ?? []).filter((s) => s.client === c.uid)
     const { resume, alertes } = suiviCoache({ programme, seances: siennes, visio: c.derniereVisio ?? null, aujourdhui, actif: c.statut === 'actif' })
     const fin = programme?.debut ? ajoutJours(programme.debut, (programme.semaines?.length ?? 0) * 7 - 1) : null
-    const resteJours = fin ? ecartJours(aujourdhui, fin) : null
-    const aFaire = c.statut === 'actif' && (!programme || resteJours <= BIENTOT)
+    // pas de rappel de fin quand un programme suivant est déjà prévu
+    const resteJours = fin && !aUneSuite(programme, programmes) ? ecartJours(aujourdhui, fin) : null
+    const aFaire = c.statut === 'actif' && (!programme || (resteJours !== null && resteJours <= BIENTOT))
     return { ...c, programmeComplet: programme, resume, alertes, resteJours, aFaire }
   })
   // ordre : d'abord ceux qui ont des points à regarder, puis ceux qui ont un programme, puis par nom

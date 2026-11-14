@@ -122,3 +122,16 @@ describe('rafraichirExercices et latéralité', () => {
     expect(r.semaines[0].seances[0].blocs[0].elements[0].lateralite).toBe('bilateral')
   })
 })
+
+import { aUneSuite } from '../../src/espace/donnees/programme.js'
+
+describe('aUneSuite', () => {
+  const actuel = { id: 'a', client: 'u1', debut: '2026-11-02' }
+  it('vrai si un autre programme du coaché commence après', () => {
+    expect(aUneSuite(actuel, [actuel, { id: 'b', client: 'u1', debut: '2026-11-30', statut: 'brouillon' }])).toBe(true)
+  })
+  it('faux sinon (plus ancien, autre coaché, sans date)', () => {
+    expect(aUneSuite(actuel, [actuel, { id: 'c', client: 'u1', debut: '2026-10-01' }, { id: 'd', client: 'u2', debut: '2026-12-01' }, { id: 'e', client: 'u1', debut: '' }])).toBe(false)
+    expect(aUneSuite(null, [])).toBe(false)
+  })
+})
