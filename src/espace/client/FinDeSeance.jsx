@@ -1,3 +1,4 @@
+import { frNombre } from '../donnees/resume.js'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { RESSENTIS } from '../donnees/seances.js'
@@ -9,7 +10,7 @@ const AIDE = 'Touchez une note : 5 modéré, 10 effort maximal.'
 // Panneau « Fin de séance » (maquette) : effort global 5 à 10, ressenti, commentaire (« Mes sensations » en course),
 // « Enregistrer ma séance ». Séance terminée (`fait.statut === 'terminée'`) : même panneau en lecture seule.
 // `etat` : texte d'enregistrement (réseau) ; `envoyer(fin)` : { effort, ressenti, commentaire } (effort facultatif : null).
-export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientDeFinir }) {
+export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientDeFinir, records = [] }) {
   const terminee = fait?.statut === 'terminée'
   const [fin, setFin] = useState({ effort: null, ressenti: '', commentaire: '' })
   const [envoye, setEnvoye] = useState(false) // un seul envoi, même après un double appui
@@ -28,7 +29,7 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
 
   // Juste après « Enregistrer ma séance » : un écran de fin clair (13 novembre 2026), avec la suite du programme
   if (terminee && vientDeFinir && !revoir) {
-    return <Bravo fait={fait} suite={suite} revoir={() => setRevoir(true)} />
+    return <Bravo fait={fait} suite={suite} records={records} revoir={() => setRevoir(true)} />
   }
 
   return (
@@ -75,7 +76,7 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
 }
 
 
-function Bravo({ fait, suite, revoir }) {
+function Bravo({ fait, suite, records, revoir }) {
   const p = suite?.prochaine
   return (
     <aside className="ec-fin ec-bravo" aria-labelledby="titre-bravo">
@@ -97,6 +98,20 @@ function Bravo({ fait, suite, revoir }) {
           {fait.ressenti && <li>Ressenti : {fait.ressenti}</li>}
         </ul>
       )}
+      {records.length > 0 && (
+        <div className="ec-records">
+          <p className="ec-surtitre ec-records__titre"><Trophee />{records.length > 1 ? `${records.length} nouveaux records` : 'Nouveau record'}</p>
+          <ul className="ec-records__liste">
+            {records.map((r) => (
+              <li key={r.exoId}>
+                <span className="ec-records__nom">{r.nom}</span>
+                <span className="ec-records__val">{frNombre(r.charge)} kg × {frNombre(r.reps)}</span>
+                <span className="ec-records__avant">avant : {frNombre(r.ancien.charge)} kg</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {p && (
         <Link className="ec-bravo__suite" to={`/espace/seance/${suite.programmeId}/${p.seance.id}`}>
           <span>
@@ -111,5 +126,13 @@ function Bravo({ fait, suite, revoir }) {
         <Link className="ec-bouton" to="/espace">Retour au tableau de bord</Link>
       </div>
     </aside>
+  )
+}
+
+export function Trophee() {
+  return (
+    <svg className="ec-trophee" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M8 4h8v5a4 4 0 0 1-8 0V4z" /><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4" /><path d="M12 13v4M9 20h6M10 17h4v3h-4z" />
+    </svg>
   )
 }

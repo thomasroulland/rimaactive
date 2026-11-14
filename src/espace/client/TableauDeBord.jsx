@@ -41,11 +41,12 @@ export default function TableauDeBord({ uid, profil, programme, programmes, fait
         )}
       </div>
 
-      <Nouveautes uid={uid} programmes={programmes} seances={seances} />
-
       <CarteNoire etat={etat} programme={programme} statut={etat.type === 'prochaine' ? statutSeance(seances, programme.id, etat.seance.id) : null} numero={av.numero} />
 
-      {programme && etat.type !== 'aucun' && <CetteSemaine programme={programme} semaine={semaine} faites={faites} seances={seances} />}
+      <Duo>
+        {programme && etat.type !== 'aucun' && <CetteSemaine programme={programme} semaine={semaine} faites={faites} seances={seances} />}
+        <Nouveautes uid={uid} programmes={programmes} seances={seances} />
+      </Duo>
     </div>
   )
 }
@@ -107,4 +108,9 @@ function Fleche() {
 
 function Pictogramme({ d }) {
   return <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="currentColor"><path d={d} /></svg>
+}
+
+// « Ma semaine » et « Du nouveau » côte à côte sur ordinateur (seulement s'il y a des nouveautés : voir coache.css)
+function Duo({ children }) {
+  return <div className="ec-tdb__duo">{children}</div>
 }

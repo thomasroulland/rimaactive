@@ -3,6 +3,9 @@ import { ecouterMesMesures } from '../depots.js'
 import { avancement } from '../donnees/progression.js'
 import { ecartPoids, frNombre, meilleurProgres } from '../donnees/resume.js'
 import MaProgression from './MaProgression.jsx'
+import { Trophee } from './FinDeSeance.jsx'
+import { records } from '../donnees/records.js'
+import { dateCourte, exercicesDe } from '../donnees/seances.js'
 
 // Page « Ma progression » (dans la barre du haut, 13 novembre 2026) : trois chiffres clés, puis les rubriques repliables.
 export default function PageProgression({ uid, profil, programme, programmes, faites, seances }) {
@@ -11,6 +14,8 @@ export default function PageProgression({ uid, profil, programme, programmes, fa
   const av = programme ? avancement(programme, faites) : null
   const progres = meilleurProgres(programmes, seances)
   const poids = ecartPoids(mesures)
+  const { exoIdParElement, noms } = exercicesDe(programmes ?? [])
+  const recs = records(seances, exoIdParElement, noms)
 
   return (
     <div className="ec-page ec-progression">
@@ -35,6 +40,20 @@ export default function PageProgression({ uid, profil, programme, programmes, fa
             : <><span className="ec-chiffre__val ec-chiffre__val--vide">—</span><span className="ec-chiffre__lib">ajoutez deux pesées pour voir l’évolution</span></>}
         </li>
       </ul>
+      {recs.length > 0 && (
+        <section className="ec-records ec-records--page" aria-labelledby="titre-records">
+          <h2 id="titre-records" className="ec-surtitre ec-records__titre"><Trophee />Mes records</h2>
+          <ul className="ec-records__liste">
+            {recs.map((r) => (
+              <li key={r.exoId}>
+                <span className="ec-records__nom">{r.nom}</span>
+                <span className="ec-records__val">{frNombre(r.charge)} kg × {frNombre(r.reps)}</span>
+                <span className="ec-records__avant">le {dateCourte(r.date)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <MaProgression uid={uid} programme={programme} programmes={programmes} faites={faites} seances={seances} />
     </div>
   )

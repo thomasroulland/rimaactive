@@ -26,13 +26,11 @@ export default function Nouveautes({ uid, programmes, seances }) {
   const visibles = liste.slice(0, MAX)
   const reste = liste.length - visibles.length
 
+  // Carte à côté de « Ma semaine » (ordinateur) ou juste en dessous (téléphone) : la semaine reste visible dès l'ouverture.
   return (
     <section className="ec-nouveautes" aria-labelledby="titre-nouveautes">
       <div className="ec-nouveautes__tete">
-        <h2 id="titre-nouveautes" className="ec-nouveautes__titre">
-          <span className="ec-nouveautes__point" aria-hidden="true" />
-          Du nouveau de Marie
-        </h2>
+        <h2 id="titre-nouveautes" className="ec-nouveautes__titre"><span className="ec-nouveautes__point" aria-hidden="true" />Du nouveau</h2>
         <button type="button" className="ec-lien ec-lien--petit" onClick={() => changer(toutVu({ programmes, seances }))}>C’est noté</button>
       </div>
       <ul className="ec-nouveautes__liste">

@@ -9,6 +9,7 @@ import { dateComplete, dateSeance, evolutionMesures } from '../donnees/progressi
 import { exercicesDe, detailSeance, texteSerie } from '../donnees/seances.js'
 import { chiffresCoache, effortParSemaine, suiviCoache } from '../donnees/alertes.js'
 import { frNombre } from '../donnees/resume.js'
+import { records } from '../donnees/records.js'
 import { RM_SUIVIS } from '../donnees/banque.js'
 import { messageErreur } from '../erreurs.js'
 import { useCoache } from './EnteteCoache.jsx'
@@ -414,6 +415,7 @@ export function Stats() {
   const courbes = [...noms.entries()]
     .map(([exoId, nom]) => ({ exoId, nom, points: tonnages(seances ?? [], exoIdParElement, exoId) }))
     .filter((c) => c.points.length > 0).sort((a, b) => a.nom.localeCompare(b.nom, 'fr'))
+  const recs = records(seances ?? [], exoIdParElement, noms)
   const COL = [['poids', 'Poids', 'kg'], ['taille', 'Taille', 'cm'], ['hanches', 'Hanches', 'cm'], ['poitrine', 'Poitrine', 'cm'], ['bras', 'Bras', 'cm'], ['cuisse', 'Cuisse', 'cm']]
 
   return (
@@ -461,6 +463,23 @@ export function Stats() {
               {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-8)} libelle="tonnage par séance" />)}
             </ul>
           </>
+        )}
+      </section>
+      <section aria-labelledby="t-rec" className="onglet-pile">
+        <div className="suivi-titre">
+          <h2 id="t-rec" className="espace-sous-titre">Records personnels</h2>
+          <span className="espace-aide">meilleure charge par exercice</span>
+        </div>
+        {recs.length === 0 ? <p className="espace-aide">Pas encore de série avec une charge.</p> : (
+          <ul className="records-coache">
+            {recs.map((r) => (
+              <li key={r.exoId} className="espace-carte">
+                <span className="records-coache__nom">{r.nom}</span>
+                <strong className="records-coache__val">{frNombre(r.charge)} kg <small>× {frNombre(r.reps)}</small></strong>
+                <span className="espace-aide">le {dateComplete(r.date)}</span>
+              </li>
+            ))}
+          </ul>
         )}
       </section>
       <Carte titre="Poids et mensurations" id="t-mes" classe="mesures-coache">

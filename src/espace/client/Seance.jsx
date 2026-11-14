@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement } from '../donnees/progression.js'
-import { allureVitesse, saisirSerie } from '../donnees/seances.js'
+import { allureVitesse, exercicesDe, saisirSerie } from '../donnees/seances.js'
+import { nouveauxRecords } from '../donnees/records.js'
 import { noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
@@ -272,7 +273,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
 
         {/* clé stable pendant la saisie : la première écriture (statut « en cours ») ne doit pas effacer effort, ressenti, commentaire */}
         <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
-          suite={suiteDe(programme, seances)} vientDeFinir={termine.current} />
+          suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />
       </div>
 
       <Consignes element={fiche} fermer={() => setFiche(null)} />
@@ -293,4 +294,11 @@ function suiteDe(programme, seances) {
   const av = avancement(programme, faites)
   const etat = etatAccueil(programme, faites, aujourdhuiIso())
   return { faites: av.faites, prevues: av.prevues, programmeId: programme.id, prochaine: etat.type === 'prochaine' ? etat : null }
+}
+
+// Records battus pendant cette séance (14 novembre 2026), affichés sur l'écran « Séance enregistrée »
+function recordsDe(fait, programmes, seances) {
+  if (fait?.statut !== 'terminée') return []
+  const { exoIdParElement, noms } = exercicesDe(programmes ?? [])
+  return nouveauxRecords(fait, seances, exoIdParElement, noms)
 }
