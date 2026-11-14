@@ -421,3 +421,37 @@ Thomas a confirmé l'accord écrit de Marie (« tout est bon ») : la branche `e
   arrivent comme celles du coaché : fondu et légère montée de 8 px (`.ec-main > .section` dans `coache.css`) ; fondu seul si
   l'appareil demande moins d'animations. Vérifié page par page : site vitrine (fondu), connexion, accord, coaché, coach, onglets
   d'un coaché, séance ouverte dans l'éditeur : toutes ont une animation d'ouverture.
+
+## Logo à gauche, phrase du haut plus grande, site qui remplit les grands écrans (14 novembre 2026, branche `claude/intelligent-turing-ibefvz`, pas en ligne)
+Demande de Marie (capture d'un écran de 1905 px de large) : logo « trop décalé », phrase « Coach sportive diplômée · Houdan (78) &
+alentours » trop petite, bande beige sous le haut de page, « quitte à grossir un peu les typos ».
+- **Barre de menu du site vitrine** : elle va d'un bord à l'autre (`.entete--site`, posé par `Entete.jsx` hors de `/espace`) ; le logo
+  est aligné sur « Marie Sillas ». Dans l'espace, la barre reste alignée sur le contenu.
+- **Phrase du haut de l'accueil** : 13 px sur l'écran de Marie au lieu de 11 (11 px gardés sur les petits ordinateurs, où la photo est
+  plus étroite).
+- **Agrandissement remis sur le site vitrine seulement** (script de `index.html`, comme avant le 13 novembre) : jusqu'à 1536 × 720 les
+  tailles de la charte ; au-delà tout grandit en proportion, 1,5 fois au plus (la règle « 2 fois en 4K » n'est pas reprise).
+  `--ecran` revient à la hauteur réelle de l'écran : la limite de 880 px est supprimée, chaque rubrique remplit de nouveau l'écran.
+  L'espace (connexion, coaché, coach) garde ses tailles normales. Ceci remplace « Dimensions, dernière décision » ci-dessus.
+
+
+## Individuel : bouton « À domicile » / « À la salle » remis, nouveaux prix, « Compris » partout (14 novembre 2026, pas en ligne)
+Demande de Marie. Branche `claude/intelligent-turing-ibefvz`, en attente de son « ok ».
+- **À domicile** : 70 € la séance (« soit 35 € après crédit d'impôt » gardé, à confirmer par Marie) ; suivi mensuel 200 € par mois, soit 50 € la séance.
+- **À la salle** : 60 € la séance ; suivi mensuel 180 € par mois, soit 45 € la séance. Pas de crédit d'impôt affiché, et la ligne
+  « Déplacements compris » ne s'affiche pas sur cet onglet. Les trois points « Compris » de la séance sont ceux de la séance à domicile.
+- Sous le titre Individuel : « À domicile ou à la salle ». « Compris pour chaque séance » devient « Compris » sur toutes les cartes.
+- Le formulaire M'écrire propose les quatre formules Individuel (il lit `page.cartes`).
+
+## Tailles « comme avant », sans agrandissement (14 novembre 2026, pas en ligne, en attente du « ok » de Marie)
+Marie, après la mise en ligne de l'agrandissement : « C'est un peu trop gros, réduis un peu les textes, le logo, etc. comme avant ».
+- L'agrandissement automatique est de nouveau retiré (`index.html`) : tailles de la charte sur tous les écrans.
+- Gardé : le logo à gauche (`.entete--site`), la phrase du haut à 13 px, et `--ecran: 100svh` sans limite de 880 px : chaque
+  rubrique remplit l'écran en hauteur (pas de bande beige), le contenu reste à sa taille, centré dans la rubrique.
+- Les offres Individuel (bouton « À domicile » / « À la salle », nouveaux prix, « Compris ») sont en ligne (accord de Marie).
+
+## Décision finale de Marie sur les dimensions (14 novembre 2026) : « tout comme avant »
+Après essai en ligne de l'agrandissement puis de la version sans agrandissement, Marie choisit de revenir à l'état du 13 novembre :
+pas d'agrandissement, logo dans la largeur du contenu (1240 px centrés), hauteur d'un écran limitée à 880 px (bande craie sous le
+haut de page sur les grands écrans : acceptée). **Seule la phrase du haut de l'accueil reste plus grande** (13 px au lieu de 11).
+Les deux sections précédentes (barre d'un bord à l'autre, `--ecran: 100svh`, agrandissement) sont donc annulées. Ne pas les reproposer.

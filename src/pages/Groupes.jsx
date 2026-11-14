@@ -18,7 +18,7 @@ export const PAGE = {
       surtitre: '2 à 8 personnes',
       infos: '60\u00a0min',
       tarifs: [{ montant: '70\u00a0€', apres: 'la séance' }],
-      titrePoints: 'Compris pour chaque séance',
+      titrePoints: 'Compris',
       points: [
         // textes de Marie (10 novembre 2026) : intitulé en gras, puis la description
         ['Mobilité & activation', 'Un réveil articulaire et musculaire ciblé que nous faisons ensemble pour préparer le corps à l’effort en toute sécurité.'],

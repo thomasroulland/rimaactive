@@ -1,9 +1,9 @@
 /* Rimaactive — d'après la charte graphique (octobre 2026), section 13 « site web » */
 /* Rimaactive — d'après le design system Rimaactive (charte validée le 29 octobre 2026) */
 :root {
-  --vw: 1vw; /* 1 % de la largeur de l'écran (plus de mise à l'échelle depuis le 13 novembre 2026) */
-  /* hauteur d'« un écran » pour les rubriques : l'écran visible, mais 880 px au plus (13 novembre 2026) :
-     sur un grand écran, les rubriques ne remplissent plus tout l'écran, elles s'enchaînent */
+  --vw: 1vw; /* 1 % de la largeur de l'écran */
+  /* hauteur d'« un écran » pour les rubriques : l'écran visible, mais 880 px au plus (13 novembre 2026, confirmé par Marie le
+     14 novembre : « tout comme avant ») : sur un grand écran, les rubriques ne remplissent plus tout l'écran, elles s'enchaînent */
   --ecran: min(100svh, 880px);
   --fond-carte: var(--blanc); /* cartes blanches sur craie ; craie-fonce sur les rubriques blanches */
   --craie: #f4f3ef;
@@ -1397,7 +1397,7 @@ main > section.tarifs:nth-of-type(n) { --fond-rubrique: var(--craie-fonce); back
     /* la photo entière, à sa taille, contre le bord gauche : plus de bandes noires floues sur les côtés */
     .heros.heros--v3 { grid-template-columns: auto 1fr !important; column-gap: 40px; }
     .heros.heros--v3 .heros__cadre { background: none; height: 100%; aspect-ratio: 0.9; }
-    .heros.heros--v3 .heros__surtitre { white-space: nowrap; font-size: 11px; letter-spacing: 0.1em; }
+    .heros.heros--v3 .heros__surtitre { white-space: nowrap; font-size: clamp(11px, calc(0.85 * var(--vw)), 13px); letter-spacing: 0.1em; } /* 13 px sur l'écran de Marie (demande du 14 novembre 2026) */
     .heros.heros--v3 .heros__photo { inset: -10% 0 0 0 !important; width: 100% !important; height: 110% !important; transform: none; object-fit: cover; object-position: 50% 30% !important; } /* photo remontée (Marie, 9 novembre) */
     /* le texte centré, sous le visage : Marie au centre, la tête au-dessus de la ligne jaune */
     /* texte aligné à gauche, comme avant ; seule la photo est centrée (tête au milieu, au-dessus de la ligne jaune) */
