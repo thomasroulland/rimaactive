@@ -10,10 +10,10 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 
 // Page unique « Mes offres » (Marie, 10 novembre 2026) : une rubrique par offre, l'une sous l'autre.
 // Les bulles du haut restent visibles et amènent à chaque rubrique. Individuel garde les boutons
-// deux cartes visibles à la fois (le bouton « En salle » est retiré le 12 novembre 2026) ; les autres offres ont leur photo à côté de leur carte.
+// deux cartes visibles à la fois (« À domicile » / « À la salle », remis le 14 novembre 2026) ; les autres offres ont leur photo à côté de leur carte.
 // Un clic sur une carte (ou « Voir le détail ») l'ouvre en grand. Les formules et prix viennent des fichiers des pages.
 const RUBRIQUES = [
-  { id: 'individuel', page: INDIVIDUEL, sous: 'À domicile' },
+  { id: 'individuel', page: INDIVIDUEL, sous: 'À domicile ou à la salle' },
   { id: 'groupes', page: GROUPES, sous: 'À domicile ou en extérieur' },
   { id: 'entreprises', page: ENTREPRISES, sous: 'Dans vos locaux ou en extérieur' },
   { id: 'en-ligne', page: EN_LIGNE, sous: 'À distance' },
@@ -72,7 +72,7 @@ function Rubrique({ id, page, sous, fonce }) {
   const refDetail = useRef(null)
   const onglets = page.onglets
   const cartes = onglets ? page.cartes.filter((c) => onglets[actif].noms.includes(c.nom)) : page.cartes
-  const liste = page.liste ?? []
+  const liste = onglets?.[actif].liste ?? page.liste ?? []
   return (
     <section id={id} className={`offres-page__rubrique ${fonce ? 'offres-page__rubrique--fonce' : ''}`} aria-labelledby={`${id}-titre`}>
       <div className="conteneur">

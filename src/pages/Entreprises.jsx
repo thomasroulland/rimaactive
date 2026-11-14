@@ -18,7 +18,7 @@ export const PAGE = {
       surtitre: 'Jusqu’à 16 personnes',
       infos: '60\u00a0min · Devis gratuit sous 48\u00a0h',
       tarifs: [{ montant: 'Sur devis' }],
-      titrePoints: 'Compris pour chaque séance',
+      titrePoints: 'Compris',
       points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
       bouton: 'Demander un devis',
     },

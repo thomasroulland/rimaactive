@@ -434,3 +434,11 @@ alentours » trop petite, bande beige sous le haut de page, « quitte à grossir
   `--ecran` revient à la hauteur réelle de l'écran : la limite de 880 px est supprimée, chaque rubrique remplit de nouveau l'écran.
   L'espace (connexion, coaché, coach) garde ses tailles normales. Ceci remplace « Dimensions, dernière décision » ci-dessus.
 
+
+## Individuel : bouton « À domicile » / « À la salle » remis, nouveaux prix, « Compris » partout (14 novembre 2026, pas en ligne)
+Demande de Marie. Branche `claude/intelligent-turing-ibefvz`, en attente de son « ok ».
+- **À domicile** : 70 € la séance (« soit 35 € après crédit d'impôt » gardé, à confirmer par Marie) ; suivi mensuel 200 € par mois, soit 50 € la séance.
+- **À la salle** : 60 € la séance ; suivi mensuel 180 € par mois, soit 45 € la séance. Pas de crédit d'impôt affiché, et la ligne
+  « Déplacements compris » ne s'affiche pas sur cet onglet. Les trois points « Compris » de la séance sont ceux de la séance à domicile.
+- Sous le titre Individuel : « À domicile ou à la salle ». « Compris pour chaque séance » devient « Compris » sur toutes les cartes.
+- Le formulaire M'écrire propose les quatre formules Individuel (il lit `page.cartes`).
