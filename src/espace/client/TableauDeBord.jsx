@@ -5,13 +5,14 @@ import { avancement, semaineDe, bonjour } from '../donnees/progression.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
 import Avatar from './Avatar.jsx'
 import CetteSemaine from './CetteSemaine.jsx'
+import Nouveautes from './Nouveautes.jsx'
 
 const PICTO_LIEU = 'M128,66a38,38,0,1,0,38,38A38,38,0,0,0,128,66Zm0,64a26,26,0,1,1,26-26A26,26,0,0,1,128,130Zm0-112a86.1,86.1,0,0,0-86,86c0,30.91,14.34,63.74,41.47,94.94a252.32,252.32,0,0,0,41.09,38,6,6,0,0,0,6.88,0,252.32,252.32,0,0,0,41.09-38c27.13-31.2,41.47-64,41.47-94.94A86.1,86.1,0,0,0,128,18Zm0,206.51C113,212.93,54,163.62,54,104a74,74,0,0,1,148,0C202,163.62,143,212.93,128,224.51Z'
 const PICTO_OBJECTIF = 'M172.24,99.76a6,6,0,0,1,0,8.48l-56,56a6,6,0,0,1-8.48,0l-24-24a6,6,0,0,1,8.48-8.48L112,151.51l51.76-51.75A6,6,0,0,1,172.24,99.76ZM222,48V208a14,14,0,0,1-14,14H48a14,14,0,0,1-14-14V48A14,14,0,0,1,48,34H208A14,14,0,0,1,222,48Zm-12,0a2,2,0,0,0-2-2H48a2,2,0,0,0-2,2V208a2,2,0,0,0,2,2H208a2,2,0,0,0,2-2Z'
 
 // Tableau de bord du coaché : avatar, bonjour, avancement, carte noire, puis « Cette semaine ».
 // « Ma progression » a sa propre page (barre du haut, 13 novembre 2026).
-export default function TableauDeBord({ uid, profil, programme, faites, seances }) {
+export default function TableauDeBord({ uid, profil, programme, programmes, faites, seances }) {
   const [params] = useSearchParams()
   const [erreurAvatar, setErreurAvatar] = useState('')
   const aujourdhui = aujourdhuiIso()
@@ -39,6 +40,8 @@ export default function TableauDeBord({ uid, profil, programme, faites, seances 
           </div>
         )}
       </div>
+
+      <Nouveautes uid={uid} programmes={programmes} seances={seances} />
 
       <CarteNoire etat={etat} programme={programme} statut={etat.type === 'prochaine' ? statutSeance(seances, programme.id, etat.seance.id) : null} numero={av.numero} />
 

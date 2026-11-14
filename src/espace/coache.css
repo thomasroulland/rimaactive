@@ -882,3 +882,19 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .connexion--sans-entree .espace-connexion__carte, .connexion--sans-entree .connexion__photo { animation: none !important; }
 /* séance du coaché : façon de faire l'exercice (bilatéral / unilatéral / B-stance) */
 .ec-lateralite { display: inline-flex; align-items: center; margin-left: 8px; padding: 2px 9px; border-radius: 999px; background: var(--ec-encre); color: #fff; font: 700 12px/18px var(--font-sans); vertical-align: 3px; }
+
+/* « Du nouveau de Marie » sur l'accueil du coaché (14 novembre 2026) */
+.ec-nouveautes { background: var(--blanc); border-radius: 24px; padding: var(--ec-pad); display: flex; flex-direction: column; gap: 4px; border-left: 4px solid var(--ec-vermillon); animation: ec-nouveautes-entree .4s cubic-bezier(.2, .7, .2, 1) both; }
+.ec-nouveautes__tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.ec-nouveautes__titre { margin: 0; display: flex; align-items: center; gap: 10px; font: 800 20px/26px var(--font-sans); letter-spacing: -0.01em; color: var(--ec-encre); }
+.ec-nouveautes__point { width: 10px; height: 10px; border-radius: 50%; background: var(--ec-vermillon); box-shadow: 0 0 0 4px rgba(255, 74, 28, 0.18); }
+.ec-nouveautes__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.ec-nouveaute { display: flex; flex-direction: column; gap: 6px; padding: 16px 0; border-top: 1px solid #ece9e3; }
+.ec-nouveaute:first-child { border-top: 0; padding-top: 12px; }
+.ec-nouveaute:last-child { padding-bottom: 0; }
+.ec-nouveaute__quoi { margin: 0; font: 700 16px/22px var(--font-sans); color: var(--ec-encre); }
+.ec-nouveaute__mot { margin: 0; padding: 10px 14px; border-radius: 12px; background: var(--ec-craie); font: 400 15px/22px var(--font-sans); color: var(--ec-encre); }
+.ec-nouveaute .ec-lien { margin-top: 4px; }
+.ec-nouveautes__reste { padding-top: 12px; font-size: 14px; }
+@keyframes ec-nouveautes-entree { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { .ec-nouveautes { animation: none; } }
