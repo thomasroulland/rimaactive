@@ -449,3 +449,9 @@ Marie, après la mise en ligne de l'agrandissement : « C'est un peu trop gros, 
 - Gardé : le logo à gauche (`.entete--site`), la phrase du haut à 13 px, et `--ecran: 100svh` sans limite de 880 px : chaque
   rubrique remplit l'écran en hauteur (pas de bande beige), le contenu reste à sa taille, centré dans la rubrique.
 - Les offres Individuel (bouton « À domicile » / « À la salle », nouveaux prix, « Compris ») sont en ligne (accord de Marie).
+
+## Décision finale de Marie sur les dimensions (14 novembre 2026) : « tout comme avant »
+Après essai en ligne de l'agrandissement puis de la version sans agrandissement, Marie choisit de revenir à l'état du 13 novembre :
+pas d'agrandissement, logo dans la largeur du contenu (1240 px centrés), hauteur d'un écran limitée à 880 px (bande craie sous le
+haut de page sur les grands écrans : acceptée). **Seule la phrase du haut de l'accueil reste plus grande** (13 px au lieu de 11).
+Les deux sections précédentes (barre d'un bord à l'autre, `--ecran: 100svh`, agrandissement) sont donc annulées. Ne pas les reproposer.

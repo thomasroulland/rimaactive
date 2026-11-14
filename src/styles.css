@@ -2,9 +2,9 @@
 /* Rimaactive — d'après le design system Rimaactive (charte validée le 29 octobre 2026) */
 :root {
   --vw: 1vw; /* 1 % de la largeur de l'écran */
-  /* hauteur d'« un écran » pour les rubriques : toute la hauteur de l'écran, sans limite (14 novembre 2026, Marie : plus de
-     bande vide sous les rubriques sur les grands écrans) ; les tailles des textes ne changent pas */
-  --ecran: 100svh;
+  /* hauteur d'« un écran » pour les rubriques : l'écran visible, mais 880 px au plus (13 novembre 2026, confirmé par Marie le
+     14 novembre : « tout comme avant ») : sur un grand écran, les rubriques ne remplissent plus tout l'écran, elles s'enchaînent */
+  --ecran: min(100svh, 880px);
   --fond-carte: var(--blanc); /* cartes blanches sur craie ; craie-fonce sur les rubriques blanches */
   --craie: #f4f3ef;
   --blanc: #ffffff;
@@ -245,8 +245,6 @@ main > section:nth-of-type(even):not(.page-contact) {
   align-items: center;
   gap: 24px;
 }
-/* site vitrine : la barre va d'un bord à l'autre, le logo est aligné sur le texte du haut de page (14 novembre 2026) */
-.entete--site .entete__barre { max-width: none; }
 .entete__logo { display: flex; align-items: center; }
 .entete__logo img { display: block; height: 21px; width: auto; }
 .entete__droite { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
