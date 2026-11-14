@@ -41,7 +41,7 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
   }, [ouvert])
 
   return (
-    <header className={`entete ${surPhoto && !ouvert ? 'entete--sur-photo' : ''} ${rangee ? 'entete--rangee' : ''}`}>
+    <header className={`entete ${pathname.startsWith('/espace') ? '' : 'entete--site'} ${surPhoto && !ouvert ? 'entete--sur-photo' : ''} ${rangee ? 'entete--rangee' : ''}`}>
       <div className="entete__barre">
         {/* Barre encre (choix de Marie, 11 novembre 2026) : logo craie. Le logo ramène en haut de l'accueil (utile surtout sur téléphone, où le menu est replié) */}
         <Link to={accueil} className="entete__logo" aria-label="Rimaactive, retour à l’accueil"

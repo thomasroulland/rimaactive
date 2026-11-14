@@ -421,3 +421,16 @@ Thomas a confirmé l'accord écrit de Marie (« tout est bon ») : la branche `e
   arrivent comme celles du coaché : fondu et légère montée de 8 px (`.ec-main > .section` dans `coache.css`) ; fondu seul si
   l'appareil demande moins d'animations. Vérifié page par page : site vitrine (fondu), connexion, accord, coaché, coach, onglets
   d'un coaché, séance ouverte dans l'éditeur : toutes ont une animation d'ouverture.
+
+## Logo à gauche, phrase du haut plus grande, site qui remplit les grands écrans (14 novembre 2026, branche `claude/intelligent-turing-ibefvz`, pas en ligne)
+Demande de Marie (capture d'un écran de 1905 px de large) : logo « trop décalé », phrase « Coach sportive diplômée · Houdan (78) &
+alentours » trop petite, bande beige sous le haut de page, « quitte à grossir un peu les typos ».
+- **Barre de menu du site vitrine** : elle va d'un bord à l'autre (`.entete--site`, posé par `Entete.jsx` hors de `/espace`) ; le logo
+  est aligné sur « Marie Sillas ». Dans l'espace, la barre reste alignée sur le contenu.
+- **Phrase du haut de l'accueil** : 13 px sur l'écran de Marie au lieu de 11 (11 px gardés sur les petits ordinateurs, où la photo est
+  plus étroite).
+- **Agrandissement remis sur le site vitrine seulement** (script de `index.html`, comme avant le 13 novembre) : jusqu'à 1536 × 720 les
+  tailles de la charte ; au-delà tout grandit en proportion, 1,5 fois au plus (la règle « 2 fois en 4K » n'est pas reprise).
+  `--ecran` revient à la hauteur réelle de l'écran : la limite de 880 px est supprimée, chaque rubrique remplit de nouveau l'écran.
+  L'espace (connexion, coaché, coach) garde ses tailles normales. Ceci remplace « Dimensions, dernière décision » ci-dessus.
+
