@@ -64,12 +64,6 @@ export default function Consignes({ element, fermer }) {
               <p className="ec-texte">{element.muscles.join(', ')}</p>
             </div>
           )}
-          {element.musclesSecondaires?.length > 0 && (
-            <div className="ec-fenetre__part">
-              <h3 className="ec-fenetre__intertitre">Muscles secondaires</h3>
-              <p className="ec-texte">{element.musclesSecondaires.join(', ')}</p>
-            </div>
-          )}
           {element.consignes && (
             <div className="ec-fenetre__part">
               <h3 className="ec-fenetre__intertitre">Consignes d’exécution</h3>

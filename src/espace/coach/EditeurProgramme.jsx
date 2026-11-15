@@ -11,7 +11,6 @@ import {
 import { ajoutJours, aujourdhuiIso, dateLongue } from '../donnees/calculs.js'
 import { dateCourte } from '../donnees/seances.js'
 import { nomType } from '../donnees/reglages.js'
-import { nomLateralite } from '../donnees/banque.js'
 import useReglages from './useReglages.js'
 import GestionListes from './GestionListes.jsx'
 import { lignesExercice } from '../donnees/seances.js'
@@ -608,7 +607,7 @@ function ExercicesColonne({ seance, banque }) {
     const infos = [seance.distance, seance.temps, seance.objectif].filter(Boolean).join(' · ')
     return <p className="colonne-seance__resume">Course{infos ? ` · ${infos}` : ''}</p>
   }
-  const lignes = (seance.blocs ?? []).flatMap((b) => (b.elements ?? []).map((e, i) => ({ id: e.id, photo: photoDe(e, banque), code: `${b.lettre}${i + 1}`, nom: e.lateralite ? `${e.nom} · ${nomLateralite(e.lateralite)}` : e.nom, detail: lignesExercice(e, b.format === 'series').prescription })))
+  const lignes = (seance.blocs ?? []).flatMap((b) => (b.elements ?? []).map((e, i) => ({ id: e.id, photo: photoDe(e, banque), code: `${b.lettre}${i + 1}`, nom: e.nom, detail: lignesExercice(e, b.format === 'series').prescription })))
   if (!lignes.length) return <p className="colonne-seance__resume">Aucun exercice pour l’instant</p>
   return (
     <ul className="colonne-seance__exos">

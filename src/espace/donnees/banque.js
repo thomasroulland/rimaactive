@@ -32,11 +32,13 @@ const simplifie = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(
 export function genreMateriel(materiel) {
   const m = simplifie(materiel)
   if (!m || m.includes('preciser')) return null
+  if (m.includes('landmine')) return 'landmine'
   if (m.includes('kettle') || /\bkb\b/.test(m)) return 'kettlebell'
   if (m.includes('halt')) return 'haltere'
   if (m.includes('barre') || m.includes('barbell')) return 'barre'
   if (m.includes('corps') || m.includes('pdc')) return 'corps'
-  if (m.includes('machine') || m.includes('poulie') || m.includes('cable')) return 'machine'
+  if (m.includes('poulie') || m.includes('cable')) return 'poulie'
+  if (m.includes('machine')) return 'machine'
   if (m.includes('elast') || m.includes('bande')) return 'elastique'
   return 'autre'
 }

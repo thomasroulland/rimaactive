@@ -55,7 +55,7 @@ export function ajouterElement(programme, { s, se, b }, exercice) {
     photos: [...(exercice.photos ?? [])],
     // façons possibles (fiche) et façon choisie pour cette séance : la première cochée par défaut
     lateralites: [...(exercice.lateralites ?? [])],
-    lateralite: exercice.lateralites?.[0] ?? '',
+    lateralite: '',
     series: '', reps: '', charge: '', pct: '', rpe: '', repos: '', tempo: '', commentaire: '',
   })
   return p
