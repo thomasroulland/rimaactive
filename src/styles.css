@@ -2067,3 +2067,9 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .offres-page__corps--photo { grid-template-columns: 2fr 3fr; align-items: stretch; }
   .offres-page__corps--photo .offres-page__photo { height: 100%; min-height: 0; }
 }
+
+/* M'écrire, ordinateur (15 novembre 2026, choix de Thomas) : plus de fondu ; la photo garde sa coupe nette,
+   séparée du formulaire par un filet jaune de la charte */
+@media (min-width: 900px) {
+  .page-contact__photo { -webkit-mask-image: none !important; mask-image: none !important; box-sizing: border-box; border-right: 6px solid var(--jaune); }
+}
