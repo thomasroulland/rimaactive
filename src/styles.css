@@ -20,9 +20,10 @@
 
   --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --gouttiere: clamp(20px, calc(5 * var(--vw)), 80px);
-  /* largeur du contenu : 1240 px (charte), la même partout, site et espace */
-  --largeur: 1240px;
+  --gouttiere: clamp(20px, calc(4 * var(--vw)), 64px);
+  /* largeur du contenu : 1240 px dans la charte, portée à 1520 px le 15 novembre 2026 (demande de Thomas :
+     sur les écrans moyens, le contenu prend toute la largeur) ; la même partout, site et espace */
+  --largeur: 1520px;
   --duree: 160ms;
   --rayon-s: 8px; /* étiquettes, champs */
   --arrondi: 16px; /* rayon-m : cartes du site, cadres photo */
@@ -2073,3 +2074,6 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 @media (min-width: 900px) {
   .page-contact__photo { -webkit-mask-image: none !important; mask-image: none !important; box-sizing: border-box; border-right: 6px solid var(--jaune); }
 }
+
+/* cartes d'offres : hauteur de leur contenu (plus de vide entre la liste et « Voir le détail ») */
+.offres--2 > .offre { min-height: 0 !important; }
