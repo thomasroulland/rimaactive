@@ -1020,12 +1020,8 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-s2-un__serie { margin: 14px 0 0; font: 800 13px/1 var(--font-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--vermillon); }
 .ec-s2-un__serie.est-fini { color: #1f6b3a; }
 .ec-s2-reglages { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
-.ec-s2-reglage { padding: 10px; border-radius: 22px; background: #fff; border: 1px solid #fff; box-shadow: 0 8px 22px rgba(22, 21, 20, .08); text-align: center; }
+.ec-s2-reglage { display: grid; gap: 4px; padding: 10px 12px; border-radius: 22px; background: #fff; border: 1px solid #fff; box-shadow: 0 8px 22px rgba(22, 21, 20, .08); text-align: center; cursor: text; }
 .ec-s2-reglage__lib { font: 700 12px/1 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--gris-chaud); }
-.ec-s2-reglage__ligne { display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-top: 6px; }
-.ec-s2-reglage__ligne button { flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #f4f3ef; color: #161514; font: 800 20px/1 var(--font-sans); cursor: pointer; }
-.ec-s2-reglage__ligne input { min-width: 0; width: 100%; padding: 0; border: 0; background: none; text-align: center; font: 800 34px/1.1 var(--font-sans); letter-spacing: -.03em; color: #161514; }
-.ec-s2-reglage__ligne input:focus-visible { outline: 2px solid #161514; border-radius: 8px; }
 .ec-s2-chips { display: flex; gap: 8px; margin-top: 12px; }
 .ec-s2-chips button { flex: 1; min-width: 0; height: 44px; padding: 0; border-radius: 12px; border: 1.5px dashed #c9c4bb; background: #fff; font: 800 14px/1 var(--font-sans); color: #161514; cursor: pointer; }
 .ec-s2-chips button.est-faite { background: #161514; border: 0; color: #f4f3ef; }
@@ -1051,7 +1047,49 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .ec-s2-photo { height: clamp(104px, 17vh, 140px); border-radius: 20px; }
   .ec-s2-un__nom { font-size: 26px; margin-top: 6px; }
   .ec-s2-un__serie { margin-top: 10px; }
-  .ec-s2-reglage__ligne input { font-size: 30px; }
-  .ec-s2-chips { margin-top: 10px; }
+    .ec-s2-chips { margin-top: 10px; }
   .ec-s2-chips button { height: 40px; }
+}
+
+/* saisie à la main : un grand champ par réglage, sans boutons − et ＋ */
+.ec-s2-reglage input { box-sizing: border-box; width: 100%; min-width: 0; padding: 4px 0; border: 0; border-radius: 12px; background: #f4f3ef; text-align: center; font: 800 36px/1.1 var(--font-sans); letter-spacing: -.03em; color: #161514; }
+.ec-s2-reglage input:focus-visible { outline: 3px solid #161514; outline-offset: 2px; background: #fff; }
+.ec-s2-un__ligne { display: flex; align-items: center; gap: 10px; }
+.ec-s2-un__ligne .ec-s2-seg { flex: 1; }
+.ec-s2-retour { flex: none; width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1px solid var(--filet); color: #161514; display: grid; place-items: center; text-decoration: none; }
+.ec-s2-retour:focus-visible { outline: 3px solid #161514; outline-offset: 2px; }
+.ec-s2-fin__haut { justify-self: start; }
+/* téléphone : pendant une séance, pas de menu de pages en bas, et les marges du haut disparaissent pour tout voir sans défiler */
+@media (max-width: 960px) {
+  .entete--seance .nav { display: none !important; }
+  .entete--seance .entete__barre { height: 48px !important; min-height: 0; padding-block: 0 !important; }
+  .ec-seance--v2 { padding-top: 10px; padding-bottom: 96px; }
+  .ec-seance--v2 .ec-s2-gros { bottom: 14px; }
+}
+@media (max-width: 899px) {
+  .ec-s2 { gap: 6px; }
+  .ec-s2-un { gap: 2px; }
+  .ec-s2-un__haut { margin-bottom: 4px; }
+  .ec-s2-photo { height: clamp(84px, 13vh, 118px); }
+  .ec-s2-un__nom { font-size: 24px; margin-top: 4px; }
+  .ec-s2-un__serie { margin-top: 8px; }
+  .ec-s2-reglage input { font-size: 32px; }
+}
+/* téléphone, un exercice à la fois : l'écran fait exactement la hauteur de la fenêtre, le gros bouton reste en bas, et le pied de page ne se voit pas */
+@media (max-width: 899px) {
+  .ec-seance--v2 { padding-bottom: 14px; }
+  .ec-seance--v2 .ec-s2-un { min-height: calc(100svh - 92px); display: flex; flex-direction: column; }
+  .ec-seance--v2 .ec-s2-un .ec-s2-gros { align-self: end; margin-top: auto; }
+  .ec-seance--v2 .ec-s2-fin { min-height: calc(100svh - 92px); align-content: start; }
+  body:has(.ec-seance--v2) .pied { display: none; }
+}
+@media (max-width: 960px) {
+  .ec-main:has(.ec-seance--v2) { padding-bottom: 0 !important; }
+  .ec-main:has(.ec-seance--v2) > .section { padding-block: 0 !important; }
+}
+@media (max-width: 899px) {
+  /* la photo prend la place qui reste : petite sur un petit écran, plus grande sur un grand */
+  .ec-seance--v2 .ec-s2-photo { height: auto; flex: 1 1 90px; min-height: 84px; max-height: 260px; }
+  .ec-seance--v2 .ec-s2-un > * { flex-shrink: 0; }
+  .ec-seance--v2 .ec-s2-un > .ec-s2-photo { flex-shrink: 1; }
 }

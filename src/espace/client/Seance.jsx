@@ -116,6 +116,11 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     ? <Link className="ec-retour" to="/espace/programme"><Fleche />Mon programme</Link>
     : <Link className="ec-retour" to="/espace"><Fleche />Tableau de bord</Link>
 
+  // téléphone, un exercice à la fois : le retour tient dans la ligne du haut, sous forme d'une simple flèche
+  const retourPetit = (
+    <Link className="ec-s2-retour" to={depuisProgramme ? '/espace/programme' : '/espace'} aria-label={depuisProgramme ? 'Retour à Mon programme' : 'Retour au tableau de bord'}><Fleche /></Link>
+  )
+
   if (!item) {
     return (
       <section className="ec-page ec-seance">
@@ -204,17 +209,18 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const aller = (i) => setEtape(Math.max(0, Math.min(nb, i)))
     const bloc = listeBlocs[ici]
     const enSeries = bloc && (bloc.format ?? 'series') === 'series'
+    const unExercice = Boolean(bloc) && mobile && !verrou && enSeries
     return (
       <section className="ec-page ec-seance ec-seance--v2">
-        {retour}
+        {!unExercice && retour}
         {refus && <p className="ec-erreur" role="alert">{refus}</p>}
         <div className="ec-s2">
           <p className="ec-s2-surtitre">{surtitre} · {titre}</p>
           <div className="ec-s2-principal">
             {bloc ? (
-              mobile && !verrou && enSeries ? (
+              unExercice ? (
                 <UnExercice key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} actions={actions}
-                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} />
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} />
               ) : (
                 <>
                   <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />

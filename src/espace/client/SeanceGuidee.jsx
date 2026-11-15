@@ -29,8 +29,6 @@ const Image = () => (
   <svg viewBox="0 0 256 256" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="40" y="48" width="176" height="160" rx="16" /><circle cx="96" cy="100" r="16" /><path d="M40 176l56-56 40 40 32-32 48 48" /></svg>
 )
 
-const nombre = (v) => parseFloat(String(v ?? '').replace(',', '.'))
-const texte = (n) => String(Math.round(n * 100) / 100).replace('.', ',')
 
 // Gros bouton unique de la page
 export function Gros({ children, onClick, discret = false, desactive = false }) {
@@ -130,22 +128,16 @@ export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes
 
 // ---------- Téléphone : un exercice à la fois ----------
 
-function Reglage({ libelle, valeur, pas, changer, mode }) {
-  const n = nombre(valeur)
-  const bouger = (sens) => changer(texte(Math.max(0, (Number.isNaN(n) ? 0 : n) + sens * pas)))
+function Reglage({ libelle, valeur, changer, mode, id }) {
   return (
-    <div className="ec-s2-reglage">
+    <label className="ec-s2-reglage" htmlFor={id}>
       <span className="ec-s2-reglage__lib">{libelle}</span>
-      <div className="ec-s2-reglage__ligne">
-        <button type="button" aria-label={`Moins, ${libelle}`} onClick={() => bouger(-1)}>−</button>
-        <input type="text" inputMode={mode} autoComplete="off" aria-label={libelle} value={valeur} onChange={(e) => changer(e.target.value)} />
-        <button type="button" aria-label={`Plus, ${libelle}`} onClick={() => bouger(1)}>＋</button>
-      </div>
-    </div>
+      <input id={id} type="text" inputMode={mode} autoComplete="off" enterKeyHint="done" value={valeur} onFocus={(e) => e.target.select()} onChange={(e) => changer(e.target.value)} />
+    </label>
   )
 }
 
-export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, voirConsignes, aller, finir }) {
+export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, voirConsignes, aller, finir, retour }) {
   const els = bloc.elements ?? []
   const [exo, setExo] = useState(() => Math.max(0, els.findIndex((e) => lignes(e).some((l) => !l.fait))))
   const [choisie, setChoisie] = useState(null)
@@ -163,6 +155,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
     const suivant = blocs[etape + 1]
     return (
       <div className="ec-s2-fin">
+        <div className="ec-s2-fin__haut">{retour}</div>
         <span className="ec-s2-fin__ok" aria-hidden="true"><Coche /></span>
         <h2>{nomBloc(bloc)} terminé</h2>
         <p>{els.length} exercice{els.length > 1 ? 's' : ''} · {p?.faites ?? 0} série{(p?.faites ?? 0) > 1 ? 's' : ''}</p>
@@ -203,11 +196,14 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
   return (
     <div className="ec-s2-un">
       <div className="ec-s2-un__haut">
-        <div className="ec-s2-seg" role="group" aria-label="Exercices du bloc">
-          {els.map((e, k) => (
-            <button key={e.id} type="button" className={`${k === exo ? 'est-actif' : exoFait(e) ? 'est-fini' : ''}`} aria-current={k === exo ? 'step' : undefined}
-              aria-label={`Exercice ${k + 1} : ${e.nom}${exoFait(e) ? ', fait' : ''}`} onClick={() => allerExo(k)} />
-          ))}
+        <div className="ec-s2-un__ligne">
+          {retour}
+          <div className="ec-s2-seg" role="group" aria-label="Exercices du bloc">
+            {els.map((e, k) => (
+              <button key={e.id} type="button" className={`${k === exo ? 'est-actif' : exoFait(e) ? 'est-fini' : ''}`} aria-current={k === exo ? 'step' : undefined}
+                aria-label={`Exercice ${k + 1} : ${e.nom}${exoFait(e) ? ', fait' : ''}`} onClick={() => allerExo(k)} />
+            ))}
+          </div>
         </div>
         <div className="ec-s2-un__compte">
           <span>Exercice {exo + 1} sur {els.length} · {nomBloc(bloc)}</span>
@@ -235,8 +231,8 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         <>
           <p className="ec-s2-un__serie">Série {cur + 1} sur {ls.length}</p>
           <div className="ec-s2-reglages">
-            <Reglage libelle={cle === 'duree' ? 'Durée' : 'Répétitions'} valeur={repsV} pas={cle === 'duree' ? 5 : 1} mode={cle === 'duree' ? 'text' : 'numeric'} changer={maj('reps')} />
-            <Reglage libelle="Charge · kg" valeur={chargeV} pas={2.5} mode="decimal" changer={maj('charge')} />
+            <Reglage id={`reps-${el.id}`} libelle={cle === 'duree' ? 'Durée' : 'Répétitions'} valeur={repsV} mode={cle === 'duree' ? 'text' : 'numeric'} changer={maj('reps')} />
+            <Reglage id={`charge-${el.id}`} libelle="Charge · kg" valeur={chargeV} mode="decimal" changer={maj('charge')} />
           </div>
         </>
       ) : <p className="ec-s2-un__serie est-fini">Toutes les séries sont faites</p>}
