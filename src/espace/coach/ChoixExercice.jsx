@@ -7,6 +7,8 @@ import { enregistrerExercice } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import { basculerDetails } from '../../components/basculerDetails.js'
+import OngletsParties from './OngletsParties.jsx'
+import { partieDe } from '../donnees/reglages.js'
 
 const simplifier = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 const VIDE = { nom: '', categorie: '', materiel: '', consignes: '' }
@@ -17,6 +19,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
   const prochaine = LETTRES[lettres.length]
   const [bloc, setBloc] = useState(lettres[lettres.length - 1] ?? 'A')
   const [recherche, setRecherche] = useState('')
+  const [partie, setPartie] = useState('Tout')
   const [categorie, setCategorie] = useState('Toutes')
   const [nouvel, setNouvel] = useState(VIDE)
   const [creationOuverte, setCreationOuverte] = useState(false)
@@ -28,6 +31,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
   const t = simplifier(recherche.trim())
   const resultats = (exercices ?? [])
     .filter((e) => e.retire !== true)
+    .filter((e) => partie === 'Tout' || partieDe(e.categorie, reglages) === partie)
     .filter((e) => categorie === 'Toutes' || e.categorie === categorie)
     .filter((e) => !t || simplifier(`${e.nom} ${e.categorie ?? ''} ${e.materiel ?? ''} ${(e.muscles ?? []).join(' ')}`).includes(t))
   const aucun = Boolean(exercices) && resultats.length === 0
@@ -66,15 +70,16 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
         <input id="choix-recherche" className="champ" type="search" autoComplete="off" placeholder="Nom, muscle, matériel…"
           value={recherche} onChange={(e) => setRecherche(e.target.value)} />
       </div>
+      <OngletsParties parties={reglages.parties} valeur={partie} changer={(p) => { setPartie(p); setCategorie('Toutes') }} />
       <div className="filtres-coaches espace-choix__filtres" role="group" aria-label="Catégorie">
-        {['Toutes', ...reglages.categories].map((c) => (
+        {['Toutes', ...reglages.categories.filter((c) => partie === 'Tout' || partieDe(c, reglages) === partie)].map((c) => (
           <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
         ))}
       </div>
       {exercices === null && <p className="espace-texte" role="status">Chargement de la banque…</p>}
       {aucun && (
         <p className="espace-aide">
-          {recherche.trim() || categorie !== 'Toutes' ? 'Aucun exercice ne correspond. Créez-le ci-dessous.' : 'Votre banque est vide. Créez un premier exercice ci-dessous.'}
+          {recherche.trim() || categorie !== 'Toutes' || partie !== 'Tout' ? 'Aucun exercice ne correspond. Créez-le ci-dessous.' : 'Votre banque est vide. Créez un premier exercice ci-dessous.'}
         </p>
       )}
       {resultats.length > 0 && (

@@ -6,6 +6,8 @@ import useReglages from './useReglages.js'
 import GestionListes from './GestionListes.jsx'
 import MaterielPicto from './MaterielPicto.jsx'
 import Picto from '../../components/Picto.jsx'
+import OngletsParties from './OngletsParties.jsx'
+import { partieDe } from '../donnees/reglages.js'
 
 const simple = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
@@ -15,6 +17,7 @@ export default function Exercices() {
   const [erreur, setErreur] = useState('')
   const [recherche, setRecherche] = useState('')
   const [retires, setRetires] = useState(false)
+  const [partie, setPartie] = useState('Tout')
   const [categorie, setCategorie] = useState('Toutes')
   const [materiel, setMateriel] = useState('Tous')
   const [gerer, setGerer] = useState(false)
@@ -26,9 +29,11 @@ export default function Exercices() {
   const liste = useMemo(() => {
     if (!exercices) return []
     const q = simple(recherche.trim())
-    return exercices.filter((e) => (retires || !e.retire) && (categorie === 'Toutes' || e.categorie === categorie) && (materiel === 'Tous' || e.materiel === materiel) && (
+    return exercices.filter((e) => (retires || !e.retire) && (partie === 'Tout' || partieDe(e.categorie, reglages) === partie) && (categorie === 'Toutes' || e.categorie === categorie) && (materiel === 'Tous' || e.materiel === materiel) && (
       !q || simple(e.nom).includes(q) || simple(e.materiel).includes(q) || simple(e.categorie).includes(q) || (e.muscles ?? []).some((m) => simple(m).includes(q))))
-  }, [exercices, recherche, retires, categorie, materiel])
+  }, [exercices, recherche, retires, categorie, materiel, partie, reglages])
+  const categoriesVisibles = reglages.categories.filter((c) => partie === 'Tout' || partieDe(c, reglages) === partie)
+  const nbPartie = (p) => (exercices ?? []).filter((e) => !e.retire && (p === 'Tout' || partieDe(e.categorie, reglages) === p)).length
 
   const actifs = exercices?.filter((e) => !e.retire).length ?? 0
   const resume = exercices === null ? ' ' : actifs === 0 ? 'Aucun exercice pour l’instant.' : actifs === 1 ? '1 exercice dans la banque.' : `${actifs} exercices dans la banque.`
@@ -50,6 +55,7 @@ export default function Exercices() {
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
 
+        <OngletsParties parties={reglages.parties} valeur={partie} changer={(p) => { setPartie(p); setCategorie('Toutes') }} compte={exercices ? nbPartie : null} />
         <div className="espace-carte espace-recherche">
           <div className="champ-groupe">
             <label htmlFor="exo-recherche">Rechercher</label>
@@ -58,7 +64,7 @@ export default function Exercices() {
           <div className="banque-filtres">
             <span className="banque-filtres__lib" id="f-cat">Catégorie</span>
             <div className="filtres-coaches" role="group" aria-labelledby="f-cat">
-              {['Toutes', ...reglages.categories].map((c) => (
+              {['Toutes', ...categoriesVisibles].map((c) => (
                 <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
               ))}
             </div>
@@ -74,11 +80,11 @@ export default function Exercices() {
               <input type="checkbox" checked={retires} onChange={(e) => setRetires(e.target.checked)} />
               Afficher les exercices archivés
             </label>
-            <button type="button" className="lien-souligne" onClick={() => setGerer(true)}>Gérer les catégories, le matériel et les muscles</button>
+            <button type="button" className="lien-souligne" onClick={() => setGerer(true)}>Gérer les parties, catégories, matériel et muscles</button>
           </div>
         </div>
-        {gerer && <GestionListes titre="Catégories, matériel et muscles" reglages={reglages} fermer={() => setGerer(false)}
-          listes={[{ cle: 'categories', titre: 'Catégories' }, { cle: 'materiels', titre: 'Matériel' }, { cle: 'muscles', titre: 'Muscles' }]} />}
+        {gerer && <GestionListes titre="Parties, catégories, matériel et muscles" reglages={reglages} fermer={() => setGerer(false)}
+          listes={[{ cle: 'parties', titre: 'Parties' }, { cle: 'categories', titre: 'Catégories' }, { cle: 'materiels', titre: 'Matériel' }, { cle: 'muscles', titre: 'Muscles' }]} />}
 
         {exercices && liste.length > 0 && (
           <ul className="espace-grille espace-grille--exos">

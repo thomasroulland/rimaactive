@@ -47,3 +47,25 @@ describe('genreMateriel', () => {
     expect(genreMateriel('À préciser')).toBe(null)
   })
 })
+
+import { completerReglages, partieDe, ranger, renommerRangement } from '../../src/espace/donnees/reglages.js'
+describe('parties de la banque', () => {
+  const r = completerReglages({})
+  it('par défaut : Mobilité, Activation, Plyométrie en Échauffement, le reste en Séance', () => {
+    expect(r.parties).toEqual(['Échauffement', 'Séance'])
+    expect(['Mobilité', 'Activation', 'Plyométrie'].map((c) => partieDe(c, r))).toEqual(['Échauffement', 'Échauffement', 'Échauffement'])
+    expect(partieDe('Gainage', r)).toBe('Séance')
+    expect(partieDe('', r)).toBe('Séance')
+  })
+  it('le choix de la coach l’emporte ; une partie disparue revient au défaut', () => {
+    const r2 = { ...r, rangement: ranger(r.rangement, 'Gainage', 'Échauffement') }
+    expect(partieDe('Gainage', r2)).toBe('Échauffement')
+    expect(partieDe('Gainage', { ...r2, rangement: ranger(r2.rangement, 'Gainage', 'Inconnue') })).toBe('Séance')
+    expect(partieDe('Cardio', { ...r, parties: ['Échauffement', 'Corps'] })).toBe('Corps')
+  })
+  it('renommer une catégorie ou une partie garde le rangement', () => {
+    const rg = [{ categorie: 'Gainage', partie: 'Échauffement' }]
+    expect(renommerRangement(rg, 'categorie', 'Gainage', 'Core')).toEqual([{ categorie: 'Core', partie: 'Échauffement' }])
+    expect(renommerRangement(rg, 'partie', 'Échauffement', 'Activation')).toEqual([{ categorie: 'Gainage', partie: 'Activation' }])
+  })
+})

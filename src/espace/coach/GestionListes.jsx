@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { enregistrerReglages, renommerDansBanque, renommerMuscleDansBanque } from '../depots.js'
 import { nouvelId } from '../donnees/programme.js'
-import { TYPES_DE_BASE } from '../donnees/reglages.js'
+import { TYPES_DE_BASE, partieDe, ranger, renommerRangement } from '../donnees/reglages.js'
 import { messageErreur } from '../erreurs.js'
 
 // Fenêtre « Gérer… » (14 novembre 2026) : ajouter, renommer, supprimer les éléments d'une ou plusieurs listes du coach.
@@ -59,8 +59,12 @@ function Liste({ cle, titre, seule, reglages }) {
     if (existe(nom, edition.id)) { setErreur(`« ${nom} » existe déjà.`); return }
     lancer(async () => {
       await ecrire(elements.map((x) => (x.id === edition.id ? { id: types ? x.id : nom, nom } : x)))
+      // une catégorie renommée garde sa partie, une partie renommée garde ses catégories
+      if (cle === 'categories' || cle === 'parties') {
+        await enregistrerReglages({ rangement: renommerRangement(reglages.rangement, cle === 'categories' ? 'categorie' : 'partie', ancien.nom, nom) })
+      }
       // les fiches de la banque suivent le nouveau nom
-      if (cle === 'muscles') await renommerMuscleDansBanque(ancien.nom, nom)
+      if (cle === 'parties') { /* rien dans les fiches : la partie vient de la catégorie */ } else if (cle === 'muscles') await renommerMuscleDansBanque(ancien.nom, nom)
       else if (!types) await renommerDansBanque(cle === 'categories' ? 'categorie' : 'materiel', ancien.nom, nom)
       setEdition(null)
     })
@@ -83,6 +87,15 @@ function Liste({ cle, titre, seule, reglages }) {
             ) : (
               <>
                 <span className="gestion-listes__nom">{x.nom}</span>
+                {cle === 'categories' && reglages.parties.length > 1 && aSupprimer !== x.id && (
+                  <>
+                    <label htmlFor={`gl-p-${x.id}`} className="sr-only">Partie de « {x.nom} »</label>
+                    <select id={`gl-p-${x.id}`} className="gestion-listes__partie-choix" value={partieDe(x.nom, reglages)} disabled={envoi}
+                      onChange={(e) => lancer(() => enregistrerReglages({ rangement: ranger(reglages.rangement, x.nom, e.target.value) }))}>
+                      {reglages.parties.map((p) => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </>
+                )}
                 {aSupprimer === x.id ? (
                   <span className="gestion-listes__actions">
                     <button type="button" className="gestion-listes__confirmer" disabled={envoi} onClick={() => supprimer(x)}>Supprimer « {x.nom} »</button>
@@ -93,7 +106,7 @@ function Liste({ cle, titre, seule, reglages }) {
                     <button type="button" className="gestion-listes__icone" aria-label={`Renommer ${x.nom}`} title="Renommer" onClick={() => { setEdition({ id: x.id, nom: x.nom }); setErreur('') }}>
                       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" /></svg>
                     </button>
-                    {!(types && BASE.has(x.id)) && (
+                    {!(types && BASE.has(x.id)) && !(cle === 'parties' && elements.length <= 1) && (
                       <button type="button" className="gestion-listes__icone gestion-listes__icone--danger" aria-label={`Supprimer ${x.nom}`} title="Supprimer" onClick={() => setASupprimer(x.id)}>
                         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" /></svg>
                       </button>
@@ -114,7 +127,11 @@ function Liste({ cle, titre, seule, reglages }) {
       <p className="espace-aide">
         {types
           ? 'Force et Course existent toujours (on peut les renommer). Supprimer un type ne change pas les séances déjà créées.'
-          : 'Renommer met à jour les fiches de la banque. Supprimer retire seulement le choix de la liste.'}
+          : cle === 'parties'
+            ? 'Les onglets de la banque. Choisissez la partie de chaque catégorie dans la colonne « Catégories ».'
+            : cle === 'categories'
+              ? 'Le menu à droite range la catégorie dans une partie. Renommer met à jour les fiches de la banque.'
+              : 'Renommer met à jour les fiches de la banque. Supprimer retire seulement le choix de la liste.'}
       </p>
     </section>
   )
