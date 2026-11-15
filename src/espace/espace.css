@@ -1399,3 +1399,68 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 }
 @media (prefers-reduced-motion: reduce) { .seance-ligne__chevron { transition: none; } }
 .espace-choix__matos { display: flex; flex-direction: column; gap: 6px; }
+
+/* ========== Éditeur de séance (maquette B de Thomas, 15 novembre 2026) : la banque à gauche, la séance à droite ========== */
+.es2 { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.es2__banque { order: -1; position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; border-radius: 20px; }
+.es2__seance { min-width: 0; }
+.es2__banque .espace-choix { margin: 0; }
+.es2__banque .espace-choix__liste { max-height: 46vh; overflow: auto; }
+.es2__banque .espace-choix__ligne { cursor: grab; }
+.es2__resume { margin: 4px 0 -2px; color: var(--gris-chaud); font-weight: 600; }
+.es2__resume b { color: var(--encre); font-size: 17px; }
+@media (max-width: 1100px) {
+  .es2 { grid-template-columns: minmax(0, 1fr); }
+  .es2__banque { order: 0; position: static; max-height: none; overflow: visible; }
+}
+
+/* bloc : lettre dans un carré noir, nom modifiable, format en pastille */
+.es2-bloc { margin: 14px 0 0; border-radius: 20px; background: rgba(255, 255, 255, .78); border: 1px solid rgba(255, 255, 255, .9); box-shadow: 0 10px 30px rgba(22, 21, 20, .08); overflow: hidden; transition: box-shadow .2s ease, outline-color .2s ease; outline: 2px solid transparent; outline-offset: -2px; }
+.es2-bloc.est-cible { outline-color: rgba(22, 21, 20, .22); }
+.es2-bloc.est-depot, .es2-nouveau.est-depot { outline: 3px dashed #e0b200; outline-offset: -3px; background: rgba(242, 194, 48, .16); }
+.es2-bloc__tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 16px; background: rgba(22, 21, 20, .04); border-bottom: 1px solid var(--filet); }
+.es2-bloc__format { margin: 0; }
+.es2-bloc__format .champ { min-height: 38px; padding-block: 0; width: auto; border-radius: 999px; font-weight: 700; font-size: 14px; }
+.es2-bloc__reglages { padding: 10px 16px 0; }
+.es2-nom { display: flex; align-items: center; gap: 6px; min-width: 0; flex-wrap: wrap; }
+.es2-nom__titre { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 20px; line-height: 1.2; letter-spacing: -.02em; }
+.es2-lettre { width: 30px; height: 30px; border-radius: 9px; background: var(--encre); color: var(--craie); display: inline-grid; place-items: center; font-size: 15px; font-weight: 800; flex: none; }
+.es2-crayon { width: 36px; height: 36px; border: 1px solid transparent; border-radius: 50%; background: none; color: var(--gris-chaud); display: grid; place-items: center; cursor: pointer; }
+.es2-crayon:hover { border-color: var(--filet); background: #fff; color: var(--encre); }
+.es2-nom--edition { display: grid; grid-template-columns: auto 1fr; gap: 8px 10px; align-items: center; }
+.es2-nom__champ { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.es2-nom__champ .champ { min-height: 40px; min-width: 240px; border: 2px solid var(--encre); font-weight: 800; font-size: 18px; }
+.es2-nom__aide { color: var(--gris-chaud); font-size: 13px; font-weight: 600; }
+.es2-idees { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.es2-idees .filtre-coaches { font-size: 13px; }
+
+/* lignes d'exercices : photo, nom, cases séries / reps / charge / repos */
+.es2-bloc, .es2-bloc * { box-sizing: border-box; }
+.es2-bloc[data-format="series"] { --es2-cols: 44px minmax(120px, 1fr) 66px 66px 78px 72px 40px; }
+.es2-bloc[data-format="autre"] { --es2-cols: 44px minmax(120px, 1fr) 76px 78px 40px; }
+.es2-colonnes { display: grid; grid-template-columns: var(--es2-cols); gap: 10px; align-items: center; padding: 8px 16px 0; font: 700 11px/1 var(--font-sans); letter-spacing: .12em; text-transform: uppercase; color: var(--gris-chaud); text-align: center; }
+.es2-lignes { list-style: none; margin: 0; padding: 0; }
+.es2-ligne { border-top: 1px solid rgba(22, 21, 20, .07); }
+.es2-colonnes + .es2-lignes .es2-ligne:first-child { border-top: 0; }
+.es2-ligne__principal { display: grid; grid-template-columns: var(--es2-cols); gap: 10px; align-items: center; padding: 8px 16px; }
+.es2-ligne__nom { margin: 0; font-weight: 700; font-size: 16px; line-height: 1.25; min-width: 0; }
+.es2-ligne__nom small { display: block; color: var(--gris-chaud); font-weight: 500; font-size: 12px; }
+.es2-code { color: var(--vermillon); font-weight: 800; }
+.es2-cellule { width: 100%; height: 42px; padding: 0 6px; text-align: center; border: 1px solid var(--filet); border-radius: 10px; background: #fff; color: var(--encre); font: 800 16px/1 var(--font-sans); }
+.es2-cellule:focus-visible { outline: 2px solid var(--encre); outline-offset: 1px; }
+.es2-cellule::placeholder { color: #b9b4ab; font-weight: 600; }
+.es2-plus { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--filet); background: #fff; color: var(--encre); font: 800 18px/1 var(--font-sans); cursor: pointer; }
+.es2-plus[aria-expanded="true"] { background: var(--encre); color: var(--craie); }
+.es2-ligne__plus { margin: 0 16px 10px 70px; padding: 12px 14px; border-radius: 14px; background: #faf8f3; border: 1px dashed var(--filet); display: grid; gap: 8px; }
+.es2-retirer { justify-self: start; }
+.es2-ajouter { display: flex; align-items: center; gap: 8px; width: calc(100% - 32px); margin: 8px 16px 14px; min-height: 44px; padding: 0 14px; border: 1.5px dashed #bdb7ab; border-radius: 12px; background: rgba(255, 255, 255, .5); color: var(--gris-chaud); font: 600 15px/1 var(--font-sans); cursor: pointer; text-align: left; }
+.es2-ajouter:hover { border-color: var(--encre); color: var(--encre); }
+.es2-nouveau { margin-top: 14px; padding: 16px; border: 2px dashed #bdb7ab; border-radius: 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; color: var(--gris-chaud); font-weight: 600; }
+.es2-nouveau button { min-height: 42px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--filet); background: #fff; color: var(--encre); font: 700 15px/1 var(--font-sans); cursor: pointer; }
+.es2-nouveau.est-cible { border-color: var(--encre); }
+@media (max-width: 720px) {
+  .es2-bloc[data-format="series"] { --es2-cols: 40px minmax(90px, 1fr) 52px 52px 62px 56px 38px; }
+  .es2-bloc[data-format="autre"] { --es2-cols: 40px minmax(90px, 1fr) 60px 62px 38px; }
+  .es2-ligne__principal, .es2-colonnes { gap: 6px; padding-inline: 10px; }
+  .es2-ligne__plus { margin-left: 10px; }
+}

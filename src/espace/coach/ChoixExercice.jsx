@@ -15,9 +15,14 @@ const VIDE = { nom: '', categorie: '', materiel: '', consignes: '' }
 
 // « Ajouter un exercice » (maquette coach) : recherche et catégories dans la banque, choix du bloc,
 // et création d'un nouvel exercice sans quitter la séance (fiche complétée plus tard dans la banque).
-export default function ChoixExercice({ exercices, lettres, ajouter }) {
+// Glisser un exercice depuis la banque vers un bloc (EditeurSeance lit ce type de donnée au dépôt)
+export const TYPE_GLISSE = 'application/x-rimaactive-exercice'
+
+export default function ChoixExercice({ exercices, lettres, ajouter, cible, changerCible, laterale = false }) {
   const prochaine = LETTRES[lettres.length]
-  const [bloc, setBloc] = useState(lettres[lettres.length - 1] ?? 'A')
+  const [blocLocal, setBlocLocal] = useState(lettres[lettres.length - 1] ?? 'A')
+  const bloc = cible ?? blocLocal // l'éditeur de séance peut imposer le bloc (clic sur « Ajouter ici »)
+  const setBloc = changerCible ?? setBlocLocal
   const [recherche, setRecherche] = useState('')
   const [partie, setPartie] = useState('Tout')
   const [categorie, setCategorie] = useState('Toutes')
@@ -56,7 +61,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
   const champ = (cle) => ({ value: nouvel[cle], onChange: (e) => { setNouvel({ ...nouvel, [cle]: e.target.value }); setErreur('') } })
 
   return (
-    <section className="espace-carte espace-choix" aria-labelledby="choix-titre">
+    <section className={`espace-carte espace-choix${laterale ? ' espace-choix--lateral' : ''}`} aria-labelledby="choix-titre">
       <div className="espace-choix__tete">
         <h2 id="choix-titre" className="espace-sous-titre">Ajouter un exercice</h2>
         <div className="champ-groupe espace-choix__bloc">
@@ -95,7 +100,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
       {resultats.length > 0 && (
         <ul className="espace-choix__liste">
           {resultats.map((e) => (
-            <li key={e.id} className="espace-choix__ligne">
+            <li key={e.id} className="espace-choix__ligne" draggable onDragStart={(ev) => { ev.dataTransfer.setData(TYPE_GLISSE, e.id); ev.dataTransfer.effectAllowed = 'copy' }}>
               <PhotoStockee chemin={e.photos?.[0]} alt="" classe="espace-vignette espace-vignette--petite" />
               <span className="espace-choix__nom">
                 <span className="espace-choix__exo">{e.nom}</span>
