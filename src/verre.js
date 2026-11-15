@@ -1,7 +1,7 @@
 // Liquid Glass en mouvement (15 novembre 2026) : le reflet qui suit le doigt ou la souris sur les cartes et la barre,
 // et la barre du haut qui se resserre quand on descend dans la page. Rien ne bouge si l'appareil demande moins d'animation.
 const CARTES = '.entete__barre, .service, .offre, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, ' +
-  '.espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-sexo--carte, .ec-piedbloc, .offres-page__liens, .bascule, .ec-noire, .bandeau-coach, .ec-recap, .ec-recapm'
+  '.espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-sexo--carte, .ec-s2-carte, .offres-page__liens, .bascule, .ec-noire, .bandeau-coach'
 
 export default function initVerre() {
   if (typeof window === 'undefined' || window.__verre) return

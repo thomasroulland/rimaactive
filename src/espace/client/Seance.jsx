@@ -3,14 +3,14 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement } from '../donnees/progression.js'
 import { nomBloc } from '../donnees/programme.js'
-import { allureVitesse, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, secondesRepos } from '../donnees/seances.js'
+import { allureVitesse, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
 import { nouveauxRecords } from '../donnees/records.js'
 import { noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
 import Consignes from './Consignes.jsx'
 import FinDeSeance from './FinDeSeance.jsx'
-import { Etapes, PiedBloc, Recap, RecapMobile, useHautDeBloc } from './SeanceGuidee.jsx'
+import { BandeauBloc, BoutonBloc, ListeBloc, UnExercice, useMobile } from './SeanceGuidee.jsx'
 
 const DELAI = 600 // ms entre la dernière frappe et l'enregistrement
 
@@ -62,7 +62,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const minuterie = useRef(null)
   const enAttente = useRef(carteVide())
   const termine = useRef(false) // « Enregistrer ma séance » déjà envoyé depuis cet écran
-  // séance guidée (15 novembre 2026) : bloc ouvert (le dernier + 1 = fin de séance) et minuteur de repos
+  // séance guidée (15 novembre 2026) : bloc ouvert (le dernier + 1 = fin de séance)
   const [etape, setEtape] = useState(() => {
     const p = programmes.find((x) => x.id === programmeId)
     const sc = listeSeances(p).find((x) => x.seance.id === seanceId)?.seance
@@ -71,8 +71,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const ls = (el) => (f?.series?.[el.id] ? avecFait(f.series[el.id]) : lignesVides(el))
     return premierBlocAFaire(progressionBlocs(sc.blocs, ls, f?.blocs))
   })
-  const [repos, setRepos] = useState(null)
-  const hautDeBloc = useHautDeBloc(etape)
+  const mobile = useMobile() // téléphone : un exercice à la fois ; ordinateur : le bloc en liste
 
   const programme = programmes.find((p) => p.id === programmeId)
   const liste = listeSeances(programme)
@@ -153,12 +152,9 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     minuterie.current = setTimeout(envoyer, DELAI)
   }
   const actions = verrou ? null : {
-    serie: (el, i, cle, v) => {
-      noter('series', el.id, lignes(el).map((l, j) => (j === i ? saisirSerie(l, cle, v, el) : l)))
-      // série cochée « Fait » : le repos prévu par Marie se lance
-      const sec = cle === 'fait' && v ? secondesRepos(el.repos) : null
-      if (sec) setRepos({ debut: Date.now(), secondes: sec, apres: el.nom })
-    },
+    serie: (el, i, cle, v) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? saisirSerie(l, cle, v, el) : l))),
+    // téléphone : « Série faite » prend d'un coup répétitions, charge et RPE saisis
+    serieComplete: (el, i, valeurs) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? serieTerminee(l, valeurs, el) : l))),
     note: (id, v) => noter('notes', id, v),
     chargeSeule: (id, v) => noter('series', id, [{ charge: v, reps: '', rpe: '', fait: v.trim() !== '' }]),
     bloc: (id, cle, v) => noter('blocs', id, { resultat: '', reps: '', rpe: '', fait: false, note: '', ...blocs[id], [cle]: v }),
@@ -188,7 +184,6 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
       }
     }
     terminerSeance(programmeId, seanceId, { ...fin, ...(course ? sortie : {}), series: toutes, notes, blocs }).catch(erreurEnvoi)
-    setRepos(null)
   }
 
   const infos = [
@@ -205,35 +200,30 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const prog = progressionBlocs(listeBlocs, lignes, blocs)
     const surtitre = `Semaine ${semaine} · séance ${numero}`
     const titre = seance.titre || `Séance ${numero}`
-    const recapInfos = [seance.lieu, seance.duree && `${seance.duree} min`, rpeVise && `RPE visé ${rpeVise}`].filter(Boolean)
     const ici = Math.min(etape, nb)
     const aller = (i) => setEtape(Math.max(0, Math.min(nb, i)))
     const bloc = listeBlocs[ici]
     const enSeries = bloc && (bloc.format ?? 'series') === 'series'
-    const nbExos = bloc?.elements?.length ?? 0
     return (
-      <section className="ec-page ec-seance ec-seance--guidee">
+      <section className="ec-page ec-seance ec-seance--v2">
         {retour}
         {refus && <p className="ec-erreur" role="alert">{refus}</p>}
-        <div className="ec-guide">
-          <Recap surtitre={surtitre} titre={titre} infos={recapInfos} progression={prog} blocs={listeBlocs} etape={ici}
-            aller={aller} finir={() => aller(nb)} verrou={verrou} />
-          <div className="ec-guide__principal" ref={hautDeBloc}>
-            <RecapMobile surtitre={surtitre} titre={titre} progression={prog} blocs={listeBlocs} etape={ici} aller={aller} finir={() => aller(nb)} />
-            {nb > 0 && <Etapes nb={nb} etape={ici} progression={prog} />}
+        <div className="ec-s2">
+          <p className="ec-s2-surtitre">{surtitre} · {titre}</p>
+          <div className="ec-s2-principal">
             {bloc ? (
-              <>
-                <div className="ec-guide__tete">
-                  <div>
-                    <span className={`ec-guide__etat${prog.blocs[ici]?.complet ? ' est-fini' : ''}`}>{prog.blocs[ici]?.complet ? 'Bloc fait' : verrou ? 'Bloc' : 'Bloc en cours'}</span>
-                    <h2 className="ec-guide__titre">{nomBloc(bloc)}{enSeries ? '' : ` · ${resumeFormat(bloc)}`}</h2>
-                    <p className="ec-guide__sous">{nbExos} exercice{nbExos > 1 ? 's' : ''}{infos.find((x) => x.picto === 'check-square') ? ` · ${seance.objectif}` : ''}</p>
-                  </div>
-                  <span className="ec-guide__rang">Bloc {ici + 1} sur {nb}</span>
-                </div>
-                <BlocSeries key={bloc.id} bloc={bloc} saisie={{ lignes, notes, blocs }} actions={actions} lecture={verrou} voirConsignes={setFiche} sansTete />
-                <PiedBloc etape={ici} blocs={listeBlocs} aller={aller} depart={verrou ? null : repos} />
-              </>
+              mobile && !verrou && enSeries ? (
+                <UnExercice key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} actions={actions}
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} />
+              ) : (
+                <>
+                  <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />
+                  {enSeries
+                    ? <ListeBloc bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={verrou} voirConsignes={setFiche} />
+                    : <BlocSeries key={bloc.id} bloc={bloc} saisie={{ lignes, notes, blocs }} actions={actions} lecture={verrou} voirConsignes={setFiche} sansTete />}
+                  {!verrou && <BoutonBloc etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]} />}
+                </>
+              )
             ) : (
               <>
                 {nb === 0 && retires.length === 0 && <p className="ec-texte">Marie n’a pas encore ajouté d’exercice à cette séance.</p>}
@@ -256,7 +246,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                 <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={false} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
                   suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />
                 {nb > 0 && (
-                  <button type="button" className="ec-lien ec-guide__revenir" onClick={() => aller(nb - 1)}>← Revenir : {nomBloc(listeBlocs[nb - 1])}</button>
+                  <button type="button" className="ec-lien" onClick={() => aller(nb - 1)}>← Revenir : {nomBloc(listeBlocs[nb - 1])}</button>
                 )}
               </>
             )}

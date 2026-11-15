@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   dateLongue, dateCourte, prescription, resumeFormat, contenuNotes, contenuFin, RESSENTIS, evolutionCharges, statutSeance,
-  texteSerie, detailSeance, exercicesDe, lignesExercice, champsResultat, avecChargeSeule, secondes, allureVitesse, saisirSerie,
+  texteSerie, serieTerminee, detailSeance, exercicesDe, lignesExercice, champsResultat, avecChargeSeule, secondes, allureVitesse, saisirSerie,
 } from '../../src/espace/donnees/seances.js'
 
 const base = { client: 'A', programme: 'P1', seance: 'S1', date: '2026-11-16', majLe: 'T' }
@@ -238,5 +238,23 @@ describe('exercices en durée (gainage)', () => {
   it('écrit la série faite', () => {
     expect(texteSerie({ duree: '45', charge: '', rpe: '' })).toBe('45 s')
     expect(texteSerie({ duree: '1:30', charge: '10', rpe: '' })).toBe('1:30 à 10 kg')
+  })
+})
+
+describe('serieTerminee (un exercice à la fois)', () => {
+  const vide = { charge: '', reps: '', rpe: '', fait: false }
+  const squat = { reps: '10', charge: '16' }
+  it('prend les valeurs saisies et coche la série', () => {
+    expect(serieTerminee(vide, { reps: '8', charge: '20', rpe: '8' }, squat)).toEqual({ charge: '20', reps: '8', rpe: '8', fait: true })
+  })
+  it('une valeur vide reprend le prévu', () => {
+    expect(serieTerminee(vide, { reps: '', charge: ' ' }, squat)).toEqual({ charge: '16', reps: '10', rpe: '', fait: true })
+  })
+  it('range la durée à part des répétitions pour un exercice en durée', () => {
+    const gainage = { reps: '45', charge: '', mesure: 'duree' }
+    expect(serieTerminee({ charge: '', duree: '', rpe: '', fait: false }, { reps: '50' }, gainage)).toEqual({ charge: '', duree: '50', rpe: '', fait: true })
+  })
+  it('garde le RPE déjà noté si aucun nouveau', () => {
+    expect(serieTerminee({ ...vide, rpe: '7' }, {}, squat).rpe).toBe('7')
   })
 })

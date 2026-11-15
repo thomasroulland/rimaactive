@@ -43,28 +43,24 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 
 /* ---------- Cartes : blanc translucide avec un reflet chaud en bas à droite ---------- */
 .service, .question, .methode__principes li, .approche__panneau, .approche__cadre, .formulaire, .ecrans__panneau,
-.ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil {
+.ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-carte, .ec-s2-reglage, .ec-s2-fin__suivant {
   background-color: rgba(255, 255, 255, .72) !important; background-image: linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); border: 1px solid rgba(255, 255, 255, .85) !important; box-shadow: 0 10px 30px rgba(22, 21, 20, .08) !important; }
 .methode__principes li { padding: 18px; border-radius: var(--arrondi); }
 .approche__panneau { border-radius: var(--arrondi); }
 /* éléments noirs : le noir du site, avec un liseré clair */
-.ec-noire, .bandeau-coach, .ec-recap, .ec-recapm, .offre--sombre { background-color: #161514 !important; border: 1px solid rgba(255, 255, 255, .08) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 14px 34px rgba(22, 21, 20, .25) !important; }
+.ec-noire, .bandeau-coach, .ec-s2-bandeau, .offre--sombre { background-color: #161514 !important; border: 1px solid rgba(255, 255, 255, .08) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 14px 34px rgba(22, 21, 20, .25) !important; }
 /* pied de page : noir, arrondi en haut */
 .pied { background: #161514 !important; border-radius: 20px 20px 0 0; }
 .pied--mentions { border-radius: 0; }
-/* séance : la barre du bas (repos + « Bloc suivant ») flotte, en verre */
-.ec-piedbloc { position: sticky; bottom: 16px; z-index: 15; padding: 10px; border-radius: 999px; background: rgba(255, 255, 255, .7); -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou);
-  border: 1px solid rgba(255, 255, 255, .92); box-shadow: inset 0 1px 0 #fff, 0 14px 40px rgba(22, 21, 20, .16); }
-.ec-piedbloc .ec-repos { background: transparent !important; border: 0 !important; box-shadow: none !important; }
 
 /* ---------- Liquid Glass en mouvement ---------- */
 @property --lueur { syntax: '<number>'; inherits: false; initial-value: 0; }
 /* un reflet de verre suit la souris ou le doigt sur les cartes et la barre (position posée par verre.js) */
 .entete__barre, .service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul,
-.espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-piedbloc { transition: --lueur .4s ease, transform .5s var(--doux), box-shadow .4s ease; }
+.espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-gros { transition: --lueur .4s ease, transform .5s var(--doux), box-shadow .4s ease; }
 .entete__barre:hover, .service:hover, .question:hover, .formulaire:hover, .ecrans__panneau:hover, .ec-semaine:hover, .ec-etape:hover, .ec-pcarte:hover, .ec-chiffre:hover, .ec-records:hover,
-.ec-regul:hover, .espace-carte:hover, .ec-histo__carte:hover, .ec-carte:hover, .disc:hover, .carte-coache:hover, .messagerie__fil:hover, .ec-piedbloc:hover { --lueur: 1; }
+.ec-regul:hover, .espace-carte:hover, .ec-histo__carte:hover, .ec-carte:hover, .disc:hover, .carte-coache:hover, .messagerie__fil:hover, .ec-s2-carte:hover { --lueur: 1; }
 .entete__barre { background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .14)), transparent 68%); }
 .service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil {
   background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .85)), transparent 68%), linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important; }
@@ -74,23 +70,23 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
   @keyframes verre-monte { from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
   @keyframes verre-derive { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(3%, -2%, 0) scale(1.07); } 100% { transform: translate3d(-3%, 3%, 0) scale(1.02); } }
   .entete__barre { animation: verre-descend .9s var(--ressort) backwards; } /* « backwards » : une fois finie, plus de filtre sur la barre (sinon la barre du bas du téléphone s'y accroche) */
-  .ec-noire, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .ec-histo__carte, .ec-carte, .espace-carte, .carte-coache, .bandeau-coach, .disc, .messagerie__fil, .ec-recap { animation: verre-monte .75s var(--doux) backwards; }
+  .ec-noire, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .ec-histo__carte, .ec-carte, .espace-carte, .carte-coache, .bandeau-coach, .disc, .messagerie__fil, .ec-s2-bandeau { animation: verre-monte .75s var(--doux) backwards; }
   .carte-coache:nth-child(2), .espace-carte:nth-of-type(2) { animation-delay: .07s; }
   .carte-coache:nth-child(3), .espace-carte:nth-of-type(3) { animation-delay: .14s; }
   .carte-coache:nth-child(n+4) { animation-delay: .2s; }
   .nav--prete .nav__bulle { transition: transform .65s var(--ressort), width .65s var(--ressort), height .4s var(--doux), opacity .3s ease; }
   /* appuyer sur un bouton l'écrase, le relâcher le fait rebondir */
-  .bouton, .ec-bouton, .heros__ecrire, .heros__second, .nav__lien, .entete__compte, .entete__ecrire, .ec-rond, .ecrans__vignette, .ec-piedbloc__suivant, .ec-piedbloc__retour, .offres-page__liens a, .bascule button, .ec-case-fait {
+  .bouton, .ec-bouton, .heros__ecrire, .heros__second, .nav__lien, .entete__compte, .entete__ecrire, .ec-rond, .ecrans__vignette, .offres-page__liens a, .bascule button, .ec-case-fait {
     transition-property: transform, background-color, color, border-color, box-shadow; transition-duration: .5s, .16s, .16s, .16s, .3s; transition-timing-function: var(--ressort), ease, ease, ease, ease; }
   .bouton:active, .ec-bouton:active, .heros__ecrire:active, .heros__second:active, .nav__lien:active, .entete__compte:active, .entete__ecrire:active, .ec-rond:active, .ecrans__vignette:active,
-  .ec-piedbloc__suivant:active, .ec-piedbloc__retour:active, .offres-page__liens a:active, .bascule button:active, .ec-case-fait:active { transform: scale(.94); }
+  .offres-page__liens a:active, .bascule button:active, .ec-case-fait:active { transform: scale(.94); }
   body::before { animation: verre-derive 38s ease-in-out infinite alternate; will-change: transform; }
 }
 /* sans transparence (réglage de l'appareil) ou en contraste renforcé : le verre devient plein */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .entete__barre, .menu-mobile, .nav, .ec-piedbloc, .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .entete__barre, .menu-mobile, .nav, .ec-s2-carte, .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
   .entete__barre, .nav, .menu-mobile { background-color: #161514 !important; }
-  .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-piedbloc { background-color: #fff !important; }
+  .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-carte { background-color: #fff !important; }
 }
 
 /* ---------- Téléphone, espace connecté : capsule fine en haut (logo + compte), pages en barre flottante en bas avec pictogrammes ---------- */
@@ -119,9 +115,6 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
   .entete--rangee .nav__lien[href$="/exercices"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M8%20128h20M228%20128h20M28%2088v80M52%2072v112M204%2072v112M228%2088v80M52%20128h152%27/%3E%3C/svg%3E"); }
   .entete--rangee .nav__lien[href$="/modeles"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2788%27%20y%3D%2740%27%20width%3D%27128%27%20height%3D%27160%27%20rx%3D%2714%27/%3E%3Cpath%20d%3D%27M168%20200v16a14%2014%200%200%201-14%2014H56a14%2014%200%200%201-14-14V84a14%2014%200%200%201%2014-14h16%27/%3E%3C/svg%3E"); }
   main, .ec-main { padding-bottom: 100px; }
-  .ec-piedbloc { bottom: 94px; }
-}
+  }
 
 @media (max-width: 960px) { .entete--rangee .nav__bulle { display: none; } .entete--rangee .nav__lien { transition: background-color .25s ease, color .25s ease; } }
-/* téléphone : la phrase « Cochez Fait… » se cache tant que le minuteur n'est pas lancé, pour que la barre « Bloc suivant » reste fine */
-@media (max-width: 640px) { .ec-piedbloc .ec-repos:not(.est-actif) { display: none; } }

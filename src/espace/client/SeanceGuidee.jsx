@@ -1,168 +1,276 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
-import { minutesSecondes, resumeFormat } from '../donnees/seances.js'
 import { nomBloc } from '../donnees/programme.js'
+import { enDuree, fr, lignesExercice, texteDuree } from '../donnees/seances.js'
+import { ChoixRpe } from './BlocResultat.jsx'
 
-// Page séance guidée bloc par bloc (15 novembre 2026, maquette D validée par Thomas) :
-// récapitulatif à gauche (Récap), étapes, minuteur de repos et navigation entre blocs (PiedBloc).
+// Séance du coaché, version simple (15 novembre 2026, choix de Thomas) :
+// - téléphone : un exercice à la fois, un seul gros bouton « Série faite » (UnExercice) ;
+// - ordinateur : tout le bloc en liste, avec un bandeau noir en haut (BandeauBloc + ListeBloc).
+// Plus de minuteur ni de temps de repos : le repos reste une indication de Marie dans son programme, il n'est plus affiché ici.
 
-// Anneau de progression (pourcentage au centre)
-export function Anneau({ pct, taille = 64 }) {
+// Téléphone ou ordinateur : même seuil que les autres écrans de l'espace
+export function useMobile() {
+  const requete = '(max-width: 899px)'
+  const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia(requete).matches)
+  useEffect(() => {
+    const m = window.matchMedia(requete)
+    const maj = () => setMobile(m.matches)
+    m.addEventListener?.('change', maj)
+    return () => m.removeEventListener?.('change', maj)
+  }, [])
+  return mobile
+}
+
+const Coche = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+)
+const Image = () => (
+  <svg viewBox="0 0 256 256" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="40" y="48" width="176" height="160" rx="16" /><circle cx="96" cy="100" r="16" /><path d="M40 176l56-56 40 40 32-32 48 48" /></svg>
+)
+
+const nombre = (v) => parseFloat(String(v ?? '').replace(',', '.'))
+const texte = (n) => String(Math.round(n * 100) / 100).replace('.', ',')
+
+// Gros bouton unique de la page
+export function Gros({ children, onClick, discret = false, desactive = false }) {
+  return <button type="button" className={`ec-s2-gros${discret ? ' est-discret' : ''}`} onClick={onClick} disabled={desactive}>{children}</button>
+}
+
+// ---------- Ordinateur ----------
+
+// Bandeau noir : séance, nom du bloc, avancement, et les blocs en pastilles pour changer de bloc
+export function BandeauBloc({ surtitre, bloc, prog, etape, blocs, aller, finir, verrou }) {
+  const p = prog.blocs[etape]
+  const pct = p?.total ? Math.round((p.faites / p.total) * 100) : 0
   return (
-    <span className="ec-anneau" style={{ '--pct': `${pct}%`, width: taille, height: taille }} aria-hidden="true">
-      <span className="ec-anneau__centre">{pct}%</span>
-    </span>
+    <header className="ec-s2-bandeau">
+      <div className="ec-s2-bandeau__texte">
+        <small>{surtitre}</small>
+        <b>{nomBloc(bloc)}</b>
+        <div className="ec-s2-barre" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label="Avancement du bloc"><i style={{ width: `${pct}%` }} /></div>
+      </div>
+      <span className="ec-s2-bandeau__compte" aria-label={`${p?.faites ?? 0} sur ${p?.total ?? 0}`}>{p?.faites ?? 0}/{p?.total ?? 0}</span>
+      <nav className="ec-s2-plan" aria-label="Blocs de la séance">
+        {blocs.map((b, i) => (
+          <button key={b.id} type="button" className={`ec-s2-pastille${i === etape ? ' est-actif' : prog.blocs[i]?.complet ? ' est-fini' : ''}`} aria-current={i === etape ? 'step' : undefined}
+            aria-label={`${nomBloc(b)}${prog.blocs[i]?.complet ? ', fait' : ''}`} title={nomBloc(b)} onClick={() => aller(i)}>
+            {prog.blocs[i]?.complet && i !== etape ? '✓' : b.lettre}
+          </button>
+        ))}
+        <button type="button" className="ec-s2-pastille ec-s2-pastille--fin" onClick={finir}>{verrou ? 'Bilan' : 'Fin'}</button>
+      </nav>
+    </header>
   )
 }
 
-// Récapitulatif (ordinateur) : séance, progression, plan des blocs cliquable, « Terminer ma séance »
-export function Recap({ surtitre, titre, infos, progression, blocs, etape, aller, finir, verrou }) {
-  const pct = progression.total ? Math.round((progression.faites / progression.total) * 100) : 0
-  const nb = blocs.length
+// Un exercice : photo, nom, prévu, puis une ligne par série (rond à toucher pour cocher, valeurs modifiables)
+function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif }) {
+  const [detail, setDetail] = useState(false)
+  const duree = enDuree(el)
+  const cle = duree ? 'duree' : 'reps'
+  const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
+  const enCours = lecture || !actif ? -1 : ls.findIndex((l) => !l.fait) // une seule série encadrée à la fois : la première pas faite du bloc
+  const base = `ex-${el.id}`
   return (
-    <aside className="ec-recap" aria-label="Récapitulatif de la séance">
-      <div>
-        <p className="ec-recap__surtitre">{surtitre}</p>
-        <h1 className="ec-recap__titre">{titre}</h1>
+    <li className="ec-s2-carte" aria-labelledby={`${base}-nom`}>
+      <div className="ec-s2-carte__tete">
+        <button type="button" className="ec-s2-vignette" onClick={voirConsignes} aria-label={`Voir les photos et consignes : ${el.nom}`}>
+          {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-vignette__img" /> : <Image />}
+        </button>
+        <div>
+          <h3 id={`${base}-nom`} className="ec-s2-carte__nom"><span className="ec-s2-code" aria-hidden="true">{code}</span> {el.nom}</h3>
+          {prevu && <p className="ec-s2-carte__prevu">Prévu : {prevu}</p>}
+        </div>
+        {!lecture && <button type="button" className="ec-s2-plus" aria-expanded={detail} onClick={() => setDetail((d) => !d)}>{detail ? '− Masquer' : '＋ Note ou effort'}</button>}
       </div>
-      <div className="ec-recap__avance">
-        <Anneau pct={pct} />
-        <p className="ec-recap__texte">
-          {progression.faites} {progression.faites > 1 ? 'séries faites' : 'série faite'} sur {progression.total}
-          {infos.length > 0 && <><br />{infos.join(' · ')}</>}
-        </p>
-      </div>
-      <ol className="ec-recap__plan">
-        {blocs.map((b, i) => {
-          const p = progression.blocs[i]
-          const etat = i === etape ? 'est-actif' : p?.complet ? 'est-fini' : ''
-          return (
-            <li key={b.id}>
-              <button type="button" className={`ec-recap__bloc ${etat}`} aria-current={i === etape ? 'step' : undefined} onClick={() => aller(i)}>
-                <span className="ec-recap__ligne">
-                  <span className="ec-recap__lettre" aria-hidden="true">{p?.complet && i !== etape ? '✓' : b.lettre}</span>
-                  <span className="ec-recap__nom">{nomBloc(b)}{(b.format ?? 'series') !== 'series' ? ` · ${resumeFormat(b)}` : ''}</span>
-                  <span className="ec-recap__compte">{p?.faites ?? 0}/{p?.total ?? 0}</span>
-                </span>
-                <span className="ec-recap__exos">
-                  {(b.elements ?? []).map((el) => <span key={el.id}>{el.nom}</span>)}
-                </span>
-              </button>
-            </li>
-          )
-        })}
-      </ol>
-      <button type="button" className={`ec-bouton ec-recap__fin${etape === nb ? ' est-actif' : ''}`} onClick={finir}>
-        {verrou ? 'Mon bilan de séance' : 'Terminer ma séance'}
-      </button>
-    </aside>
-  )
-}
-
-// Récapitulatif (téléphone) : bande noire en haut, pastilles des blocs
-export function RecapMobile({ surtitre, titre, progression, blocs, etape, aller, finir }) {
-  const pct = progression.total ? Math.round((progression.faites / progression.total) * 100) : 0
-  return (
-    <div className="ec-recapm">
-      <div className="ec-recapm__haut">
-        <Anneau pct={pct} taille={52} />
-        <div className="ec-recapm__titres"><p className="ec-recap__surtitre">{surtitre}</p><p className="ec-recapm__titre">{titre}</p></div>
-      </div>
-      <div className="ec-recapm__pastilles" role="group" aria-label="Blocs de la séance">
-        {blocs.map((b, i) => {
-          const p = progression.blocs[i]
-          return (
-            <button key={b.id} type="button" className={`ec-recapm__pastille${i === etape ? ' est-actif' : p?.complet ? ' est-fini' : ''}`}
-              aria-current={i === etape ? 'step' : undefined} aria-label={`${nomBloc(b)}${b.nom ? ` (bloc ${b.lettre})` : ''}${p?.complet ? ', fait' : ''}`} onClick={() => aller(i)}>
-              {b.lettre}{p?.complet ? ' ✓' : ''}
+      <div className="ec-s2-series">
+        {ls.map((l, i) => (
+          <div key={i} className={`ec-s2-ligne${l.fait ? ' est-faite' : ''}${i === enCours ? ' est-en-cours' : ''}`} role="group" aria-label={`${el.nom}, série ${i + 1}`}>
+            <button type="button" className="ec-s2-rond" aria-pressed={!!l.fait} aria-label={`Série ${i + 1}, ${l.fait ? 'faite' : 'à faire'}`} disabled={lecture} onClick={() => actions?.serie(el, i, 'fait', !l.fait)}>
+              {l.fait ? <Coche /> : i + 1}
             </button>
-          )
-        })}
-        <button type="button" className={`ec-recapm__pastille ec-recapm__pastille--fin${etape === blocs.length ? ' est-actif' : ''}`} onClick={finir}>Fin</button>
+            <span className="ec-s2-ligne__nom">Série {i + 1}</span>
+            <span className="ec-s2-val">
+              <input className="ec-s2-champ" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
+                value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : String(el.reps ?? '')} readOnly={lecture} onChange={(e) => actions?.serie(el, i, cle, e.target.value)} />
+              <span aria-hidden="true">×</span>
+              <input className="ec-s2-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos`}
+                value={l.charge ?? ''} placeholder={fr(el.charge ?? '')} readOnly={lecture} onChange={(e) => actions?.serie(el, i, 'charge', e.target.value)} />
+              <span className="ec-s2-unite">kg</span>
+            </span>
+            {(detail || lecture) && (
+              <span className="ec-s2-rpe"><ChoixRpe id={`${base}-rpe${i}`} libelle={`${el.nom}, série ${i + 1}, RPE`} valeur={l.rpe} lecture={lecture} changer={(v) => actions?.serie(el, i, 'rpe', v)} /></span>
+            )}
+          </div>
+        ))}
+      </div>
+      {(detail || (lecture && note)) && (
+        <div className="ec-s2-note">
+          <label className="ec-etiquette" htmlFor={`${base}-note`}>Note</label>
+          <input id={`${base}-note`} className="ec-champ" type="text" autoComplete="off" value={note} readOnly={lecture} placeholder={lecture ? '' : 'Ex. dernière rep difficile'} onChange={(e) => actions?.note(el.id, e.target.value)} />
+        </div>
+      )}
+    </li>
+  )
+}
+
+// Tout le bloc d'un coup (ordinateur)
+export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes }) {
+  const els = bloc.elements ?? []
+  const premier = els.findIndex((e) => lignes(e).some((l) => !l.fait))
+  return (
+    <ol className="ec-s2-liste">
+      {els.map((el, i) => (
+        <CarteExo key={el.id} el={el} code={`${bloc.lettre}${i + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture} actif={i === premier} voirConsignes={() => voirConsignes(el)} />
+      ))}
+    </ol>
+  )
+}
+
+// ---------- Téléphone : un exercice à la fois ----------
+
+function Reglage({ libelle, valeur, pas, changer, mode }) {
+  const n = nombre(valeur)
+  const bouger = (sens) => changer(texte(Math.max(0, (Number.isNaN(n) ? 0 : n) + sens * pas)))
+  return (
+    <div className="ec-s2-reglage">
+      <span className="ec-s2-reglage__lib">{libelle}</span>
+      <div className="ec-s2-reglage__ligne">
+        <button type="button" aria-label={`Moins, ${libelle}`} onClick={() => bouger(-1)}>−</button>
+        <input type="text" inputMode={mode} autoComplete="off" aria-label={libelle} value={valeur} onChange={(e) => changer(e.target.value)} />
+        <button type="button" aria-label={`Plus, ${libelle}`} onClick={() => bouger(1)}>＋</button>
       </div>
     </div>
   )
 }
 
-// Étapes : une barre par bloc, puis la fin
-export function Etapes({ nb, etape, progression }) {
-  return (
-    <div className="ec-etapes" aria-hidden="true">
-      {Array.from({ length: nb + 1 }, (_, i) => (
-        <span key={i} className={i === etape ? 'est-actif' : (i < nb ? progression.blocs[i]?.complet : false) ? 'est-fini' : ''} />
-      ))}
-    </div>
-  )
-}
+export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, voirConsignes, aller, finir }) {
+  const els = bloc.elements ?? []
+  const [exo, setExo] = useState(() => Math.max(0, els.findIndex((e) => lignes(e).some((l) => !l.fait))))
+  const [choisie, setChoisie] = useState(null)
+  const [brouillon, setBrouillon] = useState(null)
+  const [fin, setFin] = useState(false)
+  const [plan, setPlan] = useState(false)
+  const [detail, setDetail] = useState(false)
+  const nb = blocs.length
+  const dernier = etape >= nb - 1
 
-// Minuteur de repos : démarre quand une série est cochée « Fait » (repos prévu par Marie) ; « Passer » l'arrête
-export function Repos({ depart }) {
-  const [maintenant, setMaintenant] = useState(() => Date.now())
-  const [passe, setPasse] = useState(null)
-  useEffect(() => {
-    if (!depart) return undefined
-    const t = setInterval(() => setMaintenant(Date.now()), 250)
-    return () => clearInterval(t)
-  }, [depart])
-  const actif = depart && passe !== depart.debut && maintenant < depart.debut + depart.secondes * 1000
-  const reste = actif ? (depart.debut + depart.secondes * 1000 - maintenant) / 1000 : 0
+  if (els.length === 0) return <p className="ec-texte">Ce bloc n’a pas encore d’exercice.</p>
+
+  if (fin) {
+    const p = prog.blocs[etape]
+    const suivant = blocs[etape + 1]
+    return (
+      <div className="ec-s2-fin">
+        <span className="ec-s2-fin__ok" aria-hidden="true"><Coche /></span>
+        <h2>{nomBloc(bloc)} terminé</h2>
+        <p>{els.length} exercice{els.length > 1 ? 's' : ''} · {p?.faites ?? 0} série{(p?.faites ?? 0) > 1 ? 's' : ''}</p>
+        {suivant && (
+          <div className="ec-s2-fin__suivant"><small>Bloc suivant</small><b>{nomBloc(suivant)}</b><span>{(suivant.elements ?? []).map((e) => e.nom).join(', ')}</span></div>
+        )}
+        <Gros onClick={() => (dernier ? finir() : aller(etape + 1))}>{dernier ? 'Terminer la séance →' : `Commencer : ${nomBloc(suivant)} →`}</Gros>
+        <button type="button" className="ec-lien" onClick={() => setFin(false)}>← Revoir ce bloc</button>
+      </div>
+    )
+  }
+
+  const el = els[Math.min(exo, els.length - 1)]
+  const ls = lignes(el)
+  const cle = enDuree(el) ? 'duree' : 'reps'
+  const premiere = ls.findIndex((l) => !l.fait)
+  const cur = choisie ?? premiere
+  const ligne = cur >= 0 ? ls[cur] : null
+  const repsV = brouillon?.reps ?? (ligne?.[cle] || String(el.reps ?? ''))
+  const chargeV = brouillon?.charge ?? (ligne?.charge || String(el.charge ?? ''))
+  const rpeV = brouillon?.rpe ?? (ligne?.rpe ?? '')
+  const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
+  const exoFait = (e) => lignes(e).every((l) => l.fait)
+  const prochaineExo = (apres) => els.findIndex((e, k) => k !== apres && !exoFait(e))
+
+  const allerExo = (k) => { setExo(k); setChoisie(null); setBrouillon(null); setDetail(false) }
+  const suite = () => { const k = prochaineExo(exo); if (k >= 0) allerExo(k); else setFin(true) }
+  const faite = () => {
+    actions.serieComplete(el, cur, { reps: repsV, charge: chargeV, rpe: rpeV })
+    setBrouillon(null); setChoisie(null)
+    if (!ls.some((l, i) => i !== cur && !l.fait)) {
+      const k = els.findIndex((e, j) => j !== exo && !exoFait(e))
+      if (k >= 0) allerExo(k); else setFin(true)
+    }
+  }
+  const maj = (champ) => (v) => setBrouillon((b) => ({ ...(b ?? {}), [champ]: v }))
+
   return (
-    <div className={`ec-repos${actif ? ' est-actif' : ''}`} role="timer" aria-live="off">
-      {actif ? (
+    <div className="ec-s2-un">
+      <div className="ec-s2-un__haut">
+        <div className="ec-s2-seg" role="group" aria-label="Exercices du bloc">
+          {els.map((e, k) => (
+            <button key={e.id} type="button" className={`${k === exo ? 'est-actif' : exoFait(e) ? 'est-fini' : ''}`} aria-current={k === exo ? 'step' : undefined}
+              aria-label={`Exercice ${k + 1} : ${e.nom}${exoFait(e) ? ', fait' : ''}`} onClick={() => allerExo(k)} />
+          ))}
+        </div>
+        <div className="ec-s2-un__compte">
+          <span>Exercice {exo + 1} sur {els.length} · {nomBloc(bloc)}</span>
+          <button type="button" aria-expanded={plan} onClick={() => setPlan((p) => !p)}>{plan ? 'Fermer' : 'Plan'}</button>
+        </div>
+        {plan && (
+          <ul className="ec-s2-planliste">
+            {blocs.map((b, i) => (
+              <li key={b.id}><button type="button" className={i === etape ? 'est-actif' : ''} onClick={() => aller(i)}>
+                <span>{nomBloc(b)}</span><span>{prog.blocs[i]?.faites ?? 0}/{prog.blocs[i]?.total ?? 0}</span></button></li>
+            ))}
+            <li><button type="button" onClick={finir}><span>Fin de séance</span></button></li>
+          </ul>
+        )}
+      </div>
+
+      <button type="button" className="ec-s2-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
+        {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-photo__img" /> : <Image />}
+        <span>Voir les consignes</span>
+      </button>
+      <h2 className="ec-s2-un__nom">{el.nom}</h2>
+      {prevu && <p className="ec-s2-un__prevu">Prévu : {prevu}</p>}
+
+      {cur >= 0 ? (
         <>
-          <b className="ec-repos__temps">{minutesSecondes(reste)}</b>
-          <span className="ec-repos__texte">Repos{depart.apres ? ` · ${depart.apres}` : ''}</span>
-          <span className="ec-repos__jauge"><i style={{ width: `${100 - (reste / depart.secondes) * 100}%` }} /></span>
-          <button type="button" className="ec-repos__passer" onClick={() => setPasse(depart.debut)}>Passer</button>
+          <p className="ec-s2-un__serie">Série {cur + 1} sur {ls.length}</p>
+          <div className="ec-s2-reglages">
+            <Reglage libelle={cle === 'duree' ? 'Durée' : 'Répétitions'} valeur={repsV} pas={cle === 'duree' ? 5 : 1} mode={cle === 'duree' ? 'text' : 'numeric'} changer={maj('reps')} />
+            <Reglage libelle="Charge · kg" valeur={chargeV} pas={2.5} mode="decimal" changer={maj('charge')} />
+          </div>
         </>
-      ) : (
-        <>
-          <span className="ec-repos__icone" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2.5 2M9 2h6" /></svg>
-          </span>
-          <span className="ec-repos__texte">Cochez « Fait » : le repos se lance tout seul.</span>
-        </>
+      ) : <p className="ec-s2-un__serie est-fini">Toutes les séries sont faites</p>}
+
+      <div className="ec-s2-chips" role="group" aria-label="Séries">
+        {ls.map((l, i) => (
+          <button key={i} type="button" className={`${l.fait ? 'est-faite' : ''}${i === cur ? ' est-en-cours' : ''}`} aria-label={`Série ${i + 1}${l.fait ? ', faite' : ''}`}
+            onClick={() => { setChoisie(i); setBrouillon(null) }}>{l.fait ? '✓ ' : ''}{i + 1}</button>
+        ))}
+      </div>
+
+      <button type="button" className="ec-s2-lien" aria-expanded={detail} onClick={() => setDetail((d) => !d)}>{detail ? '− Masquer' : '＋ Note ou effort (RPE)'}</button>
+      {detail && (
+        <div className="ec-s2-detail">
+          {cur >= 0 && (
+            <div>
+              <label className="ec-etiquette" htmlFor={`rpe-${el.id}`}>Effort ressenti (RPE) de cette série</label>
+              <ChoixRpe id={`rpe-${el.id}`} libelle="RPE" valeur={rpeV} classe="ec-champ" changer={maj('rpe')} />
+            </div>
+          )}
+          <div>
+            <label className="ec-etiquette" htmlFor={`note-${el.id}`}>Note sur l’exercice</label>
+            <input id={`note-${el.id}`} className="ec-champ" type="text" autoComplete="off" value={notes[el.id] ?? ''} placeholder="Ex. dernière rep difficile" onChange={(e) => actions.note(el.id, e.target.value)} />
+          </div>
+        </div>
       )}
+
+      <Gros onClick={cur >= 0 ? faite : suite}>{cur >= 0 ? 'Série faite ✓' : 'Exercice suivant →'}</Gros>
     </div>
   )
 }
 
-// Navigation : retour rond, carte « Bloc suivant » (photo du premier exercice) ou « Fin de séance »
-export function PiedBloc({ etape, blocs, aller, depart }) {
-  const suivant = blocs[etape + 1]
-  const photo = suivant?.elements?.[0]?.photos?.[0]
-  return (
-    <div className="ec-piedbloc">
-      <Repos depart={depart} />
-      <button type="button" className="ec-piedbloc__retour" onClick={() => aller(etape - 1)} disabled={etape === 0}
-        aria-label={etape > 0 ? `Revenir : ${nomBloc(blocs[etape - 1])}` : 'Pas de bloc précédent'}>
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
-      </button>
-      <button type="button" className="ec-piedbloc__suivant" onClick={() => aller(etape + 1)}>
-        <span className="ec-piedbloc__vignette">
-          {suivant ? (photo ? <PhotoStockee chemin={photo} alt="" classe="ec-piedbloc__img" /> : <span className="ec-piedbloc__lettre">{suivant.lettre}</span>)
-            : <span className="ec-piedbloc__lettre">✓</span>}
-        </span>
-        <span className="ec-piedbloc__textes">
-          <small>{suivant ? 'Bloc suivant' : 'Dernier bloc'}</small>
-          <b>{suivant ? `${suivant.lettre} · ${suivant.nom?.trim() || (suivant.elements ?? []).map((e) => e.nom).join(', ') || 'Bloc ' + suivant.lettre}` : 'Fin de séance'}</b>
-        </span>
-        <span className="ec-piedbloc__fleche" aria-hidden="true">→</span>
-      </button>
-    </div>
-  )
-}
-
-// Garde la page en haut du bloc quand on change d'étape
-export function useHautDeBloc(etape) {
-  const ref = useRef(null)
-  const premier = useRef(true)
-  useEffect(() => {
-    if (premier.current) { premier.current = false; return }
-    const el = ref.current
-    if (!el) return
-    const haut = el.getBoundingClientRect().top
-    if (haut < 0 || haut > window.innerHeight * 0.6) el.scrollIntoView({ behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
-  }, [etape])
-  return ref
+// Bloc qui n'est pas en séries (EMOM, AMRAP…) sur téléphone : on garde son écran, avec un seul bouton pour continuer
+export function BoutonBloc({ etape, nb, aller, finir, suivant }) {
+  const dernier = etape >= nb - 1
+  return <Gros onClick={() => (dernier ? finir() : aller(etape + 1))}>{dernier ? 'Terminer la séance →' : `Bloc suivant : ${nomBloc(suivant)} →`}</Gros>
 }

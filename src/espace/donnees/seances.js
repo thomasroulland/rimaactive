@@ -286,6 +286,21 @@ export function saisirSerie(ligne, cle, valeur, element) {
   return out
 }
 
+// « Série faite » de l'écran un-exercice-à-la-fois (téléphone) : la série prend d'un coup les valeurs saisies (répétitions ou durée,
+// charge, RPE) et est cochée. Une valeur laissée vide reprend ce que Marie a prévu.
+export function serieTerminee(ligne, valeurs, element) {
+  const cle = enDuree(element) ? 'duree' : 'reps'
+  const prevu = { reps: rempli(element?.reps) ? String(element.reps) : '', charge: rempli(element?.charge) ? String(element.charge) : '' }
+  const choisi = (v, p) => (rempli(v) ? String(v).trim() : p)
+  return {
+    ...ligne,
+    charge: choisi(valeurs?.charge, prevu.charge),
+    [cle]: choisi(valeurs?.reps, prevu.reps),
+    rpe: rempli(valeurs?.rpe) ? String(valeurs.rpe).trim() : (ligne?.rpe ?? ''),
+    fait: true,
+  }
+}
+
 // ---------- Séance guidée bloc par bloc (15 novembre 2026) ----------
 
 // Avancement de chaque bloc : séries cochées « Fait » (blocs en séries) ou « Bloc fait » (EMOM, AMRAP…).
