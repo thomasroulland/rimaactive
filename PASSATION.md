@@ -455,3 +455,17 @@ Après essai en ligne de l'agrandissement puis de la version sans agrandissement
 pas d'agrandissement, logo dans la largeur du contenu (1240 px centrés), hauteur d'un écran limitée à 880 px (bande craie sous le
 haut de page sur les grands écrans : acceptée). **Seule la phrase du haut de l'accueil reste plus grande** (13 px au lieu de 11).
 Les deux sections précédentes (barre d'un bord à l'autre, `--ecran: 100svh`, agrandissement) sont donc annulées. Ne pas les reproposer.
+
+## Ma progression et « prévu / fait » du coach (15 novembre 2026, en ligne, accord écrit : « ok », « mets sur main »)
+- **Ma progression** (coaché) : « Mes records » en carte blanche comme les chiffres clés (le fond jaune reste seulement sur l'écran de
+  fin de séance) ; « Mes charges » utilise le graphique du coach (`Courbe` de `coach/FicheClient.jsx` : courbe, bulle au survol, au
+  doigt et au clavier), 8 séances au plus. La donnée reste la **meilleure charge par séance** (pas le tonnage).
+- **Coach, Vue d'ensemble d'un coaché** : liste « Dernières séances » (5, puis « Voir les séances plus anciennes »). Une ligne par
+  séance (`SeanceFaite`) : rond noir coché ou rond vermillon avec le nombre d'exercices à regarder, verdict en une phrase ; en ouvrant,
+  seulement les écarts (`Ecarts`), « Tout voir » pour chaque exercice, puis commentaire du coaché et réponse. La plus récente s'ouvre
+  seule s'il y a un écart ou une douleur. Même verdict et mêmes écarts dans la fenêtre d'un jour du calendrier (« Historique »).
+- **Calcul** : `src/espace/donnees/ecarts.js` (`comparerSeance`), tests `tests/donnees/ecarts.test.js`. « À regarder » = séries
+  manquantes, répétitions en moins, charge plus basse, exercice pas fait ; plus lourd que prévu = bonne nouvelle. Répétitions en durée
+  (« 45 s ») non comparées ; blocs EMOM / AMRAP / TABATA / HIIT : une ligne par bloc d'après « Mon résultat ».
+- **Vérifié** : `npm test` (161), `npm run test:fuseaux`, `npm run test:vercel`, `npm run build`. Captures faites avec des données
+  d'essai sur les vrais composants ; la fenêtre du calendrier et la page entière du coach n'ont pas été capturées avec un vrai compte.
