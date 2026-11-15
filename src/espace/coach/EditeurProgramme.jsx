@@ -2,21 +2,20 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
   ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
-  ecouterModele, enregistrerModele,
+  ecouterModele, enregistrerModele, nouvelIdProgramme,
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
-  garderSeancesFaites, ordreProgrammes, rafraichirExercices,
+  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance,
 } from '../donnees/programme.js'
-import { ajoutJours, aujourdhuiIso, dateLongue } from '../donnees/calculs.js'
-import { dateCourte } from '../donnees/seances.js'
+import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { nomType } from '../donnees/reglages.js'
 import useReglages from './useReglages.js'
 import GestionListes from './GestionListes.jsx'
-import { lignesExercice } from '../donnees/seances.js'
 import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import { messageErreur } from '../erreurs.js'
-import CreationProgramme, { ChoixDebut } from './CreationProgramme.jsx'
+import { ChoixDebut } from './CreationProgramme.jsx'
+import GrilleProgramme from './GrilleProgramme.jsx'
 import EditeurSeance from './EditeurSeance.jsx'
 import PhotoStockee from './PhotoStockee.jsx'
 import Confirmation from './Confirmation.jsx'
@@ -49,6 +48,7 @@ export default function EditeurProgramme() {
   const [verrous, setVerrous] = useState(null) // null : pas encore vérifié, tout reste verrouillé
   const [erreurVerrous, setErreurVerrous] = useState('')
   const [message, setMessage] = useState('')
+  const [annulable, setAnnulable] = useState(null) // dernier déplacement ou duplication de séance : { texte, avant }
   const [banqueMaj, setBanqueMaj] = useState(false) // photos et consignes repris de la banque : à enregistrer pour que le coaché les voie
   useEffect(() => { if (!modifie) setBanqueMaj(false) }, [modifie])
   const [erreur, setErreur] = useState('')
@@ -123,6 +123,14 @@ export default function EditeurProgramme() {
     if (serveur) setProg((p) => (p && p.id === serveur.id && p.statut !== serveur.statut ? { ...p, statut: serveur.statut } : p))
   }, [programmes, progId])
 
+  // Enregistrement automatique (15 novembre 2026) : seulement tant que le programme est un brouillon, que le coaché ne voit pas.
+  // Un programme publié est vu en direct : il garde son bouton « Enregistrer les modifications ».
+  useEffect(() => {
+    if (!modifie || modele || !prog || prog.statut === 'publié' || envoi || erreur || verrous === null || !prog.nom.trim()) return undefined
+    const t = setTimeout(() => enregistrer(false, true), 1500)
+    return () => clearTimeout(t)
+  }, [prog, modifie, envoi, erreur, verrous]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Avertit avant de quitter la page avec des modifications non enregistrées
   useEffect(() => {
     if (!modifie) return undefined
@@ -145,6 +153,7 @@ export default function EditeurProgramme() {
     setProg((p) => fn(p))
     setModifie(true)
     setMessage('')
+    setAnnulable(null)
   }
   const muter = (fn) => changer((p) => { const c = structuredClone(p); fn(c); return c })
 
@@ -161,6 +170,21 @@ export default function EditeurProgramme() {
   useGardeSortie(modifie, (continuer) => demander({ ...QUITTER, action: continuer }))
   const estVerrou = (id) => verrous === null || verrous.has(id)
 
+  // « Nouveau programme » : plus de formulaire. Un brouillon (4 semaines de 3 séances, à partir du lundi suivant) s'ouvre aussitôt dans la grille ;
+  // le nom, la durée et la date se changent là, sans repasser par un écran de réglages.
+  const creationLancee = useRef(false)
+  async function creerDirect() {
+    try {
+      await creer({ id: nouvelIdProgramme(), nom: 'Nouveau programme', semaines: 4, parSemaine: 3, debut: ajoutJours(lundiDe(aujourdhuiIso()), 7) })
+    } catch (e) { setErreur(e.message) }
+  }
+  useEffect(() => {
+    if (!creation || modele || !client || creationLancee.current) return
+    creationLancee.current = true
+    creerDirect()
+  }, [creation, client]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!creation) creationLancee.current = false }, [creation])
+
   async function creer({ id, nom, semaines, parSemaine, debut }) {
     setEnvoi(true); setErreur('')
     const p = { id, ...nouveauProgramme({ client: uid, nom, debut, semaines, parSemaine }) }
@@ -176,12 +200,12 @@ export default function EditeurProgramme() {
     setMessage('Programme créé en brouillon : remplissez les séances, puis publiez-le.')
   }
 
-  async function enregistrer(publier) {
+  async function enregistrer(publier, silencieux = false) {
     if (!prog.nom.trim()) { setErreur('Donnez un nom au programme avant d’enregistrer.'); return }
     if (verrous === null) { setErreur('Vérification des séances déjà faites en cours : réessayez dans un instant.'); return }
     const v = version.current
     const etaitPublie = prog.statut === 'publié'
-    setEnvoi(true); setErreur(''); setMessage('')
+    setEnvoi(true); setErreur(''); if (!silencieux) setMessage('')
     try {
       if (modele) {
         await enregistrerModele(rafraichirExercices(prog, exercices))
@@ -200,7 +224,7 @@ export default function EditeurProgramme() {
         setProg((p) => ({ ...p, statut: 'publié' }))
       }
       if (version.current === v) setModifie(false)
-      setMessage(publier
+      if (!silencieux) setMessage(publier
         ? `Programme publié : ${client?.prenom ?? 'votre coaché'} le voit dans son espace.`
         : etaitPublie ? 'Modifications enregistrées : votre coaché voit la nouvelle version.' : 'Brouillon enregistré.')
     } catch (e) {
@@ -210,8 +234,7 @@ export default function EditeurProgramme() {
   }
 
   // ---------- Semaines ----------
-  function dupliquer() {
-    const i = semIdx
+  function dupliquer(i = semIdx) {
     const suivante = prog.semaines[i + 1]
     if (!suivante && nbSem >= MAX_SEMAINES) { setErreur(`Un programme compte ${MAX_SEMAINES} semaines au plus.`); return }
     if (verrous === null) { setErreur('Vérification des séances déjà faites en cours : réessayez dans un instant.'); return }
@@ -239,41 +262,63 @@ export default function EditeurProgramme() {
     if (nbSem >= MAX_SEMAINES) { setErreur(`Un programme compte ${MAX_SEMAINES} semaines au plus.`); return }
     setErreur('')
     muter((p) => { p.semaines.push(nouvelleSemaine(p.parSemaine)) })
-    aller({ semaine: nbSem + 1 }, true)
     setMessage(`Semaine S${nbSem + 1} ajoutée.`)
   }
 
-  function ajouterSeance(type) {
+  function ajouterSeance(type, w = semIdx) {
     const s = nouvelleSeance(type)
-    muter((p) => { p.semaines[semIdx].seances.push(s) })
-    aller({ semaine: semIdx + 1, seance: s.id })
+    muter((p) => { p.semaines[w].seances.push(s) })
+    aller({ semaine: w + 1, seance: s.id })
   }
 
-  function supprimerSeance(s, numero) {
+  function supprimerSeance(s, numero, w = semIdx) {
     demander({
       titre: `Supprimer la séance ${numero} ?`,
-      texte: `« ${s.titre || 'Séance sans titre'} » et ses exercices seront retirés de la semaine S${semIdx + 1}.`,
+      texte: `« ${s.titre || 'Séance sans titre'} » et ses exercices seront retirés de la semaine S${w + 1}.`,
       libelle: 'Supprimer la séance',
       action: () => {
-        muter((p) => { p.semaines[semIdx].seances = p.semaines[semIdx].seances.filter((x) => x.id !== s.id) })
+        muter((p) => { p.semaines[w].seances = p.semaines[w].seances.filter((x) => x.id !== s.id) })
         setMessage('Séance supprimée.')
       },
     })
   }
 
+  // Grille : déplacer ou dupliquer une séance (glisser-déposer, boutons ⧉ et menu ⋯), avec « Annuler » juste après
+  function avecAnnulation(texte, fn) {
+    const avant = prog
+    changer(fn)
+    setAnnulable({ texte, avant })
+  }
+  function annulerDernier() {
+    if (!annulable) return
+    version.current += 1
+    setProg(annulable.avant); setModifie(true); setAnnulable(null)
+  }
+  function deplacerLaSeance(de, a) {
+    if (verrous === null || verrous.has(prog.semaines[de.s]?.seances[de.se]?.id)) { setErreur('Une séance déjà faite ne se déplace pas.'); return }
+    setErreur('')
+    avecAnnulation(`Séance déplacée en semaine ${a.vers + 1}.`, (p) => deplacerSeance(p, de, a))
+  }
+  function dupliquerLaSeance(de, a) {
+    setErreur('')
+    avecAnnulation(`Séance copiée en semaine ${(a.vers ?? de.s) + 1}.`, (p) => dupliquerSeance(p, de, a))
+  }
+  const majSemaine = (i, cle, v) => muter((p) => { p.semaines[i][cle] = v })
+
   // Supprimer la semaine affichée : impossible s'il n'en reste qu'une ou si une de ses séances est faite.
   // Les semaines suivantes remontent d'un cran (S4 devient S3) et donc d'une semaine dans le calendrier.
   const semaineFaite = (i) => (prog?.semaines[i]?.seances ?? []).some((x) => verrous?.has(x.id))
-  function supprimerSemaine() {
+  function supprimerSemaine(i = semIdx) {
+    const semaine = prog.semaines[i]
     if (nbSem <= 1) { setErreur('Un programme garde au moins une semaine.'); return }
-    if (verrous === null || semaineFaite(semIdx)) { setErreur(`Des séances de la semaine S${semIdx + 1} sont déjà faites : elle ne peut pas être supprimée.`); return }
-    const n = semIdx + 1
+    if (verrous === null || semaineFaite(i)) { setErreur(`Des séances de la semaine S${i + 1} sont déjà faites : elle ne peut pas être supprimée.`); return }
+    const n = i + 1
     demander({
       titre: `Supprimer la semaine S${n} ?`,
       texte: `Ses ${semaine.seances.length} séance${semaine.seances.length > 1 ? 's' : ''} seront retirée${semaine.seances.length > 1 ? 's' : ''}.${n < nbSem ? ` Les semaines suivantes avancent d’une semaine (S${n + 1} devient S${n}).` : ''}`,
       libelle: 'Supprimer la semaine',
       action: () => {
-        muter((p) => { p.semaines.splice(semIdx, 1) })
+        muter((p) => { p.semaines.splice(i, 1) })
         aller({ semaine: Math.max(1, Math.min(n, nbSem - 1)) }, true)
         setErreur(''); setMessage(`Semaine S${n} supprimée.`)
       },
@@ -311,8 +356,15 @@ export default function EditeurProgramme() {
         <div className="conteneur espace-coach">
           <EnteteCoache client={client} uid={uid} chemin={[{ label: 'Nouveau programme' }]} />
           {messages}
-          <CreationProgramme prenom={client.prenom} creer={creer} envoi={envoi}
-            annuler={prog ? () => aller({ semaine: semIdx + 1 }) : null} />
+          {creation
+            ? <p className="espace-texte" role="status">Création du programme…</p>
+            : (
+              <div className="espace-carte prog-vide">
+                <h2 className="espace-sous-titre">Pas encore de programme pour {client.prenom || 'ce coaché'}</h2>
+                <p className="espace-texte">Un programme s’ouvre tout de suite dans la grille : 4 semaines de 3 séances, que vous changez comme vous voulez. Il reste en brouillon tant que vous ne le publiez pas.</p>
+                <button type="button" className="bouton bouton--principal" disabled={envoi} onClick={() => aller({ nouveau: true })}>{envoi ? 'Création…' : 'Créer le programme'}</button>
+              </div>
+            )}
         </div>
         {dialogue}
       </section>
@@ -440,76 +492,16 @@ export default function EditeurProgramme() {
           {messages}
           {alerteVerrous}
 
-          {!seance && (<>
-
-          <div className="espace-semaines">
-            <div role="group" aria-label="Semaines" className="espace-pastilles">
-              {prog.semaines.map((w, i) => (
-                <button key={w.id} type="button" className="espace-pastille" aria-pressed={i === semIdx}
-                  onClick={() => aller({ semaine: i + 1 }, true)}>
-                  S{i + 1}<span className="sr-only">, semaine {i + 1}</span>
-                </button>
-              ))}
-              <button type="button" className="espace-pastille espace-pastille--plus" onClick={ajouterSemaine}>+ Semaine</button>
-            </div>
-            <div className="espace-actions">
-              <button type="button" className="espace-lien" onClick={dupliquer}>Dupliquer la semaine</button>
-              {nbSem > 1 && verrous !== null && !semaineFaite(semIdx) && (
-                <button type="button" className="espace-lien" onClick={supprimerSemaine}>Supprimer la semaine<span className="sr-only"> S{semIdx + 1}</span></button>
-              )}
-            </div>
-          </div>
-
-          <div className="espace-carte espace-params espace-params--semaine">
-            <div className="champ-groupe espace-param">
-              <label htmlFor="sem-rpe">RPE visé S{semIdx + 1}</label>
-              <input id="sem-rpe" className="champ" inputMode="decimal" autoComplete="off" value={semaine.rpe ?? ''}
-                onChange={(e) => { const v = e.target.value; muter((p) => { p.semaines[semIdx].rpe = v }) }} />
-            </div>
-            <div className="champ-groupe espace-param espace-param--large">
-              <label htmlFor="sem-mot">Le mot de la semaine (vu par le coaché)</label>
-              <input id="sem-mot" className="champ" autoComplete="off" value={semaine.mot ?? ''}
-                onChange={(e) => { const v = e.target.value; muter((p) => { p.semaines[semIdx].mot = v }) }} />
-            </div>
-          </div>
-
-          <div className="editeur-semaine">
-            <div className="editeur-semaine__seances">
-              {semaine.seances.length === 0
-                ? <p className="espace-texte">Aucune séance cette semaine. Ajoutez-en une ci-dessous.</p>
-                : (
-                  <ol className="colonnes-seances" key={semaine.id}>
-                    {semaine.seances.map((s, i) => {
-                      const faite = verrous?.has(s.id)
-                      const ouverte = seance?.id === s.id
-                      return (
-                        <li key={s.id} className={`colonne-seance${ouverte ? ' colonne-seance--ouverte' : ''}`}>
-                          <div className="colonne-seance__tete">
-                            <span className="colonne-seance__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                            <span className="colonne-seance__jour">{nomType(s.type, reglages.types)}</span>
-                          </div>
-                          <h2 className="colonne-seance__titre">
-                            <Link to={lienSeance(s.id)} className="colonne-seance__lien" aria-current={ouverte ? 'true' : undefined}>
-                              <span className="sr-only">Séance {i + 1} : </span>{s.titre || 'Séance sans titre'}
-                            </Link>
-                          </h2>
-                          <p className={`colonne-seance__etat${faite ? ' colonne-seance__etat--faite' : ''}`}>{faite ? '✓ Faite : non modifiable' : 'À faire'}</p>
-                          <ExercicesColonne seance={s} banque={exercices} />
-                          {!faite && verrous !== null && (
-                            <button type="button" className="espace-lien colonne-seance__suppr" onClick={() => supprimerSeance(s, i + 1)}>
-                              Supprimer<span className="sr-only"> la séance {i + 1}</span>
-                            </button>
-                          )}
-                        </li>
-                      )
-                    })}
-                  </ol>
-                )}
-              <AjoutSeance types={reglages.types} ajouter={ajouterSeance} gerer={() => setGererTypes(true)} />
-            </div>
-
-          </div>
-          </>)}
+          {!seance && (
+            <GrilleProgramme prog={prog} verrous={verrous} types={reglages.types} lien={(w, id) => `?semaine=${w + 1}&seance=${id}`}
+              gererTypes={() => setGererTypes(true)} maxSemaines={MAX_SEMAINES} annulable={annulable} annuler={annulerDernier}
+              actions={{
+                ajouterSeance: (w, type) => ajouterSeance(type, w),
+                dupliquer: dupliquerLaSeance, deplacer: deplacerLaSeance,
+                supprimer: (w, i, x) => supprimerSeance(x, i + 1, w),
+                ajouterSemaine, dupliquerSemaine: (i) => dupliquer(i), supprimerSemaine: (i) => supprimerSemaine(i), majSemaine,
+              }} />
+          )}
 
           {seance && (
             <article className="page-seance" aria-labelledby="page-seance-titre" ref={panneau}>
@@ -561,7 +553,6 @@ export default function EditeurProgramme() {
   )
 }
 
-// Exercices d'une séance, en abrégé dans sa colonne : code (A1, A2…), nom et ce qui est prévu
 // État d'un programme dans la liste « Programme affiché »
 function etatProgramme(p) {
   if (p.statut !== 'publié') return 'brouillon'
@@ -569,54 +560,4 @@ function etatProgramme(p) {
   if (auj < p.debut) return 'à venir'
   if (auj > ajoutJours(p.debut, (p.semaines?.length ?? 0) * 7 - 1)) return 'terminé'
   return 'en cours'
-}
-
-// « + Séance » : un seul bouton, qui ouvre la liste des types (et « Gérer les types »)
-function AjoutSeance({ types, ajouter, gerer }) {
-  const [ouvert, setOuvert] = useState(false)
-  const zone = useRef(null)
-  useEffect(() => {
-    if (!ouvert) return undefined
-    const fermer = (e) => { if (!zone.current?.contains(e.target)) setOuvert(false) }
-    const echap = (e) => { if (e.key === 'Escape') setOuvert(false) }
-    document.addEventListener('pointerdown', fermer)
-    document.addEventListener('keydown', echap)
-    return () => { document.removeEventListener('pointerdown', fermer); document.removeEventListener('keydown', echap) }
-  }, [ouvert])
-  return (
-    <div className="ajout-seance" ref={zone}>
-      <button type="button" className="bouton bouton--secondaire ajout-seance__bouton" aria-expanded={ouvert} aria-haspopup="true" onClick={() => setOuvert(!ouvert)}>
-        <span aria-hidden="true" className="ajout-seance__plus" /> Séance
-      </button>
-      {ouvert && (
-        <div className="ajout-seance__menu" role="group" aria-label="Type de la nouvelle séance">
-          <p className="ajout-seance__titre">Type de séance</p>
-          {types.map((t) => (
-            <button key={t.id} type="button" className="ajout-seance__choix" onClick={() => { setOuvert(false); ajouter(t.id) }}>{t.nom}</button>
-          ))}
-          <button type="button" className="ajout-seance__gerer" onClick={() => { setOuvert(false); gerer() }}>Gérer les types…</button>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// photo d'un élément : sa copie, sinon la photo actuelle de la fiche dans la banque
-const photoDe = (e, banque) => e.photos?.[0] || (banque ?? []).find((x) => x.id === e.exoId)?.photos?.[0] || null
-
-function ExercicesColonne({ seance, banque }) {
-  if (seance.type === 'course') {
-    const infos = [seance.distance, seance.temps, seance.objectif].filter(Boolean).join(' · ')
-    return <p className="colonne-seance__resume">Course{infos ? ` · ${infos}` : ''}</p>
-  }
-  const lignes = (seance.blocs ?? []).flatMap((b) => (b.elements ?? []).map((e, i) => ({ id: e.id, photo: photoDe(e, banque), code: `${b.lettre}${i + 1}`, nom: e.nom, detail: lignesExercice(e, b.format === 'series').prescription })))
-  if (!lignes.length) return <p className="colonne-seance__resume">Aucun exercice pour l’instant</p>
-  return (
-    <ul className="colonne-seance__exos">
-      {lignes.map((l) => (
-        <li key={l.id}><PhotoStockee chemin={l.photo} alt="" classe="colonne-seance__vignette" /><span><b>{l.code}</b> {l.nom}{l.detail && <small>{l.detail}</small>}</span></li>
-      ))}
-    </ul>
-  )
-
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nouveauProgramme, dupliquerSemaine, ajouterElement, ajouterAuBloc, nomBloc, renommerBloc, NOM_BLOC_MAX, nouvelId } from '../../src/espace/donnees/programme.js'
+import { nouveauProgramme, dupliquerSemaine, ajouterElement, ajouterAuBloc, copierSeance, dupliquerSeance, deplacerSeance, nomBloc, renommerBloc, NOM_BLOC_MAX, nouvelId } from '../../src/espace/donnees/programme.js'
 
 const sansIds = (o) => JSON.parse(JSON.stringify(o, (k, v) => (k === 'id' ? undefined : v)))
 
@@ -173,5 +173,55 @@ describe('nom des blocs', () => {
   it('la duplication d\'une semaine garde les noms de blocs', () => {
     const p = dupliquerSemaine({ ...renommerBloc(base(), { s: 0, se: 0 }, 'A', 'Échauffement'), semaines: renommerBloc(base(), { s: 0, se: 0 }, 'A', 'Échauffement').semaines }, 0)
     expect(p.semaines[1].seances[0].blocs[0].nom).toBe('Échauffement')
+  })
+})
+
+describe('copier, dupliquer et déplacer une séance', () => {
+  const base = () => {
+    let p = nouveauProgramme({ client: 'c', nom: 'P', debut: '2026-11-16', semaines: 2, parSemaine: 3 })
+    p.semaines[0].seances.forEach((s, i) => { s.titre = `S1-${i + 1}` })
+    p.semaines[1].seances.forEach((s, i) => { s.titre = `S2-${i + 1}` })
+    return ajouterAuBloc(p, { s: 0, se: 0 }, 'A', { id: 'e1', nom: 'Squat' })
+  }
+  const titres = (p, i) => p.semaines[i].seances.map((s) => s.titre)
+  it('la copie a de nouveaux identifiants partout et garde le contenu', () => {
+    const p = base()
+    const orig = p.semaines[0].seances[0]
+    const c = copierSeance(orig)
+    expect(c.id).not.toBe(orig.id)
+    expect(c.blocs[0].id).not.toBe(orig.blocs[0].id)
+    expect(c.blocs[0].elements[0].id).not.toBe(orig.blocs[0].elements[0].id)
+    expect(c.blocs[0].elements[0].nom).toBe('Squat')
+    expect(orig.blocs[0].elements[0].exoId).toBe('e1')
+  })
+  it('duplique juste après la séance par défaut, sans toucher à l\'original', () => {
+    const p = base()
+    const q = dupliquerSeance(p, { s: 0, se: 0 })
+    expect(titres(q, 0)).toEqual(['S1-1', 'S1-1', 'S1-2', 'S1-3'])
+    expect(q.semaines[0].seances[0].id).toBe(p.semaines[0].seances[0].id)
+    expect(q.semaines[0].seances[1].id).not.toBe(p.semaines[0].seances[0].id)
+    expect(titres(p, 0)).toHaveLength(3)
+  })
+  it('duplique vers une autre semaine, à la fin ou à une place donnée', () => {
+    const p = base()
+    expect(titres(dupliquerSeance(p, { s: 0, se: 1 }, { vers: 1 }), 1)).toEqual(['S2-1', 'S2-2', 'S2-3', 'S1-2'])
+    expect(titres(dupliquerSeance(p, { s: 0, se: 1 }, { vers: 1, index: 0 }), 1)).toEqual(['S1-2', 'S2-1', 'S2-2', 'S2-3'])
+  })
+  it('déplace dans une autre semaine', () => {
+    const q = deplacerSeance(base(), { s: 0, se: 2 }, { vers: 1, index: 1 })
+    expect(titres(q, 0)).toEqual(['S1-1', 'S1-2'])
+    expect(titres(q, 1)).toEqual(['S2-1', 'S1-3', 'S2-2', 'S2-3'])
+  })
+  it('déplace dans la même semaine (la place est comptée avant le retrait)', () => {
+    const p = base()
+    expect(titres(deplacerSeance(p, { s: 0, se: 0 }, { vers: 0, index: 3 }), 0)).toEqual(['S1-2', 'S1-3', 'S1-1'])
+    expect(titres(deplacerSeance(p, { s: 0, se: 2 }, { vers: 0, index: 0 }), 0)).toEqual(['S1-3', 'S1-1', 'S1-2'])
+    expect(titres(deplacerSeance(p, { s: 0, se: 0 }, { vers: 0, index: 1 }), 0)).toEqual(['S1-1', 'S1-2', 'S1-3'])
+  })
+  it('sans place précise, va à la fin ; les identifiants ne changent pas', () => {
+    const p = base()
+    const q = deplacerSeance(p, { s: 0, se: 0 }, { vers: 1 })
+    expect(titres(q, 1)).toEqual(['S2-1', 'S2-2', 'S2-3', 'S1-1'])
+    expect(q.semaines[1].seances[3].id).toBe(p.semaines[0].seances[0].id)
   })
 })

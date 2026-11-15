@@ -101,6 +101,39 @@ export function renommerBloc(programme, { s, se }, lettre, nom) {
   return p
 }
 
+// ---------- Séances : copier, dupliquer, déplacer (grille du programme, 15 novembre 2026) ----------
+
+// Copie d'une séance avec de nouveaux identifiants (séance, blocs, exercices) : la copie n'est jamais « faite »
+export function copierSeance(seance) {
+  const c = structuredClone(seance)
+  c.id = nouvelId()
+  for (const b of c.blocs ?? []) {
+    b.id = nouvelId()
+    for (const e of b.elements ?? []) e.id = nouvelId()
+  }
+  return c
+}
+
+// Duplique la séance { s, se } : juste après elle, ou dans la semaine `vers` à la position `index` (à la fin par défaut)
+export function dupliquerSeance(programme, { s, se }, { vers = s, index } = {}) {
+  const p = structuredClone(programme)
+  const copie = copierSeance(p.semaines[s].seances[se])
+  const cible = p.semaines[vers].seances
+  const pos = index ?? (vers === s ? se + 1 : cible.length)
+  cible.splice(Math.max(0, Math.min(pos, cible.length)), 0, copie)
+  return p
+}
+
+// Déplace la séance { s, se } dans la semaine `vers` : `index` est la place voulue dans la liste telle qu'elle s'affiche avant le déplacement
+export function deplacerSeance(programme, { s, se }, { vers, index = Infinity }) {
+  const p = structuredClone(programme)
+  const [x] = p.semaines[s].seances.splice(se, 1)
+  const cible = p.semaines[vers].seances
+  const pos = vers === s && index > se ? index - 1 : index
+  cible.splice(Math.max(0, Math.min(pos, cible.length)), 0, x)
+  return p
+}
+
 // Ajoute un exercice dans le bloc de la lettre donnée (créé à la suite s'il n'existe pas)
 export function ajouterAuBloc(programme, { s, se }, lettre, exercice) {
   const p = structuredClone(programme)
