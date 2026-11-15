@@ -17,18 +17,17 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 .section, .offres-page__rubrique, .offres-page__fin, main > section.offres-page__rubrique--fonce:nth-of-type(n) { background: transparent !important; }
 
 /* ---------- Barre du haut : capsule de verre noir, la même partout (site, espace coaché, espace coach) ---------- */
-.entete { background: transparent !important; margin-bottom: 0; }
-.entete__barre { max-width: none !important; box-sizing: border-box; width: min(1520px, calc(100% - 36px)); margin: 10px auto 0 !important; padding: 0 12px 0 22px !important; height: 52px !important; border-radius: 999px;
-  background: rgba(22, 21, 20, .9); -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou); border: 1px solid rgba(255, 255, 255, .14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 12px 32px rgba(22, 21, 20, .28); transition: width .6s var(--doux), box-shadow .5s ease; }
-.entete--sur-photo .entete__barre { background: rgba(22, 21, 20, .72); }
+/* barre pleine largeur, collée en haut : verre noir sur toute la largeur (les liens gardent la largeur du contenu) */
+.entete { background: rgba(22, 21, 20, .96) !important; border-bottom: 1px solid rgba(255, 255, 255, .1); box-shadow: 0 8px 28px rgba(22, 21, 20, .22); }
+@media (min-width: 961px) { .entete { background: rgba(22, 21, 20, .97) !important; -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou); } }
+/* (pas de flou sur téléphone : la barre de pages du bas est fixée à l'écran, un flou sur son parent la ferait remonter) */
 .entete .nav__lien { color: rgba(244, 243, 239, .85) !important; background-image: none !important; }
 .entete .nav__lien:hover { color: #fff !important; }
 .entete .nav__lien[aria-current="page"], .entete .nav__lien[aria-current="page"]:hover { background: transparent !important; color: #161514 !important; }
 .entete .entete__ecrire { color: rgba(244, 243, 239, .85) !important; }
 .entete .entete__compte, .entete .ec-rond { background: rgba(255, 255, 255, .08) !important; border-color: rgba(255, 255, 255, .28) !important; color: #f4f3ef !important; }
 .entete .entete__compte:hover, .entete .ec-rond:hover { background: #f4f3ef !important; color: #161514 !important; }
-.menu-mobile { background: rgba(22, 21, 20, .92) !important; -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou); margin: 8px 18px; border-radius: 28px; border: 1px solid rgba(255, 255, 255, .14); }
+.menu-mobile { background: rgba(22, 21, 20, .92) !important; -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou); margin: 0; border-radius: 0 0 24px 24px; border: 0; border-top: 1px solid rgba(255, 255, 255, .1); }
 /* la page en cours : une pastille claire qui glisse d'un lien à l'autre (Entete.jsx mesure le lien allumé) */
 .nav { position: relative; }
 .nav__lien { position: relative; z-index: 1; }
@@ -36,10 +35,7 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
   width: var(--bw, 0); height: var(--bh, 36px); transform: translate(var(--bx, 0), var(--by, 0)); box-shadow: 0 6px 16px rgba(0, 0, 0, .3), inset 0 1px 0 #fff; }
 .nav--prete .nav__bulle { opacity: 1; }
 .nav--pose .nav__bulle { transition: none !important; }
-/* sur l'accueil, la barre flotte par-dessus le haut de page et le panneau se décale sous elle */
-.heros.heros--v3 { margin-top: calc(-1 * var(--hauteur-entete)); }
-.heros.heros--v3 .heros__outil.ecrans { padding-top: calc(var(--hauteur-entete) + 18px) !important; padding-right: 18px !important; }
-@media (min-width: 961px) { :root[data-defile] .entete__barre { width: min(1060px, calc(100% - 36px)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 18px 44px rgba(22, 21, 20, .4); } }
+.heros.heros--v3 .heros__outil.ecrans { padding-right: 18px !important; }
 
 /* ---------- Cartes : blanc translucide avec un reflet chaud en bas à droite ---------- */
 .service, .question, .methode__principes li, .approche__panneau, .approche__cadre, .formulaire, .ecrans__panneau,
@@ -57,11 +53,11 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 /* ---------- Liquid Glass en mouvement ---------- */
 @property --lueur { syntax: '<number>'; inherits: false; initial-value: 0; }
 /* un reflet de verre suit la souris ou le doigt sur les cartes et la barre (position posée par verre.js) */
-.entete__barre, .service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul,
+.entete, .service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul,
 .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-gros { transition: --lueur .4s ease, transform .5s var(--doux), box-shadow .4s ease; }
-.entete__barre:hover, .service:hover, .question:hover, .formulaire:hover, .ecrans__panneau:hover, .ec-semaine:hover, .ec-etape:hover, .ec-pcarte:hover, .ec-chiffre:hover, .ec-records:hover,
+.entete:hover, .service:hover, .question:hover, .formulaire:hover, .ecrans__panneau:hover, .ec-semaine:hover, .ec-etape:hover, .ec-pcarte:hover, .ec-chiffre:hover, .ec-records:hover,
 .ec-regul:hover, .espace-carte:hover, .ec-histo__carte:hover, .ec-carte:hover, .disc:hover, .carte-coache:hover, .messagerie__fil:hover, .ec-s2-carte:hover { --lueur: 1; }
-.entete__barre { background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .14)), transparent 68%); }
+.entete { background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .14)), transparent 68%); }
 .service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil {
   background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .85)), transparent 68%), linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important; }
 .carte-coache:hover, .ec-pcarte:hover, .ec-carte:hover { transform: translateY(-3px); box-shadow: 0 24px 56px rgba(22, 21, 20, .13) !important; }
@@ -69,7 +65,7 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
   @keyframes verre-descend { from { opacity: 0; transform: translateY(-22px) scale(.95); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
   @keyframes verre-monte { from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
   @keyframes verre-derive { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(3%, -2%, 0) scale(1.07); } 100% { transform: translate3d(-3%, 3%, 0) scale(1.02); } }
-  .entete__barre { animation: verre-descend .9s var(--ressort) backwards; } /* « backwards » : une fois finie, plus de filtre sur la barre (sinon la barre du bas du téléphone s'y accroche) */
+  .entete { animation: verre-descend .9s var(--ressort) backwards; } /* « backwards » : une fois finie, plus de filtre sur la barre (sinon la barre du bas du téléphone s'y accroche) */
   .ec-noire, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .ec-histo__carte, .ec-carte, .espace-carte, .carte-coache, .bandeau-coach, .disc, .messagerie__fil, .ec-s2-bandeau { animation: verre-monte .75s var(--doux) backwards; }
   .carte-coache:nth-child(2), .espace-carte:nth-of-type(2) { animation-delay: .07s; }
   .carte-coache:nth-child(3), .espace-carte:nth-of-type(3) { animation-delay: .14s; }
@@ -84,8 +80,8 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 }
 /* sans transparence (réglage de l'appareil) ou en contraste renforcé : le verre devient plein */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .entete__barre, .menu-mobile, .nav, .ec-s2-carte, .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
-  .entete__barre, .nav, .menu-mobile { background-color: #161514 !important; }
+  .entete, .menu-mobile, .nav, .ec-s2-carte, .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .entete, .nav, .menu-mobile { background-color: #161514 !important; }
   .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-carte { background-color: #fff !important; }
 }
 
@@ -93,11 +89,7 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 
 
 @media (max-width: 960px) {
-  .entete--rangee .entete__barre { background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; padding: 0 !important;
-    width: calc(100% - 28px); height: 48px !important; min-height: 0; margin-top: 10px !important; grid-template-columns: 1fr auto; }
-  .entete--rangee .entete__barre::before { content: ""; grid-row: 1; grid-column: 1 / -1; height: 48px; border-radius: 999px; background: rgba(22,21,20,.92); box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 10px 26px rgba(22,21,20,.25); }
-  .entete--rangee .entete__logo { grid-row: 1; grid-column: 1; z-index: 1; padding-left: 20px; align-self: center; }
-  .entete--rangee .entete__droite { grid-row: 1; grid-column: 2; z-index: 1; padding-right: 6px; align-self: center; }
+  .entete--rangee .entete__barre { height: 52px !important; min-height: 0; padding-block: 0 !important; grid-template-columns: 1fr auto; }
   .entete--rangee .nav { position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 80; margin: 0; padding: 6px; gap: 2px; border-radius: 999px; background: rgba(22,21,20,.94);
     -webkit-backdrop-filter: blur(24px) saturate(1.5); backdrop-filter: blur(24px) saturate(1.5); border: 1px solid rgba(255,255,255,.1);
     box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 14px 34px rgba(22,21,20,.35); display: flex; overflow: visible; }
