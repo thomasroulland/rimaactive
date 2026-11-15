@@ -2137,3 +2137,16 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 }
 /* très grands écrans : le contenu du panneau garde une taille raisonnable (le haut de page ne grandit pas en hauteur) */
 .ecrans__tete, .ecrans__corps { width: 100%; max-width: calc((min(100svh, 1150px) - var(--hauteur-entete) - 200px) * 1.75); margin-inline: auto; }
+
+/* Qui suis-je, ordinateur (15 novembre 2026) : la photo prend exactement la hauteur de l'encadré.
+   Sa largeur est fixée ; sa hauteur suit celle de l'encadré (photo recadrée, visage gardé en haut). */
+@media (min-width: 900px) {
+  .approche > .approche__photo { align-self: stretch; position: relative; width: clamp(300px, calc(24 * var(--vw)), 350px); }
+  .approche > .approche__photo img { position: absolute; inset: 0; width: 100% !important; height: 100% !important; aspect-ratio: auto; object-position: 50% 18%; }
+}
+/* M'écrire, ordinateur : la phrase « Basée à Houdan… » tient sur une ligne (taille calée sur la largeur de la colonne) */
+@media (min-width: 1280px) {
+  .page-contact .presentation-contact { container-type: inline-size; align-items: stretch; }
+  .page-contact .presentation-contact__lieu { max-width: none; white-space: nowrap; font-size: clamp(14px, calc(100cqw / 39), 19px); }
+}
+@media (min-width: 900px) and (max-width: 1279px) { .page-contact .presentation-contact__lieu { text-wrap: balance; } }

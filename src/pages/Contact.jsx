@@ -26,7 +26,9 @@ export default function Contact() {
   // depuis une carte de l'accueil (« Me contacter ») : seulement l'offre (?offre=Entreprises)
   const offreSeule = OFFRES.find((o) => o.nom === parametres.get('offre'))?.nom
   const [offre, setOffre] = useState(offreVenue?.nom ?? offreSeule ?? '')
-  const [formule, setFormule] = useState(offreVenue ? formuleVenue : '')
+  // une offre qui n'a qu'une formule (Groupes, Entreprises) : elle est choisie d'office
+  const seuleFormule = (nom) => { const f = OFFRES.find((o) => o.nom === nom)?.formules ?? []; return f.length === 1 ? f[0] : '' }
+  const [formule, setFormule] = useState(offreVenue ? formuleVenue : seuleFormule(offreSeule))
   const formulesOffre = OFFRES.find((o) => o.nom === offre)?.formules ?? []
 
   // Envoi à brancher (Formspree, Resend, fonction Vercel…) : pour l'instant on affiche la confirmation
@@ -58,7 +60,7 @@ export default function Contact() {
                 {OFFRES.map((o) => (
                   <label key={o.nom}>
                     <input type="radio" name="offre" value={o.nom} checked={offre === o.nom} required
-                      onChange={() => { setOffre(o.nom); setFormule('') }} />
+                      onChange={() => { setOffre(o.nom); setFormule(seuleFormule(o.nom)) }} />
                     <span>{o.nom}</span>
                   </label>
                 ))}

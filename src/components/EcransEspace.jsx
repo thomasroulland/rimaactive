@@ -15,12 +15,13 @@ import pcMessages from '../assets/ecrans/pc-messages.webp'
 // Au centre, la page ouverte en grand (fenêtre d'ordinateur) avec la même page sur téléphone posée sur son coin ;
 // à droite, les vignettes de toutes les pages, cliquables, dont celle en cours avec une barre de temps.
 // Captures faites avec une coachée fictive.
+// Dans l'ordre du parcours (accueil, programme, séance, progression, messages), avec les titres des pages de l'espace.
 const ECRANS = [
-  { pc: pcAccueil, tel: telAccueil, titre: 'Votre semaine', sous: 'La prochaine séance, prête à ouvrir', court: 'Accueil' },
-  { pc: pcSeance, tel: telSeance, titre: 'La séance guidée', sous: 'Charges, répétitions et consignes en photo', court: 'Séance' },
-  { pc: pcProgramme, tel: telProgramme, titre: 'Votre programme', sous: 'Semaine par semaine, préparé pour vous', court: 'Programme' },
-  { pc: pcProgression, tel: telProgression, titre: 'Vos progrès', sous: 'Records, poids et régularité', court: 'Progrès' },
-  { pc: pcMessages, tel: telMessages, titre: 'Les messages', sous: 'Une question ? Je vous réponds ici', court: 'Messages' },
+  { pc: pcAccueil, tel: telAccueil, titre: 'Tableau de bord', sous: 'La prochaine séance, prête à ouvrir' },
+  { pc: pcProgramme, tel: telProgramme, titre: 'Mon programme', sous: 'Semaine par semaine, préparé pour vous' },
+  { pc: pcSeance, tel: telSeance, titre: 'Séance', sous: 'Charges, répétitions et consignes en photo' },
+  { pc: pcProgression, tel: telProgression, titre: 'Ma progression', sous: 'Records, poids et régularité' },
+  { pc: pcMessages, tel: telMessages, titre: 'Messages', sous: 'Une question ? Je vous réponds ici' },
 ]
 const DUREE = 5000
 const N = ECRANS.length
@@ -76,7 +77,7 @@ export default function EcransEspace() {
               <span className="ecrans__barre" aria-hidden="true"><i /><i /><i /><span className="ecrans__adresse">rimaactive.fr/espace</span></span>
               <div className="ecrans__vues">
                 {ECRANS.map((ecran, i) => (
-                  <img key={ecran.court} className={`ecrans__vue${i === idx ? ' est-devant' : i === prec ? ' est-sortie' : ''}`} src={ecran.pc}
+                  <img key={ecran.titre} className={`ecrans__vue${i === idx ? ' est-devant' : i === prec ? ' est-sortie' : ''}`} src={ecran.pc}
                     alt={i === idx ? `Espace client sur ordinateur : ${ecran.titre.toLowerCase()}` : ''} aria-hidden={i !== idx}
                     width="1200" height="650" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
                 ))}
@@ -84,7 +85,7 @@ export default function EcransEspace() {
             </div>
             <div className="ecrans__tel">
               {ECRANS.map((ecran, i) => (
-                <img key={ecran.court} className={`ecrans__vue${i === idx ? ' est-devant' : i === prec ? ' est-sortie' : ''}`} src={ecran.tel}
+                <img key={ecran.titre} className={`ecrans__vue${i === idx ? ' est-devant' : i === prec ? ' est-sortie' : ''}`} src={ecran.tel}
                   alt={i === idx ? 'La même page sur téléphone' : ''} aria-hidden={i !== idx}
                   width="540" height="1169" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
               ))}
@@ -97,10 +98,10 @@ export default function EcransEspace() {
 
           <ul className="ecrans__vignettes" aria-label="Les pages de l'espace">
             {ECRANS.map((ecran, i) => (
-              <li key={ecran.court}>
+              <li key={ecran.titre}>
                 <button type="button" className="ecrans__vignette" aria-pressed={i === idx} onClick={() => setIdx(i)}>
                   <span className="ecrans__mini"><img src={ecran.pc} alt="" width="1200" height="650" loading="lazy" decoding="async" /></span>
-                  <span className="ecrans__nom">{ecran.court}</span>
+                  <span className="ecrans__nom">{ecran.titre}</span>
                   {i === idx && !calme && <span key={`temps-${idx}-${tour}`} className={`ecrans__temps${enPause ? ' est-pause' : ''}`} style={{ animationDuration: `${DUREE}ms` }} aria-hidden="true" />}
                 </button>
               </li>

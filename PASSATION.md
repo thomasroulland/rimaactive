@@ -469,3 +469,11 @@ Les deux sections précédentes (barre d'un bord à l'autre, `--ecran: 100svh`, 
   (« 45 s ») non comparées ; blocs EMOM / AMRAP / TABATA / HIIT : une ligne par bloc d'après « Mon résultat ».
 - **Vérifié** : `npm test` (161), `npm run test:fuseaux`, `npm run test:vercel`, `npm run build`. Captures faites avec des données
   d'essai sur les vrais composants ; la fenêtre du calendrier et la page entière du coach n'ont pas été capturées avec un vrai compte.
+
+## Retouches vitrine (15 novembre 2026, accord écrit : « Ok pousse »)
+- **Accueil, écrans de l'espace** (`EcransEspace.jsx`) : ordre Tableau de bord, Mon programme, Séance, Ma progression, Messages ;
+  les titres sont ceux des pages de l'espace (étiquette et vignettes).
+- **Qui suis-je, ordinateur** : la photo prend exactement la hauteur de l'encadré (largeur fixée, photo recadrée, visage en haut).
+- **M'écrire** : « Basée à Houdan… » sur une ligne à partir de 1280 px (taille calée sur la largeur de la colonne) ; en dessous, deux
+  lignes équilibrées. Une offre qui n'a qu'une formule (Groupes, Entreprises, En ligne) la choisit d'office, y compris avec `?offre=`.
+- **Vérifié** : `npm test` (161), `npm run build`, mesures à 1280, 1440 et 1905 px. Téléphone non revérifié (retouches d'ordinateur).
