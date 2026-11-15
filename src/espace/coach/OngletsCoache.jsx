@@ -6,14 +6,15 @@ import {
 } from '../depots.js'
 import { aujourdhuiIso, grilleMois, listeSeances, regularite, tonnage, tonnages } from '../donnees/calculs.js'
 import { dateComplete, dateSeance, evolutionMesures } from '../donnees/progression.js'
-import { exercicesDe, detailSeance, texteSerie } from '../donnees/seances.js'
+import { exercicesDe } from '../donnees/seances.js'
 import { chiffresCoache, effortParSemaine, suiviCoache } from '../donnees/alertes.js'
 import { frNombre } from '../donnees/resume.js'
 import { records } from '../donnees/records.js'
 import { RM_SUIVIS } from '../donnees/banque.js'
 import { messageErreur } from '../erreurs.js'
 import { useCoache } from './EnteteCoache.jsx'
-import { Courbe, DialogueSuppression, SeanceFaite, trouverSeance } from './FicheClient.jsx'
+import { Courbe, DialogueSuppression, Ecarts, SeanceFaite, trouverSeance } from './FicheClient.jsx'
+import { comparerSeance } from '../donnees/ecarts.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import Discussion from '../Discussion.jsx'
 import { lienCoach } from './Messagerie.jsx'
@@ -42,6 +43,7 @@ export function Ensemble() {
   const faites = new Set((seances ?? []).filter((s) => s.statut === 'terminée').map((s) => s.seance))
   const prochaine = progEnCours ? listeSeances(progEnCours).find((x) => !faites.has(x.seance.id)) : null
   const dernier = bilans?.[0]
+  const [toutes, setToutes] = useState(false)
 
   return (
     <div className="onglet-pile">
@@ -52,6 +54,27 @@ export function Ensemble() {
         <div className="espace-carte"><dt>RPE moyen des séances</dt><dd>{ch.rpeMoyen === null ? '–' : frNombre(ch.rpeMoyen)}</dd></div>
         <div className="espace-carte"><dt>Bilans notés</dt><dd>{bilans ? bilans.length : '–'}</dd></div>
       </dl>
+      <section className="onglet-pile" aria-labelledby="t-seances">
+        <div className="suivi-titre">
+          <h2 id="t-seances" className="espace-sous-titre">Dernières séances</h2>
+          <span className="espace-aide">ce qui a été fait par rapport au prévu</span>
+        </div>
+        {seances === null ? <p className="espace-aide" role="status">Chargement…</p>
+          : seances.length === 0 ? <p className="espace-aide">{client.prenom} n’a pas encore enregistré de séance.</p> : (
+            <>
+              <ul className="fiche-liste seances-coache">
+                {seances.slice(0, toutes ? seances.length : 5).map((sf, i) => (
+                  <SeanceFaite key={sf.id} sf={sf} seance={trouverSeance(programmes, sf)} prenom={client.prenom} ouvrirSiEcart={i === 0} />
+                ))}
+              </ul>
+              {seances.length > 5 && !toutes && (
+                <button type="button" className="bouton bouton--secondaire bouton--compact suivi-plus" onClick={() => setToutes(true)}>
+                  Voir les {seances.length - 5} séances plus anciennes
+                </button>
+              )}
+            </>
+          )}
+      </section>
       <div className="fiche-grille">
         <Carte titre="Alertes" id="t-alertes">
           {alertes.length ? <ul className="alertes">{alertes.map((a) => <li key={a}>{a}</li>)}</ul> : <p className="espace-aide">Aucune alerte.</p>}
@@ -274,18 +297,16 @@ function SeanceDetail({ sf, programmes, prenom }) {
   const p = (programmes ?? []).find((x) => x.id === sf.programme)
   const sem = p ? (p.semaines ?? []).findIndex((w) => (w.seances ?? []).some((x) => x.id === sf.seance)) + 1 : 0
   const t = tonnage(sf)
+  const cmp = comparerSeance(s, sf)
   const infos = [sem ? `Semaine ${sem}` : '', Number.isInteger(sf.effort) ? `effort ${sf.effort}/10` : '', sf.ressenti, t > 0 ? `${frNombre(Math.round(t))} kg soulevés` : ''].filter(Boolean).join(' · ')
   return (
     <>
       <p className="calendrier__pastille calendrier__pastille--seance">Séance faite</p>
       <h3 className="bilan__titre">{s ? s.titre || 'Séance' : 'Séance retirée du programme'}</h3>
       {infos && <p className="espace-aide">{infos}</p>}
-      <ul className="historique__lignes">
-        {detailSeance(s, sf.series).map((x) => (
-          <li key={x.cle}><strong>{x.nom}</strong> · {x.lignes.map((l) => texteSerie(l)).join(' / ')}</li>
-        ))}
-      </ul>
-      <ul className="fiche-liste historique__detail"><SeanceFaite sf={sf} seance={s} prenom={prenom} /></ul>
+      {cmp.verdict && <p className={`seance-verdict${cmp.aRegarder ? ' seance-verdict--voir' : ''}`}>{cmp.verdict}</p>}
+      <Ecarts cmp={cmp} />
+      <ul className="fiche-liste historique__detail"><SeanceFaite sf={sf} seance={s} prenom={prenom} nu /></ul>
     </>
   )
 }

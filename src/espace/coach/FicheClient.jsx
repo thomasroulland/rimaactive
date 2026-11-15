@@ -4,13 +4,13 @@ import {
   ecouterProgrammes, ecouterSeancesClient, commenterSeance, supprimerClient, programmeEnCours,
 } from '../depots.js'
 import { aujourdhuiIso, meilleuresCharges, regularite } from '../donnees/calculs.js'
-import { dateCourte, dateLongue, detailSeance, evolutionCharges, exercicesDe, fr, texteSerie } from '../donnees/seances.js'
+import { dateCourte, dateLongue, evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
 import { messageErreur } from '../erreurs.js'
 import { noterVisio } from '../depots.js'
 import { dateSeance } from '../donnees/progression.js'
 import { avancement } from '../donnees/progression.js'
 import { effortMoyen, frNombre, meilleurProgres } from '../donnees/resume.js'
-import { basculerDetails } from '../../components/basculerDetails.js'
+import { comparerSeance } from '../donnees/ecarts.js'
 import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import { derniereVisite, noterVisite, nouvellesSeances } from './vus.js'
 
@@ -179,7 +179,7 @@ export function Regularite({ semaines }) {
   )
 }
 
-export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
+export function SeanceFaite({ sf, seance, prenom, nouvelle, ouvrirSiEcart = false, nu = false }) {
   const [texte, setTexte] = useState(sf.commentaireCoach ?? '')
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
@@ -187,13 +187,23 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
   const modifie = texte.trim() !== enregistre.trim()
   const id = `com-${sf.id}`
   const douleur = sf.douleur?.oui ? sf.douleur : null
-  const detail = detailSeance(seance, sf.series)
+  // prévu / fait (15 novembre 2026) : un verdict sur la ligne, les écarts en l'ouvrant
+  const cmp = comparerSeance(seance, sf)
+  const alerte = cmp.aRegarder > 0 || !!douleur
+  const [ouvert, setOuvert] = useState(ouvrirSiEcart && alerte)
   // Notes écrites par le client sous chaque exercice pendant la séance (champ « notes », une par exercice)
   const nomsElements = new Map((seance?.blocs ?? []).flatMap((bl) => (bl.elements ?? []).map((e) => [e.id, e.nom])))
   const notesExos = Object.entries(sf.notes ?? {})
     .filter(([, t]) => String(t ?? '').trim())
     .map(([id, t]) => ({ id, nom: nomsElements.get(id) ?? 'Exercice retiré du programme', texte: String(t).trim() }))
   const terminee = sf.statut === 'terminée'
+  const titre = seance ? seance.titre || 'Séance' : 'Séance retirée du programme'
+  const meta = [
+    `${dateLongue(sf.date)}${terminee && heure(sf.majLe) ? ` · ${heure(sf.majLe)}` : ''}`,
+    terminee && Number.isInteger(sf.effort) ? `effort ${sf.effort} sur 10` : '',
+    sf.commentaire ? 'a laissé un commentaire' : '',
+  ].filter(Boolean).join(' · ')
+  const verdict = [cmp.verdict, douleur ? 'douleur signalée' : ''].filter(Boolean).join(' · ')
 
   // Optimiste, comme côté client : hors ligne la promesse ne se résout qu'au retour du réseau (le cache garde l'écriture).
   // On n'attend donc pas ; un vrai refus (permission, etc.) arrive par le catch.
@@ -206,22 +216,17 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
     commenterSeance(sf.id, texte).catch((err) => { setMessage(''); setErreur(messageErreur(err.code)) })
   }
 
-  return (
-    <li className="espace-carte fiche-seance">
-      <div className="fiche-seance__tete">
-        <h3 className="espace-element__titre">{seance ? seance.titre || 'Séance' : 'Séance retirée du programme'}{nouvelle && <span className="repere-nouveau">Nouveau</span>}</h3>
-        <p className="fiche-seance__date">{dateLongue(sf.date)}{terminee && heure(sf.majLe) && ` · ${heure(sf.majLe)}`}</p>
-      </div>
-      <p className="fiche-seance__bilan">
-        {terminee ? (
-          <>
-            {Number.isInteger(sf.effort) && <span>Effort {sf.effort} sur 10</span>}
-            {sf.ressenti && <span>Ressenti : {sf.ressenti}</span>}
-            {sf.distance && <span>Distance : {sf.distance}</span>}
-            {sf.temps && <span>Temps : {sf.temps}</span>}
-          </>
-        ) : <span>En cours, pas encore terminée</span>}
-      </p>
+  const corps = (
+    <>
+      {!nu && terminee && (sf.ressenti || sf.distance || sf.temps || sf.fc) && (
+        <p className="fiche-seance__bilan">
+          {sf.ressenti && <span>Ressenti : {sf.ressenti}</span>}
+          {sf.distance && <span>Distance : {sf.distance}</span>}
+          {sf.temps && <span>Temps : {sf.temps}</span>}
+          {sf.fc && <span>Fréquence cardiaque : {sf.fc}</span>}
+        </p>
+      )}
+      {!nu && <Ecarts cmp={cmp} />}
       {sf.commentaire && (
         <p className="espace-verrou espace-verrou--fort fiche-douleur fiche-commentaire">
           Commentaire du client : {sf.commentaire}
@@ -235,30 +240,11 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
           </ul>
         </div>
       )}
-      {terminee && sf.fc && <p className="fiche-seance__bilan"><span>Fréquence cardiaque : {sf.fc}</span></p>}
+      {nu && terminee && sf.fc && <p className="fiche-seance__bilan"><span>Fréquence cardiaque : {sf.fc}</span></p>}
       {douleur && (
         <p className="espace-verrou espace-verrou--fort fiche-douleur">
           Douleur signalée{douleur.endroit ? ` : ${douleur.endroit}` : ''}.{douleur.note ? ` ${douleur.note}` : ''}
         </p>
-      )}
-      {detail.length > 0 && (
-        <details className="fiche-detail">
-          <summary onClick={(e) => basculerDetails(e, e.currentTarget.nextElementSibling)}>Détail des séries · {detail.length} exercice{detail.length > 1 ? 's' : ''}</summary>
-        <ul className="fiche-exos">
-          {detail.map((x) => (
-            <li key={x.cle} className="fiche-exo">
-              <p className={`fiche-exo__nom${x.retire ? ' fiche-exo__nom--retire' : ''}`}>{x.nom}</p>
-              <ol className="fiche-series">
-                {x.lignes.map((l, i) => (
-                  <li key={i} className={l.fait === false ? 'fiche-serie fiche-serie--non' : 'fiche-serie'}>
-                    <span className="fiche-serie__num">Série {i + 1}</span> {texteSerie(l)}
-                  </li>
-                ))}
-              </ol>
-            </li>
-          ))}
-        </ul>
-        </details>
       )}
       <form className="fiche-commentaire" onSubmit={enregistrer}>
         <label htmlFor={id} className="sr-only">Votre réponse à {prenom}</label>
@@ -270,9 +256,67 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle }) {
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
       </form>
+    </>
+  )
+  // dans la fenêtre du calendrier : pas de ligne à ouvrir, le titre et les écarts sont déjà au-dessus
+  if (nu) return <li className="espace-carte fiche-seance">{corps}</li>
+
+  return (
+    <li className={`espace-carte fiche-seance seance-ligne${ouvert ? ' seance-ligne--ouverte' : ''}`}>
+      <h3 className="seance-ligne__h">
+        <button type="button" className="seance-ligne__bouton" aria-expanded={ouvert} aria-controls={`corps-${sf.id}`} onClick={() => setOuvert((o) => !o)}>
+          <span className={`seance-ligne__rond seance-ligne__rond--${alerte ? 'voir' : terminee ? 'ok' : 'cours'}`} aria-hidden="true">
+            {alerte ? (cmp.aRegarder || '!')
+              : terminee ? <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                : '…'}
+          </span>
+          <span className="seance-ligne__texte">
+            <span className="espace-element__titre">{titre}{nouvelle && <span className="repere-nouveau">Nouveau</span>}</span>
+            <span className="fiche-seance__date">{meta}</span>
+          </span>
+          {verdict && <span className={`seance-ligne__verdict${alerte ? ' seance-ligne__verdict--voir' : ''}`}>{verdict}</span>}
+          <svg className="seance-ligne__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+      </h3>
+      {ouvert && <div id={`corps-${sf.id}`} className="seance-ligne__corps">{corps}</div>}
     </li>
   )
 }
+
+// Écarts d'une séance : seulement ce qui s'éloigne du prévu ; « Tout voir » montre chaque exercice, prévu et fait.
+export function Ecarts({ cmp }) {
+  const [tout, setTout] = useState(false)
+  if (!cmp.lignes.length) return null
+  const aVoir = cmp.lignes.filter((l) => l.statut === 'moins' || l.statut === 'pas-fait')
+  const autres = cmp.lignes.length - aVoir.length
+  const montrees = tout ? cmp.lignes : aVoir
+  const maj = (t) => t.charAt(0).toUpperCase() + t.slice(1)
+  const reste = aVoir.length
+    ? (autres > 1 ? `Les ${autres} autres exercices sont faits comme prévu ou mieux.` : 'L’autre exercice est fait comme prévu ou mieux.')
+    : (autres > 1 ? `Les ${autres} exercices sont faits comme prévu ou mieux.` : 'L’exercice est fait comme prévu ou mieux.')
+  return (
+    <div className="ecarts">
+      {montrees.length > 0 && (
+        <ul className="ecarts__liste">
+          {montrees.map((l) => (
+            <li key={l.cle} className={`ecarts__ligne ecarts__ligne--${l.statut}`}>
+              <strong>{l.nom}</strong>
+              {l.ecart && <em>{l.ecart}</em>}
+              <span>{maj([l.prevu && `prévu ${l.prevu}`, l.fait && `fait ${l.fait}`].filter(Boolean).join(' · '))}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {autres > 0 && (
+        <p className="ecarts__reste">
+          {!tout && `${reste} `}
+          <button type="button" className="ecarts__tout" aria-expanded={tout} onClick={() => setTout((t) => !t)}>{tout ? (aVoir.length ? 'Voir seulement les écarts' : 'Replier') : 'Tout voir'}</button>
+        </p>
+      )}
+    </div>
+  )
+}
+
 
 // Courbe d'une valeur par séance (meilleure charge ou tonnage) : ligne encre, points vermillon, axes nommés. Pas de bibliothèque.
 // Interactive (14 novembre 2026) : au survol, au doigt ou au clavier (flèches), une bulle donne la date, la valeur et l'écart
