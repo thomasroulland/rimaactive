@@ -2077,7 +2077,3 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 
 /* cartes d'offres : hauteur de leur contenu (plus de vide entre la liste et « Voir le détail ») */
 .offres--2 > .offre { min-height: 0 !important; }
-/* le filet devient un dégradé discret, du vermillon (en haut) au jaune (en bas) — choix de Thomas, 15 novembre 2026 */
-@media (min-width: 900px) {
-  .page-contact__photo { border-right-width: 3px; border-image: linear-gradient(180deg, var(--vermillon) 0%, var(--jaune) 100%) 1; }
-}
