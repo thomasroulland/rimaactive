@@ -2078,53 +2078,59 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 /* cartes d'offres : hauteur de leur contenu (plus de vide entre la liste et « Voir le détail ») */
 .offres--2 > .offre { min-height: 0 !important; }
 
-/* ---------- Haut de l'accueil : les écrans de l'espace coaché (15 novembre 2026, revu le même jour) ----------
-   les pages de l'ordinateur empilées (les suivantes derrière, en haut à droite, cliquables), le téléphone posé devant */
-.heros.heros--v3 .heros__outil.ecrans { overflow: visible; margin: 0; border-radius: 0; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px calc(var(--gouttiere) / 2) 24px 0; min-width: 0; }
-.ecrans__surtitre { margin: 0; font: 700 12px/16px var(--font-sans); letter-spacing: .16em; text-transform: uppercase; color: var(--gris-chaud); text-align: center; }
-.ecrans__scene { position: relative; width: min(100%, 1000px, calc((var(--ecran) - var(--hauteur-entete) - 150px) / 0.66)); aspect-ratio: 1 / 0.66; --dx: 0; --dy: 0; }
-.ecrans__fenetres { position: absolute; left: 17%; bottom: 4%; width: 60%; aspect-ratio: 1200 / 680; transform: translate(calc(var(--dx) * -10px), calc(var(--dy) * -8px)); transition: transform .35s ease; }
-.ecrans__fenetre { all: unset; box-sizing: border-box; position: absolute; inset: 0; display: block; border-radius: 14px; overflow: hidden; background: var(--blanc); border: 1px solid #e3dfd7; box-shadow: 0 24px 60px rgba(22, 21, 20, .16);
-  transform-origin: 0% 100%; transition: transform .8s cubic-bezier(.2, .8, .2, 1), opacity .7s ease, filter .7s ease, box-shadow .3s ease; }
-.ecrans__fenetre img { display: block; width: 100%; height: auto; }
-.ecrans__fenetre[data-rang="0"] { z-index: 10; }
-.ecrans__fenetre[data-rang="1"] { z-index: 9; transform: translate(15%, -16%) scale(.93); filter: brightness(.97); cursor: pointer; }
-.ecrans__fenetre[data-rang="2"] { z-index: 8; transform: translate(29%, -31%) scale(.86); filter: brightness(.94) saturate(.85); opacity: .9; cursor: pointer; }
-.ecrans__fenetre[data-rang="3"] { z-index: 7; transform: translate(42%, -45%) scale(.79); filter: brightness(.9) saturate(.7); opacity: .75; cursor: pointer; }
-.ecrans__fenetre[data-rang="4"] { z-index: 6; transform: translate(48%, -52%) scale(.74); opacity: 0; pointer-events: none; }
-button.ecrans__fenetre:hover { filter: none; box-shadow: 0 28px 70px rgba(22, 21, 20, .24); }
-button.ecrans__fenetre[data-rang="1"]:hover { transform: translate(15%, -18%) scale(.93); }
-button.ecrans__fenetre[data-rang="2"]:hover { transform: translate(29%, -33%) scale(.86); opacity: 1; }
-button.ecrans__fenetre[data-rang="3"]:hover { transform: translate(42%, -47%) scale(.79); opacity: 1; }
-button.ecrans__fenetre:focus-visible { outline: 3px solid var(--encre); outline-offset: 3px; }
-.ecrans__barre { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; background: #efece6; border-bottom: 1px solid #e3dfd7; }
+/* ---------- Haut de l'accueil : les écrans de l'espace coaché (15 novembre 2026, refait le même jour) ----------
+   un panneau rangé : titre en haut ; au centre la page ouverte (fenêtre d'ordinateur) et le téléphone posé sur son coin ;
+   à droite les vignettes de toutes les pages, cliquables, avec la barre de temps sur celle en cours */
+.heros.heros--v3 .heros__outil.ecrans { overflow: visible; margin: 0 !important; border-radius: 0; background: none; display: flex; align-items: stretch; padding: 20px var(--gouttiere) 20px 20px !important; min-width: 0; }
+.ecrans__panneau { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: clamp(16px, 2.4vh, 28px); padding: clamp(20px, 2.4vw, 36px); border-radius: 28px; background: var(--craie-fonce, #e9e6df); min-width: 0; }
+.ecrans__tete { display: flex; flex-direction: column; gap: 6px; }
+.ecrans__surtitre { margin: 0; font: 700 12px/16px var(--font-sans); letter-spacing: .16em; text-transform: uppercase; color: var(--gris-chaud); }
+.ecrans__titre { margin: 0; font: 800 clamp(20px, 1.7vw, 28px)/1.15 var(--font-sans); letter-spacing: -.02em; color: var(--encre); }
+.ecrans__corps { display: grid; grid-template-columns: minmax(0, 1fr) clamp(96px, 9vw, 132px); gap: clamp(16px, 1.8vw, 28px); align-items: center; }
+/* scène : la fenêtre en grand, le téléphone qui déborde un peu sur son coin bas droit, l'étiquette sur son coin bas gauche */
+.ecrans__scene { position: relative; padding: 0 7% 9% 0; }
+.ecrans__fenetre { border-radius: 14px; overflow: hidden; background: var(--blanc); border: 1px solid #ddd8cf; box-shadow: 0 22px 50px rgba(22, 21, 20, .14); }
+.ecrans__barre { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; background: #f1eee8; border-bottom: 1px solid #e3dfd7; }
 .ecrans__barre i { width: 9px; height: 9px; border-radius: 50%; background: #d4cfc6; }
 .ecrans__barre i:first-child { background: var(--vermillon); }
 .ecrans__barre i:nth-child(2) { background: var(--jaune); }
 .ecrans__adresse { margin-left: 10px; padding: 3px 12px; border-radius: 999px; background: var(--blanc); font: 500 11px/1.2 var(--font-sans); color: var(--gris-chaud); }
-.ecrans__tel { position: absolute; left: 0; bottom: 0; z-index: 20; margin: 0; width: 20%; aspect-ratio: 540 / 1169; border-radius: 26px; border: 6px solid var(--encre); background: var(--encre); overflow: hidden; box-shadow: 0 26px 50px rgba(22, 21, 20, .28);
-  opacity: 0; transform: translate(calc(var(--dx) * 14px), calc(20px + var(--dy) * 10px)); transition: opacity .6s ease, transform .8s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
-.ecrans__tel.est-devant { opacity: 1; transform: translate(calc(var(--dx) * 14px), calc(var(--dy) * 10px)); transition-delay: .12s; }
-.ecrans__tel img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 20px; }
-.ecrans__etiquette { position: absolute; right: 0; bottom: -2%; z-index: 25; display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; background: var(--blanc); border-radius: 18px; box-shadow: 0 14px 34px rgba(22, 21, 20, .16); max-width: 52%; animation: ecrans-etiquette .7s cubic-bezier(.34, 1.4, .64, 1) .25s both; }
-.ecrans__numero { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--vermillon); color: var(--blanc); display: grid; place-items: center; font: 800 16px/1 var(--font-sans); }
-.ecrans__textes { display: flex; flex-direction: column; gap: 2px; }
-.ecrans__textes strong { font: 800 17px/1.2 var(--font-sans); color: var(--encre); }
-.ecrans__textes span { font: 400 14px/1.35 var(--font-sans); color: var(--gris-chaud); }
-.ecrans__puces { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
-.ecrans__puce { min-height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--filet); background: var(--blanc); font: 600 13px/1 var(--font-sans); color: var(--encre); cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
-.ecrans__puce:hover { border-color: var(--encre); }
-.ecrans__puce[aria-pressed="true"] { background: var(--encre); color: var(--craie); border-color: var(--encre); }
-.ecrans__puce:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
-@keyframes ecrans-etiquette { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
+.ecrans__vues { position: relative; aspect-ratio: 1200 / 650; }
+.ecrans__vue { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transform: scale(1.015); transition: opacity .6s ease, transform .9s cubic-bezier(.2, .8, .2, 1); }
+.ecrans__vue.est-devant { opacity: 1; transform: none; }
+.ecrans__tel { position: absolute; right: 0; bottom: 0; width: 24%; aspect-ratio: 540 / 1169; border-radius: 22px; border: 5px solid var(--encre); background: var(--encre); overflow: hidden; box-shadow: 0 22px 44px rgba(22, 21, 20, .3); }
+.ecrans__tel .ecrans__vue { border-radius: 17px; }
+.ecrans__tel .ecrans__vue.est-devant { transition-delay: .1s; }
+.ecrans__etiquette { position: absolute; left: 4%; bottom: 0; display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; background: var(--blanc); border-radius: 16px; box-shadow: 0 12px 30px rgba(22, 21, 20, .14); max-width: 58%; animation: ecrans-etiquette .6s cubic-bezier(.34, 1.4, .64, 1) .2s both; }
+.ecrans__numero { flex: none; width: 38px; height: 38px; border-radius: 11px; background: var(--vermillon); color: var(--blanc); display: grid; place-items: center; font: 800 15px/1 var(--font-sans); }
+.ecrans__textes { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ecrans__textes strong { font: 800 16px/1.2 var(--font-sans); color: var(--encre); }
+.ecrans__textes span { font: 400 13px/1.35 var(--font-sans); color: var(--gris-chaud); }
+/* vignettes : toutes les pages, la page ouverte encadrée d'encre */
+.ecrans__vignettes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ecrans__vignette { all: unset; box-sizing: border-box; position: relative; display: flex; flex-direction: column; gap: 6px; width: 100%; padding: 6px; border-radius: 12px; cursor: pointer; transition: background .2s ease; }
+.ecrans__vignette:hover { background: rgba(255, 255, 255, .6); }
+.ecrans__vignette:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.ecrans__mini { display: block; aspect-ratio: 1200 / 650; border-radius: 8px; overflow: hidden; background: var(--blanc); border: 2px solid transparent; box-shadow: 0 4px 12px rgba(22, 21, 20, .1); transition: border-color .2s ease, transform .2s ease; }
+.ecrans__mini img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.ecrans__vignette[aria-pressed="true"] .ecrans__mini { border-color: var(--encre); }
+.ecrans__vignette:hover .ecrans__mini { transform: translateY(-2px); }
+.ecrans__nom { font: 600 12px/1.2 var(--font-sans); color: var(--gris-chaud); padding-left: 2px; }
+.ecrans__vignette[aria-pressed="true"] .ecrans__nom { color: var(--encre); font-weight: 800; }
+.ecrans__temps { position: absolute; left: 8px; right: 8px; bottom: 2px; height: 3px; border-radius: 3px; background: var(--vermillon); transform-origin: left; animation: ecrans-temps linear both; }
+.ecrans__temps.est-pause { animation-play-state: paused; }
+@keyframes ecrans-temps { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes ecrans-etiquette { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .ecrans__etiquette { animation: none; }
-  .ecrans__fenetre, .ecrans__tel, .ecrans__fenetres { transition: none !important; }
+  .ecrans__vue { transition: none; }
 }
 /* écrans moyens d'ordinateur : la photo prend moins de largeur et les écrans de l'espace passent un peu devant elle */
 @media (min-width: 1100px) {
   .heros.heros--v3 { grid-template-columns: minmax(340px, 38%) minmax(0, 1fr) !important; column-gap: 0 !important; }
   .heros.heros--v3 .heros__cadre { aspect-ratio: auto !important; width: 100%; }
   .heros.heros--v3 .heros__photo { object-position: 50% 28% !important; }
-  .heros.heros--v3 .heros__outil.ecrans { position: relative; z-index: 3; margin-left: -24px; padding-left: 0; }
+  .heros.heros--v3 .heros__outil.ecrans { position: relative; z-index: 3; margin-left: 0; }
 }
+/* très grands écrans : le contenu du panneau garde une taille raisonnable (le haut de page ne grandit pas en hauteur) */
+.ecrans__tete, .ecrans__corps { width: 100%; max-width: calc((var(--ecran) - var(--hauteur-entete) - 200px) * 1.75); margin-inline: auto; }
