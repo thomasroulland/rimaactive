@@ -1947,3 +1947,57 @@ input, textarea { caret-color: var(--vermillon); }
   .entete--rangee .nav__court { display: inline; }
   .entete--rangee .nav__long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
+
+/* ==========================================================================================
+   Vitrine resserrée (15 novembre 2026, demande de Thomas) : moins de vide partout, du contenu tout de suite ;
+   sous 1100 px, le haut de page repasse en pleine largeur. Placé en dernier : remplace les réglages précédents.
+   ========================================================================================== */
+:root { --espace-rubrique: clamp(40px, calc(4.5 * var(--vw)), 72px); }
+.section { padding-block: var(--espace-rubrique); }
+.section--serree { padding-block: clamp(32px, calc(3.5 * var(--vw)), 56px); }
+.heros-page { padding-block: clamp(32px, calc(4 * var(--vw)), 64px) clamp(28px, calc(3 * var(--vw)), 48px); }
+
+/* plus de rubriques forcées à la hauteur d'un écran (c'est ce qui créait les grands vides au-dessus et au-dessous) */
+.section.ecran-plein,
+main > section.methode.section.ecran-plein,
+.section.ecran-plein.questions { min-height: 0 !important; padding-block: var(--espace-rubrique) !important; }
+html:has(.ecran-plein) { scroll-snap-type: none !important; }
+.offres-page__rubrique, .offres-page__fin, .section.formules-page { min-height: 0 !important; }
+.offres-page__rubrique { padding-block: clamp(28px, calc(3.5 * var(--vw)), 56px) !important; }
+
+/* en-têtes de rubrique plus proches de leur contenu */
+.methode__entete, .services--v2 .services__entete { margin-bottom: clamp(16px, calc(2 * var(--vw)), 28px); }
+.methode__principes { margin-top: clamp(12px, calc(1.6 * var(--vw)), 24px); }
+.methode__objectifs { margin-top: clamp(16px, calc(2 * var(--vw)), 28px); }
+.questions__liste { margin-top: clamp(14px, calc(1.8 * var(--vw)), 24px); }
+/* questions : la liste prend la largeur du contenu, comme les autres rubriques */
+.questions .conteneur--etroit, .questions .conteneur { max-width: var(--largeur); }
+
+/* Qui suis-je, ordinateur : portrait et encadré à une hauteur raisonnable, plus calés sur l'écran */
+@media (min-width: 900px) {
+  .approche__photo img { height: clamp(380px, calc(var(--ecran) * 0.62), 560px) !important; }
+  .approche__cadre { min-height: 0 !important; padding: clamp(24px, calc(2.4 * var(--vw)), 40px) !important; justify-content: center; }
+  .approche__cadre .titre--section { margin-bottom: 16px !important; }
+  .approche__cadre .texte:last-of-type { margin-bottom: 24px !important; }
+  .approche__cadre .texte + .texte { margin-top: 12px !important; }
+}
+
+/* écrans moyens et téléphones : haut de page en pleine largeur, sans l'emplacement gris des captures */
+@media (max-width: 1099px) {
+  .heros.heros--v3 .heros__outil { display: none !important; }
+  .heros.heros--v3 { display: block !important; padding: 0 !important; height: auto !important; }
+  .heros.heros--v3 .heros__cadre { display: block; position: relative; width: 100%; aspect-ratio: auto !important; height: clamp(460px, calc(100svh - var(--hauteur-entete)), 720px) !important; min-height: 0 !important; overflow: hidden; border-radius: 0; -webkit-mask-image: none !important; mask-image: none !important; }
+  .heros.heros--v3 .heros__photo { position: absolute; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover; object-position: 50% 25% !important; }
+}
+/* écrans moyens : les cartes et blocs prennent toute la largeur disponible */
+@media (min-width: 600px) and (max-width: 1099px) {
+  .approche__cadre { max-width: none !important; }
+}
+/* téléphone et tablette : le portrait à côté de « Qui suis-je » garde une vraie taille (il ne dépend plus de la hauteur d'écran) */
+@media (max-width: 899px) {
+  .approche__entete { flex: none !important; height: clamp(150px, 38vw, 240px); max-height: none; margin-bottom: 14px; }
+}
+/* tablette : « Voir les offres » sur une ligne */
+@media (min-width: 600px) and (max-width: 1099px) {
+  .service .service__lien, .service a { white-space: nowrap; }
+}
