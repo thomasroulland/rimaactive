@@ -1464,3 +1464,26 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
   .es2-ligne__principal, .es2-colonnes { gap: 6px; padding-inline: 10px; }
   .es2-ligne__plus { margin-left: 10px; }
 }
+
+/* ========== En-tête compact de la fiche d'un coaché (maquette A de Thomas, 15 novembre 2026) ========== */
+.coache-tete2 { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; }
+.coache-retour { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--filet); background: #fff; color: var(--encre); display: grid; place-items: center; text-decoration: none; transition: transform .25s ease; }
+.coache-retour:hover { transform: translateX(-2px); }
+.coache-retour:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.coache-tete2 .coache-tete__photo { --taille: 44px !important; }
+.coache-tete2__nom { margin: 0; min-width: 0; font-size: 26px; line-height: 1.1; letter-spacing: -.025em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.coache-pastille { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--filet); font-weight: 700; font-size: 13px; line-height: 1.2; white-space: nowrap; }
+.coache-pastille i { width: 8px; height: 8px; border-radius: 50%; background: #4fa36a; flex: none; }
+.coache-tete2 .coache-tete__actions { margin-left: auto; align-items: center; }
+/* onglets : contrôle arrondi, la pastille noire glisse d'un onglet à l'autre */
+.onglets-coache { gap: 2px; padding: 4px; margin-top: -10px; border-bottom: 0; border-radius: 999px; background: rgba(22, 21, 20, .07); width: fit-content; max-width: 100%; }
+.onglets-coache a { min-height: 38px; padding: 0 15px; border-radius: 999px; font-size: 14px; white-space: nowrap; z-index: 1; }
+.onglets-coache a.active { color: var(--craie); }
+.onglets-coache.ec-glisse::after { top: 4px; bottom: auto; height: 38px; border-radius: 999px; background: var(--encre); z-index: 0; }
+@media (max-width: 720px) {
+  .coache-tete2__nom { font-size: 22px; }
+  .coache-pastille__long { display: none; }
+  .onglets-coache { margin-top: -14px; }
+}
+.espace-barre__banque { margin-left: 8px; padding: 4px 12px; border-radius: 999px; background: #161514; color: #f4f3ef; font-weight: 600; font-size: 13px; white-space: nowrap; }
+@media (max-width: 720px) { .espace-barre__banque { display: none; } }

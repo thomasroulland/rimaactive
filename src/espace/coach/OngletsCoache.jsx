@@ -123,6 +123,8 @@ function ProfilSportif({ client, uid }) {
   if (!edition) {
     return (
       <>
+        <h3 className="fiche-carte__sous">Objectif</h3>
+        <p className="espace-aide">{client.objectif || 'Pas encore renseigné'}</p>
         <h3 className="fiche-carte__sous">1RM</h3>
         <p className="espace-aide">{rmTxt}</p>
         <button type="button" className="lien-souligne fiche-carte__modifier" onClick={() => setEdition(true)}>Modifier l’objectif et les 1RM</button>

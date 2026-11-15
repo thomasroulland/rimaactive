@@ -71,17 +71,20 @@ function Tete({ client, uid, onglet, enCours, emplacement }) {
   const glisse = useGlissiere(onglet)
   return (
     <>
-      <Link to="/espace/coach" className="espace-retour">
-        <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
-        Mes coachés
-      </Link>
-      <header className="coache-tete">
-        <PhotoCoache client={client} taille={72} classe="coache-tete__photo" />
-        <div className="coache-tete__identite">
-          <p className="surtitre">{enCours ? `${enCours.nom} · ${enCours.semaine === 0 ? 'commence bientôt' : `semaine ${enCours.semaine} sur ${enCours.nbSemaines}`}` : 'Pas de programme en cours'}</p>
-          <h1 className="titre titre--section">{nom}</h1>
-          <p className="coache-tete__objectif">{client.objectif || client.email}{client.statut !== 'actif' && <span className="espace-statut espace-statut--autre">{STATUTS[client.statut] ?? client.statut}</span>}</p>
-        </div>
+      {/* en-tête compact (maquette A de Thomas, 15 novembre 2026) : flèche, photo, nom, pastille du programme, boutons de l'onglet ; l'objectif est dans la Vue d'ensemble */}
+      <header className="coache-tete2">
+        <Link to="/espace/coach" className="coache-retour" aria-label="Retour à Mes coachés" title="Mes coachés">
+          <svg width="20" height="20" aria-hidden="true" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round"><path d="M216 128H40M112 56l-72 72 72 72" /></svg>
+        </Link>
+        <PhotoCoache client={client} taille={44} classe="coache-tete__photo" />
+        <h1 className="coache-tete2__nom">{nom}</h1>
+        <span className="coache-pastille">
+          {enCours && <i aria-hidden="true" />}
+          {enCours
+            ? <><span className="coache-pastille__long">{enCours.nom} · </span>{enCours.semaine === 0 ? 'commence bientôt' : `S${enCours.semaine} sur ${enCours.nbSemaines}`}</>
+            : 'Pas de programme en cours'}
+        </span>
+        {client.statut !== 'actif' && <span className="espace-statut espace-statut--autre">{STATUTS[client.statut] ?? client.statut}</span>}
         <div className="coache-tete__actions" ref={emplacement} />
       </header>
       <nav className="onglets-coache ec-glisse" aria-label={`Fiche de ${nom}`} ref={glisse}>

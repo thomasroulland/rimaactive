@@ -49,6 +49,8 @@ export default function EditeurProgramme() {
   const [verrous, setVerrous] = useState(null) // null : pas encore vérifié, tout reste verrouillé
   const [erreurVerrous, setErreurVerrous] = useState('')
   const [message, setMessage] = useState('')
+  const [banqueMaj, setBanqueMaj] = useState(false) // photos et consignes repris de la banque : à enregistrer pour que le coaché les voie
+  useEffect(() => { if (!modifie) setBanqueMaj(false) }, [modifie])
   const [erreur, setErreur] = useState('')
   const [envoi, setEnvoi] = useState(false)
   const [confirmation, setConfirmation] = useState(null)
@@ -95,7 +97,7 @@ export default function EditeurProgramme() {
     const r = rafraichirExercices(prog, exercices)
     if (r !== prog) {
       setProg(r); setModifie(true)
-      setMessage('Photos et consignes mises à jour depuis la banque d’exercices : enregistrez pour que votre coaché les voie.')
+      setBanqueMaj(true) // pas de phrase en haut de page : une pastille dans la barre d'enregistrement (voir `barre`)
     }
   }, [prog, exercices])
 
@@ -328,7 +330,7 @@ export default function EditeurProgramme() {
         <p className="espace-barre__etat">
           <span className={`espace-statut espace-statut--${publie && !modele ? 'actif' : 'autre'}`}>{modele ? 'Modèle' : publie ? 'Publié' : 'Brouillon'}</span>
           {modifie
-            ? <span className="espace-barre__modifie">Modifications non enregistrées</span>
+            ? <><span className="espace-barre__modifie">Modifications non enregistrées</span>{banqueMaj && <span className="espace-barre__banque">Banque mise à jour : photos et consignes à enregistrer</span>}</>
             : <span>{modele ? 'Aucun coaché ne le voit : affectez-le depuis Programmes.' : publie ? 'Votre coaché voit ce programme.' : 'Votre coaché ne le voit pas encore.'}</span>}
         </p>
         <div className="espace-actions">
