@@ -331,17 +331,9 @@
 .ec-regul__txt { margin-left: auto; }
 
 /* charges */
-.ec-charges { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-.ec-courbe { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.ec-courbe__tete { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.ec-courbe__nom { margin: 0; min-width: 0; font: 800 17px/22px var(--font-sans); overflow-wrap: anywhere; }
-.ec-courbe__derniere { margin: 0; flex: none; font: 900 28px/1 var(--font-sans); letter-spacing: -0.03em; }
-.ec-courbe__barres { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; height: 108px; }
-.ec-courbe__point { flex: 0 1 48px; min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; }
-.ec-courbe__valeur { font: 600 12px/16px var(--font-sans); white-space: nowrap; }
-.ec-courbe__barre { width: 20px; background: var(--ec-encre); border-radius: 4px 4px 1px 1px; }
-.ec-courbe__date { display: flex; flex-direction: column; align-items: center; font: 400 12px/15px var(--font-sans); color: var(--ec-gris); white-space: nowrap; }
-.ec-courbe__date > :first-child { font-weight: 600; color: var(--ec-encre); }
+.ec-charges { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.ec-charges .fiche-courbe { min-width: 0; padding: var(--ec-pad); border: 0; border-radius: 16px; box-shadow: var(--ec-ombre-repos); }
+.ec-charges .courbe-zone, .ec-charges .fiche-svg { max-width: none; }
 
 /* séances faites */
 .ec-histo { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
@@ -913,7 +905,8 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-records__avant { font: 400 14px/20px var(--font-sans); color: var(--ec-gris); }
 @keyframes ec-records-entree { from { opacity: 0; transform: scale(.96); } }
 @media (prefers-reduced-motion: reduce) { .ec-records { animation: none; } }
-.ec-records--page { padding: var(--ec-pad); border-radius: 24px; animation: none; }
+/* sur la page : carte blanche comme les chiffres clés (15 novembre 2026), le jaune reste pour l'écran de fin de séance */
+.ec-records--page { padding: var(--ec-pad); border-radius: 16px; background: var(--blanc); box-shadow: var(--ec-ombre-repos); animation: none; }
 .ec-records--page .ec-records__liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px 24px; }
 .ec-records--page .ec-records__liste li { flex-direction: column; gap: 0; }
 /* écran « Séance enregistrée » épuré (14 novembre 2026) */

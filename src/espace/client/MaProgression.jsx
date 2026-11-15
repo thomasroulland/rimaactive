@@ -1,15 +1,16 @@
 import { useRef } from 'react'
-import { meilleuresCharges, regularite, semaineCourante } from '../donnees/calculs.js'
+import { meilleuresCharges, regularite } from '../donnees/calculs.js'
 import { bilanSeance, dateSeance } from '../donnees/progression.js'
-import { evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
+import { exercicesDe } from '../donnees/seances.js'
 import { Link } from 'react-router-dom'
 import { basculerDetails } from '../../components/basculerDetails.js'
 import MesPhotos from './MesPhotos.jsx'
 import useReglages from '../coach/useReglages.js'
 import { nomType } from '../donnees/reglages.js'
 import MesMesures from './MesMesures.jsx'
+import { Courbe } from '../coach/FicheClient.jsx'
 
-const NB_POINTS = 6 // dernières séances montrées par exercice
+const NB_POINTS = 8 // dernières séances montrées par exercice, comme dans les statistiques
 
 // Onglet « Ma progression » : cinq rubriques repliables, ouvertes par défaut.
 export default function MaProgression({ uid, programme, programmes, faites, seances }) {
@@ -72,58 +73,22 @@ function Regularite({ programme, faites }) {
 }
 
 // ---------- Mes charges ----------
+// Les mêmes graphiques que dans les statistiques de Marie (courbe, bulle au survol, au doigt et au clavier).
 function Charges({ programmes, seances }) {
   const { exoIdParElement, noms } = exercicesDe(programmes)
   const courbes = [...noms.entries()]
     .map(([exoId, nom]) => ({ exoId, nom, points: meilleuresCharges(seances, exoIdParElement, exoId) }))
     .filter((c) => c.points.length > 0)
     .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'))
-  // « S2·12/11 » : semaine du programme (le plus récent commencé ce jour-là) et jour/mois
-  const libelle = (date) => {
-    const p = [...programmes].filter((x) => x.debut && x.debut <= date).sort((a, b) => (a.debut < b.debut ? 1 : -1))[0]
-    const [, m, j] = date.split('-').map(Number)
-    const jm = `${j}/${m}`
-    return p ? `S${Math.max(1, semaineCourante(p.debut, date, (p.semaines ?? []).length))}·${jm}` : jm
-  }
   return (
     <>
       {courbes.length === 0 && <p className="ec-vide">Vos charges apparaîtront ici dès votre première séance de force enregistrée.</p>}
       {courbes.length > 0 && (
-        <div className="ec-charges">
-          {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points} libelle={libelle} />)}
-        </div>
+        <ul className="fiche-liste ec-charges">
+          {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-NB_POINTS)} />)}
+        </ul>
       )}
     </>
-  )
-}
-
-function Courbe({ nom, points, libelle }) {
-  const vus = points.slice(-NB_POINTS)
-  const valeur = (p) => parseFloat(String(p.charge).replace(',', '.')) || 0
-  const vals = vus.map(valeur)
-  const max = Math.max(...vals)
-  const min = Math.min(...vals)
-  const der = points[points.length - 1]
-  const description = vus
-    .map((p) => `${libelle(p.date)}, ${fr(p.charge)} kg${p.reps ? ` pour ${p.reps} répétitions` : ''}`)
-    .join(' ; ')
-  return (
-    <article className="ec-carte ec-courbe">
-      <div className="ec-courbe__tete">
-        <h3 className="ec-courbe__nom">{nom}</h3>
-        <p className="ec-courbe__derniere">{fr(der.charge)} kg{der.reps ? ` × ${der.reps}` : ''}</p>
-      </div>
-      <div className="ec-courbe__barres" role="img" aria-label={`${nom} : ${description}`}>
-        {vus.map((p, i) => (
-          <div key={i} className="ec-courbe__point">
-            <span className="ec-courbe__valeur">{fr(p.charge)}{p.reps ? `×${p.reps}` : ''}</span>
-            <span className="ec-courbe__barre" style={{ height: `${Math.round(max > min ? 14 + ((vals[i] - min) / (max - min)) * 34 : 30)}px` }} />
-            <span className="ec-courbe__date">{libelle(p.date).split('·').map((t, k) => <span key={k}>{t}</span>)}</span>
-          </div>
-        ))}
-      </div>
-      <p className="ec-petit">{evolutionCharges(points)}</p>
-    </article>
   )
 }
 
