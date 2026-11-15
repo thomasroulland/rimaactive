@@ -39,7 +39,7 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 
 /* ---------- Cartes : blanc translucide avec un reflet chaud en bas à droite ---------- */
 .service, .question, .methode__principes li, .approche__panneau, .approche__cadre, .formulaire, .ecrans__panneau,
-.ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-carte, .ec-s2-reglage, .ec-s2-fin__suivant {
+.ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-carte, .ec-s2-reglage, .ec-s2-fin__suivant, .gp-col, .gp-seance:not(.est-faite), .gp-nouvelle, .es2-bloc, .es2__banque .espace-choix, .es2-ligne__plus, .prog-vide, .ec-s2-detail {
   background-color: rgba(255, 255, 255, .72) !important; background-image: linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); border: 1px solid rgba(255, 255, 255, .85) !important; box-shadow: 0 10px 30px rgba(22, 21, 20, .08) !important; }
 .methode__principes li { padding: 18px; border-radius: var(--arrondi); }
@@ -58,7 +58,7 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 .entete:hover, .service:hover, .question:hover, .formulaire:hover, .ecrans__panneau:hover, .ec-semaine:hover, .ec-etape:hover, .ec-pcarte:hover, .ec-chiffre:hover, .ec-records:hover,
 .ec-regul:hover, .espace-carte:hover, .ec-histo__carte:hover, .ec-carte:hover, .disc:hover, .carte-coache:hover, .messagerie__fil:hover, .ec-s2-carte:hover { --lueur: 1; }
 .entete { background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .14)), transparent 68%); }
-.service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil {
+.service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .gp-seance:not(.est-faite), .gp-col, .es2-bloc {
   background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .85)), transparent 68%), linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important; }
 .carte-coache:hover, .ec-pcarte:hover, .ec-carte:hover { transform: translateY(-3px); box-shadow: 0 24px 56px rgba(22, 21, 20, .13) !important; }
 @media (prefers-reduced-motion: no-preference) {
@@ -110,3 +110,15 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
   }
 
 @media (max-width: 960px) { .entete--rangee .nav__bulle { display: none; } .entete--rangee .nav__lien { transition: background-color .25s ease, color .25s ease; } }
+
+/* grille du programme et création de séance : mêmes cartes que le reste (blanc translucide, reflet chaud en bas à droite) ;
+   une séance faite garde son vert, sa colonne un fond plus léger pour que les séances ressortent */
+.gp-col { background-color: rgba(255, 255, 255, .45) !important; box-shadow: 0 10px 30px rgba(22, 21, 20, .05) !important; }
+.gp-seance:not(.est-faite) { background-color: rgba(255, 255, 255, .82) !important; }
+.gp-seance.est-faite { background: linear-gradient(135deg, rgba(231, 243, 234, .9) 35%, rgba(190, 226, 202, .75) 100%); border-color: rgba(255, 255, 255, .85); }
+.gp-col.est-depot { background-color: rgba(242, 194, 48, .2) !important; }
+.es2-bloc__tete { background: rgba(22, 21, 20, .04); }
+.gp-col .gp-menu__liste, .es2__banque .espace-choix__ligne:hover { background-color: #fff; }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .gp-col, .gp-seance, .es2-bloc, .es2__banque .espace-choix { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: #fff !important; }
+}
