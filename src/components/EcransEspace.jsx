@@ -11,6 +11,7 @@ import pcProgression from '../assets/ecrans/pc-progression.webp'
 import pcMessages from '../assets/ecrans/pc-messages.webp'
 
 // Haut de l'accueil, ordinateur (15 novembre 2026, refait le même jour) : un panneau rangé dans la colonne de droite.
+// Changement de page : l'ancienne part vers le haut, la nouvelle arrive par le bas (demande de Thomas).
 // Au centre, la page ouverte en grand (fenêtre d'ordinateur) avec la même page sur téléphone posée sur son coin ;
 // à droite, les vignettes de toutes les pages, cliquables, dont celle en cours avec une barre de temps.
 // Captures faites avec une coachée fictive.
@@ -25,7 +26,15 @@ const DUREE = 5000
 const N = ECRANS.length
 
 export default function EcransEspace() {
-  const [idx, setIdx] = useState(0)
+  const [idx, setIdxBrut] = useState(0)
+  const [prec, setPrec] = useState(null)
+  const actuel = useRef(0)
+  // change de page en gardant la précédente, qui part vers le haut pendant que la nouvelle arrive par le bas
+  const setIdx = (suite) => {
+    const n = typeof suite === 'function' ? suite(actuel.current) : suite
+    if (n === actuel.current) return
+    setPrec(actuel.current); actuel.current = n; setIdxBrut(n)
+  }
   const [tour, setTour] = useState(0)
   const [enPause, setEnPause] = useState(false)
   const [calme] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
@@ -67,7 +76,7 @@ export default function EcransEspace() {
               <span className="ecrans__barre" aria-hidden="true"><i /><i /><i /><span className="ecrans__adresse">rimaactive.fr/espace</span></span>
               <div className="ecrans__vues">
                 {ECRANS.map((ecran, i) => (
-                  <img key={ecran.court} className={`ecrans__vue${i === idx ? ' est-devant' : ''}`} src={ecran.pc}
+                  <img key={ecran.court} className={`ecrans__vue${i === idx ? ' est-devant' : i === prec ? ' est-sortie' : ''}`} src={ecran.pc}
                     alt={i === idx ? `Espace client sur ordinateur : ${ecran.titre.toLowerCase()}` : ''} aria-hidden={i !== idx}
                     width="1200" height="650" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
                 ))}
@@ -75,7 +84,7 @@ export default function EcransEspace() {
             </div>
             <div className="ecrans__tel">
               {ECRANS.map((ecran, i) => (
-                <img key={ecran.court} className={`ecrans__vue${i === idx ? ' est-devant' : ''}`} src={ecran.tel}
+                <img key={ecran.court} className={`ecrans__vue${i === idx ? ' est-devant' : i === prec ? ' est-sortie' : ''}`} src={ecran.tel}
                   alt={i === idx ? 'La même page sur téléphone' : ''} aria-hidden={i !== idx}
                   width="540" height="1169" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
               ))}
