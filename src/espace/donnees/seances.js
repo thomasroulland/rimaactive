@@ -273,3 +273,50 @@ export function saisirSerie(ligne, cle, valeur, element) {
   for (const k of ['charge', 'reps']) if (k !== cle && !rempli(out[k])) out[k] = prevu[k]
   return out
 }
+
+// ---------- Séance guidée bloc par bloc (15 novembre 2026) ----------
+
+// Avancement de chaque bloc : séries cochées « Fait » (blocs en séries) ou « Bloc fait » (EMOM, AMRAP…).
+// lignes(el) : séries de l'élément ; resultats : { [blocId]: { fait } }.
+// Renvoie { blocs: [{ id, lettre, faites, total, complet }], faites, total }.
+export function progressionBlocs(blocs, lignes, resultats = {}) {
+  const liste = (blocs ?? []).map((b) => {
+    if ((b.format ?? 'series') !== 'series') {
+      const fait = !!resultats?.[b.id]?.fait
+      return { id: b.id, lettre: b.lettre, faites: fait ? 1 : 0, total: 1, complet: fait }
+    }
+    let faites = 0; let total = 0
+    for (const el of b.elements ?? []) {
+      const ls = lignes(el) ?? []
+      total += ls.length
+      faites += ls.filter((l) => l?.fait).length
+    }
+    return { id: b.id, lettre: b.lettre, faites, total, complet: total > 0 && faites === total }
+  })
+  return { blocs: liste, faites: liste.reduce((t, b) => t + b.faites, 0), total: liste.reduce((t, b) => t + b.total, 0) }
+}
+
+// Bloc à ouvrir en arrivant : le premier qui n'est pas complet (sinon le premier)
+export function premierBlocAFaire(progression) {
+  const i = (progression?.blocs ?? []).findIndex((b) => !b.complet)
+  return i < 0 ? 0 : i
+}
+
+// Temps de repos saisi par Marie, en secondes : « 90 », « 90 s », « 1:30 », « 1 min 30 », « 2 min » ; sinon null
+export function secondesRepos(repos) {
+  const t = String(repos ?? '').trim().toLowerCase().replace(',', '.')
+  if (!t) return null
+  let m = t.match(/^(\d+):(\d{1,2})$/)
+  if (m) return Number(m[1]) * 60 + Number(m[2])
+  m = t.match(/^(\d+(?:\.\d+)?)\s*(?:min|mn|m|')\s*(\d+)?\s*(?:s|sec|")?$/)
+  if (m) return Math.round(Number(m[1]) * 60) + (m[2] ? Number(m[2]) : 0)
+  m = t.match(/^(\d+)\s*(?:s|sec|secondes?|")?$/)
+  if (m) return Number(m[1])
+  return null
+}
+
+// 72 → « 1:12 »
+export function minutesSecondes(s) {
+  const n = Math.max(0, Math.ceil(s))
+  return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`
+}

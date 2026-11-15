@@ -10,16 +10,16 @@ const Image = () => (
 
 // Un bloc de la séance : « Bloc A » ou « Bloc C · EMOM 10 min », ses exercices, puis « Mon résultat » (autres formats).
 // `saisie` : lignes de séries, notes et résultat du bloc ; `actions` : fonctions de saisie (absentes en lecture seule).
-export default function BlocSeries({ bloc, saisie, actions, lecture, voirConsignes }) {
+export default function BlocSeries({ bloc, saisie, actions, lecture, voirConsignes, sansTete = false }) {
   const enSeries = (bloc.format ?? 'series') === 'series'
   const resultat = saisie.blocs[bloc.id]
   return (
     <section className="ec-sbloc" aria-labelledby={`bloc-${bloc.id}`}>
-      <div className="ec-sbloc__tete">
+      {!sansTete && <div className="ec-sbloc__tete">
         <h2 id={`bloc-${bloc.id}`} className="ec-h3 ec-sbloc__titre">Bloc {bloc.lettre}{enSeries ? '' : ` · ${resumeFormat(bloc)}`}</h2>
         {!enSeries && resultat?.fait && <span className="ec-valide">Validé</span>}
-      </div>
-      <ol className="ec-sexos">
+      </div>}
+      <ol className="ec-sexos ec-sexos--cartes">
         {(bloc.elements ?? []).map((el, i) => (
           <Exercice key={el.id} element={el} code={`${bloc.lettre}${i + 1}`} bloc={bloc} enSeries={enSeries}
             lignes={saisie.lignes(el)} note={saisie.notes[el.id] ?? ''} lecture={lecture} actions={actions}
@@ -33,65 +33,66 @@ export default function BlocSeries({ bloc, saisie, actions, lecture, voirConsign
   )
 }
 
+// Carte d'un exercice (15 novembre 2026) : la photo à gauche (ouvre les consignes), le nom et ce qui est prévu,
+// puis les séries ; la première série pas encore faite est mise en avant.
 function Exercice({ element, code, bloc, enSeries, lignes, note, lecture, actions, voirConsignes }) {
   const { prescription, details } = lignesExercice(element, enSeries)
   const base = `ex-${element.id}`
   const complet = enSeries && lignes.length > 0 && lignes.every((l) => l.fait)
   const chargeSeule = !enSeries && avecChargeSeule(bloc, element)
+  const enCours = lecture ? -1 : lignes.findIndex((l) => !l.fait)
   return (
-    <li className="ec-sexo" aria-labelledby={`${base}-nom`}>
-      <div className="ec-sexo__tete">
+    <li className={`ec-sexo ec-sexo--carte${complet ? ' est-complet' : ''}`} aria-labelledby={`${base}-nom`}>
+      <button type="button" className="ec-sexo__photo" onClick={voirConsignes} aria-label={`Voir les photos et consignes : ${element.nom}`}>
+        {element.photos?.[0] ? <PhotoStockee chemin={element.photos[0]} alt="" classe="ec-sexo__img" /> : <span className="ec-sexo__sans"><Image /></span>}
+        <span className="ec-sexo__voir">Consignes</span>
+      </button>
+      <div className="ec-sexo__corps">
         <div className="ec-sexo__texte">
-          <p className="ec-sexo__code" aria-hidden="true">{code}{complet && <span className="ec-valide">Validé</span>}</p>
+          <p className="ec-sexo__code" aria-hidden="true">{code}{complet && <span className="ec-valide">Fait</span>}</p>
           <h3 id={`${base}-nom`} className="ec-sexo__nom"><span className="ec-invisible">{code} : </span>{element.nom}</h3>
           {prescription && <p className="ec-sexo__prescription">{prescription}</p>}
           {details && <p className="ec-petit">{details}</p>}
           {element.commentaire && <p className="ec-petit">{element.commentaire}</p>}
         </div>
-        <button type="button" className="ec-fiche-bouton" onClick={voirConsignes} aria-label={`Voir les photos et consignes : ${element.nom}`}>
-          <span className="ec-fiche-bouton__img">
-            {element.photos?.[0] ? <PhotoStockee chemin={element.photos[0]} alt="" classe="ec-fiche-bouton__photo" /> : <Image />}
-          </span>
-          <span className="ec-fiche-bouton__txt">Consignes</span>
-        </button>
-      </div>
 
-      {enSeries && (
-        <TableauSeries base={base} nom={element.nom} element={element} lignes={lignes} lecture={lecture}
-          changer={(i, cle, v) => actions?.serie(element, i, cle, v)}>
-          <div>
-            <label className="ec-etiquette" htmlFor={`${base}-note`}>Note</label>
-            <input id={`${base}-note`} className="ec-champ" type="text" autoComplete="off" value={note} readOnly={lecture}
-              placeholder={lecture ? '' : 'Ex. dernière rep difficile'} onChange={(e) => actions?.note(element.id, e.target.value)} />
+        {enSeries && (
+          <TableauSeries base={base} nom={element.nom} element={element} lignes={lignes} lecture={lecture} enCours={enCours}
+            changer={(i, cle, v) => actions?.serie(element, i, cle, v)}>
+            <div>
+              <label className="ec-etiquette" htmlFor={`${base}-note`}>Note</label>
+              <input id={`${base}-note`} className="ec-champ" type="text" autoComplete="off" value={note} readOnly={lecture}
+                placeholder={lecture ? '' : 'Ex. dernière rep difficile'} onChange={(e) => actions?.note(element.id, e.target.value)} />
+            </div>
+          </TableauSeries>
+        )}
+
+        {chargeSeule && (
+          <div className="ec-sexo__charge">
+            <label className="ec-etiquette" htmlFor={`${base}-charge`}>Charge (kg)</label>
+            <input id={`${base}-charge`} className="ec-champ ec-champ--serre" type="text" inputMode="decimal" autoComplete="off"
+              value={lignes[0]?.charge ?? ''} placeholder={fr(element.charge ?? '')} readOnly={lecture}
+              onChange={(e) => actions?.chargeSeule(element.id, e.target.value)} />
           </div>
-        </TableauSeries>
-      )}
-
-      {chargeSeule && (
-        <div className="ec-sexo__charge">
-          <label className="ec-etiquette" htmlFor={`${base}-charge`}>Charge (kg)</label>
-          <input id={`${base}-charge`} className="ec-champ ec-champ--serre" type="text" inputMode="decimal" autoComplete="off"
-            value={lignes[0]?.charge ?? ''} placeholder={fr(element.charge ?? '')} readOnly={lecture}
-            onChange={(e) => actions?.chargeSeule(element.id, e.target.value)} />
-        </div>
-      )}
+        )}
+      </div>
     </li>
   )
 }
 
 // Tableau Série / Reps / Charge (kg) / RPE / Fait, puis ce qui suit (la note)
-export function TableauSeries({ base, nom, element, lignes, lecture, changer, children }) {
+export function TableauSeries({ base, nom, element, lignes, lecture, changer, enCours = -1, children }) {
   const prevu = { reps: String(element?.reps ?? ''), charge: fr(element?.charge ?? '') }
   return (
     <div className="ec-series">
       <div className="ec-serie ec-serie--entete" aria-hidden="true">
-        <span>Série</span><span>Reps</span><span>Charge (kg)</span><span>RPE</span><span>Fait</span>
+        <span>Série</span><span>Reps</span><span>Kg</span><span>RPE</span><span>Fait</span>
       </div>
       {lignes.map((l, i) => {
         const lib = `${nom}, série ${i + 1}`
         const id = `${base}-s${i}`
         return (
-          <div key={i} className="ec-serie" role="group" aria-label={lib}>
+          <div key={i} className={`ec-serie${l.fait ? ' est-faite' : ''}${i === enCours ? ' est-en-cours' : ''}`} role="group" aria-label={lib}>
             <span className="ec-serie__num">{i + 1}</span>
             <input id={`${id}-reps`} className="ec-champ ec-champ--serre" type="text" inputMode="numeric" autoComplete="off"
               aria-label={`${lib}, répétitions`} value={l.reps ?? ''} placeholder={lecture ? '' : prevu.reps} readOnly={lecture}

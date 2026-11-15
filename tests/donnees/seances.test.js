@@ -200,3 +200,28 @@ describe('écran de la séance', () => {
     expect(contenuFin(base, { ressenti: 'Bien' }).effort).toBeNull()
   })
 })
+
+import { progressionBlocs, premierBlocAFaire, secondesRepos, minutesSecondes } from '../../src/espace/donnees/seances.js'
+describe('séance guidée', () => {
+  const blocs = [
+    { id: 'a', lettre: 'A', elements: [{ id: 'e1' }, { id: 'e2' }] },
+    { id: 'b', lettre: 'B', format: 'emom', elements: [{ id: 'e3' }] },
+    { id: 'c', lettre: 'C', elements: [{ id: 'e4' }] },
+  ]
+  const series = { e1: [{ fait: true }, { fait: true }], e2: [{ fait: true }, { fait: true }], e4: [{ fait: true }, { fait: false }] }
+  it('compte les séries faites par bloc et au total', () => {
+    const p = progressionBlocs(blocs, (el) => series[el.id] ?? [], { b: { fait: false } })
+    expect(p.blocs.map((b) => [b.lettre, b.faites, b.total, b.complet])).toEqual([['A', 4, 4, true], ['B', 0, 1, false], ['C', 1, 2, false]])
+    expect([p.faites, p.total]).toEqual([5, 7])
+    expect(premierBlocAFaire(p)).toBe(1)
+  })
+  it('tout fait : on ouvre le premier bloc', () => {
+    expect(premierBlocAFaire({ blocs: [{ complet: true }, { complet: true }] })).toBe(0)
+    expect(premierBlocAFaire({ blocs: [] })).toBe(0)
+  })
+  it('lit le temps de repos', () => {
+    expect(['90', '90 s', '45sec', '1:30', '1 min 30', '2 min', "1'30", '1,5 min', '', 'libre'].map(secondesRepos))
+      .toEqual([90, 90, 45, 90, 90, 120, 90, 90, null, null])
+    expect([minutesSecondes(72), minutesSecondes(0), minutesSecondes(59.2)]).toEqual(['1:12', '0:00', '1:00'])
+  })
+})
