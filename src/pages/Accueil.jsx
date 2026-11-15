@@ -9,6 +9,7 @@ import { Photo } from '../components/Blocs.jsx'
 import useTitre from '../components/useTitre.js'
 import { basculerDetails } from '../components/basculerDetails.js'
 import { CONTACT } from '../components/liens.js'
+import EcransEspace from '../components/EcransEspace.jsx'
 
 const SERVICES = [
   {
@@ -52,8 +53,6 @@ const SERVICES = [
 ]
 
 
-// Captures de l'outil de suivi, dans l'ordre du défilement (à remplacer par les images de Marie)
-const CAPTURES = ['Tableau de bord', 'Programme', 'Séance du jour', 'Suivi', 'Bilans']
 
 export default function Accueil() {
   useTitre('Accueil')
@@ -76,14 +75,8 @@ export default function Accueil() {
             </div>
           </div>
         </div>
-        {/* Captures de l'outil de suivi de coaching : emplacements en attendant les images de Marie */}
-        <div className="heros__outil" aria-label="Aperçu de l’outil de suivi">
-          <div className="heros__piste">
-            {[...CAPTURES, CAPTURES[0]].map((c, i) => (
-              <div key={i} className="heros__capture" aria-hidden="true" title={c} />
-            ))}
-          </div>
-        </div>
+        {/* Les vrais écrans de l'espace coaché, en pile 3D qui défile (15 novembre 2026) ; caché sous 1100 px */}
+        <EcransEspace />
       </section>
 
       <Methode />
