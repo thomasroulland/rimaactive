@@ -2079,33 +2079,34 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 .offres--2 > .offre { min-height: 0 !important; }
 
 /* ---------- Haut de l'accueil : les écrans de l'espace coaché (15 novembre 2026, revu le même jour) ----------
-   la version ordinateur dans une fenêtre de navigateur, la version téléphone posée devant ; à plat, sans perspective */
+   les pages de l'ordinateur empilées (les suivantes derrière, en haut à droite, cliquables), le téléphone posé devant */
 .heros.heros--v3 .heros__outil.ecrans { overflow: visible; margin: 0; border-radius: 0; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px calc(var(--gouttiere) / 2) 24px 0; min-width: 0; }
 .ecrans__surtitre { margin: 0; font: 700 12px/16px var(--font-sans); letter-spacing: .16em; text-transform: uppercase; color: var(--gris-chaud); text-align: center; }
-.ecrans__scene { position: relative; width: min(100%, calc((var(--ecran) - var(--hauteur-entete) - 170px) / 0.66)); aspect-ratio: 1 / 0.66; --dx: 0; --dy: 0; }
-.ecrans__vue { position: absolute; inset: 0; pointer-events: none; }
-.ecrans__fenetre, .ecrans__tel { position: absolute; margin: 0; overflow: hidden; background: var(--blanc); transition: transform .8s cubic-bezier(.2, .8, .2, 1), opacity .7s ease; }
-.ecrans__fenetre { left: 0; top: 0; width: 82%; border-radius: 14px; border: 1px solid #e3dfd7; box-shadow: 0 24px 60px rgba(22, 21, 20, .16);
-  transform: translate(calc(var(--dx) * -10px), calc(var(--dy) * -8px)); }
-.ecrans__barre { display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; background: #efece6; border-bottom: 1px solid #e3dfd7; }
+.ecrans__scene { position: relative; width: min(100%, 1000px, calc((var(--ecran) - var(--hauteur-entete) - 150px) / 0.66)); aspect-ratio: 1 / 0.66; --dx: 0; --dy: 0; }
+.ecrans__fenetres { position: absolute; left: 17%; bottom: 4%; width: 60%; aspect-ratio: 1200 / 680; transform: translate(calc(var(--dx) * -10px), calc(var(--dy) * -8px)); transition: transform .35s ease; }
+.ecrans__fenetre { all: unset; box-sizing: border-box; position: absolute; inset: 0; display: block; border-radius: 14px; overflow: hidden; background: var(--blanc); border: 1px solid #e3dfd7; box-shadow: 0 24px 60px rgba(22, 21, 20, .16);
+  transform-origin: 0% 100%; transition: transform .8s cubic-bezier(.2, .8, .2, 1), opacity .7s ease, filter .7s ease, box-shadow .3s ease; }
+.ecrans__fenetre img { display: block; width: 100%; height: auto; }
+.ecrans__fenetre[data-rang="0"] { z-index: 10; }
+.ecrans__fenetre[data-rang="1"] { z-index: 9; transform: translate(15%, -16%) scale(.93); filter: brightness(.97); cursor: pointer; }
+.ecrans__fenetre[data-rang="2"] { z-index: 8; transform: translate(29%, -31%) scale(.86); filter: brightness(.94) saturate(.85); opacity: .9; cursor: pointer; }
+.ecrans__fenetre[data-rang="3"] { z-index: 7; transform: translate(42%, -45%) scale(.79); filter: brightness(.9) saturate(.7); opacity: .75; cursor: pointer; }
+.ecrans__fenetre[data-rang="4"] { z-index: 6; transform: translate(48%, -52%) scale(.74); opacity: 0; pointer-events: none; }
+button.ecrans__fenetre:hover { filter: none; box-shadow: 0 28px 70px rgba(22, 21, 20, .24); }
+button.ecrans__fenetre[data-rang="1"]:hover { transform: translate(15%, -18%) scale(.93); }
+button.ecrans__fenetre[data-rang="2"]:hover { transform: translate(29%, -33%) scale(.86); opacity: 1; }
+button.ecrans__fenetre[data-rang="3"]:hover { transform: translate(42%, -47%) scale(.79); opacity: 1; }
+button.ecrans__fenetre:focus-visible { outline: 3px solid var(--encre); outline-offset: 3px; }
+.ecrans__barre { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; background: #efece6; border-bottom: 1px solid #e3dfd7; }
 .ecrans__barre i { width: 9px; height: 9px; border-radius: 50%; background: #d4cfc6; }
 .ecrans__barre i:first-child { background: var(--vermillon); }
 .ecrans__barre i:nth-child(2) { background: var(--jaune); }
 .ecrans__adresse { margin-left: 10px; padding: 3px 12px; border-radius: 999px; background: var(--blanc); font: 500 11px/1.2 var(--font-sans); color: var(--gris-chaud); }
-.ecrans__fenetre img { display: block; width: 100%; height: auto; }
-.ecrans__tel { right: 0; bottom: 0; width: 28%; aspect-ratio: 540 / 1169; border-radius: 26px; border: 6px solid var(--encre); background: var(--encre); box-shadow: 0 26px 50px rgba(22, 21, 20, .28);
-  transform: translate(calc(var(--dx) * 14px), calc(var(--dy) * 10px)); }
+.ecrans__tel { position: absolute; left: 0; bottom: 0; z-index: 20; margin: 0; width: 20%; aspect-ratio: 540 / 1169; border-radius: 26px; border: 6px solid var(--encre); background: var(--encre); overflow: hidden; box-shadow: 0 26px 50px rgba(22, 21, 20, .28);
+  opacity: 0; transform: translate(calc(var(--dx) * 14px), calc(20px + var(--dy) * 10px)); transition: opacity .6s ease, transform .8s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+.ecrans__tel.est-devant { opacity: 1; transform: translate(calc(var(--dx) * 14px), calc(var(--dy) * 10px)); transition-delay: .12s; }
 .ecrans__tel img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 20px; }
-/* arrivée : la fenêtre glisse de la droite, le téléphone monte juste après ; départ : fondu vers la gauche */
-.ecrans__vue.est-attente .ecrans__fenetre, .ecrans__vue.est-attente .ecrans__tel { opacity: 0; transition: none; }
-.ecrans__vue.est-attente .ecrans__fenetre { transform: translate(40px, 0); }
-.ecrans__vue.est-attente .ecrans__tel { transform: translate(0, 40px); }
-.ecrans__vue.est-devant { z-index: 2; }
-.ecrans__vue.est-devant .ecrans__tel { transition-delay: .12s; }
-.ecrans__vue.est-sortie { z-index: 1; }
-.ecrans__vue.est-sortie .ecrans__fenetre { opacity: 0; transform: translate(-30px, 0) scale(.98); }
-.ecrans__vue.est-sortie .ecrans__tel { opacity: 0; transform: translate(0, 24px); }
-.ecrans__etiquette { position: absolute; left: 4%; bottom: 4%; z-index: 5; display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; background: var(--blanc); border-radius: 18px; box-shadow: 0 14px 34px rgba(22, 21, 20, .16); max-width: 46%; animation: ecrans-etiquette .7s cubic-bezier(.34, 1.4, .64, 1) .25s both; }
+.ecrans__etiquette { position: absolute; right: 0; bottom: -2%; z-index: 25; display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; background: var(--blanc); border-radius: 18px; box-shadow: 0 14px 34px rgba(22, 21, 20, .16); max-width: 52%; animation: ecrans-etiquette .7s cubic-bezier(.34, 1.4, .64, 1) .25s both; }
 .ecrans__numero { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--vermillon); color: var(--blanc); display: grid; place-items: center; font: 800 16px/1 var(--font-sans); }
 .ecrans__textes { display: flex; flex-direction: column; gap: 2px; }
 .ecrans__textes strong { font: 800 17px/1.2 var(--font-sans); color: var(--encre); }
@@ -2118,12 +2119,12 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 @keyframes ecrans-etiquette { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .ecrans__etiquette { animation: none; }
-  .ecrans__fenetre, .ecrans__tel { transition: none !important; transform: none !important; }
+  .ecrans__fenetre, .ecrans__tel, .ecrans__fenetres { transition: none !important; }
 }
 /* écrans moyens d'ordinateur : la photo prend moins de largeur et les écrans de l'espace passent un peu devant elle */
-@media (min-width: 1100px) and (max-width: 1599px) {
+@media (min-width: 1100px) {
   .heros.heros--v3 { grid-template-columns: minmax(340px, 38%) minmax(0, 1fr) !important; column-gap: 0 !important; }
   .heros.heros--v3 .heros__cadre { aspect-ratio: auto !important; width: 100%; }
   .heros.heros--v3 .heros__photo { object-position: 50% 28% !important; }
-  .heros.heros--v3 .heros__outil.ecrans { position: relative; z-index: 3; margin-left: clamp(-90px, calc(-6 * var(--vw)), -48px); padding-left: 0; }
+  .heros.heros--v3 .heros__outil.ecrans { position: relative; z-index: 3; margin-left: -24px; padding-left: 0; }
 }
