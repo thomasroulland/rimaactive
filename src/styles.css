@@ -2120,3 +2120,10 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .ecrans__etiquette { animation: none; }
   .ecrans__fenetre, .ecrans__tel { transition: none !important; transform: none !important; }
 }
+/* écrans moyens d'ordinateur : la photo prend moins de largeur et les écrans de l'espace passent un peu devant elle */
+@media (min-width: 1100px) and (max-width: 1599px) {
+  .heros.heros--v3 { grid-template-columns: minmax(340px, 38%) minmax(0, 1fr) !important; column-gap: 0 !important; }
+  .heros.heros--v3 .heros__cadre { aspect-ratio: auto !important; width: 100%; }
+  .heros.heros--v3 .heros__photo { object-position: 50% 28% !important; }
+  .heros.heros--v3 .heros__outil.ecrans { position: relative; z-index: 3; margin-left: clamp(-90px, calc(-6 * var(--vw)), -48px); padding-left: 0; }
+}

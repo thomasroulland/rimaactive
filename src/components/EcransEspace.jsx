@@ -59,7 +59,7 @@ export default function EcransEspace() {
 
   return (
     <div className="heros__outil ecrans" ref={racine} aria-label="Aperçu de votre espace client">
-      <p className="ecrans__surtitre">Votre espace client, sur ordinateur et sur téléphone</p>
+      <p className="ecrans__surtitre">Votre espace client · ordinateur et téléphone</p>
       <div className="ecrans__scene" onMouseMove={bouger}
         onMouseEnter={() => { survol.current = true }}
         onMouseLeave={() => { survol.current = false; setDecal({ x: 0, y: 0 }) }}
