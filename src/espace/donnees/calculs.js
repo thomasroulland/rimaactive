@@ -54,11 +54,10 @@ export function etatAccueil(programme, faites, aujourdhui) {
 export function preRemplir(element) {
   const n = parseInt(element.series, 10)
   const nb = n > 0 ? n : 1
-  return Array.from({ length: nb }, () => ({
-    charge: element.charge ? String(element.charge) : '',
-    reps: element.reps ? String(element.reps) : '',
-    rpe: '',
-  }))
+  const prevu = element.reps ? String(element.reps) : ''
+  return Array.from({ length: nb }, () => (element.mesure === 'duree'
+    ? { charge: element.charge ? String(element.charge) : '', duree: prevu, rpe: '' }
+    : { charge: element.charge ? String(element.charge) : '', reps: prevu, rpe: '' }))
 }
 
 function elementsDe(seance) {

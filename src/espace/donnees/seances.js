@@ -46,9 +46,10 @@ export function resumeFormat(bloc) {
 export function prescription(element, enSeries = true) {
   const e = element ?? {}
   const parties = []
-  if (enSeries && e.series && e.reps) parties.push(`${e.series} × ${e.reps}`)
+  const mesure = enDuree(e) ? texteDuree(e.reps) : e.reps
+  if (enSeries && e.series && e.reps) parties.push(`${e.series} × ${mesure}`)
   else if (enSeries && e.series) parties.push(`${e.series} séries`)
-  else if (e.reps) parties.push(fr(e.reps))
+  else if (e.reps) parties.push(fr(mesure))
   if (e.charge) parties.push(`${fr(e.charge)} kg`)
   if (e.pct) parties.push(`${fr(e.pct)} % de 1RM`)
   if (enSeries && e.rpe) parties.push(`RPE ${fr(e.rpe)}`)
@@ -66,7 +67,7 @@ const texte = (v) => (v == null ? '' : String(v))
 function seriesPropres(series) {
   const out = {}
   for (const [id, lignes] of Object.entries(series ?? {})) {
-    out[id] = (lignes ?? []).map((l) => ({ charge: texte(l.charge), reps: texte(l.reps), rpe: texte(l.rpe), fait: l.fait !== false }))
+    out[id] = (lignes ?? []).map((l) => ({ charge: texte(l.charge), reps: texte(l.reps), ...(l.duree !== undefined ? { duree: texte(l.duree) } : {}), rpe: texte(l.rpe), fait: l.fait !== false }))
   }
   return out
 }
@@ -172,13 +173,23 @@ export function exercicesDe(programmes) {
   return { exoIdParElement, noms }
 }
 
+// Durée saisie (« 45 » → « 45 s », « 1:30 » ou « 2 min » restent tels quels) ; vide si rien
+export function texteDuree(v) {
+  const t = String(v ?? '').trim()
+  return /^\d+([.,]\d+)?$/.test(t) ? `${t} s` : t
+}
+// Un exercice se mesure en durée (gainage…) ou en répétitions (par défaut)
+export const enDuree = (element) => element?.mesure === 'duree'
+
 // « 60 kg × 5 @8 » ; une série non cochée « Fait » par le client : « non faite »
 export function texteSerie(l) {
   if (l.fait === false) return 'non faite'
   const charge = String(l.charge ?? '').trim()
   const reps = String(l.reps ?? '').trim()
+  const duree = texteDuree(l.duree)
   const rpe = String(l.rpe ?? '').trim()
-  let t = charge && reps ? `${fr(charge)} kg × ${reps}` : charge ? `${fr(charge)} kg` : reps ? `${reps} rép.` : 'à compléter'
+  let t = duree ? (charge ? `${duree} à ${fr(charge)} kg` : duree)
+    : charge && reps ? `${fr(charge)} kg × ${reps}` : charge ? `${fr(charge)} kg` : reps ? `${reps} rép.` : 'à compléter'
   if (rpe) t += ` @${fr(rpe)}`
   return t
 }
@@ -211,12 +222,12 @@ export function lignesExercice(element, enSeries = true) {
       : rempli(e.pct) ? `${fr(String(e.pct).trim())} % de 1RM` : ''
   if (!enSeries) {
     const reps = String(e.reps ?? '').trim()
-    const r = /^\d+$/.test(reps) ? `${reps} reps` : reps
+    const r = enDuree(e) ? texteDuree(reps) : /^\d+$/.test(reps) ? `${reps} reps` : reps
     return { prescription: [r, charge].filter(Boolean).join(' · '), details: '' }
   }
   const n = String(e.series ?? '').trim()
-  const reps = String(e.reps ?? '').trim()
-  const volume = n && reps ? `${n} × ${reps}` : n ? `${n} séries` : reps ? `${reps} reps` : ''
+  const reps = enDuree(e) ? texteDuree(e.reps) : String(e.reps ?? '').trim()
+  const volume = n && reps ? `${n} × ${reps}` : n ? `${n} séries` : reps ? (enDuree(e) ? reps : `${reps} reps`) : ''
   const details = [
     rempli(e.repos) && `Repos ${String(e.repos).trim()}`,
     rempli(e.tempo) && `Tempo ${String(e.tempo).trim()}`,
@@ -264,13 +275,14 @@ export function allureVitesse(distance, temps) {
 // Ligne de série après une saisie (maquette + règle « modifier une série la coche ») :
 // la série est cochée et les cases vides reprennent ce que Marie a prévu.
 export function saisirSerie(ligne, cle, valeur, element) {
-  const prevu = { charge: rempli(element?.charge) ? String(element.charge) : '', reps: rempli(element?.reps) ? String(element.reps) : '' }
+  const mesure = enDuree(element) ? 'duree' : 'reps' // la durée est notée dans `duree`, les répétitions dans `reps`
+  const prevu = { charge: rempli(element?.charge) ? String(element.charge) : '', [mesure]: rempli(element?.reps) ? String(element.reps) : '' }
   if (cle === 'fait') {
     if (!valeur) return { ...ligne, fait: false }
-    return { ...ligne, fait: true, charge: rempli(ligne.charge) ? ligne.charge : prevu.charge, reps: rempli(ligne.reps) ? ligne.reps : prevu.reps }
+    return { ...ligne, fait: true, charge: rempli(ligne.charge) ? ligne.charge : prevu.charge, [mesure]: rempli(ligne[mesure]) ? ligne[mesure] : prevu[mesure] }
   }
   const out = { ...ligne, [cle]: valeur, fait: true }
-  for (const k of ['charge', 'reps']) if (k !== cle && !rempli(out[k])) out[k] = prevu[k]
+  for (const k of ['charge', mesure]) if (k !== cle && !rempli(out[k])) out[k] = prevu[k]
   return out
 }
 

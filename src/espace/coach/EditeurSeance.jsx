@@ -131,7 +131,14 @@ function Element({ element: el, code, series, verrou, rm, rpeSemaine, maj, retir
       </div>
       <div className="espace-params">
         {series && <Champ id={id('series')} label="Séries" mode="numeric" valeur={el.series} changer={(v) => maj('series', v)} />}
-        <Champ id={id('reps')} label={series ? 'Répétitions' : 'Répétitions ou durée'} valeur={el.reps} changer={(v) => maj('reps', v)} />
+        <div className="champ-groupe espace-param">
+          <label htmlFor={id('mesure')}>Se mesure en</label>
+          <select id={id('mesure')} className="champ" value={el.mesure === 'duree' ? 'duree' : 'reps'} onChange={(e) => maj('mesure', e.target.value === 'duree' ? 'duree' : '')}>
+            <option value="reps">Répétitions</option>
+            <option value="duree">Durée</option>
+          </select>
+        </div>
+        <Champ id={id('reps')} label={el.mesure === 'duree' ? 'Durée (ex. 45 s)' : series ? 'Répétitions' : 'Répétitions ou durée'} valeur={el.reps} changer={(v) => maj('reps', v)} />
         <Champ id={id('charge')} label="Charge (kg)" mode="decimal" valeur={el.charge} indice={calculee !== null ? frNombre(calculee) : undefined} aide={aideCharge} changer={(v) => maj('charge', v)} />
         <Champ id={id('pct')} label="% 1RM" mode="decimal" valeur={el.pct} changer={(v) => maj('pct', v)} />
         {series && <Champ id={id('rpe')} label="RPE cible" mode="decimal" valeur={el.rpe} indice={rpeSemaine || undefined} aide={rpeSemaine && String(el.rpe ?? '').trim() === '' ? `RPE de la semaine : ${rpeSemaine}` : undefined} changer={(v) => maj('rpe', v)} />}

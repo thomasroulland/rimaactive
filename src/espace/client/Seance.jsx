@@ -40,7 +40,7 @@ function etatEnvoi(fait, enLigne) {
 
 // Lignes de séries : anciennes notes sans le champ « fait » comptées comme faites
 const avecFait = (lignes) => (lignes ?? []).map((l) => ({ ...l, fait: l.fait !== false }))
-const lignesVides = (element) => preRemplir(element).map(() => ({ charge: '', reps: '', rpe: '', fait: false }))
+const lignesVides = (element) => preRemplir(element).map(() => (element.mesure === 'duree' ? { charge: '', duree: '', rpe: '', fait: false } : { charge: '', reps: '', rpe: '', fait: false }))
 const carteVide = () => ({ series: {}, notes: {}, blocs: {} })
 const CHAMPS_SORTIE = ['distance', 'temps', 'fc', 'zones']
 const ZONES = ['Z1', 'Z2', 'Z3', 'Z4', 'Z5']

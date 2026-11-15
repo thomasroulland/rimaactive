@@ -56,6 +56,7 @@ export function ajouterElement(programme, { s, se, b }, exercice) {
     // façons possibles (fiche) et façon choisie pour cette séance : la première cochée par défaut
     lateralites: [...(exercice.lateralites ?? [])],
     lateralite: '',
+    mesure: exercice.mesure === 'duree' ? 'duree' : '', // « Durée » (gainage…) ou répétitions
     series: '', reps: '', charge: '', pct: '', rpe: '', repos: '', tempo: '', commentaire: '',
   })
   return p

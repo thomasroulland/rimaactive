@@ -1,4 +1,4 @@
-import { fr, lignesExercice, resumeFormat } from './seances.js'
+import { enDuree, fr, lignesExercice, resumeFormat, texteDuree } from './seances.js'
 // Prévu / fait d'une séance, pour le coach (15 novembre 2026) : exercice par exercice, ce que Marie avait prévu,
 // ce que le coaché a noté, et l'écart en une phrase. Calculs purs.
 
@@ -16,6 +16,8 @@ function repsPrevues(reps) {
 // « 70 × 6 », « 70 kg », « 12 rép. »
 function texteFait(l) {
   const c = String(l.charge ?? '').trim()
+  const d = texteDuree(l.duree)
+  if (d) return c ? `${d} à ${fr(c)} kg` : d
   const r = String(l.reps ?? '').trim()
   return c && r ? `${fr(c)} × ${r}` : c ? `${fr(c)} kg` : r ? `${r} rép.` : 'sans chiffre'
 }
@@ -28,7 +30,7 @@ function exerciceEnSeries(el, lignes) {
   const moins = []
   const n = parseInt(String(el.series ?? '').trim(), 10)
   if (n > 0 && faites.length < n) moins.push(`${pluriel(faites.length, 'série')} sur ${n}`)
-  const rp = repsPrevues(el.reps)
+  const rp = enDuree(el) ? null : repsPrevues(el.reps) // une durée n'est pas comparée à des répétitions
   if (rp !== null) {
     const manque = faites.reduce((t, l) => (/^\d+$/.test(String(l.reps ?? '').trim()) ? t + Math.max(0, rp - Number(l.reps)) : t), 0)
     if (manque > 0) moins.push(`${pluriel(manque, 'répétition')} en moins`)

@@ -1,5 +1,5 @@
 import PhotoStockee from '../coach/PhotoStockee.jsx'
-import { avecChargeSeule, fr, lignesExercice, resumeFormat } from '../donnees/seances.js'
+import { avecChargeSeule, fr, lignesExercice, resumeFormat, texteDuree } from '../donnees/seances.js'
 import BlocResultat, { ChoixRpe } from './BlocResultat.jsx'
 
 const Image = () => (
@@ -82,11 +82,13 @@ function Exercice({ element, code, bloc, enSeries, lignes, note, lecture, action
 
 // Tableau Série / Reps / Charge (kg) / RPE / Fait, puis ce qui suit (la note)
 export function TableauSeries({ base, nom, element, lignes, lecture, changer, enCours = -1, children }) {
-  const prevu = { reps: String(element?.reps ?? ''), charge: fr(element?.charge ?? '') }
+  const duree = element?.mesure === 'duree' // gainage… : on note une durée, pas des répétitions
+  const cleMesure = duree ? 'duree' : 'reps'
+  const prevu = { reps: duree ? texteDuree(element?.reps) : String(element?.reps ?? ''), charge: fr(element?.charge ?? '') }
   return (
     <div className="ec-series">
       <div className="ec-serie ec-serie--entete" aria-hidden="true">
-        <span>Série</span><span>Reps</span><span>Kg</span><span>RPE</span><span>Fait</span>
+        <span>Série</span><span>{duree ? 'Durée' : 'Reps'}</span><span>Kg</span><span>RPE</span><span>Fait</span>
       </div>
       {lignes.map((l, i) => {
         const lib = `${nom}, série ${i + 1}`
@@ -94,9 +96,9 @@ export function TableauSeries({ base, nom, element, lignes, lecture, changer, en
         return (
           <div key={i} className={`ec-serie${l.fait ? ' est-faite' : ''}${i === enCours ? ' est-en-cours' : ''}`} role="group" aria-label={lib}>
             <span className="ec-serie__num">{i + 1}</span>
-            <input id={`${id}-reps`} className="ec-champ ec-champ--serre" type="text" inputMode="numeric" autoComplete="off"
-              aria-label={`${lib}, répétitions`} value={l.reps ?? ''} placeholder={lecture ? '' : prevu.reps} readOnly={lecture}
-              onChange={(e) => changer(i, 'reps', e.target.value)} />
+            <input id={`${id}-reps`} className="ec-champ ec-champ--serre" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
+              aria-label={`${lib}, ${duree ? 'durée' : 'répétitions'}`} value={l[cleMesure] ?? ''} placeholder={lecture ? '' : prevu.reps} readOnly={lecture}
+              onChange={(e) => changer(i, cleMesure, e.target.value)} />
             <input id={`${id}-charge`} className="ec-champ ec-champ--serre" type="text" inputMode="decimal" autoComplete="off"
               aria-label={`${lib}, charge en kg`} value={l.charge ?? ''} placeholder={lecture ? '' : prevu.charge} readOnly={lecture}
               onChange={(e) => changer(i, 'charge', e.target.value)} />

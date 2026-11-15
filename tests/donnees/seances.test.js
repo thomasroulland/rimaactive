@@ -225,3 +225,18 @@ describe('séance guidée', () => {
     expect([minutesSecondes(72), minutesSecondes(0), minutesSecondes(59.2)]).toEqual(['1:12', '0:00', '1:00'])
   })
 })
+
+describe('exercices en durée (gainage)', () => {
+  const gainage = { series: '3', reps: '45', charge: '', mesure: 'duree' }
+  it('affiche la durée avec son unité', () => {
+    expect(lignesExercice(gainage, true).prescription).toBe('3 × 45 s · charge libre')
+  })
+  it('range la saisie dans « duree » et reprend le prévu', () => {
+    expect(saisirSerie({ charge: '', duree: '', rpe: '', fait: false }, 'fait', true, gainage)).toEqual({ charge: '', duree: '45', rpe: '', fait: true })
+    expect(saisirSerie({ charge: '', duree: '', rpe: '', fait: false }, 'duree', '50', gainage)).toEqual({ charge: '', duree: '50', rpe: '', fait: true })
+  })
+  it('écrit la série faite', () => {
+    expect(texteSerie({ duree: '45', charge: '', rpe: '' })).toBe('45 s')
+    expect(texteSerie({ duree: '1:30', charge: '10', rpe: '' })).toBe('1:30 à 10 kg')
+  })
+})

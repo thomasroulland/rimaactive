@@ -1398,3 +1398,4 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
   .ecarts__ligne em { text-align: left; }
 }
 @media (prefers-reduced-motion: reduce) { .seance-ligne__chevron { transition: none; } }
+.espace-choix__matos { display: flex; flex-direction: column; gap: 6px; }

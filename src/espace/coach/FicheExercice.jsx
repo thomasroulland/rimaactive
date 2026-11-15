@@ -13,7 +13,7 @@ import ChoixAvecAjout from './ChoixAvecAjout.jsx'
 // Liste proposée par Claude, à faire valider par Marie
 export { MUSCLES } from '../donnees/banque.js'
 
-const VIDE = { nom: '', categorie: '', materiel: '', execution: '', consignes: '', erreurs: '', video: '', muscles: [], musclesSecondaires: [], lateralites: [], photos: [], retire: false }
+const VIDE = { nom: '', categorie: '', materiel: '', execution: '', consignes: '', erreurs: '', video: '', muscles: [], musclesSecondaires: [], lateralites: [], mesure: 'reps', photos: [], retire: false }
 
 // Fiche d'un exercice : création (/nouveau) ou modification (/:id)
 export default function FicheExercice() {
@@ -164,6 +164,13 @@ export default function FicheExercice() {
                 valeur={fiche.categorie} changer={(v) => setFiche((f) => ({ ...f, categorie: v }))} />
               <ChoixAvecAjout id="exo-mat" label="Matériel" cle="materiels" liste={reglages.materiels} libelleNouveau="Nouveau matériel"
                 valeur={fiche.materiel} changer={(v) => setFiche((f) => ({ ...f, materiel: v }))} />
+            </div>
+            <div className="champ-groupe">
+              <label htmlFor="exo-mesure">Se mesure en</label>
+              <select id="exo-mesure" className="champ" value={fiche.mesure === 'duree' ? 'duree' : 'reps'} onChange={(e) => setFiche((f) => ({ ...f, mesure: e.target.value }))}>
+                <option value="reps">Répétitions</option>
+                <option value="duree">Durée (gainage, planche…)</option>
+              </select>
             </div>
             <div className="champ-groupe">
               <label htmlFor="exo-consignes">Consigne d’exécution</label>

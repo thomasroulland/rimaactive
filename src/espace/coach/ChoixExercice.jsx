@@ -21,6 +21,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
   const [recherche, setRecherche] = useState('')
   const [partie, setPartie] = useState('Tout')
   const [categorie, setCategorie] = useState('Toutes')
+  const [materiel, setMateriel] = useState('Tous')
   const [nouvel, setNouvel] = useState(VIDE)
   const [creationOuverte, setCreationOuverte] = useState(false)
   const [envoi, setEnvoi] = useState(false)
@@ -33,6 +34,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
     .filter((e) => e.retire !== true)
     .filter((e) => partie === 'Tout' || partieDe(e.categorie, reglages) === partie)
     .filter((e) => categorie === 'Toutes' || e.categorie === categorie)
+    .filter((e) => materiel === 'Tous' || e.materiel === materiel)
     .filter((e) => !t || simplifier(`${e.nom} ${e.categorie ?? ''} ${e.materiel ?? ''} ${(e.muscles ?? []).join(' ')}`).includes(t))
   const aucun = Boolean(exercices) && resultats.length === 0
   useEffect(() => { if (aucun) setCreationOuverte(true) }, [aucun])
@@ -76,10 +78,18 @@ export default function ChoixExercice({ exercices, lettres, ajouter }) {
           <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
         ))}
       </div>
+      <div className="espace-choix__matos">
+        <span className="banque-filtres__lib" id="choix-f-mat">Matériel</span>
+        <div className="filtres-coaches espace-choix__filtres" role="group" aria-labelledby="choix-f-mat">
+          {['Tous', ...reglages.materiels].map((m) => (
+            <button key={m} type="button" className="filtre-coaches" aria-pressed={materiel === m} onClick={() => setMateriel(m)}>{m}</button>
+          ))}
+        </div>
+      </div>
       {exercices === null && <p className="espace-texte" role="status">Chargement de la banque…</p>}
       {aucun && (
         <p className="espace-aide">
-          {recherche.trim() || categorie !== 'Toutes' || partie !== 'Tout' ? 'Aucun exercice ne correspond. Créez-le ci-dessous.' : 'Votre banque est vide. Créez un premier exercice ci-dessous.'}
+          {recherche.trim() || categorie !== 'Toutes' || materiel !== 'Tous' || partie !== 'Tout' ? 'Aucun exercice ne correspond. Créez-le ci-dessous.' : 'Votre banque est vide. Créez un premier exercice ci-dessous.'}
         </p>
       )}
       {resultats.length > 0 && (
