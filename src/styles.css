@@ -2001,3 +2001,69 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 @media (min-width: 600px) and (max-width: 1099px) {
   .service .service__lien, .service a { white-space: nowrap; }
 }
+
+/* M'écrire sur tous les écrans (15 novembre 2026, demande de Thomas) : la mise en page « grand écran »
+   — formulaire sur une carte blanche, grands champs sur fond craie, boutons larges — partout ; plus serrée sur téléphone. */
+.page-contact__droite { gap: clamp(16px, calc(2 * var(--vw)), 28px); }
+.page-contact .presentation-contact .titre { font-size: clamp(40px, calc(4.4 * var(--vw)), 64px); line-height: 1; }
+.page-contact .presentation-contact__lieu { font-size: clamp(16px, calc(1.3 * var(--vw)), 19px); line-height: 1.55; max-width: 60ch; }
+.page-contact .formulaire { gap: 16px 20px; padding: clamp(20px, calc(2.6 * var(--vw)), 36px); border-radius: 24px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+.page-contact .champ-groupe { gap: 8px; }
+.page-contact .champ-groupe > label, .page-contact .champ-groupe legend { font-size: 16px; }
+.page-contact .champ { min-height: 48px; padding-block: 10px; font-size: 16px; line-height: 26px; background: var(--craie); }
+.page-contact .champ:hover, .page-contact .champ:focus { background: var(--blanc); }
+.page-contact textarea.champ { height: clamp(110px, calc(var(--ecran) * 0.16), 150px); }
+.page-contact .choix { gap: 8px; flex-wrap: wrap; }
+.page-contact .choix span { min-height: 44px; padding: 0 18px; font-size: 15px; letter-spacing: 0; }
+.page-contact .case { font-size: 14px; line-height: 21px; }
+.page-contact .formulaire button[type=submit] { min-height: 50px; padding-inline: 32px; font-size: 16px; }
+@media (min-width: 900px) {
+  .page-contact__droite { padding-block: clamp(24px, calc(3 * var(--vw)), 48px); padding-left: clamp(32px, calc(4.5 * var(--vw)), 72px); }
+  .page-contact .champ { min-height: 52px; font-size: 17px; line-height: 28px; }
+  .page-contact .champ-groupe > label, .page-contact .champ-groupe legend { font-size: 17px; }
+  .page-contact .choix span { font-size: 16px; padding: 0 20px; }
+}
+/* téléphone et tablette : la photo en bandeau moins haut, le formulaire tout de suite dessous */
+@media (max-width: 899px) {
+  .page-contact__photo { height: clamp(200px, 36vw, 300px); }
+  .page-contact__droite { padding-block: 24px 32px; }
+}
+@media (max-width: 599px) {
+  .page-contact .formulaire { padding: 18px; gap: 14px; border-radius: 20px; }
+  .page-contact .choix span { padding: 0 14px; font-size: 14px; }
+}
+/* M'écrire, ordinateur peu haut : la carte reste entière au-dessus des mentions (page sans défilement) */
+@media (min-width: 900px) and (max-height: 1000px) {
+  .page-contact__droite { padding-block: 20px 56px; gap: 14px; }
+  .page-contact .presentation-contact .titre { font-size: clamp(40px, calc(3.6 * var(--vw)), 54px); }
+  .page-contact .presentation-contact__lieu { margin-top: 2px; }
+  .page-contact .formulaire { padding: 22px 28px; gap: 12px 20px; }
+  .page-contact .champ-groupe { gap: 6px; }
+  .page-contact .champ { min-height: 46px; padding-block: 8px; }
+  .page-contact textarea.champ { height: 92px; }
+  .page-contact .choix span { min-height: 40px; }
+}
+@media (min-width: 900px) and (max-height: 780px) {
+  .page-contact .presentation-contact .surtitre { display: none; }
+  .page-contact .champ { min-height: 40px; padding-block: 5px; }
+  .page-contact textarea.champ { height: 64px; }
+  .page-contact .formulaire { padding: 16px 22px; gap: 8px 18px; }
+}
+
+/* Mes offres resserrée (15 novembre 2026) : cartes en pleine largeur sous 900 px, deux formules côte à côte dès 600 px,
+   photos moins hautes, espaces réduits */
+.offres-page__rubrique { padding-block: clamp(24px, calc(3 * var(--vw)), 44px) !important; }
+.offres-page__entete { margin-bottom: clamp(12px, calc(1.4 * var(--vw)), 20px); }
+.offres-page__liste { margin-top: 10px; }
+@media (max-width: 899px) {
+  .offres--1 { max-width: none; }
+  .offres-page__corps--photo { gap: 12px; }
+  .offres-page__photo { height: clamp(150px, 30vw, 220px); }
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .offres--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .offres-page__corps--photo { grid-template-columns: 2fr 3fr; align-items: stretch; }
+  .offres-page__corps--photo .offres-page__photo { height: 100%; min-height: 0; }
+}
