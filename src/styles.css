@@ -2136,4 +2136,4 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .heros.heros--v3 .heros__outil.ecrans { position: relative; z-index: 3; margin-left: 0; }
 }
 /* très grands écrans : le contenu du panneau garde une taille raisonnable (le haut de page ne grandit pas en hauteur) */
-.ecrans__tete, .ecrans__corps { width: 100%; max-width: calc((var(--ecran) - var(--hauteur-entete) - 200px) * 1.75); margin-inline: auto; }
+.ecrans__tete, .ecrans__corps { width: 100%; max-width: calc((min(100svh, 1150px) - var(--hauteur-entete) - 200px) * 1.75); margin-inline: auto; }
