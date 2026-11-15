@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { minutesSecondes, resumeFormat } from '../donnees/seances.js'
+import { nomBloc } from '../donnees/programme.js'
 
 // Page séance guidée bloc par bloc (15 novembre 2026, maquette D validée par Thomas) :
 // récapitulatif à gauche (Récap), étapes, minuteur de repos et navigation entre blocs (PiedBloc).
@@ -40,7 +41,7 @@ export function Recap({ surtitre, titre, infos, progression, blocs, etape, aller
               <button type="button" className={`ec-recap__bloc ${etat}`} aria-current={i === etape ? 'step' : undefined} onClick={() => aller(i)}>
                 <span className="ec-recap__ligne">
                   <span className="ec-recap__lettre" aria-hidden="true">{p?.complet && i !== etape ? '✓' : b.lettre}</span>
-                  <span className="ec-recap__nom">Bloc {b.lettre}{(b.format ?? 'series') !== 'series' ? ` · ${resumeFormat(b)}` : ''}</span>
+                  <span className="ec-recap__nom">{nomBloc(b)}{(b.format ?? 'series') !== 'series' ? ` · ${resumeFormat(b)}` : ''}</span>
                   <span className="ec-recap__compte">{p?.faites ?? 0}/{p?.total ?? 0}</span>
                 </span>
                 <span className="ec-recap__exos">
@@ -72,7 +73,7 @@ export function RecapMobile({ surtitre, titre, progression, blocs, etape, aller,
           const p = progression.blocs[i]
           return (
             <button key={b.id} type="button" className={`ec-recapm__pastille${i === etape ? ' est-actif' : p?.complet ? ' est-fini' : ''}`}
-              aria-current={i === etape ? 'step' : undefined} aria-label={`Bloc ${b.lettre}${p?.complet ? ', fait' : ''}`} onClick={() => aller(i)}>
+              aria-current={i === etape ? 'step' : undefined} aria-label={`${nomBloc(b)}${b.nom ? ` (bloc ${b.lettre})` : ''}${p?.complet ? ', fait' : ''}`} onClick={() => aller(i)}>
               {b.lettre}{p?.complet ? ' ✓' : ''}
             </button>
           )
@@ -134,7 +135,7 @@ export function PiedBloc({ etape, blocs, aller, depart }) {
     <div className="ec-piedbloc">
       <Repos depart={depart} />
       <button type="button" className="ec-piedbloc__retour" onClick={() => aller(etape - 1)} disabled={etape === 0}
-        aria-label={etape > 0 ? `Revenir au bloc ${blocs[etape - 1].lettre}` : 'Pas de bloc précédent'}>
+        aria-label={etape > 0 ? `Revenir : ${nomBloc(blocs[etape - 1])}` : 'Pas de bloc précédent'}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
       </button>
       <button type="button" className="ec-piedbloc__suivant" onClick={() => aller(etape + 1)}>
@@ -144,7 +145,7 @@ export function PiedBloc({ etape, blocs, aller, depart }) {
         </span>
         <span className="ec-piedbloc__textes">
           <small>{suivant ? 'Bloc suivant' : 'Dernier bloc'}</small>
-          <b>{suivant ? `${suivant.lettre} · ${(suivant.elements ?? []).map((e) => e.nom).join(', ') || 'Bloc ' + suivant.lettre}` : 'Fin de séance'}</b>
+          <b>{suivant ? `${suivant.lettre} · ${suivant.nom?.trim() || (suivant.elements ?? []).map((e) => e.nom).join(', ') || 'Bloc ' + suivant.lettre}` : 'Fin de séance'}</b>
         </span>
         <span className="ec-piedbloc__fleche" aria-hidden="true">→</span>
       </button>

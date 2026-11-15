@@ -1,4 +1,5 @@
 import PhotoStockee from '../coach/PhotoStockee.jsx'
+import { nomBloc } from '../donnees/programme.js'
 import { avecChargeSeule, fr, lignesExercice, resumeFormat, texteDuree } from '../donnees/seances.js'
 import BlocResultat, { ChoixRpe } from './BlocResultat.jsx'
 
@@ -16,7 +17,7 @@ export default function BlocSeries({ bloc, saisie, actions, lecture, voirConsign
   return (
     <section className="ec-sbloc" aria-labelledby={`bloc-${bloc.id}`}>
       {!sansTete && <div className="ec-sbloc__tete">
-        <h2 id={`bloc-${bloc.id}`} className="ec-h3 ec-sbloc__titre">Bloc {bloc.lettre}{enSeries ? '' : ` · ${resumeFormat(bloc)}`}</h2>
+        <h2 id={`bloc-${bloc.id}`} className="ec-h3 ec-sbloc__titre">{nomBloc(bloc)}{enSeries ? '' : ` · ${resumeFormat(bloc)}`}</h2>
         {!enSeries && resultat?.fait && <span className="ec-valide">Validé</span>}
       </div>}
       <ol className="ec-sexos ec-sexos--cartes">

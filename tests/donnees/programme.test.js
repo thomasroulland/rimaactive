@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nouveauProgramme, dupliquerSemaine, ajouterElement, nouvelId } from '../../src/espace/donnees/programme.js'
+import { nouveauProgramme, dupliquerSemaine, ajouterElement, ajouterAuBloc, nomBloc, renommerBloc, NOM_BLOC_MAX, nouvelId } from '../../src/espace/donnees/programme.js'
 
 const sansIds = (o) => JSON.parse(JSON.stringify(o, (k, v) => (k === 'id' ? undefined : v)))
 
@@ -133,5 +133,45 @@ describe('aUneSuite', () => {
   it('faux sinon (plus ancien, autre coaché, sans date)', () => {
     expect(aUneSuite(actuel, [actuel, { id: 'c', client: 'u1', debut: '2026-10-01' }, { id: 'd', client: 'u2', debut: '2026-12-01' }, { id: 'e', client: 'u1', debut: '' }])).toBe(false)
     expect(aUneSuite(null, [])).toBe(false)
+  })
+})
+
+describe('nom des blocs', () => {
+  const base = () => {
+    let p = nouveauProgramme({ client: 'c', nom: 'P', debut: '2026-11-16', semaines: 1, parSemaine: 1 })
+    p = ajouterAuBloc(p, { s: 0, se: 0 }, 'A', { id: 'e1', nom: 'Squat' })
+    return ajouterAuBloc(p, { s: 0, se: 0 }, 'B', { id: 'e2', nom: 'Pompes' })
+  }
+  const blocs = (p) => p.semaines[0].seances[0].blocs
+  it('sans nom, le bloc s\'appelle « Bloc A »', () => {
+    expect(nomBloc({ lettre: 'A' })).toBe('Bloc A')
+    expect(nomBloc({ lettre: 'B', nom: '   ' })).toBe('Bloc B')
+    expect(nomBloc({ lettre: 'B', nom: ' Force haut du corps ' })).toBe('Force haut du corps')
+  })
+  it('renomme un seul bloc sans toucher aux lettres ni aux codes', () => {
+    const p = renommerBloc(base(), { s: 0, se: 0 }, 'A', 'Échauffement')
+    expect(blocs(p).map((b) => b.lettre)).toEqual(['A', 'B'])
+    expect(blocs(p)[0].nom).toBe('Échauffement')
+    expect(blocs(p)[1].nom).toBeUndefined()
+    expect(blocs(p)[0].elements[0].exoId).toBe('e1')
+  })
+  it('nettoie les espaces, coupe à 30 caractères et efface avec un nom vide', () => {
+    let p = renommerBloc(base(), { s: 0, se: 0 }, 'B', '  Force   haut   du corps  ')
+    expect(blocs(p)[1].nom).toBe('Force haut du corps')
+    p = renommerBloc(p, { s: 0, se: 0 }, 'B', 'x'.repeat(80))
+    expect(blocs(p)[1].nom).toHaveLength(NOM_BLOC_MAX)
+    p = renommerBloc(p, { s: 0, se: 0 }, 'B', '   ')
+    expect('nom' in blocs(p)[1]).toBe(false)
+  })
+  it('ne modifie pas le programme d\'origine et ignore une lettre inconnue', () => {
+    const p = base()
+    const q = renommerBloc(p, { s: 0, se: 0 }, 'A', 'Cardio')
+    expect(blocs(p)[0].nom).toBeUndefined()
+    expect(blocs(renommerBloc(p, { s: 0, se: 0 }, 'Z', 'Rien'))).toEqual(blocs(p))
+    expect(q).not.toBe(p)
+  })
+  it('la duplication d\'une semaine garde les noms de blocs', () => {
+    const p = dupliquerSemaine({ ...renommerBloc(base(), { s: 0, se: 0 }, 'A', 'Échauffement'), semaines: renommerBloc(base(), { s: 0, se: 0 }, 'A', 'Échauffement').semaines }, 0)
+    expect(p.semaines[1].seances[0].blocs[0].nom).toBe('Échauffement')
   })
 })

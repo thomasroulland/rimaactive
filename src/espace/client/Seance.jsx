@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement } from '../donnees/progression.js'
+import { nomBloc } from '../donnees/programme.js'
 import { allureVitesse, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, secondesRepos } from '../donnees/seances.js'
 import { nouveauxRecords } from '../donnees/records.js'
 import { noterSeance, terminerSeance } from '../depots.js'
@@ -225,7 +226,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                 <div className="ec-guide__tete">
                   <div>
                     <span className={`ec-guide__etat${prog.blocs[ici]?.complet ? ' est-fini' : ''}`}>{prog.blocs[ici]?.complet ? 'Bloc fait' : verrou ? 'Bloc' : 'Bloc en cours'}</span>
-                    <h2 className="ec-guide__titre">Bloc {bloc.lettre}{enSeries ? '' : ` · ${resumeFormat(bloc)}`}</h2>
+                    <h2 className="ec-guide__titre">{nomBloc(bloc)}{enSeries ? '' : ` · ${resumeFormat(bloc)}`}</h2>
                     <p className="ec-guide__sous">{nbExos} exercice{nbExos > 1 ? 's' : ''}{infos.find((x) => x.picto === 'check-square') ? ` · ${seance.objectif}` : ''}</p>
                   </div>
                   <span className="ec-guide__rang">Bloc {ici + 1} sur {nb}</span>
@@ -255,7 +256,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                 <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={false} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
                   suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />
                 {nb > 0 && (
-                  <button type="button" className="ec-lien ec-guide__revenir" onClick={() => aller(nb - 1)}>← Revenir au bloc {listeBlocs[nb - 1].lettre}</button>
+                  <button type="button" className="ec-lien ec-guide__revenir" onClick={() => aller(nb - 1)}>← Revenir : {nomBloc(listeBlocs[nb - 1])}</button>
                 )}
               </>
             )}

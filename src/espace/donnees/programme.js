@@ -84,6 +84,23 @@ export function semaineVide(semaine) {
     CHAMPS_SEANCE.every((c) => !String(s[c] ?? '').trim()) && (s.blocs ?? []).length === 0)
 }
 
+// Nom d'un bloc (15 novembre 2026) : facultatif, 30 caractères au plus ; sans nom, le bloc s'appelle « Bloc A », « Bloc B »…
+export const NOM_BLOC_MAX = 30
+export function nomBloc(bloc) {
+  const nom = String(bloc?.nom ?? '').trim()
+  return nom || `Bloc ${bloc?.lettre ?? ''}`.trim()
+}
+// Renomme le bloc de la lettre donnée dans une séance ; un nom vide remet le nom par défaut. Les lettres et les codes d'exercice (A1, B2…) ne changent pas.
+export function renommerBloc(programme, { s, se }, lettre, nom) {
+  const p = structuredClone(programme)
+  const bloc = (p.semaines[s].seances[se].blocs ?? []).find((b) => b.lettre === lettre)
+  if (!bloc) return p
+  const propre = String(nom ?? '').replace(/\s+/g, ' ').trim().slice(0, NOM_BLOC_MAX)
+  if (propre) bloc.nom = propre
+  else delete bloc.nom
+  return p
+}
+
 // Ajoute un exercice dans le bloc de la lettre donnée (créé à la suite s'il n'existe pas)
 export function ajouterAuBloc(programme, { s, se }, lettre, exercice) {
   const p = structuredClone(programme)
