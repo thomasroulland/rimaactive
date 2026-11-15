@@ -1,41 +1,40 @@
 import { useEffect, useRef, useState } from 'react'
-import ecranAccueil from '../assets/ecrans/accueil.webp'
-import ecranSeance from '../assets/ecrans/seance.webp'
-import ecranProgramme from '../assets/ecrans/programme.webp'
-import ecranProgression from '../assets/ecrans/progression.webp'
-import ecranMessages from '../assets/ecrans/messages.webp'
+import telAccueil from '../assets/ecrans/accueil.webp'
+import telSeance from '../assets/ecrans/seance.webp'
+import telProgramme from '../assets/ecrans/programme.webp'
+import telProgression from '../assets/ecrans/progression.webp'
+import telMessages from '../assets/ecrans/messages.webp'
+import pcAccueil from '../assets/ecrans/pc-accueil.webp'
+import pcSeance from '../assets/ecrans/pc-seance.webp'
+import pcProgramme from '../assets/ecrans/pc-programme.webp'
+import pcProgression from '../assets/ecrans/pc-progression.webp'
+import pcMessages from '../assets/ecrans/pc-messages.webp'
 
-// Haut de l'accueil, ordinateur (15 novembre 2026) : les vrais écrans de l'espace coaché, en pile 3D qui défile seule.
-// Inspiré de la maquette « Tous les écrans en 3D » : l'écran du dessus porte une étiquette, les puces dessous
-// permettent d'en choisir un, la pile s'incline légèrement sous la souris. Captures faites avec une coachée fictive.
+// Haut de l'accueil, ordinateur (15 novembre 2026, revu le même jour) : les vrais écrans de l'espace coaché.
+// Pour chaque écran, la version ordinateur dans une fenêtre de navigateur et la version téléphone posée devant ;
+// pas de perspective penchée : les écrans arrivent à plat, en glissant et en fondu, avec un léger décalage sous la souris.
+// Captures faites avec une coachée fictive.
 const ECRANS = [
-  { image: ecranAccueil, titre: 'Votre semaine', sous: 'La prochaine séance, prête à ouvrir', court: 'Accueil' },
-  { image: ecranSeance, titre: 'La séance guidée', sous: 'Charges, répétitions et consignes en photo', court: 'Séance' },
-  { image: ecranProgramme, titre: 'Votre programme', sous: 'Semaine par semaine, préparé pour vous', court: 'Programme' },
-  { image: ecranProgression, titre: 'Vos progrès', sous: 'Records, poids et régularité', court: 'Progrès' },
-  { image: ecranMessages, titre: 'Les messages', sous: 'Une question ? Je vous réponds ici', court: 'Messages' },
+  { pc: pcAccueil, tel: telAccueil, titre: 'Votre semaine', sous: 'La prochaine séance, prête à ouvrir', court: 'Accueil' },
+  { pc: pcSeance, tel: telSeance, titre: 'La séance guidée', sous: 'Charges, répétitions et consignes en photo', court: 'Séance' },
+  { pc: pcProgramme, tel: telProgramme, titre: 'Votre programme', sous: 'Semaine par semaine, préparé pour vous', court: 'Programme' },
+  { pc: pcProgression, tel: telProgression, titre: 'Vos progrès', sous: 'Records, poids et régularité', court: 'Progrès' },
+  { pc: pcMessages, tel: telMessages, titre: 'Les messages', sous: 'Une question ? Je vous réponds ici', court: 'Messages' },
 ]
-const DUREE = 3600
+const DUREE = 4200
 const N = ECRANS.length
-
-// Place de chaque écran selon son rang derrière celui du dessus (0 = dessus ; le dernier vient de partir, à gauche)
-function place(rang) {
-  if (rang === 0) return { transform: 'translate3d(0, 0, 0)', opacity: 1, filter: 'none', zIndex: N }
-  if (rang === N - 1) return { transform: 'translate3d(-46%, 14%, 120px) rotateY(14deg)', opacity: 0, filter: 'none', zIndex: N + 1 }
-  return {
-    transform: `translate3d(${rang * 19}%, ${-rang * 3}%, ${-rang * 130}px)`,
-    opacity: Math.max(0.3, 1 - rang * 0.24),
-    filter: `saturate(${1 - rang * 0.25}) brightness(${1 - rang * 0.04})`,
-    zIndex: N - rang,
-  }
-}
 
 export default function EcransEspace() {
   const [idx, setIdx] = useState(0)
-  const [incline, setIncline] = useState({ x: 0, y: 0 })
+  const [prec, setPrec] = useState(null)
+  const [decal, setDecal] = useState({ x: 0, y: 0 })
   const pauseJusque = useRef(0)
   const survol = useRef(false)
   const racine = useRef(null)
+
+  const actuel = useRef(0)
+  useEffect(() => { actuel.current = idx }, [idx])
+  const aller = (i) => { if (i === actuel.current) return; setPrec(actuel.current); setIdx(i) }
 
   // défilement seul (sauf « moins d'animations », survol, onglet caché ou bloc hors écran)
   useEffect(() => {
@@ -45,7 +44,7 @@ export default function EcransEspace() {
     if (obs && racine.current) obs.observe(racine.current)
     const t = setInterval(() => {
       if (!visible || survol.current || document.hidden || Date.now() < pauseJusque.current) return
-      setIdx((i) => (i + 1) % N)
+      setPrec(actuel.current); setIdx((actuel.current + 1) % N)
     }, DUREE)
     return () => { clearInterval(t); obs?.disconnect() }
   }, [])
@@ -53,35 +52,32 @@ export default function EcransEspace() {
   const bouger = (e) => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
     const r = e.currentTarget.getBoundingClientRect()
-    const x = (e.clientX - r.left) / r.width - 0.5
-    const y = (e.clientY - r.top) / r.height - 0.5
-    setIncline({ x: Math.round(-y * 100) / 10, y: Math.round(x * 140) / 10 })
+    setDecal({ x: (e.clientX - r.left) / r.width - 0.5, y: (e.clientY - r.top) / r.height - 0.5 })
   }
-  const choisir = (i) => { setIdx(i); pauseJusque.current = Date.now() + 9000 }
+  const choisir = (i) => { aller(i); pauseJusque.current = Date.now() + 10000 }
   const e = ECRANS[idx]
 
   return (
     <div className="heros__outil ecrans" ref={racine} aria-label="Aperçu de votre espace client">
-      <p className="ecrans__surtitre">Votre espace client</p>
+      <p className="ecrans__surtitre">Votre espace client, sur ordinateur et sur téléphone</p>
       <div className="ecrans__scene" onMouseMove={bouger}
         onMouseEnter={() => { survol.current = true }}
-        onMouseLeave={() => { survol.current = false; setIncline({ x: 0, y: 0 }) }}>
-        <div className="ecrans__ombre" aria-hidden="true" />
-        <div className="ecrans__pile" style={{ transform: `rotateX(${incline.x}deg) rotateY(${incline.y}deg)` }}>
-          <div className="ecrans__entree">
-            <div className="ecrans__angle">
-              {ECRANS.map((ecran, i) => {
-                const rang = (i - idx + N) % N
-                return (
-                  <figure key={ecran.court} className={`ecrans__tel${rang === 0 ? ' est-devant' : ''}`} style={place(rang)} aria-hidden={rang !== 0}>
-                    <img src={ecran.image} alt={rang === 0 ? `Espace client : ${ecran.titre.toLowerCase()}` : ''} width="540" height="1169" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
-                    {rang === 0 && <span key={`reflet-${idx}`} className="ecrans__reflet" aria-hidden="true" />}
-                  </figure>
-                )
-              })}
+        onMouseLeave={() => { survol.current = false; setDecal({ x: 0, y: 0 }) }}
+        style={{ '--dx': decal.x, '--dy': decal.y }}>
+        {ECRANS.map((ecran, i) => {
+          const etat = i === idx ? 'est-devant' : i === prec ? 'est-sortie' : 'est-attente'
+          return (
+            <div key={ecran.court} className={`ecrans__vue ${etat}`} aria-hidden={i !== idx}>
+              <figure className="ecrans__fenetre">
+                <span className="ecrans__barre" aria-hidden="true"><i /><i /><i /><span className="ecrans__adresse">rimaactive.fr/espace</span></span>
+                <img src={ecran.pc} alt={i === idx ? `Espace client sur ordinateur : ${ecran.titre.toLowerCase()}` : ''} width="1200" height="650" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+              </figure>
+              <figure className="ecrans__tel">
+                <img src={ecran.tel} alt={i === idx ? `La même page sur téléphone` : ''} width="540" height="1169" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+              </figure>
             </div>
-          </div>
-        </div>
+          )
+        })}
         <div key={`etiquette-${idx}`} className="ecrans__etiquette" aria-live="polite">
           <span className="ecrans__numero">{String(idx + 1).padStart(2, '0')}</span>
           <span className="ecrans__textes">
