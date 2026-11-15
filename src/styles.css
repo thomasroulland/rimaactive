@@ -2077,12 +2077,3 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 
 /* cartes d'offres : hauteur de leur contenu (plus de vide entre la liste et « Voir le détail ») */
 .offres--2 > .offre { min-height: 0 !important; }
-
-/* Très grands écrans (15 novembre 2026) : le haut de page s'aligne sur la barre et le contenu au lieu de prendre
-   toute la largeur ; la photo devient une carte arrondie, à gauche comme le texte des rubriques */
-@media (min-width: 1100px) {
-  .heros.heros--v3 { box-sizing: border-box; max-width: calc(var(--largeur) + 2 * var(--gouttiere)) !important; margin-inline: auto !important; padding: 16px var(--gouttiere) 0 !important; column-gap: 24px !important; }
-  .heros.heros--v3 .heros__cadre { border-radius: var(--arrondi-grand); overflow: hidden; -webkit-mask-image: none !important; mask-image: none !important; }
-  .heros.heros--v3 .heros__outil { margin: 0; }
-  .heros.heros--v3 .heros__texte { padding-left: clamp(24px, calc(2.4 * var(--vw)), 40px) !important; }
-}
