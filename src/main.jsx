@@ -4,7 +4,10 @@ import { BrowserRouter } from 'react-router-dom'
 import './components/gardeRetour.js' // avant le routeur : voir le fichier
 import App from './App.jsx'
 import './styles.css'
+import './verre.css'
+import initVerre from './verre.js'
 
+initVerre()
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

@@ -11,8 +11,8 @@ import { PageCoache } from './EnteteCoache.jsx'
 
 // Pages de l'espace coach : elles sont dans la barre de menu, comme partout (13 novembre 2026)
 export const LIENS_COACH = [
-  { to: '/espace/coach', label: 'Mes coachés', end: true },
-  { to: '/espace/coach/exercices', label: 'Banque d’exercices' },
+  { to: '/espace/coach', label: 'Mes coachés', court: 'Coachés', end: true },
+  { to: '/espace/coach/exercices', label: 'Banque d’exercices', court: 'Exercices' },
   { to: '/espace/coach/modeles', label: 'Modèles' },
   { to: '/espace/coach/messages', label: 'Messages' },
 ]

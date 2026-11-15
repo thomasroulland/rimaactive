@@ -1,0 +1,127 @@
+/* Refonte « verre » (15 novembre 2026), d'après les maquettes de Thomas : fond crème chaud, barre en capsule de verre noir,
+   cartes blanches translucides, éléments noirs en #161514 (comme avant), pied de page noir arrondi en haut.
+   Les couleurs, la police et les tailles de la charte ne changent pas. Pour revenir en arrière : retirer les imports de
+   verre.css et de verre.js dans main.jsx (et la pastille dans Entete.jsx, qui ne se voit plus sans ce fichier). */
+:root {
+  --ressort: cubic-bezier(.3, 1.55, .5, 1);
+  --doux: cubic-bezier(.22, 1, .36, 1);
+  --verre-flou: blur(24px) saturate(1.5);
+}
+
+/* ---------- Fond : crème avec une chaleur jaune et rose que le verre reprend ---------- */
+body { background: var(--craie) !important; background-image: none !important; }
+body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
+  background: radial-gradient(800px 560px at 88% 30%, rgba(242, 194, 48, .30), transparent 70%), radial-gradient(700px 520px at 8% 78%, rgba(255, 120, 90, .13), transparent 70%),
+    radial-gradient(600px 480px at 55% 100%, rgba(242, 194, 48, .16), transparent 70%); }
+/* les bandes de couleur des rubriques disparaissent : le fond chaud passe derrière */
+.section, .offres-page__rubrique, .offres-page__fin, main > section.offres-page__rubrique--fonce:nth-of-type(n) { background: transparent !important; }
+
+/* ---------- Barre du haut : capsule de verre noir, la même partout (site, espace coaché, espace coach) ---------- */
+.entete { background: transparent !important; margin-bottom: 0; }
+.entete__barre { max-width: none !important; box-sizing: border-box; width: min(1520px, calc(100% - 36px)); margin: 10px auto 0 !important; padding: 0 12px 0 22px !important; height: 52px !important; border-radius: 999px;
+  background: rgba(22, 21, 20, .9); -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou); border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 12px 32px rgba(22, 21, 20, .28); transition: width .6s var(--doux), box-shadow .5s ease; }
+.entete--sur-photo .entete__barre { background: rgba(22, 21, 20, .72); }
+.entete .nav__lien { color: rgba(244, 243, 239, .85) !important; background-image: none !important; }
+.entete .nav__lien:hover { color: #fff !important; }
+.entete .nav__lien[aria-current="page"], .entete .nav__lien[aria-current="page"]:hover { background: transparent !important; color: #161514 !important; }
+.entete .entete__ecrire { color: rgba(244, 243, 239, .85) !important; }
+.entete .entete__compte, .entete .ec-rond { background: rgba(255, 255, 255, .08) !important; border-color: rgba(255, 255, 255, .28) !important; color: #f4f3ef !important; }
+.entete .entete__compte:hover, .entete .ec-rond:hover { background: #f4f3ef !important; color: #161514 !important; }
+.menu-mobile { background: rgba(22, 21, 20, .92) !important; -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou); margin: 8px 18px; border-radius: 28px; border: 1px solid rgba(255, 255, 255, .14); }
+/* la page en cours : une pastille claire qui glisse d'un lien à l'autre (Entete.jsx mesure le lien allumé) */
+.nav { position: relative; }
+.nav__lien { position: relative; z-index: 1; }
+.nav__bulle { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; border-radius: 999px; background: #f4f3ef; opacity: 0;
+  width: var(--bw, 0); height: var(--bh, 36px); transform: translate(var(--bx, 0), var(--by, 0)); box-shadow: 0 6px 16px rgba(0, 0, 0, .3), inset 0 1px 0 #fff; }
+.nav--prete .nav__bulle { opacity: 1; }
+.nav--pose .nav__bulle { transition: none !important; }
+/* sur l'accueil, la barre flotte par-dessus le haut de page et le panneau se décale sous elle */
+.heros.heros--v3 { margin-top: calc(-1 * var(--hauteur-entete)); }
+.heros.heros--v3 .heros__outil.ecrans { padding-top: calc(var(--hauteur-entete) + 18px) !important; padding-right: 18px !important; }
+@media (min-width: 961px) { :root[data-defile] .entete__barre { width: min(1060px, calc(100% - 36px)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 18px 44px rgba(22, 21, 20, .4); } }
+
+/* ---------- Cartes : blanc translucide avec un reflet chaud en bas à droite ---------- */
+.service, .question, .methode__principes li, .approche__panneau, .approche__cadre, .formulaire, .ecrans__panneau,
+.ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil {
+  background-color: rgba(255, 255, 255, .72) !important; background-image: linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); border: 1px solid rgba(255, 255, 255, .85) !important; box-shadow: 0 10px 30px rgba(22, 21, 20, .08) !important; }
+.methode__principes li { padding: 18px; border-radius: var(--arrondi); }
+.approche__panneau { border-radius: var(--arrondi); }
+/* éléments noirs : le noir du site, avec un liseré clair */
+.ec-noire, .bandeau-coach, .ec-recap, .ec-recapm, .offre--sombre { background-color: #161514 !important; border: 1px solid rgba(255, 255, 255, .08) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 14px 34px rgba(22, 21, 20, .25) !important; }
+/* pied de page : noir, arrondi en haut */
+.pied { background: #161514 !important; border-radius: 20px 20px 0 0; }
+.pied--mentions { border-radius: 0; }
+/* séance : la barre du bas (repos + « Bloc suivant ») flotte, en verre */
+.ec-piedbloc { position: sticky; bottom: 16px; z-index: 15; padding: 10px; border-radius: 999px; background: rgba(255, 255, 255, .7); -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou);
+  border: 1px solid rgba(255, 255, 255, .92); box-shadow: inset 0 1px 0 #fff, 0 14px 40px rgba(22, 21, 20, .16); }
+.ec-piedbloc .ec-repos { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+
+/* ---------- Liquid Glass en mouvement ---------- */
+@property --lueur { syntax: '<number>'; inherits: false; initial-value: 0; }
+/* un reflet de verre suit la souris ou le doigt sur les cartes et la barre (position posée par verre.js) */
+.entete__barre, .service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul,
+.espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-piedbloc { transition: --lueur .4s ease, transform .5s var(--doux), box-shadow .4s ease; }
+.entete__barre:hover, .service:hover, .question:hover, .formulaire:hover, .ecrans__panneau:hover, .ec-semaine:hover, .ec-etape:hover, .ec-pcarte:hover, .ec-chiffre:hover, .ec-records:hover,
+.ec-regul:hover, .espace-carte:hover, .ec-histo__carte:hover, .ec-carte:hover, .disc:hover, .carte-coache:hover, .messagerie__fil:hover, .ec-piedbloc:hover { --lueur: 1; }
+.entete__barre { background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .14)), transparent 68%); }
+.service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil {
+  background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .85)), transparent 68%), linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important; }
+.carte-coache:hover, .ec-pcarte:hover, .ec-carte:hover { transform: translateY(-3px); box-shadow: 0 24px 56px rgba(22, 21, 20, .13) !important; }
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes verre-descend { from { opacity: 0; transform: translateY(-22px) scale(.95); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+  @keyframes verre-monte { from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+  @keyframes verre-derive { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(3%, -2%, 0) scale(1.07); } 100% { transform: translate3d(-3%, 3%, 0) scale(1.02); } }
+  .entete__barre { animation: verre-descend .9s var(--ressort) backwards; } /* « backwards » : une fois finie, plus de filtre sur la barre (sinon la barre du bas du téléphone s'y accroche) */
+  .ec-noire, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .ec-histo__carte, .ec-carte, .espace-carte, .carte-coache, .bandeau-coach, .disc, .messagerie__fil, .ec-recap { animation: verre-monte .75s var(--doux) backwards; }
+  .carte-coache:nth-child(2), .espace-carte:nth-of-type(2) { animation-delay: .07s; }
+  .carte-coache:nth-child(3), .espace-carte:nth-of-type(3) { animation-delay: .14s; }
+  .carte-coache:nth-child(n+4) { animation-delay: .2s; }
+  .nav--prete .nav__bulle { transition: transform .65s var(--ressort), width .65s var(--ressort), height .4s var(--doux), opacity .3s ease; }
+  /* appuyer sur un bouton l'écrase, le relâcher le fait rebondir */
+  .bouton, .ec-bouton, .heros__ecrire, .heros__second, .nav__lien, .entete__compte, .entete__ecrire, .ec-rond, .ecrans__vignette, .ec-piedbloc__suivant, .ec-piedbloc__retour, .offres-page__liens a, .bascule button, .ec-case-fait {
+    transition-property: transform, background-color, color, border-color, box-shadow; transition-duration: .5s, .16s, .16s, .16s, .3s; transition-timing-function: var(--ressort), ease, ease, ease, ease; }
+  .bouton:active, .ec-bouton:active, .heros__ecrire:active, .heros__second:active, .nav__lien:active, .entete__compte:active, .entete__ecrire:active, .ec-rond:active, .ecrans__vignette:active,
+  .ec-piedbloc__suivant:active, .ec-piedbloc__retour:active, .offres-page__liens a:active, .bascule button:active, .ec-case-fait:active { transform: scale(.94); }
+  body::before { animation: verre-derive 38s ease-in-out infinite alternate; will-change: transform; }
+}
+/* sans transparence (réglage de l'appareil) ou en contraste renforcé : le verre devient plein */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .entete__barre, .menu-mobile, .nav, .ec-piedbloc, .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .entete__barre, .nav, .menu-mobile { background-color: #161514 !important; }
+  .service, .question, .formulaire, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-piedbloc { background-color: #fff !important; }
+}
+
+/* ---------- Téléphone, espace connecté : capsule fine en haut (logo + compte), pages en barre flottante en bas avec pictogrammes ---------- */
+
+
+@media (max-width: 960px) {
+  .entete--rangee .entete__barre { background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; padding: 0 !important;
+    width: calc(100% - 28px); height: 48px !important; min-height: 0; margin-top: 10px !important; grid-template-columns: 1fr auto; }
+  .entete--rangee .entete__barre::before { content: ""; grid-row: 1; grid-column: 1 / -1; height: 48px; border-radius: 999px; background: rgba(22,21,20,.92); box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 10px 26px rgba(22,21,20,.25); }
+  .entete--rangee .entete__logo { grid-row: 1; grid-column: 1; z-index: 1; padding-left: 20px; align-self: center; }
+  .entete--rangee .entete__droite { grid-row: 1; grid-column: 2; z-index: 1; padding-right: 6px; align-self: center; }
+  .entete--rangee .nav { position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 80; margin: 0; padding: 6px; gap: 2px; border-radius: 999px; background: rgba(22,21,20,.94);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5); backdrop-filter: blur(24px) saturate(1.5); border: 1px solid rgba(255,255,255,.1);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 14px 34px rgba(22,21,20,.35); display: flex; overflow: visible; }
+  .entete--rangee .nav__lien { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; height: 54px; padding: 0 2px; border-radius: 999px;
+    font-size: 10.5px; font-weight: 600; letter-spacing: .01em; line-height: 1; color: rgba(244,243,239,.6) !important; background: transparent !important; white-space: nowrap; }
+  .entete--rangee .nav__lien::before { content: ""; width: 24px; height: 24px; background: currentColor; -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat; }
+  .entete--rangee .nav__lien .roule { transform: none !important; }
+  .entete--rangee .nav__lien .roule::after { display: none; }
+  .entete--rangee .nav__lien[aria-current="page"] { background: #f4f3ef !important; color: #161514 !important; }
+  .entete--rangee .nav__lien[href="/espace"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M40%20216V120a8%208%200%200%201%202.3-5.7l80-80a8%208%200%200%201%2011.4%200l80%2080a8%208%200%200%201%202.3%205.7v96h-64v-58H104v58z%27/%3E%3C/svg%3E"); }
+  .entete--rangee .nav__lien[href$="/programme"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2740%27%20y%3D%2740%27%20width%3D%27176%27%20height%3D%27176%27%20rx%3D%2720%27/%3E%3Cpath%20d%3D%27M176%2024v32M80%2024v32M40%2096h176%27/%3E%3C/svg%3E"); }
+  .entete--rangee .nav__lien[href$="/progression"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M32%20208V48M32%20208h192%27/%3E%3Cpath%20d%3D%27M56%20168l44-52%2036%2030%2064-80%27/%3E%3C/svg%3E"); }
+  .entete--rangee .nav__lien[href$="/messages"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M132%20216H48a8%208%200%200%201-8-8V124a92%2092%200%201%201%2092%2092z%27/%3E%3C/svg%3E"); }
+  .entete--rangee .nav__lien[href="/espace/coach"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2792%27%20cy%3D%27100%27%20r%3D%2740%27/%3E%3Cpath%20d%3D%27M24%20208c8-34%2034-52%2068-52s60%2018%2068%2052%27/%3E%3Cpath%20d%3D%27M168%2062a40%2040%200%200%201%200%2076M200%20154c22%208%2036%2026%2040%2054%27/%3E%3C/svg%3E"); }
+  .entete--rangee .nav__lien[href$="/exercices"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M8%20128h20M228%20128h20M28%2088v80M52%2072v112M204%2072v112M228%2088v80M52%20128h152%27/%3E%3C/svg%3E"); }
+  .entete--rangee .nav__lien[href$="/modeles"] { --ico: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20256%20256%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%2714%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2788%27%20y%3D%2740%27%20width%3D%27128%27%20height%3D%27160%27%20rx%3D%2714%27/%3E%3Cpath%20d%3D%27M168%20200v16a14%2014%200%200%201-14%2014H56a14%2014%200%200%201-14-14V84a14%2014%200%200%201%2014-14h16%27/%3E%3C/svg%3E"); }
+  main, .ec-main { padding-bottom: 100px; }
+  .ec-piedbloc { bottom: 94px; }
+}
+
+@media (max-width: 960px) { .entete--rangee .nav__bulle { display: none; } .entete--rangee .nav__lien { transition: background-color .25s ease, color .25s ease; } }
+/* téléphone : la phrase « Cochez Fait… » se cache tant que le minuteur n'est pas lancé, pour que la barre « Bloc suivant » reste fine */
+@media (max-width: 640px) { .ec-piedbloc .ec-repos:not(.est-actif) { display: none; } }

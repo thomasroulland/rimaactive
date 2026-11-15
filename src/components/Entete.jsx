@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logoCraie from '../assets/rimaactive-mot-craie.svg'
 import { PAGES_MENU } from './liens.js'
@@ -29,6 +29,7 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
     return () => cancelAnimationFrame(image)
   }, [ecrireCible, ecrireVisible])
   const avecMenu = !rangee && liens.length > 0
+  const nav = useNavBulle(pathname, liens)
   // « Accueil » ramène toujours tout en haut de l'accueil, même quand on y est déjà
   const versLeHaut = (page) => () => { if (page.to === pathname) window.scrollTo({ top: 0, behavior: 'smooth' }) }
   // Le menu mobile se referme quand on change de page ou qu'on appuie sur Échap
@@ -49,7 +50,8 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
           <img src={logoCraie} alt="Rimaactive, Marie Sillas coach sportive" width="128" height="26" />
         </Link>
         {/* Menu à droite, à côté de « M'écrire » (11 novembre 2026) ; mots simples ; la page en cours est dans une pilule encre ; au survol le jaune monte et le mot « roule » vers le haut (choix de Marie, novembre 2026) */}
-        <nav className="nav" aria-label="Menu principal">
+        <nav className="nav" aria-label="Menu principal" ref={nav}>
+          <span className="nav__bulle" aria-hidden="true" />
           {liens.map((page) => {
             // `court` : nom plus court sur téléphone, quand la barre de l'espace a 4 liens (15 novembre 2026)
             const nom = <span className="roule" data-texte={page.label}>{page.label}</span>
@@ -145,4 +147,38 @@ export function Fleche({ taille = 20 }) {
       <path d="M4 12h15M13 6l6 6-6 6" />
     </svg>
   )
+}
+
+// Pastille « Liquid Glass » de la page en cours : elle glisse (avec un petit rebond) d'un lien à l'autre.
+// On mesure le lien allumé (aria-current) et on pose sa place dans des variables CSS ; au premier affichage, elle
+// se pose sans glisser. Remesure au redimensionnement (menu qui se resserre au défilement, rotation du téléphone…).
+function useNavBulle(pathname, liens) {
+  const ref = useRef(null)
+  useLayoutEffect(() => {
+    const nav = ref.current
+    if (!nav) return undefined
+    let image = 0
+    const mesurer = () => {
+      const actif = nav.querySelector('.nav__lien[aria-current="page"]')
+      if (!actif) { nav.classList.remove('nav--prete'); return }
+      nav.style.setProperty('--bx', `${actif.offsetLeft}px`)
+      nav.style.setProperty('--by', `${actif.offsetTop}px`)
+      nav.style.setProperty('--bw', `${actif.offsetWidth}px`)
+      nav.style.setProperty('--bh', `${actif.offsetHeight}px`)
+      if (!nav.classList.contains('nav--prete')) {
+        // premier affichage : la pastille se pose sans glisser, puis les déplacements suivants sont animés
+        nav.classList.add('nav--prete', 'nav--pose')
+        cancelAnimationFrame(image)
+        image = requestAnimationFrame(() => { image = requestAnimationFrame(() => nav.classList.remove('nav--pose')) })
+      }
+    }
+    mesurer()
+    const observateur = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(mesurer)
+    observateur?.observe(nav)
+    window.addEventListener('resize', mesurer)
+    // la police peut arriver après le premier affichage et changer la largeur des liens
+    document.fonts?.ready?.then(mesurer)
+    return () => { cancelAnimationFrame(image); observateur?.disconnect(); window.removeEventListener('resize', mesurer) }
+  }, [pathname, liens])
+  return ref
 }
