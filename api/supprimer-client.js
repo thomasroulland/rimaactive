@@ -44,6 +44,10 @@ export default async function handler(req, res) {
       const lot = await db.collection(`utilisateurs/${uid}/${sous}`).get()
       await Promise.all(lot.docs.map((d) => d.ref.delete()))
     }
+    // Discussion avec la coach (messages puis fiche) ; les photos jointes sont sous clients/{uid}/, déjà effacées.
+    const messages = await db.collection(`conversations/${uid}/messages`).get()
+    await Promise.all(messages.docs.map((d) => d.ref.delete()))
+    await db.doc(`conversations/${uid}`).delete()
     // 3. Le compte de connexion.
     if (compte) await a.auth.deleteUser(uid)
     // 4. Le profil, en dernier.

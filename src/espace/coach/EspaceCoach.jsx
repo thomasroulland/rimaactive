@@ -3,7 +3,9 @@ import ProgrammesCoach from './ProgrammesCoach.jsx'
 import MesCoaches from './MesCoaches.jsx'
 import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
-import { Bilans, Ensemble, Historique, Notes, Photos, Stats } from './OngletsCoache.jsx'
+import { Bilans, Ensemble, Historique, Messages, Notes, Photos, Stats } from './OngletsCoache.jsx'
+import Messagerie, { useConversations } from './Messagerie.jsx'
+import { nonLu } from '../donnees/messages.js'
 import EditeurProgramme from './EditeurProgramme.jsx'
 import { PageCoache } from './EnteteCoache.jsx'
 
@@ -12,6 +14,7 @@ export const LIENS_COACH = [
   { to: '/espace/coach', label: 'Mes coachés', end: true },
   { to: '/espace/coach/exercices', label: 'Banque d’exercices' },
   { to: '/espace/coach/modeles', label: 'Modèles' },
+  { to: '/espace/coach/messages', label: 'Messages' },
 ]
 
 // Espace coach : l'écran choisi
@@ -23,6 +26,8 @@ export default function EspaceCoach({ profil }) {
         <Route path="modeles" element={<ProgrammesCoach />} />
         <Route path="programmes" element={<Navigate to="/espace/coach/modeles" replace />} />
         <Route path="modeles/:modeleId" element={<EditeurProgramme />} />
+        <Route path="messages" element={<Messagerie />} />
+        <Route path="messages/:uid" element={<Messagerie />} />
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />
         <Route path="exercices/:id" element={<FicheExercice />} />
@@ -34,6 +39,7 @@ export default function EspaceCoach({ profil }) {
           <Route path="bilans" element={<Bilans />} />
           <Route path="stats" element={<Stats />} />
           <Route path="photos" element={<Photos />} />
+          <Route path="messages" element={<Messages />} />
           <Route path="notes" element={<Notes />} />
           <Route path="mesures" element={<Navigate to="../stats" replace />} />
         </Route>
@@ -43,7 +49,9 @@ export default function EspaceCoach({ profil }) {
   )
 }
 
-// Pages du coach (maquette PDF : pas de pastille de nombre dans la barre ; les points à regarder sont sur « Mes coachés »)
+// Pages du coach : « Messages » porte le nombre de coachés qui ont écrit sans réponse lue (15 novembre 2026)
 export function useLiensCoach() {
-  return LIENS_COACH
+  const conversations = useConversations()
+  const n = [...(conversations?.values() ?? [])].filter((c) => nonLu(c, 'coach')).length
+  return LIENS_COACH.map((l) => (l.to === '/espace/coach/messages' ? { ...l, badge: n } : l))
 }

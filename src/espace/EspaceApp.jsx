@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+import { ecouterConversation, ecouterMessages } from './depots.js'
+import { nombreNonLus } from './donnees/messages.js'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Coque from './coque/Coque.jsx'
 import useSession from './useSession.js'
@@ -38,18 +41,34 @@ export default function EspaceApp() {
 
 function EspaceCoache({ uid, profil }) {
   // dans la barre : le pictogramme « compte », pas la photo de profil (choix de Thomas, 14 novembre 2026)
+  // « Messages » porte le nombre de messages de Marie pas encore lus (15 novembre 2026)
+  const nonLus = useNonLusCoache(uid)
+  const liens = LIENS_CLIENT.map((l) => (l.to === '/espace/messages' ? { ...l, badge: nonLus } : l))
   return (
-    <Coque liens={LIENS_CLIENT} client>
+    <Coque liens={liens} client>
       <EspaceClient uid={uid} profil={profil} />
     </Coque>
   )
 }
 
 const LIENS_CLIENT = [
-  { to: '/espace', label: 'Tableau de bord' },
-  { to: '/espace/programme', label: 'Mon programme' },
-  { to: '/espace/progression', label: 'Ma progression' },
+  { to: '/espace', label: 'Tableau de bord', court: 'Accueil' },
+  { to: '/espace/programme', label: 'Mon programme', court: 'Programme' },
+  { to: '/espace/progression', label: 'Ma progression', court: 'Progression' },
+  { to: '/espace/messages', label: 'Messages' },
 ]
+
+// Messages de Marie arrivés depuis la dernière lecture du coaché
+function useNonLusCoache(uid) {
+  const [messages, setMessages] = useState([])
+  const [conversation, setConversation] = useState(null)
+  useEffect(() => {
+    const a = ecouterMessages(uid, setMessages, () => {})
+    const b = ecouterConversation(uid, setConversation, () => {})
+    return () => { a(); b() }
+  }, [uid])
+  return nombreNonLus(messages, conversation, 'client')
+}
 
 function Page({ titre, children }) {
   return (

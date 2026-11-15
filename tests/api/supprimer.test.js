@@ -13,6 +13,8 @@ async function peupler(c) {
   await db.doc(`seancesFaites/p_${c.uid}_s1`).set({ client: c.uid })
   await db.doc(`utilisateurs/${c.uid}/mesures/m1`).set({ date: '2026-11-17', poids: '72,5' })
   await db.doc(`utilisateurs/${c.uid}/photos/ph1`).set({ date: '2026-11-17', chemin: `clients/${c.uid}/progression/x.jpg` })
+  await db.doc(`conversations/${c.uid}`).set({ dernier: { texte: 'Salut', auteur: 'client' } })
+  await db.doc(`conversations/${c.uid}/messages/m1`).set({ auteur: 'client', texte: 'Salut' })
   await bucket().file(`clients/${c.uid}/photo.jpg`).save(Buffer.from('x'), { contentType: 'image/jpeg' })
 }
 const existe = async (chemin) => (await app().firestore().doc(chemin).get()).exists
@@ -56,6 +58,9 @@ describe('POST /api/supprimer-client', () => {
     expect(await existe(`seancesFaites/p_${A.uid}_s1`)).toBe(false)
     expect(await existe(`utilisateurs/${A.uid}/mesures/m1`)).toBe(false)
     expect(await existe(`utilisateurs/${A.uid}/photos/ph1`)).toBe(false)
+    expect(await existe(`conversations/${A.uid}`)).toBe(false)
+    expect(await existe(`conversations/${A.uid}/messages/m1`)).toBe(false)
+    expect(await existe(`conversations/${B.uid}/messages/m1`)).toBe(true)
     const [fichiersA] = await bucket().getFiles({ prefix: `clients/${A.uid}/` })
     expect(fichiersA).toHaveLength(0)
     await expect(app().auth().getUser(A.uid)).rejects.toMatchObject({ code: 'auth/user-not-found' })

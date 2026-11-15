@@ -68,6 +68,48 @@ service cloud.firestore {
       }
     }
 
+    // Discussion entre la coach et chaque coaché (15 novembre 2026) : conversations/{uid du coaché}.
+    // Fiche de la conversation : dernier message (pour la liste et les pastilles) et moments de lecture de chacun.
+    // Chacun ne change que « son » moment de lecture et le dernier message signé de son rôle.
+    function role() {
+      return estCoach() ? 'coach' : 'client';
+    }
+    function dernierValide() {
+      return !('dernier' in request.resource.data)
+        || (request.resource.data.dernier.keys().hasOnly(['texte', 'auteur', 'le'])
+          && request.resource.data.dernier.auteur == role()
+          && request.resource.data.dernier.le == request.time
+          && request.resource.data.dernier.texte is string
+          && request.resource.data.dernier.texte.size() <= 200);
+    }
+    match /conversations/{uid} {
+      allow read: if estMoi(uid) || estCoach();
+      allow create: if (estMoi(uid) || estCoach())
+        && request.resource.data.keys().hasOnly(['dernier', 'luCoach', 'luClient'])
+        && dernierValide()
+        && (estCoach() ? !('luClient' in request.resource.data) : !('luCoach' in request.resource.data));
+      allow update: if (estMoi(uid) || estCoach())
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(estCoach() ? ['dernier', 'luCoach'] : ['dernier', 'luClient'])
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['dernier']) || dernierValide());
+      allow delete: if false;
+
+      // Messages : jamais modifiés ni effacés ; une photo jointe est dans le dossier du coaché.
+      match /messages/{id} {
+        allow read: if estMoi(uid) || estCoach();
+        allow create: if (estMoi(uid) || estCoach())
+          && request.resource.data.keys().hasOnly(['auteur', 'texte', 'piece', 'photo', 'envoyeLe'])
+          && request.resource.data.auteur == role()
+          && request.resource.data.envoyeLe == request.time
+          && request.resource.data.texte is string
+          && request.resource.data.texte.size() <= 2000
+          && (request.resource.data.texte.size() > 0 || request.resource.data.get('piece', null) != null || request.resource.data.get('photo', null) != null)
+          && (request.resource.data.get('piece', null) == null || request.resource.data.piece is map)
+          && (request.resource.data.get('photo', null) == null
+            || (request.resource.data.photo is string && request.resource.data.photo.matches('clients/' + uid + '/messages/[^/]+')));
+        allow update, delete: if false;
+      }
+    }
+
     // Modèles de programmes réutilisables (page « Programmes » du coach)
     match /modeles/{id} {
       allow read, write: if estCoach();

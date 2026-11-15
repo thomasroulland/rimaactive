@@ -1940,3 +1940,10 @@ input, textarea { caret-color: var(--vermillon); }
   .page-contact .case { font-size: 15px; line-height: 22px; }
   .page-contact .formulaire button[type=submit] { min-height: 50px; padding-inline: 32px; font-size: 16px; }
 }
+
+/* Noms courts dans la barre de l'espace sur téléphone (15 novembre 2026) ; le nom complet reste lu par les lecteurs d'écran */
+.nav__court { display: none; }
+@media (max-width: 600px) {
+  .entete--rangee .nav__court { display: inline; }
+  .entete--rangee .nav__long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}

@@ -15,6 +15,8 @@ import { messageErreur } from '../erreurs.js'
 import { useCoache } from './EnteteCoache.jsx'
 import { Courbe, DialogueSuppression, SeanceFaite, trouverSeance } from './FicheClient.jsx'
 import PhotoStockee from './PhotoStockee.jsx'
+import Discussion from '../Discussion.jsx'
+import { lienCoach } from './Messagerie.jsx'
 
 // Onglets de la fiche d'un coaché, d'après la maquette coach de Marie (13 novembre 2026).
 // Les données communes (coaché, programmes, séances) viennent de la page commune (useCoache).
@@ -578,4 +580,11 @@ export function Notes() {
       ))}
     </div>
   )
+}
+
+// ---------- Messages (15 novembre 2026) : la discussion avec ce coaché ----------
+export function Messages() {
+  const { uid, client, programmes } = useCoache()
+  const publies = (programmes ?? []).filter((p) => p.statut === 'publié')
+  return <Discussion uid={uid} role="coach" autre={client.prenom || 'votre coaché'} programmes={publies} lienPiece={lienCoach(uid)} classe="disc--onglet" />
 }

@@ -1237,3 +1237,112 @@ img.photo-attente { opacity: 1; }
 .records-coache__nom { font-size: 13px; font-weight: 600; color: var(--gris-chaud); }
 .records-coache__val { font-size: 24px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .records-coache__val small { font-size: 15px; font-weight: 600; color: var(--gris-chaud); }
+
+/* ---------- Discussion coach ↔ coaché (15 novembre 2026), la même des deux côtés ---------- */
+.disc { --disc-moi: #161514; --disc-moi-texte: #f4f3ef; --disc-autre: #ffffff; display: flex; flex-direction: column; min-height: 0; height: 100%; background: #f4f3ef; border-radius: 24px; border: 1px solid #ece9e3; overflow: hidden; font-family: var(--font-sans); }
+.disc__fil { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 16px 12px; display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; }
+.disc__groupe { display: flex; flex-direction: column; }
+.disc__jour { align-self: center; margin: 14px 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #57534e; }
+.disc__jour span { background: #ece9e3; padding: 4px 10px; border-radius: 999px; }
+.disc__msg { max-width: min(78%, 520px); display: flex; flex-direction: column; gap: 6px; padding: 10px 14px 6px; border-radius: 18px; animation: disc-arrivee .25s cubic-bezier(.2, .7, .2, 1) both; }
+.disc__msg--moi { align-self: flex-end; background: var(--disc-moi); color: var(--disc-moi-texte); border-bottom-right-radius: 6px; }
+.disc__msg--autre { align-self: flex-start; background: var(--disc-autre); color: #161514; border-bottom-left-radius: 6px; box-shadow: 0 1px 2px rgba(22, 21, 20, .06); }
+.disc__texte { margin: 0; font-size: 15px; line-height: 22px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.disc__heure { align-self: flex-end; font-size: 11px; line-height: 14px; opacity: .6; font-variant-numeric: tabular-nums; }
+.disc__photo { display: block; width: 100%; max-width: 260px; max-height: 320px; object-fit: cover; border-radius: 12px; background: #e6e2da; min-height: 120px; }
+.disc__vide { margin: auto; max-width: 360px; text-align: center; color: #57534e; font-size: 15px; line-height: 22px; padding: 24px 8px; }
+.disc__vide p { margin: 0; }
+.disc__vide-titre { font-size: 18px !important; font-weight: 800; color: #161514; margin-bottom: 6px !important; }
+.disc__vide--erreur { color: #b42318; }
+@keyframes disc-arrivee { from { opacity: 0; transform: translateY(6px); } }
+
+/* pièce jointe : petite carte cliquable */
+.disc-piece { display: flex; align-items: center; gap: 10px; width: 100%; min-width: 200px; padding: 10px 12px; border: 1px solid rgba(22, 21, 20, .1); border-radius: 12px; background: #f4f3ef; color: #161514; text-decoration: none; text-align: left; font: inherit; cursor: pointer; transition: border-color .2s ease, background .2s ease; }
+.disc__msg--moi .disc-piece { background: rgba(244, 243, 239, .1); border-color: rgba(244, 243, 239, .2); color: #f4f3ef; }
+a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
+.disc-piece:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.disc-piece__picto { flex: none; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: #f2c230; color: #161514; }
+.disc-piece__texte { display: flex; flex-direction: column; min-width: 0; }
+.disc-piece__type { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .65; }
+.disc-piece__titre { font-size: 15px; font-weight: 700; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.disc-piece__sous { font-size: 13px; opacity: .7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* zone de saisie */
+.disc__saisie { flex: none; background: #fff; border-top: 1px solid #ece9e3; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 8px; }
+.disc__barre { display: flex; align-items: flex-end; gap: 8px; }
+.disc__champ { flex: 1; min-width: 0; resize: none; min-height: 44px; max-height: 160px; padding: 11px 16px; border: 1px solid #d9d5cd; border-radius: 22px; background: #f4f3ef; font: 400 16px/20px var(--font-sans); color: #161514; }
+.disc__champ:focus { outline: none; border-color: #57534e; box-shadow: 0 0 0 3px rgba(22, 21, 20, .08); background: #fff; }
+.disc__rond, .disc__envoyer { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; border: 1px solid #d9d5cd; background: #fff; color: #161514; cursor: pointer; transition: background .2s ease, transform .15s ease; }
+.disc__rond[aria-expanded="true"] { background: #161514; color: #f4f3ef; border-color: #161514; }
+.disc__rond[aria-expanded="true"] svg { transform: rotate(45deg); }
+.disc__rond svg { transition: transform .2s ease; }
+.disc__envoyer { background: #f2c230; border-color: #f2c230; }
+.disc__envoyer:disabled { background: #ece9e3; border-color: #ece9e3; color: #a8a29e; cursor: default; }
+.disc__envoyer:not(:disabled):active { transform: scale(.94); }
+.disc__rond:focus-visible, .disc__envoyer:focus-visible { outline: 2px solid #161514; outline-offset: 2px; }
+.disc__plus { position: relative; }
+.disc__menu { position: absolute; bottom: calc(100% + 8px); left: 0; z-index: 5; min-width: 200px; background: #fff; border: 1px solid #ece9e3; border-radius: 16px; box-shadow: 0 12px 32px rgba(22, 21, 20, .14); padding: 6px; display: flex; flex-direction: column; animation: disc-arrivee .18s ease both; }
+.disc__menu button { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 4px 10px; border: 0; border-radius: 10px; background: none; font: 600 15px/1 var(--font-sans); color: #161514; cursor: pointer; text-align: left; }
+.disc__menu button:hover, .disc__menu button:focus-visible { background: #f4f3ef; outline: none; }
+.disc__joint { display: flex; flex-wrap: wrap; gap: 8px; }
+.disc__joint-photo { position: relative; width: 64px; height: 64px; border-radius: 12px; overflow: hidden; background: #ece9e3; }
+.disc__joint-photo img { width: 100%; height: 100%; object-fit: cover; }
+.disc__joint-photo .disc__retirer { position: absolute; top: 4px; right: 4px; }
+.disc__joint-piece { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 6px 6px 6px 8px; border-radius: 12px; background: #f4f3ef; border: 1px solid #ece9e3; }
+.disc__joint-titre { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.disc__retirer { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 0; background: rgba(22, 21, 20, .72); color: #fff; font: 700 16px/1 var(--font-sans); cursor: pointer; display: grid; place-items: center; }
+.disc__joint-piece .disc__retirer { background: #e6e2da; color: #161514; }
+.disc__erreur { margin: 0; font-size: 14px; color: #b42318; }
+
+/* fenêtre « Joindre une séance / un exercice / un programme » */
+.disc-choix { width: min(480px, calc(100vw - 32px)); max-height: min(80vh, 640px); display: none; flex-direction: column; gap: 12px; }
+.disc-choix[open] { display: flex; }
+.disc-choix__tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.disc-choix__titre { margin: 0; font-size: 20px; font-weight: 800; }
+.disc-choix__fermer { width: 36px; height: 36px; background: #f4f3ef; color: #161514; font-size: 20px; }
+.disc-choix__cherche { min-height: 44px; padding: 0 14px; border: 1px solid #d9d5cd; border-radius: 12px; font: 400 16px var(--font-sans); }
+.disc-choix__liste { list-style: none; margin: 0; padding: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.disc-piece--choix { background: #fff; }
+.disc-piece--choix:hover { background: #f4f3ef; }
+.disc-choix__vide { color: #57534e; font-size: 15px; margin: 0; padding: 8px 0; }
+
+@media (prefers-reduced-motion: reduce) { .disc__msg, .disc__menu { animation: none; } .disc__fil { scroll-behavior: auto; } }
+
+/* hauteurs de la discussion selon la page */
+.disc--onglet { height: clamp(440px, calc(100dvh - 330px), 720px); }
+.disc--coach { flex: 1; border-radius: 0 0 20px 20px; border: 0; }
+
+/* page « Messages » du coach : liste à gauche, discussion à droite ; sur téléphone, l'une puis l'autre */
+.messagerie { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 20px; height: clamp(520px, calc(100dvh - 180px), 820px); }
+.messagerie__liste { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.messagerie__titre { margin: 0; }
+.messagerie__coaches { list-style: none; margin: 0; padding: 4px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.messagerie__coache { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px; text-decoration: none; color: var(--encre); transition: background .2s ease; }
+.messagerie__coache:hover { background: rgba(255, 255, 255, .7); }
+.messagerie__coache.est-choisi { background: #fff; box-shadow: 0 1px 3px rgba(22, 21, 20, .08); }
+.messagerie__coache:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.messagerie__qui { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.messagerie__nom { font-weight: 700; font-size: 15px; }
+.messagerie__apercu { font-size: 14px; color: var(--gris-chaud); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.est-neuf .messagerie__apercu { color: var(--encre); font-weight: 600; }
+.messagerie__quand { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-size: 12px; color: var(--gris-chaud); }
+.messagerie__point { width: 10px; height: 10px; border-radius: 50%; background: var(--vermillon, #ff4a1c); }
+.messagerie__fil { display: flex; flex-direction: column; min-height: 0; background: #fff; border-radius: 20px; border: 1px solid #ece9e3; overflow: hidden; }
+.messagerie__entete { flex: none; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #ece9e3; }
+.messagerie__entete-nom { flex: 1; font-weight: 800; font-size: 17px; }
+.messagerie__retour { display: none; width: 40px; height: 40px; border-radius: 50%; place-items: center; text-decoration: none; color: var(--encre); font-size: 20px; background: #f4f3ef; }
+.messagerie__rien { margin: auto; padding: 24px; color: var(--gris-chaud); text-align: center; }
+.messagerie__fil .disc { border-radius: 0; }
+@media (max-width: 860px) {
+  .messagerie { grid-template-columns: 1fr; height: auto; }
+  .messagerie--ouverte .messagerie__liste { display: none; }
+  .messagerie:not(.messagerie--ouverte) .messagerie__fil { display: none; }
+  .messagerie__fil { height: calc(100dvh - 170px); min-height: 440px; }
+  .messagerie__retour { display: grid; }
+}
+
+/* page « Messages » du coaché */
+.ec-messages { display: flex; flex-direction: column; gap: 16px; }
+.ec-messages__tete { display: flex; flex-direction: column; gap: 4px; }
+.disc--page { height: clamp(440px, calc(100dvh - 300px), 760px); background: #fff; }
+.disc--page .disc__fil { background: #f4f3ef; }

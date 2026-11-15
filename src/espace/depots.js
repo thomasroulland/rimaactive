@@ -1,11 +1,12 @@
 // Lectures et écritures Firestore / API de l'espace. Parties utilisateurs (tâche 6).
-import { addDoc, collection, deleteDoc, doc, onSnapshot, query, where, updateDoc, setDoc, getDoc, getDocs, serverTimestamp } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, where, updateDoc, setDoc, getDoc, getDocs, serverTimestamp, writeBatch } from 'firebase/firestore'
 import { ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth, db, stockage } from './firebase.js'
 import { semaineCourante, aujourdhuiIso } from './donnees/calculs.js'
 import { reduireImage } from './donnees/photos.js'
 import { contenuNotes, contenuFin } from './donnees/seances.js'
+import { apercu } from './donnees/messages.js'
 
 // Appelle une route /api/... avec le jeton du coach. Renvoie { statut, donnees } ; ne lève que si le réseau échoue.
 export async function appelerApi(chemin, corps) {
@@ -563,3 +564,67 @@ export async function enregistrerModele(modele, { creation = false } = {}) {
   else await updateDoc(ref, { ...donnees, majLe: serverTimestamp() })
 }
 export function supprimerModele(id) { return deleteDoc(doc(db, 'modeles', id)) }
+
+// ---------- Discussion coach ↔ coaché (15 novembre 2026) ----------
+// conversations/{uid du coaché} : { dernier: { texte, auteur, le }, luCoach, luClient } ; messages/{id} : { auteur, texte, piece, photo, envoyeLe }
+
+const tempsEstime = (snap) => snap.data({ serverTimestamps: 'estimate' })
+
+// Messages d'une discussion, du plus ancien au plus récent ; `enAttente` tant que le serveur n'a pas reçu le message.
+export function ecouterMessages(uid, rappel, erreur) {
+  return onSnapshot(
+    query(collection(db, 'conversations', uid, 'messages'), orderBy('envoyeLe')),
+    { includeMetadataChanges: true },
+    (s) => rappel(s.docs.map((d) => {
+      const m = tempsEstime(d)
+      return { id: d.id, ...m, envoyeLe: m.envoyeLe?.toMillis?.() ?? Date.now(), enAttente: d.metadata.hasPendingWrites }
+    })),
+    erreur,
+  )
+}
+
+// Fiche d'une discussion (dernier message, lectures) ; null si aucun message encore.
+export function ecouterConversation(uid, rappel, erreur) {
+  return onSnapshot(doc(db, 'conversations', uid), (d) => rappel(d.exists() ? { id: d.id, ...tempsEstime(d) } : null), erreur)
+}
+
+// Toutes les discussions (coach) : Map(uid → fiche)
+export function ecouterConversations(rappel, erreur) {
+  return onSnapshot(collection(db, 'conversations'), (s) => rappel(new Map(s.docs.map((d) => [d.id, { id: d.id, ...tempsEstime(d) }]))), erreur)
+}
+
+// Envoie un message (texte, pièce jointe, photo) et met à jour la fiche de la discussion en une seule écriture.
+// role : 'coach' ou 'client'. La photo est réduite puis envoyée dans clients/{uid}/messages/ avant le message.
+export async function envoyerMessage(uid, role, { texte = '', piece = null, fichier = null }) {
+  let photo = null
+  if (fichier) {
+    const blob = await reduireImage(fichier)
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      throw Object.assign(new Error('auth/network-request-failed'), { code: 'auth/network-request-failed' })
+    }
+    const fichierRef = ref(stockage, `clients/${uid}/messages/${Date.now()}.jpg`)
+    try {
+      await uploadBytes(fichierRef, blob, { contentType: 'image/jpeg' })
+    } catch (e) {
+      if (e?.code === 'storage/unauthorized') throw Object.assign(new Error('permission-denied'), { code: 'permission-denied' })
+      throw Object.assign(new Error('envoi'), { code: 'envoi' })
+    }
+    photo = fichierRef.fullPath
+  }
+  const message = { auteur: role, texte: String(texte ?? '').trim().slice(0, 2000), piece: piece ?? null, photo, envoyeLe: serverTimestamp() }
+  const lot = writeBatch(db)
+  lot.set(doc(collection(db, 'conversations', uid, 'messages')), message)
+  lot.set(doc(db, 'conversations', uid), {
+    dernier: { texte: apercu(message), auteur: role, le: serverTimestamp() },
+    [role === 'coach' ? 'luCoach' : 'luClient']: serverTimestamp(),
+  }, { merge: true })
+  // Hors ligne, l'écriture part au retour du réseau (le message s'affiche « en attente ») : on n'attend un refus que quelques secondes.
+  const envoi = lot.commit()
+  const refus = await Promise.race([envoi.then(() => null, (e) => e), new Promise((r) => setTimeout(() => r(null), 5000))])
+  if (refus) throw Object.assign(new Error(refus.code ?? 'envoi'), { code: refus.code ?? 'envoi' })
+}
+
+// Marque la discussion comme lue par `role` (n'écrit que s'il y a du nouveau à marquer).
+export function marquerLu(uid, role) {
+  return setDoc(doc(db, 'conversations', uid), { [role === 'coach' ? 'luCoach' : 'luClient']: serverTimestamp() }, { merge: true }).catch(() => {})
+}
