@@ -971,7 +971,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-seance--guidee .ec-sbloc { gap: 14px; }
 .ec-sexos--cartes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 430px), 1fr)); gap: 14px; }
 .ec-sexo--carte { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 0; padding: 0; overflow: hidden; border-radius: 20px; }
-.ec-sexo--carte.est-complet { box-shadow: inset 0 0 0 2px var(--ec-encre); }
+.ec-sexo--carte .ec-sexo__texte { flex: none; }
 .ec-sexo__photo { position: relative; padding: 0; border: 0; background: #e8e5de; cursor: pointer; overflow: hidden; min-height: 100%; }
 .ec-sexo__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
 .ec-sexo__photo:hover .ec-sexo__img { transform: scale(1.04); }
