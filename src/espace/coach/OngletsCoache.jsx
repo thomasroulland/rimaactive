@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   ajouterBilan, ajouterNoteCoach, ecouterBilans, ecouterMesMesures, ecouterMesPhotos, ecouterNotesCoach,
   majProfilSportif, supprimerBilan, supprimerNoteCoach, urlPdf,
@@ -34,69 +34,62 @@ const Carte = ({ titre, id, children, classe = '' }) => (
 export function Ensemble() {
   const { client, uid, programmes, seances, progEnCours, erreur } = useCoache()
   const navigate = useNavigate()
-  const [bilans, setBilans] = useState(null)
   const [suppression, setSuppression] = useState(false)
-  useEffect(() => ecouterBilans(uid, setBilans, () => setBilans([])), [uid])
   const aujourdhui = aujourdhuiIso()
   const ch = chiffresCoache({ programme: progEnCours, seances, aujourdhui })
   const { alertes } = suiviCoache({ programme: progEnCours, seances, visio: client.derniereVisio ?? null, aujourdhui, actif: client.statut === 'actif' })
   const faites = new Set((seances ?? []).filter((s) => s.statut === 'terminée').map((s) => s.seance))
   const prochaine = progEnCours ? listeSeances(progEnCours).find((x) => !faites.has(x.seance.id)) : null
-  const dernier = bilans?.[0]
-  const [toutes, setToutes] = useState(false)
+  const part = ch.prevues > 0 ? Math.min(100, Math.round((ch.faites / ch.prevues) * 100)) : 0
+  const details = [
+    ch.regularite === null ? null : `Régularité ${ch.regularite} %`,
+    ch.rpeMoyen === null ? null : `Effort moyen ${frNombre(ch.rpeMoyen)} sur 10`,
+  ].filter(Boolean).join(' · ')
 
   return (
-    <div className="onglet-pile">
+    <div className="onglet-pile ens">
       <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
-      <dl className="chiffres-fiche">
-        <div className="espace-carte"><dt>Séances faites sur {ch.prevues}</dt><dd>{ch.faites}</dd></div>
-        <div className="espace-carte"><dt>Régularité des semaines passées</dt><dd>{ch.regularite === null ? '–' : `${ch.regularite} %`}</dd></div>
-        <div className="espace-carte"><dt>RPE moyen des séances</dt><dd>{ch.rpeMoyen === null ? '–' : frNombre(ch.rpeMoyen)}</dd></div>
-        <div className="espace-carte"><dt>Bilans notés</dt><dd>{bilans ? bilans.length : '–'}</dd></div>
-      </dl>
-      <section className="onglet-pile" aria-labelledby="t-seances">
-        <div className="suivi-titre">
-          <h2 id="t-seances" className="espace-sous-titre">Dernières séances</h2>
-          <span className="espace-aide">ce qui a été fait par rapport au prévu</span>
-        </div>
-        {seances === null ? <p className="espace-aide" role="status">Chargement…</p>
-          : seances.length === 0 ? <p className="espace-aide">{client.prenom} n’a pas encore enregistré de séance.</p> : (
-            <>
-              <ul className="fiche-liste seances-coache">
-                {seances.slice(0, toutes ? seances.length : 5).map((sf, i) => (
-                  <SeanceFaite key={sf.id} sf={sf} seance={trouverSeance(programmes, sf)} prenom={client.prenom} ouvrirSiEcart={i === 0} />
-                ))}
-              </ul>
-              {seances.length > 5 && !toutes && (
-                <button type="button" className="bouton bouton--secondaire bouton--compact suivi-plus" onClick={() => setToutes(true)}>
-                  Voir les {seances.length - 5} séances plus anciennes
-                </button>
-              )}
-            </>
-          )}
+
+      <section className={`ens-etat ${alertes.length ? 'a-surveiller' : 'tout-va-bien'}`} aria-labelledby="t-etat">
+        <h2 id="t-etat" className="ens-etat__titre">{alertes.length ? 'À surveiller' : 'Tout va bien'}</h2>
+        {alertes.length
+          ? <ul className="ens-etat__liste">{alertes.map((a) => <li key={a}>{a}</li>)}</ul>
+          : <p className="ens-etat__texte">{client.prenom} suit son programme, rien à signaler.</p>}
       </section>
-      <div className="fiche-grille">
-        <Carte titre="Alertes" id="t-alertes">
-          {alertes.length ? <ul className="alertes">{alertes.map((a) => <li key={a}>{a}</li>)}</ul> : <p className="espace-aide">Aucune alerte.</p>}
+
+      <div className="ens-trio">
+        <Carte titre="Progression" id="t-prog">
+          <p className="ens-gros"><b>{ch.faites}</b> séance{ch.faites > 1 ? 's' : ''} sur {ch.prevues}</p>
+          <div className="ens-barre" role="img" aria-label={`${part} % du programme fait`}><span style={{ width: `${part}%` }} /></div>
+          {details && <p className="espace-aide">{details}</p>}
         </Carte>
         <Carte titre="Prochaine séance" id="t-prochaine">
           {prochaine
-            ? <><p className="fiche-carte__fort">{prochaine.seance.titre || 'Séance sans titre'}</p><p className="espace-aide">Semaine {prochaine.semaine}</p></>
+            ? <><p className="ens-gros ens-gros--texte">{prochaine.seance.titre || 'Séance sans titre'}</p><p className="espace-aide">Semaine {prochaine.semaine}</p></>
             : <p className="espace-aide">{progEnCours ? 'Toutes les séances sont faites.' : 'Pas de programme en cours.'}</p>}
+        </Carte>
+        <Carte titre="Objectif et 1RM" id="t-profil">
           <ProfilSportif client={client} uid={uid} />
         </Carte>
-        <Carte titre="Dernier bilan" id="t-visio">
-          {dernier
-            ? <><p className="espace-aide">{dernier.semaine ? `S${dernier.semaine} · ` : ''}{dateSeance(dernier.date)}</p><p className="fiche-carte__texte">{dernier.texte}{dernier.ajuster ? ` À ajuster : ${dernier.ajuster}` : ''}</p></>
-            : <p className="espace-aide">{client.derniereVisio?.date ? `S${client.derniereVisio.semaine ?? '?'} · ${dateSeance(client.derniereVisio.date)}` : 'Aucun bilan noté.'}</p>}
-        </Carte>
       </div>
+
+      <section className="onglet-pile" aria-labelledby="t-seances">
+        <div className="suivi-titre">
+          <h2 id="t-seances" className="espace-sous-titre">Dernières séances</h2>
+          <Link className="lien-souligne" to={`/espace/coach/clients/${uid}/historique`}>Tout l’historique</Link>
+        </div>
+        {seances === null ? <p className="espace-aide" role="status">Chargement…</p>
+          : seances.length === 0 ? <p className="espace-aide">{client.prenom} n’a pas encore enregistré de séance.</p> : (
+            <ul className="fiche-liste seances-coache">
+              {seances.slice(0, 3).map((sf, i) => (
+                <SeanceFaite key={sf.id} sf={sf} seance={trouverSeance(programmes, sf)} prenom={client.prenom} ouvrirSiEcart={i === 0} />
+              ))}
+            </ul>
+          )}
+      </section>
+
       {programmes !== null && (
-        <section className="fiche-bloc fiche-danger" aria-labelledby="fiche-supp">
-          <h2 id="fiche-supp" className="espace-sous-titre">Supprimer ce client</h2>
-          <p className="espace-texte">Le compte, les programmes, les séances, les photos, les bilans et les notes de {client.prenom} sont effacés définitivement.</p>
-          <button type="button" className="bouton bouton--secondaire" onClick={() => setSuppression(true)}>Supprimer ce client et ses données</button>
-        </section>
+        <p className="ens-supprimer"><button type="button" className="lien-souligne" onClick={() => setSuppression(true)}>Supprimer ce client et ses données</button></p>
       )}
       {suppression && <DialogueSuppression client={client} uid={uid} fermer={() => setSuppression(false)} fini={() => navigate('/espace/coach', { replace: true })} />}
     </div>
