@@ -1842,3 +1842,11 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 @media (max-width: 700px) { .es2-bloc__confirme > span { display: none; } }
 .es2-bloc__tete { justify-content: flex-start; }
 .es2-bloc__tete .es2-bloc__format { margin-left: auto; }
+@media (max-width: 700px) {
+  /* téléphone : le titre et la corbeille sur la première ligne, le format en dessous sur toute la largeur */
+  .es2-bloc__tete { flex-wrap: wrap; gap: 10px; padding: 12px; }
+  .es2-bloc__tete > :first-child { flex: 1 1 0; min-width: 0; }
+  .es2-bloc__corbeille { order: 2; }
+  .es2-bloc__tete .es2-bloc__format { order: 3; flex: 1 0 100%; margin-left: 0; }
+  .es2-bloc__format .champ { width: 100%; max-width: none; min-height: 42px; height: 42px; }
+}
