@@ -2133,3 +2133,13 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
   .ms-nouveau button { min-height: 72px; flex-direction: row; border-radius: 18px; }
   .ms-nouveau__plus { width: 40px; height: 40px; font-size: 22px; }
 }
+
+/* Fenêtre d'un jour : le bilan reste étroit pour laisser la place aux exercices (sinon ils sont écrasés à droite) */
+.jour2 .es2.sf { grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) !important; gap: 16px; }
+.jour2__corps.a-une-liste { grid-template-columns: 210px minmax(0, 1fr); }
+.jour2 .sf-bilan textarea { min-height: 90px; height: 90px; }
+@media (max-width: 1100px) {
+  .jour2 .es2.sf { grid-template-columns: minmax(0, 1fr) !important; }
+}
+/* la vue « séance faite » garde un bilan étroit partout (la règle large de la banque d'exercices ne s'applique qu'à la création de séance) */
+@media (min-width: 1101px) { .es2.sf { grid-template-columns: minmax(270px, 320px) minmax(0, 1fr); } }
