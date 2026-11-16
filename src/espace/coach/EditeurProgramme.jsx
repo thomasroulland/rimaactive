@@ -1,3 +1,4 @@
+import MenuFlottant from './MenuFlottant.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
@@ -515,14 +516,15 @@ export default function EditeurProgramme() {
                   <span>{nbSem} semaine{nbSem > 1 ? 's' : ''}</span>
                   <button type="button" aria-label="Une semaine de plus" disabled={nbSem >= MAX_SEMAINES} onClick={() => changerNbSemaines(nbSem + 1)}>＋</button>
                 </div>
-                <details className="gp-menu prog-modele">
-                  <summary className="prog-modele__bouton">Partir d’un modèle ▾</summary>
-                  <div className="gp-menu__liste" role="group" aria-label="Modèles">
-                    {modeles.length === 0 && <p className="gp-menu__titre">Aucun modèle enregistré</p>}
-                    {modeles.map((m) => <button key={m.id} type="button" onClick={(e) => { e.currentTarget.closest('details').open = false; partirDunModele(m) }}>{m.nom || 'Modèle sans nom'} <small>{m.semaines?.length ?? 0} sem.</small></button>)}
-                    <button type="button" onClick={(e) => { e.currentTarget.closest('details').open = false; enregistrerCommeModele() }}>Enregistrer ce programme comme modèle</button>
-                  </div>
-                </details>
+                <MenuFlottant classe="prog-modele" classeBouton="prog-modele__bouton" libelle="Partir d’un modèle" bouton="Partir d’un modèle ▾" aGauche largeur={280} aria="Modèles">
+                  {(fermer) => (
+                    <>
+                      {modeles.length === 0 && <p className="gp-menu__titre">Aucun modèle enregistré</p>}
+                      {modeles.map((m) => <button key={m.id} type="button" onClick={() => { fermer(); partirDunModele(m) }}>{m.nom || 'Modèle sans nom'} <small>{m.semaines?.length ?? 0} sem.</small></button>)}
+                      <button type="button" onClick={() => { fermer(); enregistrerCommeModele() }}>Enregistrer ce programme comme modèle</button>
+                    </>
+                  )}
+                </MenuFlottant>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setGestion(true)}>Gérer le programme</button>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => {
                   const go = () => aller({ nouveau: true })

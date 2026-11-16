@@ -204,3 +204,7 @@ html { scrollbar-gutter: stable; }
 @media (prefers-reduced-motion: reduce) {
   .ec-s2-rond, .ec-s2-chips button, .gp-seance { animation: none !important; }
 }
+
+/* Les menus de la grille se posent par rapport à l'écran : aucune colonne ne doit les enfermer (un flou de fond ferait
+   de la colonne leur « cadre » et les couperait) */
+.gp-col { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }

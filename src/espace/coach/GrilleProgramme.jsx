@@ -1,3 +1,4 @@
+import MenuFlottant from './MenuFlottant.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { nomType } from '../donnees/reglages.js'
@@ -11,30 +12,28 @@ const TYPE_SEANCE = 'application/x-rimaactive-seance'
 
 const nbExos = (s) => (s.blocs ?? []).reduce((t, b) => t + (b.elements ?? []).length, 0)
 
-// Ferme le menu <details> qui contient le bouton cliqué
-const fermer = (ev) => { const d = ev.currentTarget.closest('details'); if (d) d.open = false }
-
 function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, supprimer }) {
   return (
-    <details className="gp-menu">
-      <summary aria-label={`Actions : ${nom}`} title="Actions"><IconePoints /></summary>
-      <div className="gp-menu__liste" role="group" aria-label={`Actions : ${nom}`}>
-        <button type="button" onClick={(e) => { fermer(e); dupliquer(courante) }}>Dupliquer juste après</button>
-        <p className="gp-menu__titre">Copier vers…</p>
-        <div className="gp-menu__semaines">
-          {semaines.map((_, i) => <button key={i} type="button" onClick={(e) => { fermer(e); dupliquer(i) }}>S{i + 1}</button>)}
-        </div>
-        {!faite && (
-          <>
-            <p className="gp-menu__titre">Déplacer vers…</p>
-            <div className="gp-menu__semaines">
-              {semaines.map((_, i) => i !== courante && <button key={i} type="button" onClick={(e) => { fermer(e); deplacer(i) }}>S{i + 1}</button>)}
-            </div>
-            <button type="button" className="gp-menu__danger" onClick={(e) => { fermer(e); supprimer() }}>Supprimer la séance</button>
-          </>
-        )}
-      </div>
-    </details>
+    <MenuFlottant libelle={`Actions : ${nom}`} titre="Actions" bouton={<IconePoints />} aria={`Actions : ${nom}`}>
+      {(fermer) => (
+        <>
+          <button type="button" onClick={() => { fermer(); dupliquer(courante) }}>Dupliquer juste après</button>
+          <p className="gp-menu__titre">Copier vers…</p>
+          <div className="gp-menu__semaines">
+            {semaines.map((_, i) => <button key={i} type="button" onClick={() => { fermer(); dupliquer(i) }}>S{i + 1}</button>)}
+          </div>
+          {!faite && (
+            <>
+              <p className="gp-menu__titre">Déplacer vers…</p>
+              <div className="gp-menu__semaines">
+                {semaines.map((_, i) => i !== courante && <button key={i} type="button" onClick={() => { fermer(); deplacer(i) }}>S{i + 1}</button>)}
+              </div>
+              <button type="button" className="gp-menu__danger" onClick={() => { fermer(); supprimer() }}>Supprimer la séance</button>
+            </>
+          )}
+        </>
+      )}
+    </MenuFlottant>
   )
 }
 
@@ -94,16 +93,17 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
             <section key={w.id} className={`gp-col${depot?.s === s ? ' est-depot' : ''}${s === courante ? ' est-courante' : ''}`} aria-labelledby={`gp-sem-${w.id}`} aria-current={s === courante ? 'date' : undefined}>
               <header className="gp-col__tete">
                 <h2 id={`gp-sem-${w.id}`}>Semaine {s + 1}{s === courante && <span className="gp-courante">En cours</span>}</h2>
-                <details className="gp-menu gp-menu--semaine">
-                  <summary aria-label={`Actions : semaine ${s + 1}`} title="Actions de la semaine"><IconePoints /></summary>
-                  <div className="gp-menu__liste" role="group" aria-label={`Actions : semaine ${s + 1}`}>
-                    <button type="button" onClick={(e) => { fermer(e); actions.dupliquerSemaine(s) }}>Dupliquer dans la semaine {s + 2}</button>
-                    <button type="button" onClick={(e) => { fermer(e); setMots((m) => ({ ...m, [w.id]: !m[w.id] })) }}>Mot pour le coaché</button>
-                    {semaines.length > 1 && !attente && nbFaites === 0 && (
-                      <button type="button" className="gp-menu__danger" onClick={(e) => { fermer(e); actions.supprimerSemaine(s) }}>Supprimer la semaine</button>
-                    )}
-                  </div>
-                </details>
+                <MenuFlottant classe="gp-menu--semaine" libelle={`Actions : semaine ${s + 1}`} titre="Actions de la semaine" bouton={<IconePoints />} aria={`Actions : semaine ${s + 1}`}>
+                  {(fermer) => (
+                    <>
+                      <button type="button" onClick={() => { fermer(); actions.dupliquerSemaine(s) }}>Dupliquer dans la semaine {s + 2}</button>
+                      <button type="button" onClick={() => { fermer(); setMots((m) => ({ ...m, [w.id]: !m[w.id] })) }}>Mot pour le coaché</button>
+                      {semaines.length > 1 && !attente && nbFaites === 0 && (
+                        <button type="button" className="gp-menu__danger" onClick={() => { fermer(); actions.supprimerSemaine(s) }}>Supprimer la semaine</button>
+                      )}
+                    </>
+                  )}
+                </MenuFlottant>
               </header>
               <div className="gp-col__reglages">
                 <label className="gp-rpe">RPE visé

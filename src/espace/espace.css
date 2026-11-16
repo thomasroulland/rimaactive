@@ -1798,3 +1798,8 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 .ens-supprimer button { all: unset; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--gris-chaud); text-decoration: underline; text-underline-offset: 3px; }
 .ens-supprimer button:hover { color: var(--vermillon); }
 @media (max-width: 980px) { .ens-cols { grid-template-columns: minmax(0, 1fr); } .ens-cote { position: static; order: -1; } }
+
+/* liste des menus : posée sur la page (portail), par-dessus tout */
+.gp-menu__liste--flottante { position: fixed; z-index: 400; right: auto; bottom: auto; left: 0; top: 0; transform-origin: top right; }
+.prog-modele .gp-menu__liste--flottante { transform-origin: top left; }
+@media (prefers-reduced-motion: no-preference) { .gp-menu__liste--flottante { animation: menu-ouvre .22s cubic-bezier(.22, 1, .36, 1) both; } }
