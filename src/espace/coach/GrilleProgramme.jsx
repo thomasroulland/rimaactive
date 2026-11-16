@@ -9,15 +9,17 @@ import { IconeCopier, IconePoints } from './Icones.jsx'
 // On glisse une séance d'une colonne à l'autre (ou plus haut, plus bas) ; Alt en glissant la copie ; ⧉ la duplique juste après ;
 // le menu ⋯ fait la même chose au clavier ou au toucher. Une séance déjà faite par le coaché ne se déplace ni ne se supprime (cadenas), mais elle se copie.
 const TYPE_SEANCE = 'application/x-rimaactive-seance'
+const TYPE_MODELE = 'application/x-rimaactive-modele-seance'
 
 const nbExos = (s) => (s.blocs ?? []).reduce((t, b) => t + (b.elements ?? []).length, 0)
 
-function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, supprimer }) {
+function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, supprimer, versModele }) {
   return (
     <MenuFlottant libelle={`Actions : ${nom}`} titre="Actions" bouton={<IconePoints />} aria={`Actions : ${nom}`}>
       {(fermer) => (
         <>
           <button type="button" onClick={() => { fermer(); dupliquer(courante) }}>Dupliquer juste après</button>
+          {versModele && <button type="button" onClick={() => { fermer(); versModele() }}>Enregistrer comme modèle</button>}
           <p className="gp-menu__titre">Copier vers…</p>
           <div className="gp-menu__semaines">
             {semaines.map((_, i) => <button key={i} type="button" onClick={() => { fermer(); dupliquer(i) }}>S{i + 1}</button>)}
@@ -37,12 +39,13 @@ function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, suppr
   )
 }
 
-export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes, actions, annulable, annuler, maxSemaines, courante = -1 }) {
+export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes, actions, annulable, annuler, maxSemaines, courante = -1, modeles = null }) {
   const [glisse, setGlisse] = useState(null) // { s, se } de la séance en train d'être glissée
   const [depot, setDepot] = useState(null) // { s, index } : où elle tomberait
   const [mots, setMots] = useState({}) // semaines dont le « mot pour le coaché » est ouvert
   const colonnes = useRef({})
   const enCours = useRef(null) // la séance glissée, lisible tout de suite (l'état `glisse` ne sert qu'à l'affichage)
+  const modeleEnCours = useRef(null) // id du modèle de séance glissé depuis le panneau
   const semaines = prog.semaines
   const zone = useRef(null)
   // à l'ouverture, la grille défile jusqu'à la semaine en cours (visible sans chercher)
@@ -63,13 +66,22 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
     return i < 0 ? cartes.length : i
   }
   const survoler = (s) => (ev) => {
-    if (!enCours.current || ![...ev.dataTransfer.types].includes(TYPE_SEANCE)) return
+    const modele = modeleEnCours.current && [...ev.dataTransfer.types].includes(TYPE_MODELE)
+    if (!modele && (!enCours.current || ![...ev.dataTransfer.types].includes(TYPE_SEANCE))) return
     ev.preventDefault()
-    ev.dataTransfer.dropEffect = ev.altKey ? 'copy' : 'move'
+    ev.dataTransfer.dropEffect = modele || ev.altKey ? 'copy' : 'move'
     const index = indexDepuis(ev, s)
     setDepot((d) => (d && d.s === s && d.index === index ? d : { s, index }))
   }
   const deposer = (s) => (ev) => {
+    if (modeleEnCours.current) {
+      ev.preventDefault()
+      const id = modeleEnCours.current
+      modeleEnCours.current = null
+      setDepot(null)
+      actions.ajouterModele(s, id, indexDepuis(ev, s))
+      return
+    }
     const de = enCours.current
     if (!de) return
     ev.preventDefault()
@@ -82,7 +94,12 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
   const quitter = (ev) => { if (!ev.currentTarget.contains(ev.relatedTarget)) setDepot(null) }
 
   return (
-    <div className="gp-zone">
+    <div className={`gp-zone${modeles ? ' gp-zone--modeles' : ''}`}>
+      {modeles && (
+        <PanneauModeles modeles={modeles} types={types} semaines={semaines} courante={courante}
+          glisserModele={(id) => { modeleEnCours.current = id }} finGlisse={() => { modeleEnCours.current = null; setDepot(null) }}
+          ajouter={actions.ajouterModele} seanceGlissee={enCours} versModele={(de) => { enCours.current = null; setGlisse(null); setDepot(null); actions.versModele(de.s, de.se) }} />
+      )}
       {annulable && (
         <p className="gp-annuler" role="status">{annulable.texte}<button type="button" onClick={annuler}>Annuler</button></p>
       )}
@@ -147,7 +164,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                             <MenuSeance nom={`séance ${i + 1}, semaine ${s + 1}`} semaines={semaines} courante={s} faite={f}
                               dupliquer={(vers) => actions.dupliquer({ s, se: i }, vers === s ? { vers, index: i + 1 } : { vers })}
                               deplacer={(vers) => actions.deplacer({ s, se: i }, { vers })}
-                              supprimer={() => actions.supprimer(s, i, x)} />
+                              supprimer={() => actions.supprimer(s, i, x)} versModele={actions.versModele ? () => actions.versModele(s, i) : undefined} />
                           </div>
                         )}
                       </article>
@@ -168,5 +185,74 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
         )}
       </div>
     </div>
+  )
+}
+
+// Panneau « Modèles de séance » (16 novembre 2026) : à gauche de la grille, on glisse un modèle dans une semaine (ou ＋ pour choisir
+// la semaine) ; glisser une séance de la grille sur le panneau l'enregistre comme modèle. Se replie pour laisser la place.
+function PanneauModeles({ modeles, types, semaines, courante, glisserModele, finGlisse, ajouter, seanceGlissee, versModele }) {
+  const [ouvert, setOuvert] = useState(() => { try { return localStorage.getItem('rima-panneau-modeles') !== 'ferme' } catch { return true } })
+  const [recherche, setRecherche] = useState('')
+  const [cible, setCible] = useState(false)
+  const basculer = () => setOuvert((o) => { try { localStorage.setItem('rima-panneau-modeles', o ? 'ferme' : 'ouvert') } catch { /* rien */ } return !o })
+  const simple = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  const liste = modeles.filter((m) => !recherche.trim() || simple(`${m.nom} ${nomType(m.seance?.type, types)}`).includes(simple(recherche.trim())))
+  const accueillir = {
+    onDragOver: (ev) => { if (seanceGlissee.current && [...ev.dataTransfer.types].includes(TYPE_SEANCE)) { ev.preventDefault(); ev.dataTransfer.dropEffect = 'copy'; setCible(true) } },
+    onDragLeave: (ev) => { if (!ev.currentTarget.contains(ev.relatedTarget)) setCible(false) },
+    onDrop: (ev) => { const de = seanceGlissee.current; setCible(false); if (!de) return; ev.preventDefault(); versModele(de) },
+  }
+  if (!ouvert) {
+    return (
+      <aside className={`gp-modeles est-ferme${cible ? ' est-cible' : ''}`} aria-label="Modèles de séance" {...accueillir}>
+        <button type="button" className="gp-modeles__ouvrir" onClick={basculer} aria-expanded="false" title="Afficher les modèles de séance">
+          <span aria-hidden="true">›</span><span className="gp-modeles__vertical">Modèles</span><span className="gp-modeles__nb">{modeles.length}</span>
+        </button>
+      </aside>
+    )
+  }
+  return (
+    <aside className={`gp-modeles${cible ? ' est-cible' : ''}`} aria-labelledby="gp-modeles-titre" {...accueillir}>
+      <header className="gp-modeles__tete">
+        <h2 id="gp-modeles-titre">Modèles de séance</h2>
+        <button type="button" className="gp-modeles__replier" onClick={basculer} aria-expanded="true" aria-label="Replier les modèles" title="Replier">‹</button>
+      </header>
+      <label className="sr-only" htmlFor="gp-modeles-cherche">Chercher un modèle</label>
+      <input id="gp-modeles-cherche" className="gp-modeles__cherche" type="search" autoComplete="off" placeholder="Chercher un modèle…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
+      <p className="gp-modeles__aide">Glissez un modèle dans une semaine.</p>
+      {modeles.length === 0
+        ? <p className="gp-modeles__vide">Aucun modèle pour l’instant. Glissez une séance de la grille ici pour en créer un, ou créez-en dans « Modèles ».</p>
+        : liste.length === 0 ? <p className="gp-modeles__vide">Aucun modèle ne correspond.</p> : (
+          <ul className="gp-modeles__liste">
+            {liste.map((m) => {
+              const blocs = m.seance?.blocs ?? []
+              const exos = blocs.reduce((t, b) => t + (b.elements ?? []).length, 0)
+              return (
+                <li key={m.id} className="gp-modele" draggable
+                  onDragStart={(ev) => { ev.dataTransfer.setData(TYPE_MODELE, m.id); ev.dataTransfer.effectAllowed = 'copy'; glisserModele(m.id) }}
+                  onDragEnd={finGlisse}>
+                  <span className="gp-modele__poignee" aria-hidden="true" />
+                  <span className="gp-modele__corps">
+                    <span className="gp-modele__type">{nomType(m.seance?.type, types)}</span>
+                    <span className="gp-modele__nom">{m.nom || 'Modèle sans nom'}</span>
+                    <span className="gp-modele__meta">{exos} exercice{exos > 1 ? 's' : ''}{m.seance?.duree ? ` · ${m.seance.duree} min` : ''}</span>
+                  </span>
+                  <MenuFlottant classe="gp-modele__ajout" classeBouton="gp-modele__plus" libelle={`Ajouter « ${m.nom} » dans une semaine`} titre="Ajouter dans une semaine" bouton="＋" aria="Choisir la semaine">
+                    {(fermer) => (
+                      <>
+                        <p className="gp-menu__titre">Ajouter dans…</p>
+                        <div className="gp-menu__semaines">
+                          {semaines.map((_, i) => <button key={i} type="button" className={i === courante ? 'est-courante' : undefined} onClick={() => { fermer(); ajouter(i, m.id) }}>S{i + 1}</button>)}
+                        </div>
+                      </>
+                    )}
+                  </MenuFlottant>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      {cible && <p className="gp-modeles__depot" aria-hidden="true">Déposez pour en faire un modèle</p>}
+    </aside>
   )
 }

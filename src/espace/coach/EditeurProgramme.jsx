@@ -1,13 +1,13 @@
-import MenuFlottant from './MenuFlottant.jsx'
+import { insererSeance, seanceDepuisModele, versModeleSeance } from '../donnees/modelesSeance.js'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
   ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
-  ecouterModele, ecouterModeles, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
+  ecouterModele, ecouterModelesSeance, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, supprimerBloc, sansBlocsVides, retirerElement,
-  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines, semaineEnCours,
+  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, reglerNbSemaines, semaineEnCours,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { nomType } from '../donnees/reglages.js'
@@ -51,7 +51,7 @@ export default function EditeurProgramme() {
   const [erreurVerrous, setErreurVerrous] = useState('')
   const [message, setMessage] = useState('')
   const [seancesFaites, setSeancesFaites] = useState([]) // ce que le coaché a fait : affiché sur une séance faite
-  const [modeles, setModeles] = useState([]) // pour « Partir d'un modèle »
+  const [modeles, setModeles] = useState([]) // modèles de séance (panneau de la grille)
   const [annulable, setAnnulable] = useState(null) // dernier déplacement ou duplication de séance : { texte, avant }
   const [banqueMaj, setBanqueMaj] = useState(false) // photos et consignes repris de la banque : à enregistrer pour que le coaché les voie
   useEffect(() => { if (!modifie) setBanqueMaj(false) }, [modifie])
@@ -84,7 +84,7 @@ export default function EditeurProgramme() {
     ? ecouterModele(modeleId, setProgrammes, () => setErreur('Impossible de charger le modèle. Vérifiez votre connexion.'))
     : ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.'))), [uid, modele, modeleId])
   useEffect(() => ecouterExercices(setExercices, () => setExercices([])), [])
-  useEffect(() => (modele ? undefined : ecouterModeles(setModeles, () => setModeles([]))), [modele])
+  useEffect(() => (modele ? undefined : ecouterModelesSeance(setModeles, () => setModeles([]))), [modele])
   useEffect(() => (modele ? undefined : ecouterSeancesClient(uid, setSeancesFaites, () => setSeancesFaites([]))), [uid, modele])
 
   // Ouvre d'abord le programme en cours, sinon le prochain, sinon le plus récent (14 novembre 2026)
@@ -320,18 +320,18 @@ export default function EditeurProgramme() {
     if (n < nbSem && retirees > 0) demander({ titre: `Retirer ${nbSem - n} semaine${nbSem - n > 1 ? 's' : ''} ?`, texte: 'Les séances de ces dernières semaines seront supprimées.', libelle: 'Retirer', action: faire })
     else faire()
   }
-  function partirDunModele(m) {
-    if (verrous === null || prog.semaines.some((w) => w.seances.some((x) => verrous.has(x.id)))) { setErreur('Ce programme contient déjà des séances faites : le modèle ne peut pas le remplacer.'); return }
-    const faire = () => { setErreur(''); avecAnnulation(`Modèle « ${m.nom} » appliqué.`, (p) => appliquerModele(p, m)) }
-    if (prog.semaines.every(semaineVide)) faire()
-    else demander({ titre: `Partir du modèle « ${m.nom} » ?`, texte: 'Les semaines et séances actuelles seront remplacées par celles du modèle. Vous pourrez annuler juste après.', libelle: 'Remplacer', action: faire })
+  // Modèles de séance : un modèle glissé (ou ajouté) dans une semaine y devient une séance neuve ; une séance peut devenir un modèle
+  function ajouterDepuisModele(vers, modeleId, index) {
+    const m = modeles.find((x) => x.id === modeleId)
+    if (!m) return
+    setErreur('')
+    avecAnnulation(`« ${m.nom || 'Modèle'} » ajouté en semaine ${vers + 1}.`, (p) => insererSeance(p, vers, seanceDepuisModele(m), index))
   }
-  async function enregistrerCommeModele() {
-    const nom = window.prompt('Nom du modèle', prog.nom || 'Nouveau modèle')
-    if (!nom || !nom.trim()) return
+  async function enregistrerSeanceCommeModele(x) {
+    const m = versModeleSeance(x)
     try {
-      await enregistrerModele({ id: nouvelIdModele(), ...versModele(prog, nom.trim()) }, { creation: true })
-      setMessage(`Modèle « ${nom.trim()} » enregistré. Retrouvez-le dans Modèles.`)
+      await enregistrerModele({ id: nouvelIdModele(), ...m }, { creation: true })
+      setMessage(`« ${m.nom} » enregistré comme modèle de séance.`)
     } catch (e) { setErreur(messageErreur(e.code)) }
   }
   const majSemaine = (i, cle, v) => muter((p) => { p.semaines[i][cle] = v })
@@ -516,15 +516,6 @@ export default function EditeurProgramme() {
                   <span>{nbSem} semaine{nbSem > 1 ? 's' : ''}</span>
                   <button type="button" aria-label="Une semaine de plus" disabled={nbSem >= MAX_SEMAINES} onClick={() => changerNbSemaines(nbSem + 1)}>＋</button>
                 </div>
-                <MenuFlottant classe="prog-modele" classeBouton="prog-modele__bouton" libelle="Partir d’un modèle" bouton="Partir d’un modèle ▾" aGauche largeur={280} aria="Modèles">
-                  {(fermer) => (
-                    <>
-                      {modeles.length === 0 && <p className="gp-menu__titre">Aucun modèle enregistré</p>}
-                      {modeles.map((m) => <button key={m.id} type="button" onClick={() => { fermer(); partirDunModele(m) }}>{m.nom || 'Modèle sans nom'} <small>{m.semaines?.length ?? 0} sem.</small></button>)}
-                      <button type="button" onClick={() => { fermer(); enregistrerCommeModele() }}>Enregistrer ce programme comme modèle</button>
-                    </>
-                  )}
-                </MenuFlottant>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setGestion(true)}>Gérer le programme</button>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => {
                   const go = () => aller({ nouveau: true })
@@ -545,7 +536,9 @@ export default function EditeurProgramme() {
                 dupliquer: dupliquerLaSeance, deplacer: deplacerLaSeance,
                 supprimer: (w, i, x) => supprimerSeance(x, i + 1, w),
                 ajouterSemaine, dupliquerSemaine: (i) => dupliquer(i), supprimerSemaine: (i) => supprimerSemaine(i), majSemaine,
-              }} />
+                ajouterModele: ajouterDepuisModele,
+                versModele: (w, i) => enregistrerSeanceCommeModele(prog.semaines[w].seances[i]),
+              }} modeles={modele ? null : modeles} />
           )}
 
           {seance && (
@@ -559,6 +552,12 @@ export default function EditeurProgramme() {
                     {prog.nom || (modele ? 'Modèle' : 'Programme')} · Semaine {semIdx + 1}
                   </Link>
                 </nav>
+                {!modele && (
+                  <button type="button" className="page-seance__modele" onClick={() => enregistrerSeanceCommeModele(seance)}>
+                    <svg viewBox="0 0 256 256" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M184,34H72A14,14,0,0,0,58,48V224a6,6,0,0,0,9.18,5.09L128,190.08l60.83,39a6,6,0,0,0,9.17-5.08V48A14,14,0,0,0,184,34Zm2,179L131.24,177.94a6,6,0,0,0-6.48,0L70,213V48a2,2,0,0,1,2-2H184a2,2,0,0,1,2,2Z" /></svg>
+                    Enregistrer comme modèle
+                  </button>
+                )}
                 <div className="page-seance__pager">
                   {seIdx > 0
                     ? <Link to={lienSeance(semaine.seances[seIdx - 1].id)} className="page-seance__fleche" aria-label="Séance précédente"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></Link>

@@ -6,6 +6,7 @@ import FicheExercice from './FicheExercice.jsx'
 import { Bilans, Ensemble, Messages, Notes, Photos, Stats } from './OngletsCoache.jsx'
 import Messagerie, { useConversations } from './Messagerie.jsx'
 import { nonLu } from '../donnees/messages.js'
+import EditeurModeleSeance from './EditeurModeleSeance.jsx'
 import EditeurProgramme from './EditeurProgramme.jsx'
 import { PageCoache } from './EnteteCoache.jsx'
 
@@ -25,7 +26,7 @@ export default function EspaceCoach({ profil }) {
         <Route index element={<MesCoaches profil={profil} />} />
         <Route path="modeles" element={<ProgrammesCoach />} />
         <Route path="programmes" element={<Navigate to="/espace/coach/modeles" replace />} />
-        <Route path="modeles/:modeleId" element={<EditeurProgramme />} />
+        <Route path="modeles/:modeleId" element={<EditeurModeleSeance />} />
         <Route path="messages" element={<Messagerie />} />
         <Route path="messages/:uid" element={<Messagerie />} />
         <Route path="exercices" element={<Exercices />} />

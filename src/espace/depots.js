@@ -565,6 +565,13 @@ export async function enregistrerModele(modele, { creation = false } = {}) {
   else await updateDoc(ref, { ...donnees, majLe: serverTimestamp() })
 }
 export function supprimerModele(id) { return deleteDoc(doc(db, 'modeles', id)) }
+// Modèles de séance (genre « seance ») et anciens modèles de programme (sans genre), séparés
+export function ecouterModelesSeance(rappel, erreur) {
+  return ecouterModeles((liste) => rappel(liste.filter((m) => m.genre === 'seance')), erreur)
+}
+export function ecouterAnciensModeles(rappel, erreur) {
+  return ecouterModeles((liste) => rappel(liste.filter((m) => m.genre !== 'seance')), erreur)
+}
 
 // ---------- Discussion coach ↔ coaché (15 novembre 2026) ----------
 // conversations/{uid du coaché} : { dernier: { texte, auteur, le }, luCoach, luClient } ; messages/{id} : { auteur, texte, piece, photo, envoyeLe }

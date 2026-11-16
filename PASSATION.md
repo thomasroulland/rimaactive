@@ -524,3 +524,22 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
   (`DetailOffre` reste dans `PageService.jsx`, non utilisé par Mes offres). En salle : « Déplacements compris jusqu'à 20 km autour de
   Houdan » sous les cartes. Suivi hebdomadaire : « Minimum 2 mois » seul. Groupes : carte à gauche, photo à droite (`inverse`).
 - **À confirmer par Marie** : les textes « Comment ça se passe ? » et « Pour qui ? » ne sont plus visibles ; « Déplacements compris » en salle.
+
+## Fond adouci, calendrier de 3 semaines, modèles de séance (16 novembre 2026)
+- **Fond, ordinateur** : un quart moins vif (« un peu trop vives ») : jaune .23 et .14, rouge orangé .24 (même équilibre). En ligne.
+- **Vue d'ensemble d'un coaché** : « Dernières séances » remplacé par un calendrier de 3 semaines (`Calendrier3Semaines`,
+  `src/espace/coach/OngletsCoache.jsx`) : semaine dernière, en cours, prochaine ; séances prévues du programme (faite ✓, à faire,
+  pas faite ✕), séances faites et bilans jour par jour (un jour se touche pour le détail) ; flèches pour remonter le temps.
+  **Onglet Historique retiré** (`/historique` ramène à la Vue d'ensemble). En ligne ; relief des jours renforcé ensuite (local).
+- **Modèles de SÉANCE à la place des modèles de programme** (demande de Thomas, choix : anciens modèles supprimés, panneau à gauche,
+  trois façons de créer) :
+  - Rangés dans la collection `modeles` avec `genre: 'seance'` et `seance: {…}` (aucune règle Firestore à changer).
+    Données : `src/espace/donnees/modelesSeance.js` (+ tests). Les anciens modèles de programme (sans `genre`) ne s'affichent plus ;
+    la page Modèles propose « Les supprimer » (avec confirmation) s'il en reste.
+  - **Page Modèles** : cartes de séances types (type, nom, exercices, durée, blocs), recherche, filtre par type, Modifier / Dupliquer /
+    Supprimer, « ＋ Nouveau modèle de séance ». « Affecter un modèle de programme à un coaché » n'existe plus.
+  - **Éditeur d'un modèle** (`/espace/coach/modeles/:id`, `EditeurModeleSeance.jsx`) : le même écran que la création de séance.
+  - **Grille du programme** : panneau « Modèles de séance » à gauche (repliable, mémorisé), on glisse un modèle dans une semaine
+    (ou ＋ pour choisir la semaine) : la séance ajoutée est une copie indépendante (Annuler possible). Glisser une séance de la grille
+    sur le panneau l'enregistre comme modèle ; aussi « Enregistrer comme modèle » dans le menu ⋯ d'une séance et en haut d'une séance.
+  - « Partir d'un modèle » / « Enregistrer ce programme comme modèle » sont retirés de la barre du programme.

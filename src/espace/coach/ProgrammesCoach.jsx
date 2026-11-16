@@ -1,17 +1,19 @@
 import PhotoCoache from './PhotoCoache.jsx'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ecouterModeles, enregistrerModele, enregistrerProgramme, nouvelIdModele, nouvelIdProgramme, supprimerModele } from '../depots.js'
-import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
-import { dupliquerProgramme, nouveauProgramme } from '../donnees/programme.js'
+import { ecouterAnciensModeles, ecouterModelesSeance, enregistrerModele, nouvelIdModele, supprimerModele } from '../depots.js'
+import { ajoutJours, aujourdhuiIso } from '../donnees/calculs.js'
+import { nomBloc } from '../donnees/programme.js'
+import { nouveauModeleSeance, resumeModele, versModeleSeance } from '../donnees/modelesSeance.js'
+import { nomType } from '../donnees/reglages.js'
 import { messageErreur } from '../erreurs.js'
-import { NB_SEMAINES, libelleLundi, lundisProposes } from './CreationProgramme.jsx'
+import useReglages from './useReglages.js'
+import { IconeCopier, IconeCorbeille } from './Icones.jsx'
 import { useDonneesCoach } from './donneesCoach.js'
 import Confirmation from './Confirmation.jsx'
 import { dateCourte } from '../donnees/seances.js'
 
-// Page « Modèles » (anciennement « Programmes », renommée le 14 novembre 2026) (maquette coach, 13 novembre 2026 ; mise en page revue le 14) : les modèles réutilisables (créer, modifier, dupliquer,
-// affecter à un coaché qui en reçoit sa propre copie), puis les programmes de chaque coaché.
+// Page « Modèles » : les modèles de séance (depuis le 16 novembre 2026, à la place des modèles de programme), puis les programmes de chaque coaché.
 export default function ProgrammesCoach() {
   return (
     <section className="section">
@@ -19,7 +21,7 @@ export default function ProgrammesCoach() {
         <header className="progs__tete">
           <p className="surtitre">Espace coach</p>
           <h1 className="titre titre--section">Modèles</h1>
-          <p className="espace-texte">Vos modèles réutilisables. Affectez-en un à un coaché : il reçoit sa propre copie, que vous pouvez ensuite ajuster dans sa fiche.</p>
+          <p className="espace-texte">Vos séances types, prêtes à l’emploi. Glissez-les dans les semaines d’un programme depuis la fiche d’un coaché (onglet Programme) : chaque fois, c’est une copie que vous pouvez ajuster.</p>
         </header>
         <Modeles />
         <ProgrammesDesCoaches />
@@ -29,157 +31,113 @@ export default function ProgrammesCoach() {
 }
 
 const pluriel = (n, mot) => `${n} ${mot}${n > 1 ? 's' : ''}`
-const exercicesDe = (seance) => (seance.blocs ?? []).reduce((t, b) => t + (b.elements?.length ?? 0), 0) + (seance.type === 'course' ? 1 : 0)
-
-// Aperçu d'un programme : une colonne par semaine, un point par séance (plein si la séance a du contenu)
-function Apercu({ programme }) {
-  const semaines = programme.semaines ?? []
-  const pleines = semaines.flatMap((w) => w.seances ?? []).filter((x) => exercicesDe(x) > 0).length
-  const total = semaines.flatMap((w) => w.seances ?? []).length
-  return (
-    <div className="apercu" role="img" aria-label={`${pluriel(pleines, 'séance')} remplie${pleines > 1 ? 's' : ''} sur ${total}`}>
-      {semaines.map((w, i) => (
-        <span key={w.id ?? i} className="apercu__sem">
-          <span className="apercu__points">
-            {(w.seances ?? []).map((x) => <span key={x.id} className={`apercu__point${exercicesDe(x) > 0 ? ' apercu__point--plein' : ''}`} />)}
-          </span>
-          <span className="apercu__num">S{i + 1}</span>
-        </span>
-      ))}
-    </div>
-  )
-}
-
+// Modèles de SÉANCE (16 novembre 2026, à la place des modèles de programme) : créer, modifier, dupliquer, supprimer.
+// On les glisse ensuite dans les semaines d'un programme (panneau à gauche de la grille).
 function Modeles() {
   const navigate = useNavigate()
-  const { clients } = useDonneesCoach()
+  const { types } = useReglages()
   const [modeles, setModeles] = useState(null)
-  const [np, setNp] = useState({ nom: '', semaines: 4, parSemaine: 3 })
-  const [affecter, setAffecter] = useState(null) // { id, client, debut }
+  const [anciens, setAnciens] = useState([])
+  const [recherche, setRecherche] = useState('')
+  const [filtre, setFiltre] = useState('tous')
   const [aSupprimer, setASupprimer] = useState(null)
+  const [nettoyer, setNettoyer] = useState(false)
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
   const [envoi, setEnvoi] = useState(false)
-  useEffect(() => ecouterModeles(setModeles, () => setErreur('Impossible de charger les modèles. Vérifiez votre connexion.')), [])
-  const lundis = lundisProposes()
-  const lundiSuivant = ajoutJours(lundiDe(aujourdhuiIso()), 7)
+  useEffect(() => ecouterModelesSeance(setModeles, () => setErreur('Impossible de charger les modèles. Vérifiez votre connexion.')), [])
+  useEffect(() => ecouterAnciensModeles(setAnciens, () => setAnciens([])), [])
   const tenter = async (fn) => {
     setErreur(''); setMessage(''); setEnvoi(true)
     try { await fn() } catch (e) { setErreur(messageErreur(e.code)) } finally { setEnvoi(false) }
   }
-
-  const creer = (e) => {
-    e.preventDefault()
-    if (!np.nom.trim()) { setErreur('Donnez un nom au modèle.'); return }
-    tenter(async () => {
-      const id = nouvelIdModele()
-      const { client, statut, ...base } = nouveauProgramme({ client: '', nom: np.nom.trim(), debut: '', semaines: Number(np.semaines), parSemaine: Number(np.parSemaine) }) // eslint-disable-line no-unused-vars
-      await enregistrerModele({ id, ...base, debut: '' }, { creation: true })
-      navigate(`/espace/coach/modeles/${id}`)
-    })
-  }
+  const creer = () => tenter(async () => {
+    const id = nouvelIdModele()
+    await enregistrerModele({ id, ...nouveauModeleSeance(types?.[0]?.id ?? 'force') }, { creation: true })
+    navigate(`/espace/coach/modeles/${id}`)
+  })
   const dupliquer = (m) => tenter(async () => {
-    const { client, statut, ...copie } = dupliquerProgramme(m, { nom: `${m.nom} (copie)`, debut: '' }) // eslint-disable-line no-unused-vars
+    const copie = versModeleSeance({ ...m.seance, titre: `${m.nom || 'Modèle'} (copie)` })
     await enregistrerModele({ id: nouvelIdModele(), ...copie }, { creation: true })
     setMessage(`Modèle « ${m.nom} » dupliqué.`)
   })
-  const affecterModele = (m) => tenter(async () => {
-    const c = (clients ?? []).find((x) => x.uid === affecter.client)
-    if (!c) { setErreur('Choisissez un coaché.'); return }
-    const id = nouvelIdProgramme()
-    await enregistrerProgramme({ id, ...dupliquerProgramme(m, { nom: m.nom, debut: affecter.debut }), client: c.uid }, { creation: true })
-    setAffecter(null)
-    setMessage(`« ${m.nom} » affecté à ${c.prenom} ${c.nom}, en brouillon : ajustez-le puis publiez-le depuis sa fiche.`)
-  })
+  const simple = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  const typesPresents = [...new Set((modeles ?? []).map((m) => m.seance?.type).filter(Boolean))]
+  const liste = (modeles ?? []).filter((m) => (filtre === 'tous' || m.seance?.type === filtre)
+    && (!recherche.trim() || simple(`${m.nom} ${nomType(m.seance?.type, types)}`).includes(simple(recherche.trim()))))
   const modeleASupprimer = (modeles ?? []).find((m) => m.id === aSupprimer)
 
   return (
     <>
-      <form className="espace-carte progs__creer" onSubmit={creer} aria-labelledby="t-nouveau-prog">
-        <div className="progs__creer-texte">
-          <h2 id="t-nouveau-prog" className="progs__h2">Créer un modèle</h2>
-          <p className="espace-aide">Une structure vide, à remplir ensuite séance par séance.</p>
-        </div>
-        <div className="progs__champs">
-          <div className="champ-groupe progs__nom"><label htmlFor="np-nom">Nom</label>
-            <input id="np-nom" className="champ" autoComplete="off" value={np.nom} placeholder="Ex. Remise en forme · 6 semaines" onChange={(e) => { setNp({ ...np, nom: e.target.value }); setErreur('') }} /></div>
-          <div className="champ-groupe"><label htmlFor="np-sem">Semaines</label>
-            <select id="np-sem" className="champ" value={np.semaines} onChange={(e) => setNp({ ...np, semaines: e.target.value })}>{NB_SEMAINES.map((n) => <option key={n}>{n}</option>)}</select></div>
-          <div className="champ-groupe"><label htmlFor="np-sps">Séances par semaine</label>
-            <select id="np-sps" className="champ" value={np.parSemaine} onChange={(e) => setNp({ ...np, parSemaine: e.target.value })}>{[1, 2, 3, 4, 5, 6].map((n) => <option key={n}>{n}</option>)}</select></div>
-          <button type="submit" className="bouton bouton--principal progs__creer-bouton" disabled={envoi}>Créer</button>
-        </div>
-      </form>
-      <p className="espace-message" role="status">{message}</p>
-      <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
-
       <section aria-labelledby="t-modeles" className="progs__partie">
-        <div className="progs__partie-tete">
-          <h2 id="t-modeles" className="progs__h2">Vos modèles</h2>
+        <div className="progs__partie-tete ms-tete">
+          <h2 id="t-modeles" className="progs__h2">Modèles de séance</h2>
           {modeles && <span className="progs__compte">{modeles.length}</span>}
+          <button type="button" className="bouton bouton--principal bouton--compact ms-creer" disabled={envoi} onClick={creer}>＋ Nouveau modèle de séance</button>
         </div>
+        <p className="espace-message" role="status">{message}</p>
+        <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
+        {anciens.length > 0 && (
+          <p className="ms-anciens">
+            {anciens.length} ancien{anciens.length > 1 ? 's' : ''} modèle{anciens.length > 1 ? 's' : ''} de programme ne {anciens.length > 1 ? 'sont' : 'est'} plus utilisé{anciens.length > 1 ? 's' : ''}.
+            <button type="button" className="lien-souligne" onClick={() => setNettoyer(true)}>{anciens.length > 1 ? 'Les supprimer' : 'Le supprimer'}</button>
+          </p>
+        )}
+        {modeles?.length > 0 && (
+          <div className="ms-filtres">
+            <label className="sr-only" htmlFor="ms-cherche">Chercher un modèle</label>
+            <input id="ms-cherche" className="champ ms-cherche" type="search" autoComplete="off" placeholder="Chercher un modèle…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
+            {typesPresents.length > 1 && (
+              <div className="filtres-coaches" role="group" aria-label="Type de séance">
+                {['tous', ...typesPresents].map((t) => (
+                  <button key={t} type="button" className="filtre-coaches" aria-pressed={filtre === t} onClick={() => setFiltre(t)}>{t === 'tous' ? 'Tous' : nomType(t, types)}</button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         {modeles === null && <p className="espace-aide" role="status">Chargement…</p>}
         {modeles?.length === 0 && (
-          <p className="progs__vide">Pas encore de modèle. Créez-en un ci-dessus : vous pourrez l’affecter à autant de coachés que vous voulez.</p>
+          <p className="progs__vide">Pas encore de modèle de séance. Créez-en un ici, ou ouvrez une séance d’un programme et touchez « Enregistrer comme modèle ».</p>
         )}
-        <ul className="progs__grille">
-          {(modeles ?? []).map((m, i) => {
-            const nb = m.semaines?.length ?? 0
-            const exos = (m.semaines ?? []).flatMap((w) => w.seances ?? []).reduce((t, x) => t + exercicesDe(x), 0)
-            const ouvert = affecter?.id === m.id
-            const choisi = ouvert ? (clients ?? []).find((x) => x.uid === affecter.client) : null
+        <ul className="ms-grille">
+          {liste.map((m, i) => {
+            const { exos } = resumeModele(m)
+            const blocs = (m.seance?.blocs ?? []).filter((b) => (b.elements ?? []).length > 0)
             return (
-              <li key={m.id} className={`espace-carte modele${ouvert ? ' modele--ouvert' : ''}`} style={{ '--i': i }}>
-                <div className="modele__tete">
-                  <h3 className="modele__nom">{m.nom || 'Modèle sans nom'}</h3>
+              <li key={m.id} className="espace-carte ms-carte" style={{ '--i': i }}>
+                <div className="ms-carte__tete">
+                  <span className="ms-carte__type">{nomType(m.seance?.type, types)}</span>
                   <span className="modele__icones">
-                  <button type="button" className="modele__suppr" onClick={() => dupliquer(m)} disabled={envoi} aria-label={`Dupliquer le modèle ${m.nom || 'sans nom'}`} title="Dupliquer">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>
-                  </button>
-                  <button type="button" className="modele__suppr modele__suppr--danger" onClick={() => setASupprimer(m.id)} aria-label={`Supprimer le modèle ${m.nom || 'sans nom'}`} title="Supprimer">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" /></svg>
-                  </button>
+                    <button type="button" className="modele__suppr" onClick={() => dupliquer(m)} disabled={envoi} aria-label={`Dupliquer le modèle ${m.nom || 'sans nom'}`} title="Dupliquer"><IconeCopier /></button>
+                    <button type="button" className="modele__suppr modele__suppr--danger" onClick={() => setASupprimer(m.id)} aria-label={`Supprimer le modèle ${m.nom || 'sans nom'}`} title="Supprimer"><IconeCorbeille /></button>
                   </span>
                 </div>
-                <p className="modele__meta">{pluriel(nb, 'semaine')} · {pluriel(m.parSemaine ?? 0, 'séance')} / semaine · {pluriel(exos, 'exercice')}</p>
-                <Apercu programme={m} />
-                <div className="modele__actions">
-                  <Link to={`/espace/coach/modeles/${m.id}`} className="bouton bouton--secondaire bouton--compact">Modifier</Link>
-                  <button type="button" className="lien-souligne modele__affecter-lien" aria-expanded={ouvert} aria-controls={`aff-${m.id}`}
-                    onClick={() => setAffecter(ouvert ? null : { id: m.id, client: clients?.[0]?.uid ?? '', debut: lundiSuivant })}>
-                    Affecter à un coaché
-                  </button>
-                </div>
-                <div id={`aff-${m.id}`} className="modele__zone" inert={!ouvert}>
-                  <div className="modele__interieur">
-                    <div className="modele__affecter">
-                      {(clients ?? []).length === 0 ? <p className="espace-aide">Invitez d’abord un coaché depuis « Mes coachés ».</p> : (<>
-                        <div className="progs__champs progs__champs--affecter">
-                          <div className="champ-groupe"><label htmlFor={`aff-c-${m.id}`}>Coaché</label>
-                            <select id={`aff-c-${m.id}`} className="champ" value={affecter?.id === m.id ? affecter.client : ''} onChange={(e) => setAffecter({ ...affecter, client: e.target.value })}>
-                              {(clients ?? []).map((c) => <option key={c.uid} value={c.uid}>{c.prenom} {c.nom}</option>)}
-                            </select></div>
-                          <div className="champ-groupe"><label htmlFor={`aff-d-${m.id}`}>Début (un lundi)</label>
-                            <select id={`aff-d-${m.id}`} className="champ" value={affecter?.id === m.id ? affecter.debut : lundiSuivant} onChange={(e) => setAffecter({ ...affecter, debut: e.target.value })}>
-                              {lundis.map((l) => <option key={l} value={l}>{libelleLundi(l)}</option>)}
-                            </select></div>
-                        </div>
-                        <p className="espace-aide">{choisi?.programme ? `${choisi.prenom} a déjà « ${choisi.programme.nom} » : la copie s’ajoute en brouillon, sans le remplacer.` : 'La copie arrive en brouillon : vous la publiez quand elle est prête.'}</p>
-                        <button type="button" className="bouton bouton--principal bouton--compact" disabled={envoi} onClick={() => affecterModele(m)}>Affecter le programme</button>
-                      </>)}
-                    </div>
-                  </div>
-                </div>
+                <h3 className="ms-carte__nom"><Link to={`/espace/coach/modeles/${m.id}`}>{m.nom || 'Modèle sans nom'}</Link></h3>
+                <p className="ms-carte__meta">{pluriel(exos, 'exercice')}{m.seance?.duree ? ` · ${m.seance.duree} min` : ''}{m.seance?.lieu ? ` · ${m.seance.lieu}` : ''}</p>
+                {blocs.length > 0 && (
+                  <ol className="ms-carte__blocs">
+                    {blocs.map((b) => <li key={b.id}><span className="ms-carte__lettre">{b.lettre}</span>{nomBloc(b)}<span className="ms-carte__nb">{b.elements.length}</span></li>)}
+                  </ol>
+                )}
+                <Link to={`/espace/coach/modeles/${m.id}`} className="bouton bouton--secondaire bouton--compact ms-carte__modifier">Modifier</Link>
               </li>
             )
           })}
         </ul>
+        {modeles?.length > 0 && liste.length === 0 && <p className="progs__vide">Aucun modèle ne correspond.</p>}
       </section>
       {modeleASupprimer && (
         <Confirmation titre={`Supprimer « ${modeleASupprimer.nom || 'ce modèle'} » ?`}
-          texte="Le modèle est effacé. Les programmes déjà affectés à vos coachés ne changent pas."
+          texte="Le modèle est effacé. Les séances déjà ajoutées dans des programmes ne changent pas."
           libelle="Supprimer le modèle" fermer={() => setASupprimer(null)}
-          action={() => tenter(async () => { await supprimerModele(modeleASupprimer.id); setMessage('Modèle supprimé. Les programmes déjà affectés ne changent pas.') })} />
+          action={() => tenter(async () => { await supprimerModele(modeleASupprimer.id); setMessage('Modèle supprimé.') })} />
+      )}
+      {nettoyer && (
+        <Confirmation titre={`Supprimer ${anciens.length > 1 ? `les ${anciens.length} anciens modèles` : 'l’ancien modèle'} de programme ?`}
+          texte={`${anciens.map((m) => `« ${m.nom || 'sans nom'} »`).join(', ')}. Les programmes déjà affectés à vos coachés ne changent pas.`}
+          libelle="Supprimer" fermer={() => setNettoyer(false)}
+          action={() => tenter(async () => { for (const m of anciens) await supprimerModele(m.id); setMessage('Anciens modèles de programme supprimés.') })} />
       )}
     </>
   )
