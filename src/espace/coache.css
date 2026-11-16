@@ -1249,3 +1249,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
 /* flèche de retour de la barre : plus discrète */
 .ec-s5-retour { width: 30px; height: 30px; font-size: 14px; background: transparent; }
 .ec-s5-barre { padding-left: 10px; }
+/* peu de séries : le contenu reste groupé en haut de la carte (plus de lignes étirées sur toute la hauteur de la photo) */
+.ec-s5-corps { align-content: start; }
+.ec-s5-ligne { align-self: start; }
+@media (min-width: 1100px) { .ec-s5-grille--1 .ec-s5-photo, .ec-s5-grille--2 .ec-s5-photo { min-height: 260px; } }
