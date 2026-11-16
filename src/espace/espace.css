@@ -1706,7 +1706,7 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 .prog-outils__actions .bouton { white-space: nowrap; }
 .prog-modele__bouton { display: inline-flex; align-items: center; white-space: nowrap; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--filet); background: #fff; font: 700 15px/1 var(--font-sans); color: var(--encre); cursor: pointer; list-style: none; }
 .prog-modele__bouton:hover { background: var(--encre); color: var(--craie); }
-.espace-coach:has(.gp-zone) { gap: 12px; }
+.espace-coach:has(.gp-zone) .prog-outils { margin-top: -8px; } /* l'écart du haut reste le même que sur les autres onglets : seul le bas se resserre */
 .espace-coach:has(.gp-zone) .espace-message:empty { display: none; }
 @media (max-width: 1180px) { .prog-outils { flex-wrap: wrap; } .prog-outils__gauche { flex-wrap: wrap; } .prog-outils__actions { flex-wrap: wrap; } }
 .prog-modele summary.prog-modele__bouton { width: auto; height: 40px; border-radius: 999px; padding: 0 16px; display: inline-flex; place-items: initial; font: 700 15px/1 var(--font-sans); }
