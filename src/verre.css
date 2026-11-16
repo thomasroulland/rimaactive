@@ -141,7 +141,9 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 :root:has(.espace-coach) { --largeur: 2400px; }
 /* la place réservée à la barre de défilement (quand il n'y en a pas) est foncée : elle ressemble au fond d'une barre */
 html { scrollbar-gutter: stable; background: #161514; }
-body { min-height: 100vh; }
+/* le fond foncé de html empêche celui de body de servir de toile : sans « isolation », body peint sa craie par-dessus les lumières
+   jaune et rose du fond (body::before, z-index -1) et elles disparaissent. Avec, elles repassent au-dessus de la craie, sous le contenu. */
+body { min-height: 100vh; isolation: isolate; }
 
 /* =====================================================================================================
    20 PRINCIPES D'UX ET D'ANIMATION (16 novembre 2026) — ce qui est appliqué, et où
