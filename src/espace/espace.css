@@ -1736,3 +1736,28 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
   .gp-menu summary:active, .gp-dup:active, .es2-plus:active { transform: scale(.92); }
 }
 .prog-modele summary.prog-modele__bouton { display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0 16px; height: 40px; }
+/* semaine en cours : colonne marquée (filet vermillon en haut, pastille « En cours »), la grille défile jusqu'à elle à l'ouverture */
+.gp-col.est-courante { outline: 2px solid var(--vermillon); outline-offset: -2px; box-shadow: 0 14px 34px rgba(255, 74, 28, .14) !important; }
+.gp-col.est-courante .gp-col__tete h2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.gp-courante { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: var(--vermillon); color: #fff; font: 800 12px/1.3 var(--font-sans); letter-spacing: .02em; }
+.gp-courante::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+.gp-col.est-courante.est-depot { outline-color: #e0b200; }
+.gp { scroll-padding-inline: 16px; }
+/* pastille « En cours » : posée sur le bord haut de la colonne, elle ne déplace plus rien ; la date de début s'affiche en entier */
+.gp-col { position: relative; }
+.gp { padding-top: 16px; }
+.gp-col.est-courante .gp-col__tete h2 { display: block; }
+.gp-courante { position: absolute; top: -11px; left: 14px; z-index: 3; box-shadow: 0 4px 10px rgba(255, 74, 28, .3); }
+.prog-outils__choix { flex: 0 1 300px; min-width: 150px; }
+.prog-outils__debut { flex: 0 0 auto; min-width: 300px; }
+.prog-outils__debut .champ { min-width: 300px; }
+.prog-outils__gauche { flex: 0 1 auto; }
+@media (max-width: 1180px) { .prog-outils__debut, .prog-outils__debut .champ { min-width: 0; width: 100%; } .prog-outils__debut { flex: 1 1 260px; } }
+.prog-outils { flex-wrap: wrap; }
+.prog-outils__gauche { flex: 1 1 520px; flex-wrap: nowrap; }
+.prog-outils__choix { flex: 1 1 200px; min-width: 190px; }
+.prog-outils__debut { flex: 0 0 280px; min-width: 280px; }
+.prog-outils__debut .champ { min-width: 0; width: 100%; }
+.prog-outils__actions { flex: 0 0 auto; }
+@media (max-width: 1180px) { .prog-outils__debut { flex: 1 1 260px; min-width: 0; } .prog-outils__gauche { flex-wrap: wrap; } }
+.gp-mot { position: absolute; left: 6px; right: 6px; top: 44px; z-index: 6; padding: 10px; border-radius: 14px; background: #fff; border: 1px solid var(--filet); box-shadow: 0 14px 30px rgba(22, 21, 20, .18); animation: menu-ouvre var(--net, 220ms) var(--doux, ease) both; }

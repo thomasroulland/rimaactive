@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { nomType } from '../donnees/reglages.js'
 import AjoutSeance from './AjoutSeance.jsx'
@@ -38,13 +38,22 @@ function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, suppr
   )
 }
 
-export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes, actions, annulable, annuler, maxSemaines, semainePrete }) {
+export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes, actions, annulable, annuler, maxSemaines, courante = -1 }) {
   const [glisse, setGlisse] = useState(null) // { s, se } de la séance en train d'être glissée
   const [depot, setDepot] = useState(null) // { s, index } : où elle tomberait
   const [mots, setMots] = useState({}) // semaines dont le « mot pour le coaché » est ouvert
   const colonnes = useRef({})
   const enCours = useRef(null) // la séance glissée, lisible tout de suite (l'état `glisse` ne sert qu'à l'affichage)
   const semaines = prog.semaines
+  const zone = useRef(null)
+  // à l'ouverture, la grille défile jusqu'à la semaine en cours (visible sans chercher)
+  useEffect(() => {
+    const g = zone.current
+    const col = g?.querySelector('.gp-col.est-courante')
+    if (!g || !col) return
+    // défilement horizontal de la grille seulement (la page ne bouge pas)
+    g.scrollLeft += col.getBoundingClientRect().left - g.getBoundingClientRect().left - 16
+  }, [prog.id, courante])
   const attente = verrous === null
   const faite = (id) => verrous?.has(id)
 
@@ -78,13 +87,13 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
       {annulable && (
         <p className="gp-annuler" role="status">{annulable.texte}<button type="button" onClick={annuler}>Annuler</button></p>
       )}
-      <div className="gp" style={{ gridTemplateColumns: `repeat(${semaines.length}, minmax(252px, 1fr)) minmax(150px, 190px)` }}>
+      <div className="gp" ref={zone} style={{ gridTemplateColumns: `repeat(${semaines.length}, minmax(252px, 1fr)) minmax(150px, 190px)` }}>
         {semaines.map((w, s) => {
           const nbFaites = w.seances.filter((x) => faite(x.id)).length
           return (
-            <section key={w.id} className={`gp-col${depot?.s === s ? ' est-depot' : ''}`} aria-labelledby={`gp-sem-${w.id}`}>
+            <section key={w.id} className={`gp-col${depot?.s === s ? ' est-depot' : ''}${s === courante ? ' est-courante' : ''}`} aria-labelledby={`gp-sem-${w.id}`} aria-current={s === courante ? 'date' : undefined}>
               <header className="gp-col__tete">
-                <h2 id={`gp-sem-${w.id}`}>Semaine {s + 1}</h2>
+                <h2 id={`gp-sem-${w.id}`}>Semaine {s + 1}{s === courante && <span className="gp-courante">En cours</span>}</h2>
                 <details className="gp-menu gp-menu--semaine">
                   <summary aria-label={`Actions : semaine ${s + 1}`} title="Actions de la semaine"><IconePoints /></summary>
                   <div className="gp-menu__liste" role="group" aria-label={`Actions : semaine ${s + 1}`}>
@@ -100,11 +109,13 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                 <label className="gp-rpe">RPE visé
                   <input inputMode="decimal" autoComplete="off" value={w.rpe ?? ''} aria-label={`RPE visé de la semaine ${s + 1}`} placeholder="–" onChange={(e) => actions.majSemaine(s, 'rpe', e.target.value)} />
                 </label>
-                <span className="gp-compte">{w.seances.length} séance{w.seances.length > 1 ? 's' : ''}</span>
+                <span className="gp-compte">{w.seances.length} séance{w.seances.length > 1 ? 's' : ''}{(w.mot ?? '').trim() ? ' · mot ✎' : ''}</span>
               </div>
-              {(mots[w.id] || (w.mot ?? '').trim()) && (
+              {mots[w.id] && (
                 <label className="gp-mot">Mot pour le coaché
-                  <input autoComplete="off" value={w.mot ?? ''} onChange={(e) => actions.majSemaine(s, 'mot', e.target.value)} />
+                  <input autoFocus autoComplete="off" value={w.mot ?? ''} onChange={(e) => actions.majSemaine(s, 'mot', e.target.value)}
+                    onBlur={() => setMots((m) => ({ ...m, [w.id]: false }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') e.currentTarget.blur() }} />
                 </label>
               )}
               <ol className="gp-liste" ref={(el) => { colonnes.current[s] = el }} onDragOver={survoler(s)} onDragLeave={quitter} onDrop={deposer(s)}>

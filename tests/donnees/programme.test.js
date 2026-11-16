@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nouveauProgramme, dupliquerSemaine, ajouterElement, ajouterAuBloc, copierSeance, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines, nomBloc, renommerBloc, NOM_BLOC_MAX, nouvelId } from '../../src/espace/donnees/programme.js'
+import { nouveauProgramme, dupliquerSemaine, ajouterElement, ajouterAuBloc, copierSeance, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines, semaineEnCours, nomBloc, renommerBloc, NOM_BLOC_MAX, nouvelId } from '../../src/espace/donnees/programme.js'
 
 const sansIds = (o) => JSON.parse(JSON.stringify(o, (k, v) => (k === 'id' ? undefined : v)))
 
@@ -252,5 +252,21 @@ describe('modèles et nombre de semaines', () => {
     expect(reglerNbSemaines(p, 0).semaines).toHaveLength(1)
     const faite = new Set([p.semaines[1].seances[0].id])
     expect(reglerNbSemaines(p, 1, faite).semaines).toHaveLength(2)
+  })
+})
+
+describe('semaineEnCours', () => {
+  const p = { debut: '2026-11-02', semaines: [{}, {}, {}, {}] } // lundi 2 novembre, 4 semaines
+  it('trouve la semaine du jour', () => {
+    expect(semaineEnCours(p, '2026-11-02')).toBe(0)
+    expect(semaineEnCours(p, '2026-11-08')).toBe(0)
+    expect(semaineEnCours(p, '2026-11-09')).toBe(1)
+    expect(semaineEnCours(p, '2026-11-16')).toBe(2)
+    expect(semaineEnCours(p, '2026-11-29')).toBe(3)
+  })
+  it('-1 avant le début, après la fin, ou sans date', () => {
+    expect(semaineEnCours(p, '2026-11-01')).toBe(-1)
+    expect(semaineEnCours(p, '2026-11-30')).toBe(-1)
+    expect(semaineEnCours({ semaines: [{}] }, '2026-11-16')).toBe(-1)
   })
 })

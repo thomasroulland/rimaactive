@@ -1,3 +1,4 @@
+import { ajoutJours } from './calculs.js'
 // Modifications pures d'un programme : chaque fonction renvoie un nouvel objet.
 
 export function nouvelId() {
@@ -99,6 +100,17 @@ export function renommerBloc(programme, { s, se }, lettre, nom) {
   if (propre) bloc.nom = propre
   else delete bloc.nom
   return p
+}
+
+// Position (à partir de 0) de la semaine en cours dans le programme à la date `aujourdhui` ; -1 si le programme n'a pas commencé ou est fini
+export function semaineEnCours(programme, aujourdhui) {
+  const debut = programme?.debut
+  if (!debut || !aujourdhui) return -1
+  const n = programme.semaines?.length ?? 0
+  for (let i = 0; i < n; i += 1) {
+    if (aujourdhui >= ajoutJours(debut, i * 7) && aujourdhui < ajoutJours(debut, (i + 1) * 7)) return i
+  }
+  return -1
 }
 
 // « Partir d'un modèle » (grille, 16 novembre 2026) : les semaines du modèle (copiées avec de nouveaux identifiants) remplacent celles du programme ;

@@ -6,7 +6,7 @@ import {
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
-  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines,
+  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines, semaineEnCours,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { nomType } from '../donnees/reglages.js'
@@ -537,7 +537,7 @@ export default function EditeurProgramme() {
 
           {!seance && (
             <GrilleProgramme prog={prog} verrous={verrous} types={reglages.types} lien={(w, id) => `?semaine=${w + 1}&seance=${id}`}
-              gererTypes={() => setGererTypes(true)} maxSemaines={MAX_SEMAINES} annulable={annulable} annuler={annulerDernier}
+              gererTypes={() => setGererTypes(true)} maxSemaines={MAX_SEMAINES} courante={modele ? -1 : semaineEnCours(prog, aujourdhuiIso())} annulable={annulable} annuler={annulerDernier}
               actions={{
                 ajouterSeance: (w, type) => ajouterSeance(type, w),
                 dupliquer: dupliquerLaSeance, deplacer: deplacerLaSeance,
