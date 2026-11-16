@@ -2086,3 +2086,8 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 .est-glisse-modele .gp-col.est-depot .gp-liste { outline-style: solid; background: rgba(242, 194, 48, .18); }
 /* la grille qui défile s'estompe sur les bords : une semaine à moitié cachée ne fait plus « coupée » */
 .gp-zone--modeles > .gp { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 56px, #000 calc(100% - 40px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 56px, #000 calc(100% - 40px), transparent 100%); }
+/* chevron « détail des séries » : un vrai trait dessiné (plus de caractère ⌄ qui s'affichait comme un « v »), qui pivote à l'ouverture */
+.sf-chevron { display: grid; place-items: center; padding: 0; line-height: 0; }
+.sf-chevron svg { transition: transform .2s cubic-bezier(.22, 1, .36, 1); }
+.sf-chevron[aria-expanded="true"] { background: var(--encre); color: var(--craie); border-color: var(--encre); }
+.sf-chevron[aria-expanded="true"] svg { transform: rotate(180deg); }

@@ -42,7 +42,9 @@ function LigneSerie({ el, code, lignes, verdict, photo, mode }) {
           )
         })}
         <Pastille statut={verdict} />
-        <button type="button" className="sf-chevron" aria-expanded={ouvert} aria-controls={id} aria-label={`Détail des séries : ${el.nom}`} onClick={() => setOuvert((o) => !o)}>{ouvert ? '⌃' : '⌄'}</button>
+        <button type="button" className="sf-chevron" aria-expanded={ouvert} aria-controls={id} aria-label={`Détail des séries : ${el.nom}`} onClick={() => setOuvert((o) => !o)}>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
       </div>
       {ouvert && (
         <div className="sf-detail" id={id}>
