@@ -97,7 +97,6 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                   {(fermer) => (
                     <>
                       <button type="button" onClick={() => { fermer(); actions.dupliquerSemaine(s) }}>Dupliquer dans la semaine {s + 2}</button>
-                      <button type="button" onClick={() => { fermer(); setMots((m) => ({ ...m, [w.id]: !m[w.id] })) }}>Mot pour le coaché</button>
                       {semaines.length > 1 && !attente && nbFaites === 0 && (
                         <button type="button" className="gp-menu__danger" onClick={() => { fermer(); actions.supprimerSemaine(s) }}>Supprimer la semaine</button>
                       )}
@@ -109,7 +108,11 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                 <label className="gp-rpe">RPE visé
                   <input inputMode="decimal" autoComplete="off" value={w.rpe ?? ''} aria-label={`RPE visé de la semaine ${s + 1}`} placeholder="–" onChange={(e) => actions.majSemaine(s, 'rpe', e.target.value)} />
                 </label>
-                <span className="gp-compte">{w.seances.length} séance{w.seances.length > 1 ? 's' : ''}{(w.mot ?? '').trim() ? ' · mot ✎' : ''}</span>
+                <button type="button" className={`gp-motbtn${(w.mot ?? '').trim() ? ' a-un-mot' : ''}`} aria-expanded={!!mots[w.id]} aria-label="Mot pour le coaché" title="Mot pour le coaché"
+                  onClick={() => setMots((m) => ({ ...m, [w.id]: true }))}>
+                  {(w.mot ?? '').trim() ? '✎ Mot écrit' : '＋ Mot'}
+                </button>
+                <span className="sr-only">{w.seances.length} séance{w.seances.length > 1 ? 's' : ''}</span>
               </div>
               {mots[w.id] && (
                 <label className="gp-mot">Mot pour le coaché

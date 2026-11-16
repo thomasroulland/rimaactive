@@ -6,13 +6,7 @@ const CARTES = '.entete, .service, .offre, .question, .formulaire, .approche__ca
 export default function initVerre() {
   if (typeof window === 'undefined' || window.__verre) return
   window.__verre = true
-  // menus déroulants (grille, modèles) : un clic ailleurs ou Échap les referme, et ouvrir l'un ferme les autres
-  document.addEventListener('pointerdown', (e) => {
-    document.querySelectorAll('details.gp-menu[open]').forEach((d) => { if (!d.contains(e.target)) d.open = false })
-  })
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') document.querySelectorAll('details.gp-menu[open]').forEach((d) => { d.open = false })
-  })
+  // (les menus déroulants de la grille gèrent eux-mêmes leur fermeture : voir coach/MenuFlottant.jsx)
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
   let cible = null

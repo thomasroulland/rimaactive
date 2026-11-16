@@ -1872,3 +1872,20 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
   .es2-bloc__tete:has(.es2-nom--edition) .es2-bloc__corbeille { display: none; }
   .es2-nom--edition .es2-idees { padding-left: 0; }
 }
+
+/* « Mot pour le coaché » : un petit bouton bien visible sous le titre de la semaine */
+.gp-col__reglages { flex-wrap: wrap; row-gap: 6px; }
+.gp-motbtn { height: 34px; padding: 0 12px; border: 1px dashed #bdb7ab; border-radius: 999px; background: rgba(255, 255, 255, .6); font: 700 13px/1 var(--font-sans); color: var(--gris-chaud); cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+.gp-motbtn:hover { background: #fff; color: var(--encre); border-color: var(--encre); }
+.gp-motbtn.a-un-mot { border-style: solid; border-color: transparent; background: rgba(242, 194, 48, .35); color: var(--encre); }
+.gp-compte { margin-left: auto; }
+
+/* Barre d'enregistrement : fine et discrète */
+.espace-barre { bottom: 10px; padding: 5px 6px 5px 16px; border-radius: 999px; box-shadow: 0 6px 18px rgba(22, 21, 20, .08); }
+.espace-barre__etat { font-size: 13px; }
+.espace-barre .espace-statut { font-size: 12px; padding: 3px 10px; }
+.espace-barre .bouton { min-height: 38px; padding: 0 18px; font-size: 14px; border-radius: 999px; }
+@media (max-width: 599px) { .espace-barre { border-radius: 22px; padding: 6px 8px; } }
+
+/* La bulle de confirmation se détache du pied de page (même noir) : liseré clair et ombre plus nette */
+body .snack, body .gp-annuler { background: #232120; box-shadow: 0 0 0 1px rgba(255, 255, 255, .22), 0 14px 36px rgba(0, 0, 0, .45); }

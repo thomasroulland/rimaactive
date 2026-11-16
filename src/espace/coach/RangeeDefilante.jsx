@@ -11,14 +11,16 @@ export default function RangeeDefilante({ children, ...props }) {
     const e = rangee.current
     if (!e) return
     const { scrollWidth: sw, clientWidth: cw, scrollLeft: sl } = e
-    setM(sw > cw + 1 ? { visible: true, largeur: cw / sw, x: sw > cw ? sl / (sw - cw) : 0 } : { visible: false, largeur: 1, x: 0 })
+    const n = sw > cw + 1 ? { visible: true, largeur: cw / sw, x: sw > cw ? sl / (sw - cw) : 0 } : { visible: false, largeur: 1, x: 0 }
+    // même mesure : on garde l'ancien état (sinon chaque mesure relancerait un affichage, sans fin)
+    setM((a) => (a.visible === n.visible && Math.abs(a.largeur - n.largeur) < 0.001 && Math.abs(a.x - n.x) < 0.001 ? a : n))
   }
+  useEffect(() => { mesurer() })
   useEffect(() => {
-    mesurer()
     const o = new ResizeObserver(mesurer)
     if (rangee.current) o.observe(rangee.current)
     return () => o.disconnect()
-  })
+  }, [])
 
   const tirer = (ev) => {
     const e = rangee.current, p = piste.current
