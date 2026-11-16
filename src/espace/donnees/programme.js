@@ -196,6 +196,14 @@ export function ajouterBlocVide(programme, { s, se }) {
   return p
 }
 
+// Supprime un bloc (avec ses exercices) ; les blocs restants sont renommés A, B, C…
+export function supprimerBloc(programme, { s, se }, blocId) {
+  const p = structuredClone(programme)
+  const seance = p.semaines[s].seances[se]
+  seance.blocs = (seance.blocs ?? []).filter((b) => b.id !== blocId).map((b, i) => ({ ...b, lettre: LETTRES[i] ?? b.lettre }))
+  return p
+}
+
 // Retire un élément ; le bloc qui devient vide à cause de ce retrait disparaît et les blocs restants sont renommés A, B, C…
 // (un bloc créé vide par le coach, lui, reste en place)
 export function retirerElement(programme, { s, se }, elementId) {

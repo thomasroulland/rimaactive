@@ -6,7 +6,7 @@ import {
   ecouterModele, ecouterModeles, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
-  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, sansBlocsVides, retirerElement,
+  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, supprimerBloc, sansBlocsVides, retirerElement,
   garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines, semaineEnCours,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
@@ -582,6 +582,7 @@ export default function EditeurProgramme() {
               <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
                 majSeance={majSeance} majBloc={majBloc} majElement={majElement}
                 retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
+                supprimerBloc={(blocId, nom) => { changer((p) => supprimerBloc(p, { s: semIdx, se: seIdx }, blocId)); setMessage(`${nom} supprimé.`) }}
                 ajouterBloc={() => changer((p) => ajouterBlocVide(p, { s: semIdx, se: seIdx }))}
                 ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
                   )

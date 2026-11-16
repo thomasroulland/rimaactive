@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nouveauProgramme, semaineVide, ajouterAuBloc, ajouterBlocVide, sansBlocsVides, retirerElement, nouvelleSemaine, nouvelleSeance } from '../../src/espace/donnees/programme.js'
+import { nouveauProgramme, semaineVide, ajouterAuBloc, ajouterBlocVide, supprimerBloc, sansBlocsVides, retirerElement, nouvelleSemaine, nouvelleSeance } from '../../src/espace/donnees/programme.js'
 import { lundiDe, dateLongue } from '../../src/espace/donnees/calculs.js'
 
 const prog = () => nouveauProgramme({ client: 'u', nom: 'n', debut: '2026-11-16', semaines: 2, parSemaine: 2 })
@@ -60,6 +60,15 @@ describe('ajouterAuBloc / retirerElement', () => {
     expect(p.semaines[0].seances[0].blocs).toHaveLength(3)
     const net = ajouterAuBloc(prog(), { s: 0, se: 0 }, 'A', exo('a', 'Squat'))
     expect(sansBlocsVides(net)).toBe(net)
+  })
+  it('supprimerBloc retire le bloc et renomme les suivants', () => {
+    let p = ajouterAuBloc(prog(), { s: 0, se: 0 }, 'A', exo('a', 'Squat'))
+    p = ajouterAuBloc(p, { s: 0, se: 0 }, 'B', exo('b', 'Pompes'))
+    p = ajouterAuBloc(p, { s: 0, se: 0 }, 'C', exo('c', 'Fentes'))
+    const idB = p.semaines[0].seances[0].blocs[1].id
+    const r = supprimerBloc(p, { s: 0, se: 0 }, idB)
+    expect(r.semaines[0].seances[0].blocs.map((b) => [b.lettre, b.elements[0].nom])).toEqual([['A', 'Squat'], ['B', 'Fentes']])
+    expect(p.semaines[0].seances[0].blocs).toHaveLength(3)
   })
   it('nouvelle séance du type demandé', () => {
     expect(nouvelleSeance('course')).toMatchObject({ type: 'course', blocs: [] })

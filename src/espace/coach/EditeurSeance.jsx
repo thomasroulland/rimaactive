@@ -6,7 +6,7 @@ import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice, { TYPE_GLISSE } from './ChoixExercice.jsx'
 import { chargeIndicative } from '../donnees/banque.js'
 import { frNombre } from '../donnees/resume.js'
-import { IconePoints } from './Icones.jsx'
+import { IconeCorbeille, IconePoints } from './Icones.jsx'
 
 export const FORMATS = [
   ['series', 'Séries classiques'],
@@ -38,7 +38,7 @@ const IDEES_NOMS = ['Échauffement', 'Force', 'Cardio', 'Gainage', 'Mobilité', 
 // Éditeur d'une séance (maquette B de Thomas, 15 novembre 2026) : la banque d'exercices à gauche, la séance à droite,
 // un exercice par ligne (séries, reps, charge, repos), le reste dans « ⋯ », des blocs que l'on peut renommer.
 // `verrou` : séance faite, tout est en lecture seule.
-export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, rpeSemaine, majSeance, majBloc, majElement, retirer, ajouter, ajouterBloc }) {
+export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, rpeSemaine, majSeance, majBloc, majElement, retirer, ajouter, ajouterBloc, supprimerBloc }) {
   const ids = (cle) => `se-${seance.id}-${cle}`
   const blocs = seance.blocs ?? []
   const lettres = blocs.map((b) => b.lettre)
@@ -114,6 +114,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                         {FORMATS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                       </select>
                     </div>
+                    {!verrou && <SupprimerBloc bloc={b} supprimer={() => supprimerBloc(b.id, nomBloc(b))} />}
                   </div>
                   {(b.format === 'emom' || b.format === 'amrap' || b.format === 'tabata' || b.format === 'hiit') && (
                     <div className="espace-params espace-params--bloc es2-bloc__reglages">
@@ -257,5 +258,25 @@ function LigneExo({ element: el, code, series, verrou, rm, rpeSemaine, maj, reti
         </div>
       )}
     </li>
+  )
+}
+
+// Corbeille du bloc : un bloc vide part tout de suite ; un bloc avec des exercices demande d'abord confirmation
+function SupprimerBloc({ bloc, supprimer }) {
+  const [confirme, setConfirme] = useState(false)
+  const n = (bloc.elements ?? []).length
+  if (confirme) {
+    return (
+      <span className="es2-bloc__confirme" role="group" aria-label={`Supprimer le ${nomBloc(bloc).toLowerCase()} ?`}>
+        <span>Supprimer avec {n} exercice{n > 1 ? 's' : ''} ?</span>
+        <button type="button" className="es2-bloc__oui" onClick={supprimer}>Supprimer</button>
+        <button type="button" onClick={() => setConfirme(false)}>Garder</button>
+      </span>
+    )
+  }
+  return (
+    <button type="button" className="es2-bloc__corbeille" aria-label={`Supprimer le ${nomBloc(bloc).toLowerCase()}`} title="Supprimer le bloc" onClick={() => (n === 0 ? supprimer() : setConfirme(true))}>
+      <IconeCorbeille />
+    </button>
   )
 }
