@@ -139,7 +139,9 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 /* pages de travail du coach (grille du programme, création de séance, séance faite) : tout l'écran est utilisé, la barre et le pied de page suivent */
 /* même largeur sur toutes les pages du coach (fiche d'un coaché et ses onglets, listes) : rien ne bouge d'un onglet à l'autre ; la barre de défilement garde sa place */
 :root:has(.espace-coach) { --largeur: 2400px; }
-html { scrollbar-gutter: stable; }
+/* la place réservée à la barre de défilement (quand il n'y en a pas) est foncée : elle ressemble au fond d'une barre */
+html { scrollbar-gutter: stable; background: #161514; }
+body { min-height: 100vh; }
 
 /* =====================================================================================================
    20 PRINCIPES D'UX ET D'ANIMATION (16 novembre 2026) — ce qui est appliqué, et où
