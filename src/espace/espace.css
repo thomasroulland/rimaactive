@@ -1960,7 +1960,7 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 .cal3__jours .cal3__jour.est-choisi.est-choisi { border-color: var(--encre); box-shadow: 0 0 0 1px var(--encre), 0 6px 16px rgba(22, 21, 20, .14); }
 
 /* ---------- Panneau « Modèles de séance » à gauche de la grille (16 novembre 2026) ---------- */
-.gp-zone--modeles { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 16px; align-items: start; }
+.gp-zone--modeles { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 16px; align-items: start; }
 .gp-zone--modeles:has(.gp-modeles.est-ferme) { grid-template-columns: 52px minmax(0, 1fr); }
 .gp-zone--modeles > .gp { min-width: 0; }
 .gp-modeles { position: sticky; top: 84px; margin-top: 16px; max-height: calc(100vh - 180px); display: flex; flex-direction: column; gap: 10px; padding: 14px 12px; border-radius: 20px; background: rgba(255, 255, 255, .78); border: 1px solid #fff; box-shadow: 0 8px 24px rgba(22, 21, 20, .07); transition: background-color .15s ease, box-shadow .15s ease; }
@@ -2085,9 +2085,22 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 .est-glisse-modele .gp-col .gp-liste { outline: 2px dashed #e0b200; outline-offset: 4px; border-radius: 14px; background: rgba(242, 194, 48, .08); }
 .est-glisse-modele .gp-col.est-depot .gp-liste { outline-style: solid; background: rgba(242, 194, 48, .18); }
 /* la grille qui défile s'estompe sur les bords : une semaine à moitié cachée ne fait plus « coupée » */
-.gp-zone--modeles > .gp { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 56px, #000 calc(100% - 40px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 56px, #000 calc(100% - 40px), transparent 100%); }
+/* fondu seulement du côté où la grille déborde (jamais sur la semaine 1 quand elle est visible en entier) */
+.gp.deborde-gauche { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px); mask-image: linear-gradient(to right, transparent 0, #000 48px); }
+.gp.deborde-droite { -webkit-mask-image: linear-gradient(to left, transparent 0, #000 40px); mask-image: linear-gradient(to left, transparent 0, #000 40px); }
+.gp.deborde-gauche.deborde-droite { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 40px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 40px), transparent 100%); }
 /* chevron « détail des séries » : un vrai trait dessiné (plus de caractère ⌄ qui s'affichait comme un « v »), qui pivote à l'ouverture */
 .sf-chevron { display: grid; place-items: center; padding: 0; line-height: 0; }
 .sf-chevron svg { transition: transform .2s cubic-bezier(.22, 1, .36, 1); }
 .sf-chevron[aria-expanded="true"] { background: var(--encre); color: var(--craie); border-color: var(--encre); }
 .sf-chevron[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* Où la séance va tomber : une place en pointillés jaunes avec son numéro (au lieu d'un fin trait) */
+.gp-depot { display: grid; place-items: center; height: 52px; margin: 0 0 8px; border: 2px dashed #e0b200; border-radius: 14px; background: rgba(242, 194, 48, .22); box-shadow: none; animation: pli-ouvre .15s cubic-bezier(.22, 1, .36, 1) both; }
+.gp-depot > span { font-size: 13px; font-weight: 800; color: #7a5a00; }
+.gp-item:last-child > .gp-depot { margin: 0; }
+/* colonnes un peu plus étroites quand le panneau des séances types est là : tout tient sur une ligne */
+.gp-zone--modeles .gp-col__reglages { gap: 6px; padding-inline: 2px; }
+.gp-zone--modeles .gp-rpe { padding-left: 8px; font-size: 12px; }
+.gp-zone--modeles .gp-motbtn { padding: 0 10px; }
+.gp-zone--modeles .gp-seance__etat { white-space: nowrap; font-size: 11px; }

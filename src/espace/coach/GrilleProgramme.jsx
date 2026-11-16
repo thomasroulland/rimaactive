@@ -47,6 +47,14 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
   const enCours = useRef(null) // la séance glissée, lisible tout de suite (l'état `glisse` ne sert qu'à l'affichage)
   const modeleEnCours = useRef(null) // id du modèle de séance glissé depuis le panneau
   const [modeleGlisse, setModeleGlisse] = useState(false) // pour montrer où le déposer
+  const [bords, setBords] = useState({ gauche: false, droite: false }) // la grille déborde-t-elle à gauche / à droite ?
+  const mesurerBords = () => {
+    const g = zone.current
+    if (!g) return
+    const n = { gauche: g.scrollLeft > 4, droite: g.scrollLeft + g.clientWidth < g.scrollWidth - 4 }
+    setBords((b) => (b.gauche === n.gauche && b.droite === n.droite ? b : n))
+  }
+  useEffect(() => { mesurerBords(); window.addEventListener('resize', mesurerBords); return () => window.removeEventListener('resize', mesurerBords) })
   const semaines = prog.semaines
   const zone = useRef(null)
   // à l'ouverture, la grille défile jusqu'à la semaine en cours (visible sans chercher)
@@ -55,7 +63,8 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
     const col = g?.querySelector('.gp-col.est-courante')
     if (!g || !col) return
     // défilement horizontal de la grille seulement (la page ne bouge pas)
-    g.scrollLeft += col.getBoundingClientRect().left - g.getBoundingClientRect().left - 16
+    // la semaine en cours est calée pile au bord gauche : aucune semaine n'apparaît à moitié
+    g.scrollLeft += col.getBoundingClientRect().left - g.getBoundingClientRect().left - 2
   }, [prog.id, courante])
   const attente = verrous === null
   const faite = (id) => verrous?.has(id)
@@ -104,11 +113,11 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
       {annulable && (
         <p className="gp-annuler" role="status">{annulable.texte}<button type="button" onClick={annuler}>Annuler</button></p>
       )}
-      <div className="gp" ref={zone} style={{ gridTemplateColumns: `repeat(${semaines.length}, minmax(252px, 1fr)) minmax(150px, 190px)` }}>
+      <div className={`gp${bords.gauche ? ' deborde-gauche' : ''}${bords.droite ? ' deborde-droite' : ''}`} ref={zone} onScroll={mesurerBords} style={{ gridTemplateColumns: modeles ? `repeat(${semaines.length}, minmax(212px, 1fr)) minmax(130px, 170px)` : `repeat(${semaines.length}, minmax(252px, 1fr)) minmax(150px, 190px)` }}>
         {semaines.map((w, s) => {
           const nbFaites = w.seances.filter((x) => faite(x.id)).length
           return (
-            <section key={w.id} className={`gp-col${depot?.s === s ? ' est-depot' : ''}${s === courante ? ' est-courante' : ''}`} aria-labelledby={`gp-sem-${w.id}`} aria-current={s === courante ? 'date' : undefined}>
+            <section key={w.id} className={`gp-col${depot?.s === s ? ' est-depot' : ''}${s === courante ? ' est-courante' : ''}`} aria-labelledby={`gp-sem-${w.id}`} aria-current={s === courante ? 'date' : undefined} onDragOver={survoler(s)} onDragLeave={quitter} onDrop={deposer(s)}>
               <header className="gp-col__tete">
                 <h2 id={`gp-sem-${w.id}`}>Semaine {s + 1}{s === courante && <span className="gp-courante">En cours</span>}</h2>
                 <MenuFlottant classe="gp-menu--semaine" libelle={`Actions : semaine ${s + 1}`} titre="Actions de la semaine" bouton={<IconePoints />} aria={`Actions : semaine ${s + 1}`}>
@@ -128,7 +137,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                 </label>
                 <button type="button" className={`gp-motbtn${(w.mot ?? '').trim() ? ' a-un-mot' : ''}`} aria-expanded={!!mots[w.id]} aria-label="Mot pour le coaché" title="Mot pour le coaché"
                   onClick={() => setMots((m) => ({ ...m, [w.id]: true }))}>
-                  {(w.mot ?? '').trim() ? '✎ Mot écrit' : '＋ Mot'}
+                  {(w.mot ?? '').trim() ? '✎ Mot' : '＋ Mot'}
                 </button>
                 <span className="sr-only">{w.seances.length} séance{w.seances.length > 1 ? 's' : ''}</span>
               </div>
@@ -139,14 +148,14 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') e.currentTarget.blur() }} />
                 </label>
               )}
-              <ol className="gp-liste" ref={(el) => { colonnes.current[s] = el }} onDragOver={survoler(s)} onDragLeave={quitter} onDrop={deposer(s)}>
+              <ol className="gp-liste" ref={(el) => { colonnes.current[s] = el }}>
                 {w.seances.length === 0 && depot?.s !== s && <li className="gp-vide">Aucune séance</li>}
                 {w.seances.map((x, i) => {
                   const f = faite(x.id)
                   const nb = nbExos(x)
                   return (
                     <li key={x.id} className="gp-item">
-                      {depot?.s === s && depot.index === i && <span className="gp-depot" aria-hidden="true" />}
+                      {depot?.s === s && depot.index === i && <span className="gp-depot" aria-hidden="true"><span>Ici : séance {i + 1}</span></span>}
                       <article className={`gp-seance${f ? ' est-faite' : ''}${glisse?.s === s && glisse.se === i ? ' est-leve' : ''}`}
                         draggable={!f && !attente}
                         onDragStart={(ev) => { ev.dataTransfer.setData(TYPE_SEANCE, `${s}:${i}`); ev.dataTransfer.effectAllowed = 'copyMove'; enCours.current = { s, se: i }; setGlisse({ s, se: i }) }}
@@ -172,7 +181,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                     </li>
                   )
                 })}
-                {depot?.s === s && depot.index >= w.seances.length && <li className="gp-item"><span className="gp-depot" aria-hidden="true" /></li>}
+                {depot?.s === s && depot.index >= w.seances.length && <li className="gp-item"><span className="gp-depot" aria-hidden="true"><span>Ici : séance {w.seances.length + 1}</span></span></li>}
               </ol>
               <AjoutSeance types={types} ajouter={(type) => actions.ajouterSeance(s, type)} gerer={gererTypes} />
             </section>
