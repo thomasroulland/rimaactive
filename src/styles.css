@@ -2156,3 +2156,13 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 .questions .mot-avant { text-decoration: none; color: var(--vermillon); }
 /* Mes services : le surtitre passe au-dessus du titre, en vermillon */
 .service__lieux { color: var(--vermillon); }
+
+/* Mes offres, deux cartes côte à côte (Individuel) : chaque ligne d'une carte est à la même hauteur que celle de sa voisine
+   (nom, durée, « Compris », liste, bouton), même quand une carte a une ligne de plus sous le prix ou une durée sur deux lignes.
+   Les deux cartes partagent les mêmes rangées (sous-grille) ; le prix est calé en haut, à la hauteur du nom. 16 novembre 2026. */
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 900px) {
+    .offres--2 > .offre { grid-row: span 6; grid-template-rows: subgrid; }
+    .offres--2 > .offre > .offre__tarifs { align-self: start; }
+  }
+}
