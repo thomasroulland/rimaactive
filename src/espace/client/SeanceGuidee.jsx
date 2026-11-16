@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
 import { enDuree, fr, lignesExercice, texteDuree } from '../donnees/seances.js'
@@ -135,7 +136,7 @@ export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes
 // Ordinateur (16 novembre 2026, mélange « Focus » + « Galerie » choisi par Thomas) : les exercices du bloc côte à côte avec
 // leur grande photo, et sous chaque photo les séries avec de vraies cases répétitions / charge.
 // Superset (biset, triset) : on avance par tour (A1 → A2 → A3, puis tour suivant) ; bloc classique : exercice après exercice.
-export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirConsignes, etape, nb, aller, finir, suivant }) {
+export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirConsignes, etape, nb, aller, finir, suivant, blocs = [], prog, titre, sousTitre, lienRetour }) {
   const els = bloc.elements ?? []
   const superset = bloc.format === 'superset'
   // série à faire maintenant : { e: index de l'exercice, i: index de la série }
@@ -168,11 +169,33 @@ export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirCons
     if (!actuelle) { if (dernier) finir(); else aller(etape + 1); return }
     actions.serie(els[actuelle.e], actuelle.i, 'fait', true)
   }
+  const tours = Math.max(0, ...els.map((e) => lignes(e).length))
+  const p = prog?.blocs?.[etape]
+  const etat = superset && actuelle ? `${nomBloc(bloc)} · tour ${actuelle.i + 1} sur ${tours}` : `${nomBloc(bloc)} · ${p?.faites ?? 0} série${(p?.faites ?? 0) > 1 ? 's' : ''} sur ${p?.total ?? 0}`
+  const nomFormat = superset ? (els.length === 2 ? 'Biset' : els.length === 3 ? 'Triset' : 'Superset') : null
   return (
     <div className="ec-s5">
-      {superset && (
-        <p className="ec-s5-consigne">Enchaînez {els.map((_, k) => `${bloc.lettre}${k + 1}`).join(' → ')}{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}. On avance tour par tour.</p>
-      )}
+      {/* barre noire fine (maquette) : retour, séance, où on en est */}
+      <div className="ec-s5-barre">
+        <Link className="ec-s5-retour" to={lienRetour ?? '/espace'} aria-label={lienRetour === '/espace/programme' ? 'Retour à Mon programme' : 'Retour au tableau de bord'}><span aria-hidden="true">←</span></Link>
+        <b>{titre}</b><span className="ec-s5-barre__sous">{sousTitre}</span>
+        <span className="ec-s5-barre__etat">{etat}</span>
+      </div>
+      <div className="ec-s5-tete">
+        <div>
+          <h2 className="ec-s5-titre">{nomBloc(bloc)}{nomFormat && <span> · {nomFormat}</span>}</h2>
+          {superset && <p className="ec-s5-consigne">Enchaînez {els.map((_, k) => `${bloc.lettre}${k + 1}`).join(' → ')}{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}. <b>{tours} tours.</b></p>}
+        </div>
+        <nav className="ec-s5-blocs" aria-label="Blocs de la séance">
+          {blocs.map((b, i) => (
+            <button key={b.id} type="button" className={`${i === etape ? 'est-actif' : prog?.blocs?.[i]?.complet ? 'est-fini' : ''}`} aria-current={i === etape ? 'step' : undefined}
+              aria-label={`${nomBloc(b)}${prog?.blocs?.[i]?.complet ? ', fait' : ''}`} title={nomBloc(b)} onClick={() => aller(i)}>
+              {prog?.blocs?.[i]?.complet && i !== etape ? '✓' : b.lettre}
+            </button>
+          ))}
+          <button type="button" className="ec-s5-blocs__fin" onClick={finir}>{lecture ? 'Bilan' : 'Fin'}</button>
+        </nav>
+      </div>
       <ol className={`ec-s5-grille ec-s5-grille--${Math.min(els.length, 3)}`}>
         {els.map((el, e) => (
           <CarteGalerie key={el.id} el={el} code={`${bloc.lettre}${e + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture}

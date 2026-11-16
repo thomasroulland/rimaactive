@@ -1226,3 +1226,23 @@ select.ec-champ { appearance: auto; min-width: 0; }
 /* bandeau du bloc plus compact sur ordinateur */
 .ec-seance--large .ec-s2-bandeau { padding: 14px 18px; gap: 8px 16px; }
 .ec-seance--large .ec-s2-surtitre { margin-bottom: -4px; }
+
+/* En-tête resserré, comme la maquette : barre noire fine, titre du bloc + consigne, pastilles des blocs à droite */
+.ec-seance--large { padding-top: 14px !important; }
+.ec-seance--large .ec-s2 { gap: 0; }
+.ec-s5-barre { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 18px 0 8px; border-radius: 18px; background: #161514; color: #f4f3ef; }
+.ec-s5-retour { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: rgba(255, 255, 255, .1); color: #f4f3ef; text-decoration: none; font-size: 18px; font-weight: 800; }
+.ec-s5-retour:hover { background: rgba(255, 255, 255, .2); }
+.ec-s5-barre b { font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+.ec-s5-barre__sous { font-size: 13px; font-weight: 600; opacity: .65; }
+.ec-s5-barre__etat { margin-left: auto; font-size: 13px; font-weight: 700; opacity: .8; }
+.ec-s5-tete { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 4px 2px 0; }
+.ec-s5-titre { margin: 0; font-size: 28px; line-height: 1.15; font-weight: 900; letter-spacing: -.03em; }
+.ec-s5-titre span { color: #6b665f; font-weight: 800; }
+.ec-s5-tete .ec-s5-consigne { margin: 2px 0 0; padding: 0; background: none; font-size: 15px; font-weight: 600; color: #6b665f; }
+.ec-s5-tete .ec-s5-consigne b { color: #161514; }
+.ec-s5-blocs { display: flex; gap: 8px; }
+.ec-s5-blocs button { min-width: 44px; height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #e2ddd3; background: #fff; font: 800 15px/1 var(--font-sans); color: #161514; cursor: pointer; }
+.ec-s5-blocs button.est-actif { background: #161514; color: #fff; border-color: #161514; }
+.ec-s5-blocs button.est-fini { background: #eef7f1; color: #2f9e5b; border-color: #cfe8d7; }
+.ec-s5 { gap: 14px; }
