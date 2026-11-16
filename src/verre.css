@@ -12,8 +12,9 @@
 body { background: var(--craie) !important; background-image: none !important; }
 body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
   /* un peu plus fortes le 16 novembre 2026 (demande de Thomas) : jaune .30 → .40 et .16 → .22 ; l'orange, qu'on ne voyait pas à côté du jaune,
-     est plus orangé et plus large. Puis les deux un cran en dessous (« un peu fort ») : jaune .34 et .19, orange .24 */
-  background: radial-gradient(800px 560px at 88% 30%, rgba(242, 194, 48, .34), transparent 70%), radial-gradient(820px 620px at 6% 72%, rgba(255, 98, 48, .24), transparent 70%),
+     est plus orangé et plus large. Puis les deux un cran en dessous (« un peu fort »), puis rééquilibrage
+     (« on voit moins le rouge que le jaune ») : jaune .30 et .19, rouge orangé .31, plus rouge, plus large et un peu plus haut */
+  background: radial-gradient(800px 560px at 88% 30%, rgba(242, 194, 48, .30), transparent 70%), radial-gradient(880px 660px at 5% 62%, rgba(255, 84, 40, .31), transparent 70%),
     radial-gradient(600px 480px at 55% 100%, rgba(242, 194, 48, .19), transparent 70%); }
 /* l'espace connecté (coach et coaché) : sa coque avait un fond craie plein qui cachait les lumières du fond */
 .ec-coque { background: transparent !important; }
