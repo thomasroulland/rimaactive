@@ -37,10 +37,10 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 .nav--pose .nav__bulle { transition: none !important; }
 .heros.heros--v3 .heros__outil.ecrans { padding-right: 18px !important; }
 
-/* ---------- Cartes : blanc translucide avec un reflet chaud en bas à droite ---------- */
+/* ---------- Cartes : blanc translucide, sans dégradé (16 novembre 2026 : avec les lumières du fond, le reflet chaud faisait trop) ---------- */
 .service, .question, .methode__principes li, .approche__panneau, .approche__cadre, .formulaire, .ecrans__panneau,
 .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .ec-s2-carte, .ec-s2-reglage, .ec-s2-fin__suivant, .gp-col, .gp-seance:not(.est-faite), .gp-nouvelle, .es2-bloc, .es2__banque .espace-choix, .es2-ligne__plus, .prog-vide, .ec-s2-detail {
-  background-color: rgba(255, 255, 255, .72) !important; background-image: linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important;
+  background-color: rgba(255, 255, 255, .72) !important; background-image: none !important;
   -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); border: 1px solid rgba(255, 255, 255, .85) !important; box-shadow: 0 10px 30px rgba(22, 21, 20, .08) !important; }
 .methode__principes li { padding: 18px; border-radius: var(--arrondi); }
 .approche__panneau { border-radius: var(--arrondi); }
@@ -59,7 +59,7 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 .ec-regul:hover, .espace-carte:hover, .ec-histo__carte:hover, .ec-carte:hover, .disc:hover, .carte-coache:hover, .messagerie__fil:hover, .ec-s2-carte:hover { --lueur: 1; }
 .entete { background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .14)), transparent 68%); }
 .service, .question, .formulaire, .approche__cadre, .ecrans__panneau, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .espace-carte, .ec-histo__carte, .ec-carte, .disc, .carte-coache, .messagerie__fil, .gp-seance:not(.est-faite), .gp-col, .es2-bloc {
-  background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .85)), transparent 68%), linear-gradient(135deg, rgba(255, 255, 255, 0) 35%, rgba(255, 196, 150, .20) 100%) !important; }
+  background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, calc(var(--lueur) * .85)), transparent 68%) !important; }
 .carte-coache:hover, .ec-pcarte:hover, .ec-carte:hover { transform: translateY(-3px); box-shadow: 0 24px 56px rgba(22, 21, 20, .13) !important; }
 @media (prefers-reduced-motion: no-preference) {
   @keyframes verre-descend { from { opacity: 0; transform: translateY(-22px) scale(.95); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
@@ -126,8 +126,8 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 
 /* reflet chaud : toutes les cartes d'origine de la maquette l'ont ; les cartes denses de la grille du programme et de la création de séance restent blanches et simples */
 .gp-seance:not(.est-faite), .es2-bloc, .sf-bilan, .es2-ligne__plus, .prog-vide, .ec-s2-detail { background-image: none !important; }
-/* en revanche, un reflet plus doux sur les grands conteneurs : colonnes de semaine, banque, « + Semaine » */
-.gp-col, .gp-nouvelle, .es2__banque .espace-choix { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0) 40%, rgba(255, 196, 150, .16) 100%) !important; }
+/* plus de reflet chaud non plus sur les grands conteneurs (colonnes de semaine, banque, « + Semaine ») : le fond coloré suffit */
+.gp-col, .gp-nouvelle, .es2__banque .espace-choix { background-image: none !important; }
 .gp-col.est-depot { background-image: none !important; }
 /* accueil : le panneau de l'espace client va jusqu'au bord droit de l'écran (même marge de 18 px qu'en haut et en bas), plus de bande vide */
 .heros.heros--v3 { padding-right: 0 !important; max-width: none !important; }
