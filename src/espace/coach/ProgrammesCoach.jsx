@@ -18,11 +18,6 @@ export default function ProgrammesCoach() {
   return (
     <section className="section">
       <div className="conteneur espace-coach progs">
-        <header className="progs__tete">
-          <p className="surtitre">Espace coach</p>
-          <h1 className="titre titre--section">Modèles</h1>
-          <p className="espace-texte">Vos séances types, prêtes à l’emploi. Glissez-les dans les semaines d’un programme depuis la fiche d’un coaché (onglet Programme) : chaque fois, c’est une copie que vous pouvez ajuster.</p>
-        </header>
         <Modeles />
         <ProgrammesDesCoaches />
       </div>
@@ -69,12 +64,20 @@ function Modeles() {
 
   return (
     <>
-      <section aria-labelledby="t-modeles" className="progs__partie">
-        <div className="progs__partie-tete ms-tete">
-          <h2 id="t-modeles" className="progs__h2">Modèles de séance</h2>
-          {modeles && <span className="progs__compte">{modeles.length}</span>}
-          <button type="button" className="bouton bouton--principal bouton--compact ms-creer" disabled={envoi} onClick={creer}>＋ Nouveau modèle de séance</button>
-        </div>
+      <section aria-labelledby="t-modeles" className="progs__partie ms">
+        <header className="ms-barre">
+          <div className="ms-barre__titre">
+            <h1 id="t-modeles" className="ms-h1">Modèles</h1>
+            {modeles && <span className="progs__compte">{modeles.length}</span>}
+          </div>
+          <p className="ms-barre__aide">Vos séances types, à glisser dans les programmes.</p>
+          {modeles?.length > 0 && (
+            <>
+              <label className="sr-only" htmlFor="ms-cherche">Chercher un modèle</label>
+              <input id="ms-cherche" className="ms-cherche" type="search" autoComplete="off" placeholder="Chercher…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
+            </>
+          )}
+        </header>
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
         {anciens.length > 0 && (
@@ -83,24 +86,26 @@ function Modeles() {
             <button type="button" className="lien-souligne" onClick={() => setNettoyer(true)}>{anciens.length > 1 ? 'Les supprimer' : 'Le supprimer'}</button>
           </p>
         )}
-        {modeles?.length > 0 && (
-          <div className="ms-filtres">
-            <label className="sr-only" htmlFor="ms-cherche">Chercher un modèle</label>
-            <input id="ms-cherche" className="champ ms-cherche" type="search" autoComplete="off" placeholder="Chercher un modèle…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
-            {typesPresents.length > 1 && (
-              <div className="filtres-coaches" role="group" aria-label="Type de séance">
-                {['tous', ...typesPresents].map((t) => (
-                  <button key={t} type="button" className="filtre-coaches" aria-pressed={filtre === t} onClick={() => setFiltre(t)}>{t === 'tous' ? 'Tous' : nomType(t, types)}</button>
-                ))}
-              </div>
-            )}
+        {typesPresents.length > 1 && (
+          <div className="filtres-coaches ms-filtres" role="group" aria-label="Type de séance">
+            {['tous', ...typesPresents].map((t) => (
+              <button key={t} type="button" className="filtre-coaches" aria-pressed={filtre === t} onClick={() => setFiltre(t)}>{t === 'tous' ? 'Tous' : nomType(t, types)}</button>
+            ))}
           </div>
         )}
         {modeles === null && <p className="espace-aide" role="status">Chargement…</p>}
         {modeles?.length === 0 && (
-          <p className="progs__vide">Pas encore de modèle de séance. Créez-en un ici, ou ouvrez une séance d’un programme et touchez « Enregistrer comme modèle ».</p>
+          <p className="progs__vide">Astuce : dans un programme, une séance se transforme en modèle avec « Enregistrer comme modèle ».</p>
         )}
         <ul className="ms-grille">
+          {modeles !== null && (
+            <li className="ms-nouveau">
+              <button type="button" disabled={envoi} onClick={creer}>
+                <span className="ms-nouveau__plus" aria-hidden="true">＋</span>
+                <span className="ms-nouveau__texte">Nouveau modèle</span>
+              </button>
+            </li>
+          )}
           {liste.map((m, i) => {
             const { exos } = resumeModele(m)
             const blocs = (m.seance?.blocs ?? []).filter((b) => (b.elements ?? []).length > 0)

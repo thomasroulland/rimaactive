@@ -2104,3 +2104,32 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 .gp-zone--modeles .gp-rpe { padding-left: 8px; font-size: 12px; }
 .gp-zone--modeles .gp-motbtn { padding: 0 10px; }
 .gp-zone--modeles .gp-seance__etat { white-space: nowrap; font-size: 11px; }
+
+/* ---------- Page Modèles, version 2 : un titre sur une ligne, une tuile « Nouveau modèle », des cartes nettes ---------- */
+.progs:has(.ms) { gap: 28px; }
+.ms { gap: 16px; }
+.ms-barre { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
+.ms-barre__titre { display: flex; align-items: center; gap: 10px; }
+.ms-h1 { margin: 0; font-size: clamp(30px, 3vw, 40px); line-height: 1.1; font-weight: 900; letter-spacing: -.035em; }
+.ms-barre__aide { margin: 0; font-size: 15px; color: var(--gris-chaud); }
+.ms-cherche { margin-left: auto; width: min(280px, 100%); height: 42px; padding: 0 16px; border: 1px solid #e2ddd3; border-radius: 999px; background: #fff; font: 600 15px/1 var(--font-sans); color: var(--encre); }
+.ms-cherche:focus { outline: none; border-color: var(--encre); box-shadow: 0 0 0 3px rgba(242, 194, 48, .45); }
+.ms-grille { grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 16px; }
+.ms-nouveau button { width: 100%; height: 100%; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border: 2px dashed #cfc9be; border-radius: 22px; background: rgba(255, 255, 255, .45); font: inherit; color: var(--encre); cursor: pointer; transition: background-color .15s ease, border-color .15s ease, transform .15s ease; }
+.ms-nouveau button:hover { background: #fff; border-color: var(--encre); transform: translateY(-2px); }
+.ms-nouveau__plus { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; background: var(--jaune); font-size: 26px; font-weight: 800; }
+.ms-nouveau__texte { font-size: 16px; font-weight: 800; }
+.ms-carte { background: #fff !important; background-image: none !important; border: 1px solid #ebe7df; border-radius: 22px; padding: 16px 18px; gap: 10px; box-shadow: 0 2px 0 rgba(22, 21, 20, .03), 0 10px 24px rgba(22, 21, 20, .06); transition: transform .15s ease, box-shadow .15s ease; }
+.ms-carte:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(22, 21, 20, .1); }
+.ms-carte__type { display: inline-block; padding: 3px 10px; border-radius: 999px; background: rgba(255, 74, 28, .1); font-size: 11px; }
+.ms-carte__nom { font-size: 20px; }
+.ms-carte__blocs { margin: 2px 0 0; padding: 10px 12px; border-radius: 14px; background: #f6f4ef; gap: 6px; }
+.ms-carte__modifier { align-self: stretch; justify-content: center; background: var(--encre) !important; color: var(--craie) !important; border-color: var(--encre) !important; }
+.ms-carte__modifier:hover { background: #2a2622 !important; }
+.ms-filtres { margin-top: -4px; }
+.ms-barre { padding-top: 6px; }
+@media (max-width: 700px) {
+  .ms-cherche { margin-left: 0; width: 100%; }
+  .ms-nouveau button { min-height: 72px; flex-direction: row; border-radius: 18px; }
+  .ms-nouveau__plus { width: 40px; height: 40px; font-size: 22px; }
+}
