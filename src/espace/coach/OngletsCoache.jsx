@@ -57,23 +57,8 @@ export function Ensemble() {
           : <p className="ens-etat__texte">{client.prenom} suit son programme, rien à signaler.</p>}
       </section>
 
-      <div className="ens-trio">
-        <Carte titre="Progression" id="t-prog">
-          <p className="ens-gros"><b>{ch.faites}</b> séance{ch.faites > 1 ? 's' : ''} sur {ch.prevues}</p>
-          <div className="ens-barre" role="img" aria-label={`${part} % du programme fait`}><span style={{ width: `${part}%` }} /></div>
-          {details && <p className="espace-aide">{details}</p>}
-        </Carte>
-        <Carte titre="Prochaine séance" id="t-prochaine">
-          {prochaine
-            ? <><p className="ens-gros ens-gros--texte">{prochaine.seance.titre || 'Séance sans titre'}</p><p className="espace-aide">Semaine {prochaine.semaine}</p></>
-            : <p className="espace-aide">{progEnCours ? 'Toutes les séances sont faites.' : 'Pas de programme en cours.'}</p>}
-        </Carte>
-        <Carte titre="Objectif et 1RM" id="t-profil">
-          <ProfilSportif client={client} uid={uid} />
-        </Carte>
-      </div>
-
-      <section className="onglet-pile" aria-labelledby="t-seances">
+      <div className="ens-cols">
+      <section className="onglet-pile ens-seances" aria-labelledby="t-seances">
         <div className="suivi-titre">
           <h2 id="t-seances" className="espace-sous-titre">Dernières séances</h2>
           <Link className="lien-souligne" to={`/espace/coach/clients/${uid}/historique`}>Tout l’historique</Link>
@@ -87,6 +72,22 @@ export function Ensemble() {
             </ul>
           )}
       </section>
+      <aside className="ens-cote" aria-label="Résumé">
+        <Carte titre="Progression" id="t-prog">
+          <p className="ens-gros"><b>{ch.faites}</b> séance{ch.faites > 1 ? 's' : ''} sur {ch.prevues}</p>
+          <div className="ens-barre" role="img" aria-label={`${part} % du programme fait`}><span style={{ width: `${part}%` }} /></div>
+          {details && <p className="espace-aide">{details}</p>}
+        </Carte>
+        <Carte titre="Prochaine séance" id="t-prochaine">
+          {prochaine
+            ? <><p className="ens-gros ens-gros--texte">{prochaine.seance.titre || 'Séance sans titre'}</p><p className="espace-aide">Semaine {prochaine.semaine}</p></>
+            : <p className="espace-aide">{progEnCours ? 'Toutes les séances sont faites.' : 'Pas de programme en cours.'}</p>}
+        </Carte>
+        <Carte titre="Objectif et 1RM" id="t-profil">
+          <ProfilSportif client={client} uid={uid} />
+        </Carte>
+      </aside>
+      </div>
 
       {programmes !== null && (
         <p className="ens-supprimer"><button type="button" className="lien-souligne" onClick={() => setSuppression(true)}>Supprimer ce client et ses données</button></p>
