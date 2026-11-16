@@ -13,14 +13,16 @@ export const PAGE = {
     {
       nom: 'Suivi mensuel en ligne',
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
-      pourQui: 'Une personne qui veut s’entraîner à distance, avec un programme personnalisé et un suivi hebdomadaire.',
+      pourQui: 'Une personne qui veut s’entraîner à distance, avec un programme sur mesure et un bilan chaque semaine.',
       titre: 'Suivi mensuel',
       picto: 'laptop',
+      puce: 'haltere',
       surtitre: 'À distance',
-      infos: 'Engagement de 3 mois',
-      tarifs: [{ montant: '45\u00a0€', apres: 'par mois', detail: 'soit 135\u00a0€ les 3 mois' }],
+      infos: 'Minimum 2\u00a0mois',
+      // prix et « Compris » de Marie (PDF du 16 novembre 2026)
+      tarifs: [{ montant: '45\u00a0€', apres: 'par mois', detail: 'soit 90\u00a0€ les 2\u00a0mois' }],
       titrePoints: 'Compris',
-      points: ['Programme personnalisé', 'Suivi hebdomadaire', 'Bilans'],
+      points: ['Programme sur mesure', 'Bilan et ajustements chaque semaine', 'Suivi sur votre espace en ligne'],
       sombre: true,
     },
   ],

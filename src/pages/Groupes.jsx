@@ -15,16 +15,19 @@ export const PAGE = {
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'De 2 à 8 personnes, à domicile ou en extérieur, même avec des niveaux différents.',
       picto: 'users',
+      puce: 'kettlebell',
       surtitre: '2 à 8 personnes',
-      infos: '60\u00a0min',
-      tarifs: [{ montant: '70\u00a0€', apres: 'la séance' }],
+      infos: '60\u00a0min • Sans engagement',
+      // prix de Marie (PDF du 16 novembre 2026)
+      tarifs: [{ montant: '15\u00a0€ à 30\u00a0€', apres: 'par personne', detail: '(selon la taille du groupe)' }],
       titrePoints: 'Compris',
+      // intitulés courts de Marie sur la carte ; le détail garde ses explications
       points: [
-        // textes de Marie (10 novembre 2026) : intitulé en gras, puis la description
-        ['Mobilité & activation', 'Un réveil articulaire et musculaire ciblé que nous faisons ensemble pour préparer le corps à l’effort en toute sécurité.'],
-        ['Cœur de séance', 'L’apprentissage technique et le renforcement musculaire à travers des exercices fonctionnels que je sélectionne selon le thème du jour.'],
-        ['Clôture de séance', 'Un bloc de fin sur mesure qui s’adapte à l’énergie du groupe (cardio, renforcement postural ou retour au calme).'],
+        ['Mobilité & activation musculaire', 'Un réveil articulaire et musculaire ciblé que nous faisons ensemble pour préparer le corps à l’effort en toute sécurité.'],
+        ['Renforcement fonctionnel ciblé', 'L’apprentissage technique et le renforcement musculaire à travers des exercices fonctionnels que je sélectionne selon le thème du jour.'],
+        ['Fin de séance selon votre énergie', 'Un bloc de fin sur mesure qui s’adapte à l’énergie du groupe (cardio, renforcement postural ou retour au calme).'],
       ],
+      pointsCourts: true,
     },
   ],
 }

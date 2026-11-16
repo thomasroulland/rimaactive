@@ -26,6 +26,17 @@ export default function Picto({ nom, taille = 24 }) {
       </svg>
     )
   }
+  // haltère au trait (offre En ligne, 16 novembre 2026), même épaisseur que Phosphor Light : une poignée courte, deux poids de chaque côté
+  if (nom === 'haltere') {
+    return (
+      <svg className="picto" width={taille} height={taille} viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M96 128h64" />
+        <rect x="56" y="72" width="40" height="112" rx="10" />
+        <rect x="160" y="72" width="40" height="112" rx="10" />
+        <path d="M28 104v48M228 104v48" />
+      </svg>
+    )
+  }
   // silhouette dans un rond (espace de connexion), au trait, même épaisseur que Phosphor Light
   if (nom === 'user-circle') {
     return (

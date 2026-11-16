@@ -2150,3 +2150,9 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .page-contact .presentation-contact__lieu { max-width: none; white-space: nowrap; font-size: clamp(14px, calc(100cqw / 39), 19px); }
 }
 @media (min-width: 900px) and (max-width: 1279px) { .page-contact .presentation-contact__lieu { text-wrap: balance; } }
+
+/* Textes de Marie (16 novembre 2026) */
+/* « questions » en vermillon, sans le trait (comme « fonctionne » dans Ma méthode) */
+.questions .mot-avant { text-decoration: none; color: var(--vermillon); }
+/* Mes services : le surtitre passe au-dessus du titre, en vermillon */
+.service__lieux { color: var(--vermillon); }

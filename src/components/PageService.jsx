@@ -100,9 +100,10 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte }) {
       {f.points && (
         <ul className="offre__points">
           {f.points.map((point) => (
-            <li key={String(point)} className={Array.isArray(point) ? 'offre__point--long' : undefined}>
-              <Picto nom="check-square" taille={18} />
-              {Array.isArray(point) ? <span><b>{point[0]}<span className="offre__suite">&nbsp;:</span></b><span className="offre__suite"> {point[1]}</span></span> : point}
+            <li key={String(point)} className={Array.isArray(point) && !f.pointsCourts ? 'offre__point--long' : undefined}>
+              {/* la puce est le pictogramme choisi par Marie pour l'offre (kettlebell, barre, haltères) ; sinon la case cochée */}
+              <Picto nom={f.puce ?? 'check-square'} taille={18} />
+              {Array.isArray(point) ? (f.pointsCourts ? point[0] : <span><b>{point[0]}<span className="offre__suite">&nbsp;:</span></b><span className="offre__suite"> {point[1]}</span></span>) : point}
             </li>
           ))}
         </ul>
@@ -169,7 +170,7 @@ export function DetailOffre({ refDetail, ouverte, onClose, contexte, liste = [] 
             <ul className="detail__points">
               {ouverte.points.map((point) => (
                 <li key={String(point)}>
-                  <Picto nom="check-square" taille={20} />
+                  <Picto nom={ouverte.puce ?? 'check-square'} taille={20} />
                   {Array.isArray(point) ? <span><b>{point[0]}</b><br />{point[1]}</span> : point}
                 </li>
               ))}

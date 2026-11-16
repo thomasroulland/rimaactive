@@ -10,7 +10,7 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 
 // Les quatre offres et leurs formules, reprises des pages (« Suivi mensuel · Individuel », « Suivi mensuel en ligne · En ligne »…) :
 // la même écriture que celle envoyée par le bouton « Choisir » d'une carte
-const OFFRES = [INDIVIDUEL, GROUPES, ENTREPRISES, EN_LIGNE].map((page) => ({
+const OFFRES = [INDIVIDUEL, EN_LIGNE, GROUPES, ENTREPRISES].map((page) => ({
   nom: page.titre,
   formules: page.cartes.map((f) => `${f.nom} · ${f.mode ?? page.titre}`),
 }))

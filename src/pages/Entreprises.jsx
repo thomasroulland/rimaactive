@@ -15,11 +15,14 @@ export const PAGE = {
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Vos équipes, jusqu’à 16 personnes, dans vos locaux ou en extérieur.',
       picto: 'buildings',
+      puce: 'kettlebell',
       surtitre: 'Jusqu’à 16 personnes',
-      infos: '60\u00a0min · Devis gratuit sous 48\u00a0h',
-      tarifs: [{ montant: 'Sur devis' }],
+      infos: '60\u00a0min • Ponctuel ou régulier',
+      tarifs: [{ montant: 'Sur devis', detail: '(selon les besoins)' }],
       titrePoints: 'Compris',
-      points: ['Mobilité & Activation : 7 à 10\u00a0min', 'Corps de séance : 40 à 50\u00a0min', 'Retour au calme : 3 à 5\u00a0min'],
+      // « Compris » de Marie (PDF du 16 novembre 2026) ; carte sur fond noir
+      points: ['Réveil musculaire & mobilité', 'Renforcement adapté à tous les niveaux', 'Challenge & cohésion d’équipe'],
+      sombre: true,
       bouton: 'Demander un devis',
     },
   ],

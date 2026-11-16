@@ -11,48 +11,42 @@ import { basculerDetails } from '../components/basculerDetails.js'
 import { CONTACT } from '../components/liens.js'
 import EcransEspace from '../components/EcransEspace.jsx'
 
+// Ordre, surtitres et textes de Marie (16 novembre 2026) : Individuel, En ligne, Groupes, Entreprises
 const SERVICES = [
   {
     to: '/offres#individuel',
     titre: 'Individuel',
-    lieux: 'Domicile',
-    pourQui: 'Domicile',
-        photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
+    pourQui: '1:1 • À domicile ou en salle',
+    photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoEnLigne,
-    texte: 'Je vous accompagne en présentiel avec des séances construites autour de vos objectifs et de votre niveau.',
-  },
-  {
-    to: '/offres#groupes',
-    titre: 'Groupes',
-    lieux: 'Domicile · Extérieur',
-    pourQui: '2 à 8 personnes',
-        photo: 'Kettlebells et barres sur un sol de salle',
-    image: photoGroupes,
-    texte: 'Retrouvez-moi en extérieur, près de chez vous, pour progresser ensemble dans un esprit d’entraide.',
-  },
-  {
-    to: '/offres#entreprises',
-    titre: 'Entreprises',
-    lieux: 'Locaux · Extérieur',
-    pourQui: 'Jusqu’à 16 personnes',
-        photo: 'Rangée de kettlebells sur le sol d’une salle',
-    image: photoEntreprises,
-    texte: 'J’accompagne vos équipes avec des séances de mobilité et de renforcement fonctionnel dans vos locaux ou en extérieur.',
+    texte: 'Des séances adaptées à votre niveau et vos objectifs chez vous ou en extérieur.',
   },
   // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie
   {
     to: '/offres#en-ligne',
     titre: 'En ligne',
-    lieux: '3 mois',
-    pourQui: '3 mois',
+    pourQui: 'Suivi mensuel • À distance',
     photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
     image: photoIndividuel,
-    texte: 'Je vous accompagne à distance avec un programme personnalisé avec un suivi hebdomadaire.',
+    texte: 'Votre programme sur mesure et un bilan chaque semaine pour progresser où que vous soyez.',
   },
-
+  {
+    to: '/offres#groupes',
+    titre: 'Groupes',
+    pourQui: '2 à 8 personnes • En extérieur',
+    photo: 'Kettlebells et barres sur un sol de salle',
+    image: photoGroupes,
+    texte: 'Entraînez-vous en petit comité près de chez vous pour progresser dans une bonne ambiance.',
+  },
+  {
+    to: '/offres#entreprises',
+    titre: 'Entreprises',
+    pourQui: 'Jusqu’à 16 personnes • Sur site',
+    photo: 'Rangée de kettlebells sur le sol d’une salle',
+    image: photoEntreprises,
+    texte: 'Des séances de mobilité et de renforcement pour vos équipes dans vos locaux ou en plein air.',
+  },
 ]
-
-
 
 export default function Accueil() {
   useTitre('Accueil')
@@ -100,13 +94,14 @@ export default function Accueil() {
                 <div className="service">
                   <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.split('#')[1]}`} />
                   <div className="service__corps">
+                    {/* surtitre vermillon au-dessus du titre (Marie, 16 novembre 2026) */}
+                    <p className="surtitre service__lieux">{service.pourQui}</p>
                     <h3 className="titre titre--tuile">
                       <Link to={service.to} className="service__lien" aria-label={`${service.titre} : voir les formules`}>{service.titre}</Link>
                     </h3>
-                    <p className="surtitre service__lieux">{service.pourQui}</p>
                     <p className="texte">{service.texte}</p>
-                    <Link to={service.to} className="service__bas" aria-label={`${service.titre} : voir les offres`}>
-                      <span className="service__contact">Voir les offres</span>
+                    <Link to={service.to} className="service__bas" aria-label={`${service.titre} : découvrir les offres`}>
+                      <span className="service__contact">Découvrir</span>
                       <span className="service__fleche" aria-hidden="true"><FlecheDiagonale /></span>
                     </Link>
                   </div>
@@ -134,15 +129,15 @@ export default function Accueil() {
             </div>
             <h2 id="approche-titre" className="titre titre--section">Moi c’est <span className="mot-avant">Marie</span></h2>
             <p className="texte">
-              Passionnée de sport, je vous aide à atteindre vos objectifs grâce à une pratique adaptée à votre rythme de vie.
+              Coach sportive diplômée d’État, je vous aide à atteindre vos objectifs grâce à une pratique adaptée à votre emploi du temps.
             </p>
             <p className="texte">
-              Durant mes 6&nbsp;années de salariat, j’ai constaté que beaucoup de mes collègues manquaient de temps pour prendre
-              soin d’eux ou se sentaient perdus face au sport. C’est ce qui m’a poussée à devenir coach.
+              Durant mes 6&nbsp;années de salariat, j’ai vu beaucoup de mes collègues manquer de temps pour prendre soin d’eux
+              ou se sentir perdus face au sport. C’est ce déclic qui m’a poussée à me reconvertir.
             </p>
             <p className="texte">
-              Ensemble, nous construisons un programme sur mesure qui trouve sa place dans votre emploi du temps.
-              Mon objectif&nbsp;? Vous faire gagner en force et en mobilité, tout en retrouvant le plaisir de vous dépasser.
+              Je construis avec vous des séances efficaces et ciblées sur vos besoins. Mon objectif&nbsp;: vous faire gagner
+              en force et en mobilité tout en retrouvant le plaisir de vous dépasser.
             </p>
             <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
           </div>
@@ -162,23 +157,23 @@ function FlecheDiagonale() {
 
 // Quatre principes repris de l'ancien texte « Mon approche » et du contexte de marque (validés par Marie)
 const PRINCIPES = [
-  ['Le mouvement d’abord', 'Je décompose les mouvements et vous donne des repères simples pour bien les réaliser.'],
-  ['Des séances qui ont du sens', 'Exercices, format, intensité\u00a0: chaque séance est construite pour atteindre votre objectif.'],
-  ['Des progrès mesurables', 'On suit vos charges et votre exécution. Le vrai progrès, c’est de vous sentir mieux au quotidien.'],
-  ['La confiance qui s’installe', 'Au fil des séances, vous prenez confiance et découvrez le plaisir de progresser.'],
+  ['Le mouvement d’abord', 'Je décompose les mouvements en vous donnant des repères simples pour que vous maîtrisiez la technique.'],
+  ['Des séances structurées', 'Échauffement ciblé, renforcement fonctionnel et fin de séance adaptée à votre énergie\u00a0: chaque étape sert votre objectif.'],
+  ['Des progrès concrets', 'Un suivi complet de vos séances et de vos statistiques pour savoir exactement où vous en êtes.'],
+  ['Le plaisir de progresser', 'En maîtrisant les bases, vous gagnez en assurance et vous vous sentez mieux dans votre corps au quotidien.'],
 ]
 
 // Les objectifs que Marie accompagne (donnés par Marie, novembre 2026)
 const OBJECTIFS = ['Transformation & Silhouette', 'Performance & Force', 'Condition physique & Endurance', 'Mental & Discipline']
 
-// « Ma méthode » (novembre 2026) : titre centré, quatre principes, objectifs ; fond blanc, « marche » en vermillon
+// « Ma méthode » (novembre 2026) : titre centré, quatre principes, objectifs ; fond blanc, « fonctionne » en vermillon
 function Methode() {
   return (
     <section id="methode" className="section ecran-plein methode" aria-labelledby="methode-titre">
       <div className="conteneur">
         <div className="methode__entete">
           <p className="surtitre">Ma méthode</p>
-          <h2 id="methode-titre" className="titre titre--section">Pourquoi ça <span className="mot-avant">marche</span>&nbsp;?</h2>
+          <h2 id="methode-titre" className="titre titre--section">Pourquoi ça <span className="mot-avant">fonctionne</span>&nbsp;?</h2>
         </div>
         <ol className="methode__principes">
           {PRINCIPES.map(([titre, texte], i) => (
@@ -202,11 +197,12 @@ function Methode() {
 
 // « Les questions qu'on me pose » : questions et réponses de Marie (5 novembre 2026), reprises telles quelles
 const QUESTIONS = [
-  ['Je débute ou je reprends le sport après une longue pause, est-ce pour moi\u00a0?', 'Bien sûr. Chaque séance est adaptée à votre niveau et à vos objectifs. Que vous débutiez ou repreniez après une pause, vous progressez à votre rythme.'],
-  ['Comment se déroule une séance\u00a0?', 'Chaque séance commence par un échauffement associant mobilité dynamique et activation des muscles qui seront sollicités. Le corps de séance dure ensuite 40 à 50\u00a0minutes avant un retour au calme.'],
+  ['Je débute ou je reprends le sport après une longue pause, est-ce pour moi\u00a0?', 'Bien sûr. Chaque séance est adaptée à votre niveau et à vos objectifs. Que vous débutiez ou que vous repreniez après une pause, vous progressez à votre rythme.'],
+  ['Comment se déroule une séance\u00a0?', 'Chaque séance démarre par un échauffement alliant mobilité et activation des muscles. Le cœur de séance dure ensuite 40 à 50\u00a0minutes, suivi d’une fin de séance adaptée à votre énergie du jour.'],
   ['Faut-il prévoir du matériel ou un espace particulier\u00a0?', 'À domicile, dans vos locaux ou en extérieur, il suffit d’un espace permettant de bouger en toute sécurité. J’apporte tout le matériel nécessaire\u00a0: tapis, kettlebells, slam balls, etc.'],
   ['Dans quel secteur vous déplacez-vous\u00a0?', 'Basée à Houdan (78), je me déplace dans les Yvelines (78), l’Eure-et-Loir (28) et l’Eure (27). Le déplacement est inclus jusqu’à 20\u00a0km autour de Houdan.'],
   ['Peut-on s’entraîner à deux ou en groupe avec des niveaux différents\u00a0?', 'Totalement. Les exercices sont adaptés au niveau de chaque personne. J’ajuste les charges et propose différentes variantes pour que chacun puisse progresser avec une difficulté adaptée.'],
+  ['Comment fonctionne le coaching en ligne\u00a0?', 'Vous recevez votre programme sur mesure directement sur votre espace. On fait un bilan chaque semaine pour adapter le programme et corriger vos mouvements en vidéo.'],
   ['Comment réserver une séance ou obtenir un devis\u00a0?', (
     <>
       Vous pouvez me contacter via le <Link to="/contact">formulaire de contact</Link> ou par email à{' '}

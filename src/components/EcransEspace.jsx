@@ -3,25 +3,22 @@ import telAccueil from '../assets/ecrans/accueil.webp'
 import telSeance from '../assets/ecrans/seance.webp'
 import telProgramme from '../assets/ecrans/programme.webp'
 import telProgression from '../assets/ecrans/progression.webp'
-import telMessages from '../assets/ecrans/messages.webp'
 import pcAccueil from '../assets/ecrans/pc-accueil.webp'
 import pcSeance from '../assets/ecrans/pc-seance.webp'
 import pcProgramme from '../assets/ecrans/pc-programme.webp'
 import pcProgression from '../assets/ecrans/pc-progression.webp'
-import pcMessages from '../assets/ecrans/pc-messages.webp'
 
 // Haut de l'accueil, ordinateur (15 novembre 2026, refait le même jour) : un panneau rangé dans la colonne de droite.
 // Changement de page : l'ancienne part vers le haut, la nouvelle arrive par le bas (demande de Thomas).
 // Au centre, la page ouverte en grand (fenêtre d'ordinateur) avec la même page sur téléphone posée sur son coin ;
 // à droite, les vignettes de toutes les pages, cliquables, dont celle en cours avec une barre de temps.
 // Captures faites avec une coachée fictive.
-// Dans l'ordre du parcours (accueil, programme, séance, progression, messages), avec les titres des pages de l'espace.
+// Dans l'ordre du parcours (accueil, programme, séance, progression ; « Messages » retiré par Marie le 16 novembre 2026), avec les titres des pages de l'espace.
 const ECRANS = [
   { pc: pcAccueil, tel: telAccueil, titre: 'Tableau de bord', sous: 'La prochaine séance, prête à ouvrir' },
   { pc: pcProgramme, tel: telProgramme, titre: 'Mon programme', sous: 'Semaine par semaine, préparé pour vous' },
   { pc: pcSeance, tel: telSeance, titre: 'Séance', sous: 'Charges, répétitions et consignes en photo' },
   { pc: pcProgression, tel: telProgression, titre: 'Ma progression', sous: 'Records, poids et régularité' },
-  { pc: pcMessages, tel: telMessages, titre: 'Messages', sous: 'Une question ? Je vous réponds ici' },
 ]
 const DUREE = 5000
 const N = ECRANS.length
@@ -67,8 +64,8 @@ export default function EcransEspace() {
       onFocus={() => setEnPause(true)} onBlur={() => setEnPause(false)}>
       <div className="ecrans__panneau">
         <div className="ecrans__tete">
-          <p className="ecrans__surtitre">Votre espace client</p>
-          <p className="ecrans__titre">Tout votre suivi, sur ordinateur et sur téléphone</p>
+          <p className="ecrans__surtitre">Votre espace</p>
+          <p className="ecrans__titre">Un suivi complet de votre programme et de vos entraînements sur ordinateur et mobile</p>
         </div>
 
         <div className="ecrans__corps">

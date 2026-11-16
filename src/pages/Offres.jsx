@@ -12,11 +12,12 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 // Les bulles du haut restent visibles et amènent à chaque rubrique. Individuel garde les boutons
 // deux cartes visibles à la fois (« À domicile » / « À la salle », remis le 14 novembre 2026) ; les autres offres ont leur photo à côté de leur carte.
 // Un clic sur une carte (ou « Voir le détail ») l'ouvre en grand. Les formules et prix viennent des fichiers des pages.
+// Ordre de Marie (16 novembre 2026) : Individuel, En ligne, Groupes, Entreprises ; seulement le nom de l'offre en titre (plus de sous-titre)
 const RUBRIQUES = [
-  { id: 'individuel', page: INDIVIDUEL, sous: 'À domicile ou à la salle' },
-  { id: 'groupes', page: GROUPES, sous: 'À domicile ou en extérieur' },
-  { id: 'entreprises', page: ENTREPRISES, sous: 'Dans vos locaux ou en extérieur' },
-  { id: 'en-ligne', page: EN_LIGNE, sous: 'À distance' },
+  { id: 'individuel', page: INDIVIDUEL },
+  { id: 'en-ligne', page: EN_LIGNE },
+  { id: 'groupes', page: GROUPES },
+  { id: 'entreprises', page: ENTREPRISES },
 ]
 
 export default function Offres() {
@@ -79,7 +80,7 @@ function Rubrique({ id, page, sous, fonce }) {
         <div className="offres-page__entete">
           <div>
             <h2 id={`${id}-titre`} className="titre titre--section">{page.titre}</h2>
-            <p className="offres-page__sous">{sous}</p>
+            {sous && <p className="offres-page__sous">{sous}</p>}
           </div>
           {onglets && (
             <div className="bascule" role="group" aria-label={`Choisir : ${onglets.map((o) => o.nom).join(' ou ')}`}>
