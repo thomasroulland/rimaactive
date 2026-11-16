@@ -503,8 +503,9 @@ Deux PDF de Marie (« Page d'accueil », « Page Mes offres »), appliqués tels
   site sur le port 4202), `scratchpad/outils/semer.mjs`, `scratchpad/glass/tour.cjs` (15 pages) et `tout.cjs` (23 clics rejoués).
 
 ## Couleurs du fond plus fortes, survol jaune dans la barre (16 novembre 2026, en ligne, accord écrit : « ok »)
-- **Fond** (`body::before`, `src/verre.css`), réglage final de Thomas après trois essais le même jour : jaune du haut .34, jaune du bas .19,
-  et à gauche un vrai orange `rgba(255, 98, 48, .24)` plus large (le rose pâle d'avant ne se voyait pas à côté du jaune).
+- **Fond** (`body::before`, `src/verre.css`), réglage final de Thomas après quatre essais le même jour : jaune du haut .30, jaune du bas .19,
+  et à gauche un rouge orangé `rgba(255, 84, 40, .31)` plus large et plus haut (le rose pâle d'avant ne se voyait pas à côté du jaune ;
+  les deux doivent se voir à égalité).
   Plus fort (.40 / .30) : « un peu fort ». Ne pas remonter sans demande.
 - **Barre de menu, ordinateur** : au survol, la pilule du lien passe en jaune, texte encre (simple changement de couleur en 0,15 s, sans
   glissement ni texte qui défile : ces animations ont été retirées le matin même à la demande de Thomas). La page en cours garde sa pilule blanche.
