@@ -185,15 +185,42 @@ export function ajouterAuBloc(programme, { s, se }, lettre, exercice) {
   return ajouterElement(p, { s, se, b }, exercice)
 }
 
-// Retire un élément ; un bloc devenu vide disparaît et les blocs restants sont renommés A, B, C…
+// Ajoute un bloc vide (le coach le remplira ensuite) ; renvoie le programme tel quel s'il n'y a plus de lettre libre
+export function ajouterBlocVide(programme, { s, se }) {
+  const p = structuredClone(programme)
+  const seance = p.semaines[s].seances[se]
+  seance.blocs = seance.blocs ?? []
+  const lettre = LETTRES[seance.blocs.length]
+  if (!lettre) return programme
+  seance.blocs.push({ id: nouvelId(), lettre, format: 'series', duree: '', repos: '', elements: [] })
+  return p
+}
+
+// Retire un élément ; le bloc qui devient vide à cause de ce retrait disparaît et les blocs restants sont renommés A, B, C…
+// (un bloc créé vide par le coach, lui, reste en place)
 export function retirerElement(programme, { s, se }, elementId) {
   const p = structuredClone(programme)
   const seance = p.semaines[s].seances[se]
   seance.blocs = (seance.blocs ?? [])
-    .map((b) => ({ ...b, elements: (b.elements ?? []).filter((e) => e.id !== elementId) }))
-    .filter((b) => b.elements.length > 0)
-    .map((b, i) => ({ ...b, lettre: LETTRES[i] ?? b.lettre }))
+    .map((b) => ({ ...b, avait: (b.elements ?? []).some((e) => e.id === elementId), elements: (b.elements ?? []).filter((e) => e.id !== elementId) }))
+    .filter((b) => !(b.avait && b.elements.length === 0))
+    .map(({ avait, ...b }, i) => ({ ...b, lettre: LETTRES[i] ?? b.lettre }))
   return p
+}
+
+// Version à écrire : aucun bloc vide n'est enregistré (le coaché ne verrait qu'un bloc sans exercice), lettres A, B, C… recalculées
+export function sansBlocsVides(programme) {
+  let change = false
+  const semaines = (programme.semaines ?? []).map((w) => ({
+    ...w,
+    seances: (w.seances ?? []).map((x) => {
+      const blocs = x.blocs ?? []
+      if (!blocs.some((b) => (b.elements ?? []).length === 0)) return x
+      change = true
+      return { ...x, blocs: blocs.filter((b) => (b.elements ?? []).length > 0).map((b, i) => ({ ...b, lettre: LETTRES[i] ?? b.lettre })) }
+    }),
+  }))
+  return change ? { ...programme, semaines } : programme
 }
 
 // Avant d'enregistrer : chaque séance déjà faite reprend la version du serveur (rien de ce qui a été

@@ -38,7 +38,7 @@ const IDEES_NOMS = ['Échauffement', 'Force', 'Cardio', 'Gainage', 'Mobilité', 
 // Éditeur d'une séance (maquette B de Thomas, 15 novembre 2026) : la banque d'exercices à gauche, la séance à droite,
 // un exercice par ligne (séries, reps, charge, repos), le reste dans « ⋯ », des blocs que l'on peut renommer.
 // `verrou` : séance faite, tout est en lecture seule.
-export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, rpeSemaine, majSeance, majBloc, majElement, retirer, ajouter }) {
+export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, rpeSemaine, majSeance, majBloc, majElement, retirer, ajouter, ajouterBloc }) {
   const ids = (cle) => `se-${seance.id}-${cle}`
   const blocs = seance.blocs ?? []
   const lettres = blocs.map((b) => b.lettre)
@@ -156,7 +156,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
               ))}
               {!verrou && prochaine && (
                 <div className={`es2-nouveau${survol === prochaine ? ' est-depot' : ''}${cibleOk === prochaine ? ' est-cible' : ''}`} {...pourDeposer(prochaine)}>
-                  <button type="button" onClick={() => versLaBanque(prochaine)}>＋ Nouveau bloc {prochaine}</button>
+                  <button type="button" onClick={() => { ajouterBloc(); versLaBanque(prochaine) }}>＋ Nouveau bloc {prochaine}</button>
                   <span>{survol === prochaine ? 'Déposez l’exercice ici pour créer ce bloc' : 'ou glissez un exercice ici'}</span>
                 </div>
               )}
@@ -232,21 +232,28 @@ function LigneExo({ element: el, code, series, verrou, rm, rpeSemaine, maj, reti
         <button type="button" className="es2-plus" aria-expanded={plus} aria-label={`Plus de réglages pour ${el.nom}`} onClick={() => setPlus((p) => !p)}><IconePoints /></button>
       </div>
       {plus && (
-        <div className="es2-ligne__plus">
-          <div className="espace-params">
-            <div className="champ-groupe espace-param">
-              <label htmlFor={id('mesure')}>Se mesure en</label>
-              <select id={id('mesure')} className="champ" value={duree ? 'duree' : 'reps'} onChange={(e) => maj('mesure', e.target.value === 'duree' ? 'duree' : '')}>
-                <option value="reps">Répétitions</option>
-                <option value="duree">Durée</option>
-              </select>
+        <div className="es2-opt">
+          <div className="es2-opt__grille">
+            <div className="es2-opt__champ">
+              <span id={id('mesure')}>Se mesure en</span>
+              <div className="es2-opt__bascule" role="group" aria-labelledby={id('mesure')}>
+                <button type="button" aria-pressed={!duree} onClick={() => maj('mesure', '')}>Répétitions</button>
+                <button type="button" aria-pressed={duree} onClick={() => maj('mesure', 'duree')}>Durée</button>
+              </div>
             </div>
-            <Champ id={id('pct')} label="% 1RM" mode="decimal" valeur={el.pct} aide={aideCharge} changer={(v) => maj('pct', v)} />
-            {series && <Champ id={id('rpe')} label="RPE cible" mode="decimal" valeur={el.rpe} indice={rpeSemaine || undefined} aide={rpeSemaine && String(el.rpe ?? '').trim() === '' ? `RPE de la semaine : ${rpeSemaine}` : undefined} changer={(v) => maj('rpe', v)} />}
-            {series && <Champ id={id('tempo')} label="Tempo" valeur={el.tempo} changer={(v) => maj('tempo', v)} />}
-            <Champ id={id('commentaire')} label="Commentaire pour cette séance" large valeur={el.commentaire} changer={(v) => maj('commentaire', v)} />
+            <label className="es2-opt__champ" htmlFor={id('pct')}><span>% du 1RM</span>
+              <input id={id('pct')} autoComplete="off" inputMode="decimal" value={el.pct ?? ''} onChange={(e) => maj('pct', e.target.value)} /></label>
+            {series && <label className="es2-opt__champ" htmlFor={id('rpe')}><span>RPE cible</span>
+              <input id={id('rpe')} autoComplete="off" inputMode="decimal" value={el.rpe ?? ''} placeholder={rpeSemaine ? String(rpeSemaine) : undefined} onChange={(e) => maj('rpe', e.target.value)} /></label>}
+            {series && <label className="es2-opt__champ" htmlFor={id('tempo')}><span>Tempo</span>
+              <input id={id('tempo')} autoComplete="off" placeholder="3-1-1" value={el.tempo ?? ''} onChange={(e) => maj('tempo', e.target.value)} /></label>}
           </div>
-          {!verrou && <button type="button" className="espace-lien es2-retirer" onClick={retirer}>Retirer {el.nom} de la séance</button>}
+          {(aideCharge || (series && rpeSemaine && String(el.rpe ?? '').trim() === '')) && (
+            <p className="es2-opt__aide">{[aideCharge, series && rpeSemaine && String(el.rpe ?? '').trim() === '' ? `RPE de la semaine : ${rpeSemaine}` : null].filter(Boolean).join(' · ')}</p>
+          )}
+          <label className="es2-opt__champ es2-opt__champ--large" htmlFor={id('commentaire')}><span>Commentaire pour cette séance</span>
+            <input id={id('commentaire')} autoComplete="off" value={el.commentaire ?? ''} onChange={(e) => maj('commentaire', e.target.value)} /></label>
+          {!verrou && <button type="button" className="es2-opt__retirer" onClick={retirer}>Retirer {el.nom} de la séance</button>}
         </div>
       )}
     </li>

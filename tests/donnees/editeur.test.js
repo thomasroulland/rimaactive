@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nouveauProgramme, semaineVide, ajouterAuBloc, retirerElement, nouvelleSemaine, nouvelleSeance } from '../../src/espace/donnees/programme.js'
+import { nouveauProgramme, semaineVide, ajouterAuBloc, ajouterBlocVide, sansBlocsVides, retirerElement, nouvelleSemaine, nouvelleSeance } from '../../src/espace/donnees/programme.js'
 import { lundiDe, dateLongue } from '../../src/espace/donnees/calculs.js'
 
 const prog = () => nouveauProgramme({ client: 'u', nom: 'n', debut: '2026-11-16', semaines: 2, parSemaine: 2 })
@@ -37,6 +37,29 @@ describe('ajouterAuBloc / retirerElement', () => {
     const r = retirerElement(p, { s: 0, se: 0 }, id)
     expect(JSON.stringify(p)).toBe(avant)
     expect(r.semaines[0].seances[0].blocs.map((b) => [b.lettre, b.elements[0].nom])).toEqual([['A', 'Pompes']])
+  })
+  it('un bloc vide créé par le coach reste quand on retire un exercice d’un autre bloc', () => {
+    let p = ajouterAuBloc(prog(), { s: 0, se: 0 }, 'A', exo('a', 'Squat'))
+    p = ajouterAuBloc(p, { s: 0, se: 0 }, 'A', exo('c', 'Fentes'))
+    p = ajouterBlocVide(p, { s: 0, se: 0 })
+    const id = p.semaines[0].seances[0].blocs[0].elements[0].id
+    const r = retirerElement(p, { s: 0, se: 0 }, id)
+    expect(r.semaines[0].seances[0].blocs.map((b) => [b.lettre, b.elements.length])).toEqual([['A', 1], ['B', 0]])
+  })
+  it('ajouterBlocVide prend la lettre suivante', () => {
+    let p = ajouterAuBloc(prog(), { s: 0, se: 0 }, 'A', exo('a', 'Squat'))
+    p = ajouterBlocVide(p, { s: 0, se: 0 })
+    expect(p.semaines[0].seances[0].blocs.map((b) => b.lettre)).toEqual(['A', 'B'])
+  })
+  it('sansBlocsVides retire les blocs vides et renomme, sans toucher au reste', () => {
+    let p = ajouterAuBloc(prog(), { s: 0, se: 0 }, 'A', exo('a', 'Squat'))
+    p = ajouterBlocVide(p, { s: 0, se: 0 })
+    p = ajouterAuBloc(p, { s: 0, se: 0 }, 'C', exo('b', 'Pompes'))
+    const r = sansBlocsVides(p)
+    expect(r.semaines[0].seances[0].blocs.map((b) => [b.lettre, b.elements[0].nom])).toEqual([['A', 'Squat'], ['B', 'Pompes']])
+    expect(p.semaines[0].seances[0].blocs).toHaveLength(3)
+    const net = ajouterAuBloc(prog(), { s: 0, se: 0 }, 'A', exo('a', 'Squat'))
+    expect(sansBlocsVides(net)).toBe(net)
   })
   it('nouvelle séance du type demandé', () => {
     expect(nouvelleSeance('course')).toMatchObject({ type: 'course', blocs: [] })

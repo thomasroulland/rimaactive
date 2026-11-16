@@ -67,8 +67,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter, cible, chan
         <div className="champ-groupe espace-choix__bloc">
           <label htmlFor="choix-bloc">Dans le bloc</label>
           <select id="choix-bloc" className="champ" value={blocChoisi} onChange={(e) => setBloc(e.target.value)}>
-            {lettres.map((l) => <option key={l} value={l}>{l}</option>)}
-            {prochaine && <option value={prochaine}>{prochaine} (nouveau bloc)</option>}
+            {(lettres.length ? lettres : ['A']).map((l) => <option key={l} value={l}>Bloc {l}</option>)}
           </select>
         </div>
       </div>

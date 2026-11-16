@@ -6,7 +6,7 @@ import {
   ecouterModele, ecouterModeles, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
-  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
+  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, sansBlocsVides, retirerElement,
   garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines, semaineEnCours,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
@@ -214,7 +214,7 @@ export default function EditeurProgramme() {
     setEnvoi(true); setErreur(''); if (!silencieux) setMessage('')
     try {
       if (modele) {
-        await enregistrerModele(rafraichirExercices(prog, exercices))
+        await enregistrerModele(sansBlocsVides(rafraichirExercices(prog, exercices)))
         if (version.current === v) setModifie(false)
         setMessage('Modèle enregistré.')
         setEnvoi(false)
@@ -223,7 +223,7 @@ export default function EditeurProgramme() {
       const serveur = programmes?.find((p) => p.id === prog.id)
       // les séances faites gardent leur version du serveur, mais toutes reprennent les photos / consignes actuelles de la banque
       const aEcrire = rafraichirExercices(garderSeancesFaites(prog, serveur, verrous), exercices)
-      await enregistrerProgramme(aEcrire)
+      await enregistrerProgramme(sansBlocsVides(aEcrire))
       if (aEcrire !== prog) setProg((p) => rafraichirExercices(garderSeancesFaites(p, serveur, verrous), exercices))
       if (publier) {
         await publierProgramme(prog.id)
@@ -582,6 +582,7 @@ export default function EditeurProgramme() {
               <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
                 majSeance={majSeance} majBloc={majBloc} majElement={majElement}
                 retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
+                ajouterBloc={() => changer((p) => ajouterBlocVide(p, { s: semIdx, se: seIdx }))}
                 ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
                   )
               })()}
