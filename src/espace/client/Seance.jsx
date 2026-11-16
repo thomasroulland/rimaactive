@@ -10,7 +10,7 @@ import Picto from '../../components/Picto.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
 import Consignes from './Consignes.jsx'
 import FinDeSeance from './FinDeSeance.jsx'
-import { BandeauBloc, BoutonBloc, ListeBloc, UnExercice, useMobile } from './SeanceGuidee.jsx'
+import { BandeauBloc, BlocOrdinateur, BoutonBloc, UnExercice, useMobile } from './SeanceGuidee.jsx'
 
 const DELAI = 600 // ms entre la dernière frappe et l'enregistrement
 
@@ -211,7 +211,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const enSeries = bloc && (bloc.format ?? 'series') === 'series'
     const unExercice = Boolean(bloc) && mobile && !verrou && enSeries
     return (
-      <section className="ec-page ec-seance ec-seance--v2">
+      <section className={`ec-page ec-seance ec-seance--v2${!mobile ? ' ec-seance--large' : ''}`}>
         {!unExercice && retour}
         {refus && <p className="ec-erreur" role="alert">{refus}</p>}
         <div className="ec-s2">
@@ -225,7 +225,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                 <>
                   <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />
                   {enSeries
-                    ? <ListeBloc bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={verrou} voirConsignes={setFiche} />
+                    ? <BlocOrdinateur key={bloc.id} bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={verrou} voirConsignes={setFiche} />
                     : <BlocSeries key={bloc.id} bloc={bloc} saisie={{ lignes, notes, blocs }} actions={actions} lecture={verrou} voirConsignes={setFiche} sansTete />}
                   {!verrou && <BoutonBloc etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]} />}
                 </>

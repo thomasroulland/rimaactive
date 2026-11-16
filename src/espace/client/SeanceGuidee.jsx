@@ -63,7 +63,7 @@ export function BandeauBloc({ surtitre, bloc, prog, etape, blocs, aller, finir, 
 }
 
 // Un exercice : photo, nom, prévu, puis une ligne par série (rond à toucher pour cocher, valeurs modifiables)
-function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif }) {
+function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, choisi = false, choisir }) {
   const [detail, setDetail] = useState(false)
   const duree = enDuree(el)
   const cle = duree ? 'duree' : 'reps'
@@ -71,7 +71,7 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif }
   const enCours = lecture || !actif ? -1 : ls.findIndex((l) => !l.fait) // une seule série encadrée à la fois : la première pas faite du bloc
   const base = `ex-${el.id}`
   return (
-    <li className="ec-s2-carte" aria-labelledby={`${base}-nom`}>
+    <li className={`ec-s2-carte${choisi ? ' est-choisi' : ''}`} aria-labelledby={`${base}-nom`} onFocusCapture={choisir} onClick={choisir}>
       <div className="ec-s2-carte__tete">
         <button type="button" className="ec-s2-vignette" onClick={voirConsignes} aria-label={`Voir les photos et consignes : ${el.nom}`}>
           {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-vignette__img" /> : <Image />}
@@ -114,15 +114,61 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif }
 }
 
 // Tout le bloc d'un coup (ordinateur)
-export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes }) {
+export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes, choisi = null, choisir }) {
   const els = bloc.elements ?? []
   const premier = els.findIndex((e) => lignes(e).some((l) => !l.fait))
   return (
     <ol className="ec-s2-liste">
       {els.map((el, i) => (
-        <CarteExo key={el.id} el={el} code={`${bloc.lettre}${i + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture} actif={i === premier} voirConsignes={() => voirConsignes(el)} />
+        <CarteExo key={el.id} el={el} code={`${bloc.lettre}${i + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture} actif={i === premier} voirConsignes={() => voirConsignes(el)}
+          choisi={choisi === el.id} choisir={choisir ? () => choisir(el.id) : undefined} />
       ))}
     </ol>
+  )
+}
+
+// Ordinateur (refait le 16 novembre 2026) : à gauche, la grande photo de l'exercice choisi (photos, muscles, consignes) ;
+// à droite, les exercices du bloc. L'exercice choisi suit la série en cours ; un clic sur un exercice l'affiche à gauche.
+export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirConsignes }) {
+  const els = bloc.elements ?? []
+  const enCours = els.find((e) => lignes(e).some((l) => !l.fait)) ?? els[0]
+  const [choisiId, setChoisiId] = useState(null)
+  const choisi = els.find((e) => e.id === choisiId) ?? enCours
+  useEffect(() => { setChoisiId(null) }, [bloc.id])
+  const i = els.indexOf(choisi)
+  return (
+    <div className="ec-s3">
+      {choisi && <GrandePhoto key={choisi.id} el={choisi} code={`${bloc.lettre}${i + 1}`} voirConsignes={() => voirConsignes(choisi)} />}
+      <ListeBloc bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={lecture} voirConsignes={voirConsignes} choisi={choisi?.id} choisir={setChoisiId} />
+    </div>
+  )
+}
+
+function GrandePhoto({ el, code, voirConsignes }) {
+  const photos = el.photos ?? []
+  const [n, setN] = useState(0)
+  const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
+  return (
+    <aside className="ec-s3-media" aria-label={`Exercice ${code} : ${el.nom}`}>
+      <div className="ec-s3-photo">
+        {photos.length > 0
+          ? <PhotoStockee key={photos[n]} chemin={photos[n]} alt={`${el.nom}${photos.length > 1 ? `, photo ${n + 1} sur ${photos.length}` : ''}`} classe="ec-s3-photo__img" />
+          : <div className="ec-s3-photo__vide"><Image /><span>Pas encore de photo pour cet exercice</span></div>}
+        {photos.length > 1 && (
+          <div className="ec-s3-points" role="group" aria-label="Photos de l’exercice">
+            {photos.map((p, k) => <button key={p} type="button" aria-pressed={k === n} aria-label={`Photo ${k + 1}`} onClick={() => setN(k)}><span /></button>)}
+          </div>
+        )}
+      </div>
+      <div className="ec-s3-infos">
+        <p className="ec-s3-code">{code}</p>
+        <h2 className="ec-s3-nom">{el.nom}</h2>
+        {prevu && <p className="ec-s3-prevu">Prévu : <b>{prevu}</b></p>}
+        {el.muscles?.length > 0 && <p className="ec-s3-muscles">{el.muscles.join(' · ')}</p>}
+        {el.consignes && <p className="ec-s3-consignes">{el.consignes}</p>}
+        {(photos.length > 0 || el.consignes) && <button type="button" className="ec-s3-agrandir" onClick={voirConsignes}>Agrandir les photos et consignes</button>}
+      </div>
+    </aside>
   )
 }
 
