@@ -1945,3 +1945,16 @@ button.cal3__jour:focus-visible { outline: 2px solid var(--encre); outline-offse
   .cal3__jours .cal3__evt { width: 8px; height: 8px; padding: 0; border-radius: 50%; font-size: 0; }
 }
 @media (max-width: 980px) { .ens-cote { order: 0; } } /* téléphone : le calendrier d'abord, puis le résumé */
+
+/* Calendrier : jours plus lisibles (cartes blanches en relief sur un fond de semaine plus soutenu) */
+.cal3__semaine { background: #ebe7df; border-color: #e2ddd3; }
+.cal3__semaine.est-courante { background: #fff3ee; border-color: var(--vermillon); }
+.cal3__jour, .cal3__semaine.est-courante .cal3__jour { background: #fff; border: 1px solid #ddd8ce; box-shadow: 0 1px 0 rgba(22, 21, 20, .06), 0 3px 8px rgba(22, 21, 20, .06); }
+.cal3__jour.est-passe:not(.a-des-evts) { opacity: 1; background: #f6f4ef; box-shadow: none; }
+.cal3__jour.est-passe:not(.a-des-evts) .cal3__jour-num { color: #9a948a; }
+.cal3__jour-nom { color: #6b665f; }
+.cal3__jour-num { color: var(--encre); }
+.cal3__jours li:nth-child(n+6) .cal3__jour:not(.est-passe) { background: #fbfaf7; }
+button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgba(22, 21, 20, .12); }
+.cal3__jours .cal3__jour.est-aujourdhui.est-aujourdhui { border-color: var(--vermillon); box-shadow: 0 0 0 1px var(--vermillon), 0 4px 12px rgba(255, 74, 28, .18); }
+.cal3__jours .cal3__jour.est-choisi.est-choisi { border-color: var(--encre); box-shadow: 0 0 0 1px var(--encre), 0 6px 16px rgba(22, 21, 20, .14); }
