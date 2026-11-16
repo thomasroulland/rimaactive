@@ -477,3 +477,16 @@ Les deux sections précédentes (barre d'un bord à l'autre, `--ecran: 100svh`, 
 - **M'écrire** : « Basée à Houdan… » sur une ligne à partir de 1280 px (taille calée sur la largeur de la colonne) ; en dessous, deux
   lignes équilibrées. Une offre qui n'a qu'une formule (Groupes, Entreprises, En ligne) la choisit d'office, y compris avec `?offre=`.
 - **Vérifié** : `npm test` (161), `npm run build`, mesures à 1280, 1440 et 1905 px. Téléphone non revérifié (retouches d'ordinateur).
+
+## Textes de Marie, accueil et Mes offres (16 novembre 2026, en ligne, accord écrit : « ok »)
+Deux PDF de Marie (« Page d'accueil », « Page Mes offres »), appliqués tels quels.
+- **Accueil** : « Votre espace », titre « Un suivi complet de votre programme et de vos entraînements sur ordinateur et mobile », tuile
+  « Messages » retirée des écrans (`EcransEspace.jsx`) ; « Pourquoi ça fonctionne ? » et nouveaux principes ; Mes services dans l'ordre
+  Individuel, En ligne, Groupes, Entreprises, « Découvrir », surtitre vermillon au-dessus du titre ; questions (réponse du déroulé,
+  « que vous », nouvelle question sur le coaching en ligne) ; « questions » en vermillon sans trait ; nouveaux textes de « Moi c'est Marie ».
+- **Mes offres** : même ordre, plus de sous-titre. Individuel : séance à l'unité 65 € (domicile) / 60 € (salle), « Suivi hebdomadaire »
+  50 € / 45 € la séance (facturation mensuelle), bouton « À domicile » / « En salle ». En ligne : minimum 2 mois, 45 € par mois.
+  Groupes : 15 € à 30 € par personne. Entreprises : fond noir, sur devis. Les puces de « Compris » sont le pictogramme de l'offre
+  (`puce` : kettlebell, `barbell`, `haltere` dessiné dans `Picto.jsx`) ; `pointsCourts` : intitulé seul sur la carte, explication dans le détail.
+- **À confirmer par Marie** : la mention du crédit d'impôt a disparu (absente du PDF) ; les textes « Pour qui ? » du suivi hebdomadaire
+  et d'En ligne sont de Claude. Le logo qui bougeait vers « M'écrire » n'est plus reproductible (place réservée à la barre de défilement).
