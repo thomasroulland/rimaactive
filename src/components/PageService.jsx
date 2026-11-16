@@ -72,9 +72,11 @@ export default function PageService({ page }) {
 }
 
 // Une carte de formule (pages de formules et page « Mes offres ») ; un clic l'ouvre en grand
-export function CarteOffre({ f, grisee, onOuvrir, contexte }) {
+// `direct` (page « Mes offres », 16 novembre 2026, demande de Marie) : plus de « Voir le détail » ni de fenêtre de détail ;
+// le bouton de la carte est « Choisir cette formule », qui mène au formulaire de contact avec l'offre et la formule déjà cochées.
+export function CarteOffre({ f, grisee, onOuvrir, contexte, direct = false }) {
   return (
-    <li onClick={onOuvrir} className={`offre offre--cliquable ${f.sombre ? 'offre--sombre' : ''} ${grisee ? 'offre--grisee' : ''}`} aria-disabled={grisee ? true : undefined}>
+    <li onClick={direct ? undefined : onOuvrir} className={`offre ${direct ? '' : 'offre--cliquable'} ${f.sombre ? 'offre--sombre' : ''} ${grisee ? 'offre--grisee' : ''}`} aria-disabled={grisee ? true : undefined}>
       {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
       <div className="offre__tete">
         <p className="surtitre">{f.surtitre}</p>
@@ -110,7 +112,12 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte }) {
       )}
       {/* le bouton de la carte ouvre le détail ; « Choisir » est dans le détail (Marie, 10 novembre 2026) */}
       {/* page « Mes offres » (maquette du 10 novembre 2026) : « Choisir » directement sur la carte, le détail devient un lien */}
-      {contexte ? (
+      {direct ? (
+        <Link to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${f.mode ?? contexte}`)}`}
+          className={`bouton ${f.sombre ? 'bouton--principal' : 'bouton--encre'} offre__bouton`}>
+          {f.bouton ?? 'Choisir cette formule'} <FlecheDiagonale />
+        </Link>
+      ) : contexte ? (
         <div className="offre__actions">
           <Link
             to={`/contact?formule=${encodeURIComponent(`${f.nom} · ${f.mode ?? contexte}`)}`}

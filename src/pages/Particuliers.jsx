@@ -13,8 +13,8 @@ export const PAGE = {
   // page.cartes garde toutes les formules (le formulaire de contact s'en sert)
   onglets: [
     { nom: 'À domicile', noms: ['Séance à l’unité à domicile', 'Suivi hebdomadaire à domicile'] },
-    // en salle, pas de déplacement : la ligne « Déplacements compris » ne s'affiche pas
-    { nom: 'En salle', noms: ['Séance à l’unité en salle', 'Suivi hebdomadaire en salle'], liste: ['Matériel fourni : tapis, kettlebells, slam balls, etc.'] },
+    // en salle : seulement « Déplacements compris… » sous les cartes (demande de Marie, 16 novembre 2026)
+    { nom: 'En salle', noms: ['Séance à l’unité en salle', 'Suivi hebdomadaire en salle'], liste: ['Déplacements compris jusqu’à 20\u00a0km autour de Houdan'] },
   ],
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   // formules, prix et « Compris » de Marie (PDF du 16 novembre 2026) ; puces : kettlebell à domicile, barre en salle
@@ -46,7 +46,7 @@ export const PAGE = {
       picto: 'kettlebell',
       puce: 'kettlebell',
       surtitre: 'À domicile',
-      infos: '60\u00a0min / séance • Minimum 2\u00a0mois',
+      infos: 'Minimum 2\u00a0mois',
       tarifs: [{ montant: '50\u00a0€', apres: 'la séance', detail: '(facturation mensuelle)' }],
       titrePoints: 'Compris',
       points: ['1 séance / semaine en présentiel', 'Programme sur mesure', 'Suivi sur votre espace en ligne'],
@@ -79,7 +79,7 @@ export const PAGE = {
       picto: 'barbell',
       puce: 'barbell',
       surtitre: 'En salle',
-      infos: '60\u00a0min / séance • Minimum 2\u00a0mois',
+      infos: 'Minimum 2\u00a0mois',
       tarifs: [{ montant: '45\u00a0€', apres: 'la séance', detail: '(facturation mensuelle)' }],
       titrePoints: 'Compris',
       points: ['1 séance / semaine en présentiel', 'Programme sur mesure', 'Suivi sur votre espace en ligne'],

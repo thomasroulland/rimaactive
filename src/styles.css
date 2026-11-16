@@ -2166,3 +2166,14 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
     .offres--2 > .offre > .offre__tarifs { align-self: start; }
   }
 }
+
+/* Mes offres, Groupes : la carte à gauche, la photo à droite (ordinateur et tablette). Sur téléphone, la photo reste au-dessus. */
+@media (min-width: 900px) {
+  .offres-page__corps--inverse .offres-page__photo { order: 2; }
+  .offres-page__corps--inverse { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 900px) and (max-width: 1250px) { .offres-page__corps--inverse { grid-template-columns: 6fr 4fr; } }
+@media (min-width: 600px) and (max-width: 899px) {
+  .offres-page__corps--inverse { grid-template-columns: 3fr 2fr; }
+  .offres-page__corps--inverse .offres-page__photo { order: 2; }
+}

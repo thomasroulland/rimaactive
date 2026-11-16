@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { CarteOffre, DetailOffre } from '../components/PageService.jsx'
+import { CarteOffre } from '../components/PageService.jsx'
 import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 import { PAGE as INDIVIDUEL } from './Particuliers.jsx'
@@ -11,12 +11,14 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 // Page unique « Mes offres » (Marie, 10 novembre 2026) : une rubrique par offre, l'une sous l'autre.
 // Les bulles du haut restent visibles et amènent à chaque rubrique. Individuel garde les boutons
 // deux cartes visibles à la fois (« À domicile » / « À la salle », remis le 14 novembre 2026) ; les autres offres ont leur photo à côté de leur carte.
-// Un clic sur une carte (ou « Voir le détail ») l'ouvre en grand. Les formules et prix viennent des fichiers des pages.
+// Le bouton d'une carte, « Choisir cette formule », mène au formulaire de contact (plus de fenêtre de détail depuis le 16 novembre 2026).
+// Les formules et prix viennent des fichiers des pages.
 // Ordre de Marie (16 novembre 2026) : Individuel, En ligne, Groupes, Entreprises ; seulement le nom de l'offre en titre (plus de sous-titre)
 const RUBRIQUES = [
   { id: 'individuel', page: INDIVIDUEL },
   { id: 'en-ligne', page: EN_LIGNE },
-  { id: 'groupes', page: GROUPES },
+  // Groupes : la carte à gauche et la photo à droite, pour rompre la répétition (essai demandé par Marie, 16 novembre 2026)
+  { id: 'groupes', page: GROUPES, inverse: true },
   { id: 'entreprises', page: ENTREPRISES },
 ]
 
@@ -67,10 +69,8 @@ export default function Offres() {
   )
 }
 
-function Rubrique({ id, page, sous, fonce }) {
+function Rubrique({ id, page, sous, fonce, inverse }) {
   const [actif, setActif] = useState(0)
-  const [ouverte, setOuverte] = useState(null)
-  const refDetail = useRef(null)
   const onglets = page.onglets
   const cartes = onglets ? page.cartes.filter((c) => onglets[actif].noms.includes(c.nom)) : page.cartes
   const liste = onglets?.[actif].liste ?? page.liste ?? []
@@ -91,10 +91,10 @@ function Rubrique({ id, page, sous, fonce }) {
           )}
         </div>
         {/* la photo seulement à côté d'une carte seule ; Individuel (deux cartes) les garde en pleine largeur */}
-        <div className={`offres-page__corps ${cartes.length > 1 ? '' : 'offres-page__corps--photo'}`}>
+        <div className={`offres-page__corps ${cartes.length > 1 ? '' : 'offres-page__corps--photo'} ${inverse ? 'offres-page__corps--inverse' : ''}`}>
           {cartes.length === 1 && <img className="offres-page__photo" src={page.image} alt="" style={{ objectPosition: page.cadrage }} />}
           <ul className={`offres offres--${cartes.length === 1 ? '1' : '2'}`}>
-            {cartes.map((f) => <CarteOffre key={f.nom} f={f} onOuvrir={() => setOuverte(f)} />)}
+            {cartes.map((f) => <CarteOffre key={f.nom} f={f} contexte={page.titre} direct />)}
           </ul>
         </div>
         {liste.length > 0 && (
@@ -103,7 +103,6 @@ function Rubrique({ id, page, sous, fonce }) {
           </ul>
         )}
       </div>
-      <DetailOffre refDetail={refDetail} ouverte={ouverte} onClose={() => setOuverte(null)} contexte={page.titre} liste={liste} />
     </section>
   )
 }
