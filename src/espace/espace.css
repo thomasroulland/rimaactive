@@ -1823,8 +1823,8 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 /* Banque d'exercices : tous les filtres visibles (ils passent à la ligne), liste du bloc lisible */
 .es2__banque .filtres-coaches { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding-bottom: 2px; scroll-snap-type: x proximity; overscroll-behavior-x: contain; }
 .es2__banque .filtres-coaches::-webkit-scrollbar { display: none; }
-.rangee-defilante { min-width: 0; display: grid; gap: 6px; }
-.rangee-defilante__piste { position: relative; height: 8px; border-radius: 999px; background: #e7e3da; cursor: pointer; }
+.rangee-defilante { min-width: 0; display: grid; gap: 4px; }
+.rangee-defilante__piste { position: relative; height: 4px; border-radius: 999px; background: #e7e3da; cursor: pointer; }
 .rangee-defilante__poignee { position: absolute; top: 0; bottom: 0; border-radius: 999px; background: #8f897d; cursor: grab; touch-action: none; transition: background-color .15s ease; }
 .rangee-defilante__poignee:hover, .rangee-defilante__poignee:active { background: var(--encre); }
 .es2__banque .filtres-coaches .filtre-coaches { flex: none; scroll-snap-align: start; }
