@@ -1840,3 +1840,5 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 .es2-bloc__confirme button { min-height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: #f0ede6; font: 700 14px/1 var(--font-sans); color: var(--encre); cursor: pointer; }
 .es2-bloc__confirme .es2-bloc__oui { background: #c2370f; color: #fff; }
 @media (max-width: 700px) { .es2-bloc__confirme > span { display: none; } }
+.es2-bloc__tete { justify-content: flex-start; }
+.es2-bloc__tete .es2-bloc__format { margin-left: auto; }
