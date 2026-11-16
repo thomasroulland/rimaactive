@@ -184,17 +184,22 @@ function EnteteBloc({ bloc, verrou, renommer, idTitre }) {
   if (edition) {
     return (
       <div className="es2-nom es2-nom--edition">
-        <span className="es2-lettre" aria-hidden="true">{bloc.lettre}</span>
-        <div className="es2-nom__champ">
+        <div className="es2-nom__ligne">
+          <span className="es2-lettre" aria-hidden="true">{bloc.lettre}</span>
           <label className="sr-only" htmlFor={`${idTitre}-nom`}>Nom du bloc {bloc.lettre}</label>
-          <input id={`${idTitre}-nom`} className="champ" autoFocus maxLength={NOM_BLOC_MAX} autoComplete="off" value={brouillon} placeholder={`Bloc ${bloc.lettre}`}
+          <input id={`${idTitre}-nom`} className="es2-nom__saisie" autoFocus maxLength={NOM_BLOC_MAX} autoComplete="off" value={brouillon} placeholder={`Bloc ${bloc.lettre}`}
+            title="Entrée pour valider, Échap pour annuler"
             onChange={(e) => setBrouillon(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); valider() } if (e.key === 'Escape') { e.preventDefault(); setEdition(false) } }} />
-          <button type="button" className="bouton bouton--principal bouton--compact" onClick={() => valider()}>OK</button>
-          <span className="es2-nom__aide">Entrée pour valider · Échap pour annuler</span>
+          <button type="button" className="es2-nom__rond es2-nom__rond--ok" aria-label="Valider le nom" title="Valider" onClick={() => valider()}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+          </button>
+          <button type="button" className="es2-nom__rond" aria-label="Annuler" title="Annuler" onClick={() => setEdition(false)}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
         </div>
         <ul className="es2-idees" aria-label="Idées de noms">
-          {IDEES_NOMS.map((n) => <li key={n}><button type="button" className="filtre-coaches" onClick={() => valider(n)}>{n}</button></li>)}
+          {IDEES_NOMS.map((n) => <li key={n}><button type="button" onClick={() => valider(n)}>{n}</button></li>)}
         </ul>
       </div>
     )

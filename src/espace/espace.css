@@ -1850,3 +1850,25 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
   .es2-bloc__tete .es2-bloc__format { order: 3; flex: 1 0 100%; margin-left: 0; }
   .es2-bloc__format .champ { width: 100%; max-width: none; min-height: 42px; height: 42px; }
 }
+
+/* Renommer un bloc : le titre devient un champ à sa place, deux petits boutons ronds, des idées discrètes en dessous */
+.es2-nom--edition { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; flex: 1 1 360px; min-width: 0; }
+.es2-nom__ligne { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.es2-nom__saisie { flex: 1 1 auto; min-width: 0; height: 44px; padding: 0 14px; border: 1px solid var(--filet); border-radius: 12px; background: #fff; font: 800 18px/1 var(--font-sans); letter-spacing: -.02em; color: var(--encre); }
+.es2-nom__saisie::placeholder { color: #a8a298; }
+.es2-nom__saisie:focus { outline: none; border-color: var(--encre); box-shadow: 0 0 0 3px rgba(242, 194, 48, .5); }
+.es2-nom__rond { flex: none; width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 1px solid var(--filet); border-radius: 50%; background: #fff; color: var(--gris-chaud); cursor: pointer; transition: background-color .15s ease, color .15s ease, transform .15s ease; }
+.es2-nom__rond:hover { color: var(--encre); background: #f4f3ef; }
+.es2-nom__rond--ok { background: var(--jaune); border-color: var(--jaune); color: var(--encre); }
+.es2-nom__rond--ok:hover { background: #e9b81f; }
+.es2-nom__rond:active { transform: scale(.92); }
+.es2-nom--edition .es2-idees { grid-column: auto; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 6px; padding-left: 44px; }
+.es2-nom--edition .es2-idees::-webkit-scrollbar { display: none; }
+.es2-nom--edition .es2-idees button { flex: none; height: 30px; padding: 0 12px; border: 1px solid var(--filet); border-radius: 999px; background: rgba(255, 255, 255, .7); font: 600 13px/1 var(--font-sans); color: var(--gris-chaud); cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+.es2-nom--edition .es2-idees button:hover { background: #fff; color: var(--encre); }
+@media (max-width: 700px) {
+  /* téléphone : pendant le renommage, le champ prend toute la largeur et la corbeille s'efface le temps de la saisie */
+  .es2-nom--edition { flex: 1 0 100%; }
+  .es2-bloc__tete:has(.es2-nom--edition) .es2-bloc__corbeille { display: none; }
+  .es2-nom--edition .es2-idees { padding-left: 0; }
+}
