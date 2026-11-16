@@ -509,3 +509,8 @@ Deux PDF de Marie (« Page d'accueil », « Page Mes offres »), appliqués tels
   Plus fort (.40 / .30) : « un peu fort ». Ne pas remonter sans demande.
 - **Barre de menu, ordinateur** : au survol, la pilule du lien passe en jaune, texte encre (simple changement de couleur en 0,15 s, sans
   glissement ni texte qui défile : ces animations ont été retirées le matin même à la demande de Thomas). La page en cours garde sa pilule blanche.
+
+## Mes offres : cartes d'Individuel alignées (16 novembre 2026, en ligne, accord écrit : « ok »)
+Les deux cartes côte à côte partagent les mêmes rangées (`grid-template-rows: subgrid`, fin de `src/styles.css`) : nom, durée, prix,
+trait, « Compris », liste et bouton à la même hauteur, même si une carte a une ligne de plus sous le prix. Le prix est calé en haut,
+à la hauteur du nom. Mesuré à 1600, 1280 et 960 px sur les deux onglets. Navigateur sans sous-grille : affichage d'avant.
