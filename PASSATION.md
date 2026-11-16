@@ -514,3 +514,13 @@ Deux PDF de Marie (« Page d'accueil », « Page Mes offres »), appliqués tels
 Les deux cartes côte à côte partagent les mêmes rangées (`grid-template-rows: subgrid`, fin de `src/styles.css`) : nom, durée, prix,
 trait, « Compris », liste et bouton à la même hauteur, même si une carte a une ligne de plus sous le prix. Le prix est calé en haut,
 à la hauteur du nom. Mesuré à 1600, 1280 et 960 px sur les deux onglets. Navigateur sans sous-grille : affichage d'avant.
+
+## Téléphone et Mes offres (16 novembre 2026, en ligne, accord écrit : « ok »)
+- **Barre du bas (téléphone, espace)** : plus de transition sur les liens (`transition: none`). Avec une transition, le texte passait au
+  noir avant l'arrivée de la pastille blanche : noir sur noir pendant un quart de seconde. Ne pas remettre de transition.
+- **Fond sur téléphone et tablette** (≤ 960 px) : lumières plus petites et environ moitié moins fortes (« trop coloré »). Ordinateur inchangé.
+- **Mes offres** (demandes de Marie) : le bouton des cartes est « Choisir cette formule » (`CarteOffre`, propriété `direct`), qui mène à
+  `/contact?formule=…` avec l'offre et la formule cochées ; plus de « Voir le détail » ni de fenêtre de détail sur cette page
+  (`DetailOffre` reste dans `PageService.jsx`, non utilisé par Mes offres). En salle : « Déplacements compris jusqu'à 20 km autour de
+  Houdan » sous les cartes. Suivi hebdomadaire : « Minimum 2 mois » seul. Groupes : carte à gauche, photo à droite (`inverse`).
+- **À confirmer par Marie** : les textes « Comment ça se passe ? » et « Pour qui ? » ne sont plus visibles ; « Déplacements compris » en salle.
