@@ -93,3 +93,77 @@ export function comparerSeance(seance, sf) {
   else if (compares > 0) verdict = 'Tout fait comme prévu'
   return { lignes, aRegarder, verdict }
 }
+
+// ---------- Séance faite, page du coach (16 novembre 2026) : cases « prévu / fait » et bilan ----------
+
+const premier = (liste) => liste.find((v) => rempli(v))
+// Une seule valeur → elle ; plusieurs valeurs numériques → « min–max » ; sinon la dernière
+function valeurFaite(valeurs) {
+  const v = valeurs.map((x) => String(x ?? '').trim()).filter(Boolean)
+  if (v.length === 0) return ''
+  const uniques = [...new Set(v)]
+  if (uniques.length === 1) return uniques[0]
+  const n = uniques.map(nombre)
+  if (n.every((x) => !Number.isNaN(x))) return `${fr(Math.min(...n))}–${fr(Math.max(...n))}`
+  return v[v.length - 1]
+}
+const comparer = (fait, prevu, plusEstMieux = true) => {
+  const f = nombre(fait); const p = nombre(prevu)
+  if (!rempli(fait)) return 'vide'
+  if (Number.isNaN(f) || Number.isNaN(p) || !rempli(prevu)) return 'ok'
+  if (f === p) return 'ok'
+  return (f > p) === plusEstMieux ? 'plus' : 'moins'
+}
+
+// Cases d'un exercice en séries : [{ cle, libelle, prevu, fait, etat }] (séries, répétitions ou durée, charge, repos).
+// `etat` : 'ok' (comme prévu), 'plus', 'moins' (pas assez), 'vide' (rien noté). Le repos n'est plus noté par le coaché : on montre le prévu.
+export function casesExercice(el, lignes) {
+  const duree = enDuree(el)
+  const faites = (lignes ?? []).filter((l) => l && l.fait !== false)
+  const cleMesure = duree ? 'duree' : 'reps'
+  const prevuMesure = duree ? texteDuree(el?.reps) : String(el?.reps ?? '').trim()
+  const faitMesure = valeurFaite(faites.map((l) => l[cleMesure]))
+  const faitCharge = valeurFaite(faites.map((l) => l.charge))
+  const prevuSeries = String(el?.series ?? '').trim()
+  const nbSeries = faites.length ? String(faites.length) : ''
+  const nombreFait = (v) => (duree ? parseFloat(String(v).replace(',', '.')) : nombre(v))
+  return [
+    { cle: 'series', libelle: 'Séries', prevu: prevuSeries, fait: nbSeries, etat: nbSeries ? comparer(nbSeries, prevuSeries) : 'vide' },
+    { cle: 'mesure', libelle: duree ? 'Durée' : 'Reps', prevu: prevuMesure, fait: faitMesure, etat: faitMesure ? (Number.isNaN(nombreFait(faitMesure)) ? 'ok' : comparer(nombreFait(faitMesure), nombreFait(prevuMesure))) : 'vide' },
+    { cle: 'charge', libelle: 'Charge', prevu: rempli(el?.charge) ? String(el.charge).trim() : '', fait: faitCharge, etat: faitCharge ? comparer(faitCharge, el?.charge) : 'vide' },
+    { cle: 'repos', libelle: 'Repos', prevu: String(el?.repos ?? '').trim(), fait: '', etat: 'vide' },
+  ]
+}
+
+// Détail série par série : [{ n, prevu, fait, etat }] ; `etat` 'non-faite' si la série n'a pas été cochée
+export function detailSeries(el, lignes) {
+  const duree = enDuree(el)
+  const total = Math.max(parseInt(String(el?.series ?? '').trim(), 10) || 0, (lignes ?? []).length)
+  const prevu = [duree ? texteDuree(el?.reps) : String(el?.reps ?? '').trim(), rempli(el?.charge) ? `${fr(String(el.charge).trim())} kg` : ''].filter(Boolean)
+  const prevuTexte = duree ? prevu.join(' · ') : (prevu.length === 2 ? `${prevu[0]} × ${prevu[1]}` : prevu[0] ?? '')
+  return Array.from({ length: total }, (_, i) => {
+    const l = lignes?.[i]
+    if (!l || l.fait === false) return { n: i + 1, prevu: prevuTexte, fait: '', etat: 'non-faite' }
+    const m = duree ? texteDuree(l.duree) : String(l.reps ?? '').trim()
+    const c = String(l.charge ?? '').trim()
+    const fait = duree ? [m, c && `${fr(c)} kg`].filter(Boolean).join(' · ') : (m && c ? `${m} × ${fr(c)} kg` : c ? `${fr(c)} kg` : m ? `${m} rép.` : '')
+    const e = [duree ? 'ok' : comparer(m, el?.reps), comparer(c, el?.charge)]
+    const etat = e.includes('moins') ? 'moins' : e.includes('plus') ? 'plus' : 'ok'
+    return { n: i + 1, prevu: prevuTexte, fait, etat }
+  })
+}
+
+// Bilan d'une séance faite : séries cochées sur séries prévues, RPE moyen noté
+export function bilanSeance(seance, sf) {
+  let faites = 0; let total = 0; const rpes = []
+  for (const b of seance?.blocs ?? []) {
+    if ((b.format ?? 'series') !== 'series') continue
+    for (const el of b.elements ?? []) {
+      const l = sf?.series?.[el.id] ?? []
+      total += Math.max(parseInt(String(el.series ?? '').trim(), 10) || 0, l.length)
+      for (const x of l) { if (x && x.fait !== false) { faites += 1; const r = nombre(x.rpe); if (!Number.isNaN(r)) rpes.push(r) } }
+    }
+  }
+  const rpeMoyen = rpes.length ? arrondi(rpes.reduce((t, r) => t + r, 0) / rpes.length) : null
+  return { faites, total, rpeMoyen }
+}

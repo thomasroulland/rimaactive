@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { comparerSeance } from '../../src/espace/donnees/ecarts.js'
+import { comparerSeance, casesExercice, detailSeries, bilanSeance } from '../../src/espace/donnees/ecarts.js'
 
 const seance = { id: 's', blocs: [
   { id: 'b1', format: 'series', elements: [
@@ -51,5 +51,48 @@ describe('comparerSeance', () => {
     expect(retiree.lignes).toEqual([{ cle: 'x', nom: 'Exercice retiré du programme', prevu: '', fait: '50 × 5', statut: 'retire', ecart: '' }])
     expect(retiree.verdict).toBe('')
     expect(comparerSeance(seance, { statut: 'terminée' }).aRegarder).toBe(5)
+  })
+})
+
+describe('séance faite : cases, détail et bilan', () => {
+  const squat = { id: 'e', series: '4', reps: '10', charge: '16', repos: '90' }
+  const l = (reps, charge, extra = {}) => ({ reps, charge, rpe: '', fait: true, ...extra })
+  it('comme prévu : tout « ok »', () => {
+    const c = casesExercice(squat, [l('10', '16'), l('10', '16'), l('10', '16'), l('10', '16')])
+    expect(c.map((x) => x.etat)).toEqual(['ok', 'ok', 'ok', 'vide'])
+    expect(c[0].fait).toBe('4')
+  })
+  it('plus lourd et moins de séries', () => {
+    const c = casesExercice(squat, [l('10', '20'), l('10', '20'), l('10', '20')])
+    expect(c.find((x) => x.cle === 'charge')).toMatchObject({ fait: '20', prevu: '16', etat: 'plus' })
+    expect(c.find((x) => x.cle === 'series')).toMatchObject({ fait: '3', prevu: '4', etat: 'moins' })
+  })
+  it('plusieurs valeurs : min–max ; séries non cochées ignorées', () => {
+    const c = casesExercice(squat, [l('10', '16'), l('8', '16'), l('6', '16', { fait: false })])
+    expect(c.find((x) => x.cle === 'mesure')).toMatchObject({ fait: '8–10', etat: 'moins' })
+    expect(c.find((x) => x.cle === 'series').fait).toBe('2')
+  })
+  it('rien noté : cases vides', () => {
+    expect(casesExercice(squat, []).every((x) => x.etat === 'vide')).toBe(true)
+  })
+  it('exercice en durée : lit « duree », pas « reps »', () => {
+    const g = { id: 'g', series: '3', reps: '45', charge: '', mesure: 'duree' }
+    const c = casesExercice(g, [{ duree: '50', charge: '', fait: true }])
+    expect(c.find((x) => x.cle === 'mesure')).toMatchObject({ libelle: 'Durée', prevu: '45 s', fait: '50', etat: 'plus' })
+  })
+  it('détail série par série', () => {
+    const d = detailSeries(squat, [l('8', '35'), l('6', '16'), { ...l('', ''), fait: false }])
+    expect(d).toHaveLength(4)
+    expect(d[0]).toMatchObject({ n: 1, fait: '8 × 35 kg', etat: 'moins' })
+    expect(d[1].etat).toBe('moins')
+    expect(d[2]).toMatchObject({ etat: 'non-faite', fait: '' })
+    expect(d[3].etat).toBe('non-faite')
+    expect(d[0].prevu).toBe('10 × 16 kg')
+  })
+  it('bilan : séries cochées, séries prévues et RPE moyen', () => {
+    const s = { blocs: [{ format: 'series', elements: [squat] }, { format: 'emom', elements: [{ id: 'x', series: '9' }] }] }
+    const sf = { series: { e: [l('10', '16', { rpe: '7' }), l('10', '16', { rpe: '8' }), l('10', '16', { fait: false })] } }
+    expect(bilanSeance(s, sf)).toEqual({ faites: 2, total: 4, rpeMoyen: 7.5 })
+    expect(bilanSeance(s, {})).toEqual({ faites: 0, total: 4, rpeMoyen: null })
   })
 })

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
   ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
-  ecouterModele, enregistrerModele, nouvelIdProgramme,
+  ecouterModele, enregistrerModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
@@ -17,6 +17,7 @@ import { messageErreur } from '../erreurs.js'
 import { ChoixDebut } from './CreationProgramme.jsx'
 import GrilleProgramme from './GrilleProgramme.jsx'
 import EditeurSeance from './EditeurSeance.jsx'
+import SeanceFaiteCoach from './SeanceFaiteCoach.jsx'
 import PhotoStockee from './PhotoStockee.jsx'
 import Confirmation from './Confirmation.jsx'
 import GestionProgramme, { lundisAutour } from './GestionProgramme.jsx'
@@ -48,6 +49,7 @@ export default function EditeurProgramme() {
   const [verrous, setVerrous] = useState(null) // null : pas encore vérifié, tout reste verrouillé
   const [erreurVerrous, setErreurVerrous] = useState('')
   const [message, setMessage] = useState('')
+  const [seancesFaites, setSeancesFaites] = useState([]) // ce que le coaché a fait : affiché sur une séance faite
   const [annulable, setAnnulable] = useState(null) // dernier déplacement ou duplication de séance : { texte, avant }
   const [banqueMaj, setBanqueMaj] = useState(false) // photos et consignes repris de la banque : à enregistrer pour que le coaché les voie
   useEffect(() => { if (!modifie) setBanqueMaj(false) }, [modifie])
@@ -80,6 +82,7 @@ export default function EditeurProgramme() {
     ? ecouterModele(modeleId, setProgrammes, () => setErreur('Impossible de charger le modèle. Vérifiez votre connexion.'))
     : ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.'))), [uid, modele, modeleId])
   useEffect(() => ecouterExercices(setExercices, () => setExercices([])), [])
+  useEffect(() => (modele ? undefined : ecouterSeancesClient(uid, setSeancesFaites, () => setSeancesFaites([]))), [uid, modele])
 
   // Ouvre d'abord le programme en cours, sinon le prochain, sinon le plus récent (14 novembre 2026)
   useEffect(() => {
@@ -528,10 +531,18 @@ export default function EditeurProgramme() {
                 <h2 id="page-seance-titre" className="page-seance__titre">{seance.titre || `Séance ${seIdx + 1}`}</h2>
                 <span className="page-seance__jour">{nomType(seance.type, reglages.types)}</span>
               </div>
+              {(() => {
+                const sf = !modele && estVerrou(seance.id) ? seancesFaites.find((x) => x.programme === prog.id && x.seance === seance.id && x.statut === 'terminée') : null
+                return sf
+                  ? <SeanceFaiteCoach seance={seance} sf={sf} prenom={client?.prenom} banque={exercices} rpeVise={semaine?.rpe} semaine={semIdx + 1} numero={seIdx + 1}
+                    commenter={(texte) => commenterSeance(sf.id, texte).then(() => setMessage('Commentaire envoyé.')).catch((e) => setErreur(messageErreur(e.code)))} />
+                  : (
               <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
                 majSeance={majSeance} majBloc={majBloc} majElement={majElement}
                 retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
                 ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
+                  )
+              })()}
             </article>
           )}
         </div>
