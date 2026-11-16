@@ -490,3 +490,14 @@ Deux PDF de Marie (« Page d'accueil », « Page Mes offres »), appliqués tels
   (`puce` : kettlebell, `barbell`, `haltere` dessiné dans `Picto.jsx`) ; `pointsCourts` : intitulé seul sur la carte, explication dans le détail.
 - **À confirmer par Marie** : la mention du crédit d'impôt a disparu (absente du PDF) ; les textes « Pour qui ? » du suivi hebdomadaire
   et d'En ligne sont de Claude. Le logo qui bougeait vers « M'écrire » n'est plus reproductible (place réservée à la barre de défilement).
+
+## Fond coloré et cartes sans dégradé (16 novembre 2026, en ligne, accord écrit : « ok »)
+- **Fond** : les lumières jaune et rose du style verre (`body::before`, `src/verre.css`) étaient cachées. Deux causes : le fond foncé de
+  `html` (place de la barre de défilement) faisait peindre la craie de `body` par-dessus → `body { isolation: isolate }` ; et dans
+  l'espace connecté, `.ec-coque` avait un fond craie plein → rendu transparent. Ne pas retirer ces deux règles.
+- **Cartes** : plus de dégradé chaud à l'intérieur (choix de Thomas : « ça fait beaucoup » avec le fond) ; le reflet blanc qui suit la
+  souris reste, comme le vert des séances faites. Ne pas reproposer le dégradé dans les cartes.
+- **Piège** : pour vérifier le fond, regarder une capture (ou chercher les éléments à fond plein) ; tester seulement que la règle CSS
+  existe ne prouve pas qu'on la voit.
+- **Outils d'essai** (machine temporaire, à refaire si elle est recréée) : `/tmp/claude-0/relance.sh` (émulateurs, données de démo,
+  site sur le port 4202), `scratchpad/outils/semer.mjs`, `scratchpad/glass/tour.cjs` (15 pages) et `tout.cjs` (23 clics rejoués).
