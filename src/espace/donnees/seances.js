@@ -116,6 +116,17 @@ export function contenuNotes(base, donnees = {}) {
   return ajouterCartes(out, donnees)
 }
 
+// Correction d'une séance déjà faite (16 novembre 2026) : seulement ce que le coaché a noté (séries, notes, blocs, course),
+// jamais le statut, la date ni l'heure de fin.
+export function contenuCorrection(donnees = {}) {
+  const out = {}
+  if (donnees.distance != null) out.distance = texte(donnees.distance).trim()
+  if (donnees.temps != null) out.temps = texte(donnees.temps).trim()
+  if (donnees.fc != null) out.fc = texte(donnees.fc).trim()
+  if (donnees.zones != null) out.zones = zonesPropres(donnees.zones)
+  return ajouterCartes(out, donnees)
+}
+
 // Contenu écrit (fusion) à la « Fin de séance » : statut « terminée », bilan du client, séries éventuelles.
 export function contenuFin(base, fin = {}) {
   const out = {

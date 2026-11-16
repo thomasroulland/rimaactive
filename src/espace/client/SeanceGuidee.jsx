@@ -63,7 +63,7 @@ export function BandeauBloc({ surtitre, bloc, prog, etape, blocs, aller, finir, 
 }
 
 // Un exercice : photo, nom, prévu, puis une ligne par série (rond à toucher pour cocher, valeurs modifiables)
-function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, choisi = false, choisir }) {
+function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, grand = false }) {
   const [detail, setDetail] = useState(false)
   const duree = enDuree(el)
   const cle = duree ? 'duree' : 'reps'
@@ -71,14 +71,19 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, 
   const enCours = lecture || !actif ? -1 : ls.findIndex((l) => !l.fait) // une seule série encadrée à la fois : la première pas faite du bloc
   const base = `ex-${el.id}`
   return (
-    <li className={`ec-s2-carte${choisi ? ' est-choisi' : ''}`} aria-labelledby={`${base}-nom`} onFocusCapture={choisir} onClick={choisir}>
+    <li className={`ec-s2-carte${grand ? ' est-grand' : ''}`} aria-labelledby={`${base}-nom`}>
+      {grand && <GrandePhoto el={el} voirConsignes={voirConsignes} />}
+      <div className="ec-s2-carte__corps">
       <div className="ec-s2-carte__tete">
-        <button type="button" className="ec-s2-vignette" onClick={voirConsignes} aria-label={`Voir les photos et consignes : ${el.nom}`}>
-          {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-vignette__img" /> : <Image />}
-        </button>
+        {!grand && (
+          <button type="button" className="ec-s2-vignette" onClick={voirConsignes} aria-label={`Voir les photos et consignes : ${el.nom}`}>
+            {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-vignette__img" /> : <Image />}
+          </button>
+        )}
         <div>
           <h3 id={`${base}-nom`} className="ec-s2-carte__nom"><span className="ec-s2-code" aria-hidden="true">{code}</span> {el.nom}</h3>
           {prevu && <p className="ec-s2-carte__prevu">Prévu : {prevu}</p>}
+          {grand && el.consignes && <p className="ec-s2-carte__consignes">{el.consignes}</p>}
         </div>
         {!lecture && <button type="button" className="ec-s2-plus" aria-expanded={detail} onClick={() => setDetail((d) => !d)}>{detail ? '− Masquer' : '＋ Note ou effort'}</button>}
       </div>
@@ -109,66 +114,45 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, 
           <input id={`${base}-note`} className="ec-champ" type="text" autoComplete="off" value={note} readOnly={lecture} placeholder={lecture ? '' : 'Ex. dernière rep difficile'} onChange={(e) => actions?.note(el.id, e.target.value)} />
         </div>
       )}
+      </div>
     </li>
   )
 }
 
-// Tout le bloc d'un coup (ordinateur)
-export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes, choisi = null, choisir }) {
+// Tout le bloc d'un coup (ordinateur) : chaque exercice avec sa grande photo à gauche (16 novembre 2026)
+export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes, grand = false }) {
   const els = bloc.elements ?? []
   const premier = els.findIndex((e) => lignes(e).some((l) => !l.fait))
   return (
     <ol className="ec-s2-liste">
       {els.map((el, i) => (
-        <CarteExo key={el.id} el={el} code={`${bloc.lettre}${i + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture} actif={i === premier} voirConsignes={() => voirConsignes(el)}
-          choisi={choisi === el.id} choisir={choisir ? () => choisir(el.id) : undefined} />
+        <CarteExo key={el.id} el={el} code={`${bloc.lettre}${i + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture} actif={i === premier}
+          voirConsignes={() => voirConsignes(el)} grand={grand} />
       ))}
     </ol>
   )
 }
-
-// Ordinateur (refait le 16 novembre 2026) : à gauche, la grande photo de l'exercice choisi (photos, muscles, consignes) ;
-// à droite, les exercices du bloc. L'exercice choisi suit la série en cours ; un clic sur un exercice l'affiche à gauche.
-export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirConsignes }) {
-  const els = bloc.elements ?? []
-  const enCours = els.find((e) => lignes(e).some((l) => !l.fait)) ?? els[0]
-  const [choisiId, setChoisiId] = useState(null)
-  const choisi = els.find((e) => e.id === choisiId) ?? enCours
-  useEffect(() => { setChoisiId(null) }, [bloc.id])
-  const i = els.indexOf(choisi)
-  return (
-    <div className="ec-s3">
-      {choisi && <GrandePhoto key={choisi.id} el={choisi} code={`${bloc.lettre}${i + 1}`} voirConsignes={() => voirConsignes(choisi)} />}
-      <ListeBloc bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={lecture} voirConsignes={voirConsignes} choisi={choisi?.id} choisir={setChoisiId} />
-    </div>
-  )
+export function BlocOrdinateur(props) {
+  return <ListeBloc {...props} grand />
 }
 
-function GrandePhoto({ el, code, voirConsignes }) {
+// Grande photo d'un exercice (ordinateur) : les photos se font défiler avec les points, un clic agrandit avec les consignes
+function GrandePhoto({ el, voirConsignes }) {
   const photos = el.photos ?? []
   const [n, setN] = useState(0)
-  const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
   return (
-    <aside className="ec-s3-media" aria-label={`Exercice ${code} : ${el.nom}`}>
-      <div className="ec-s3-photo">
+    <div className="ec-s4-photo">
+      <button type="button" className="ec-s4-photo__bouton" onClick={voirConsignes} aria-label={`Agrandir les photos et consignes : ${el.nom}`}>
         {photos.length > 0
-          ? <PhotoStockee key={photos[n]} chemin={photos[n]} alt={`${el.nom}${photos.length > 1 ? `, photo ${n + 1} sur ${photos.length}` : ''}`} classe="ec-s3-photo__img" />
-          : <div className="ec-s3-photo__vide"><Image /><span>Pas encore de photo pour cet exercice</span></div>}
-        {photos.length > 1 && (
-          <div className="ec-s3-points" role="group" aria-label="Photos de l’exercice">
-            {photos.map((p, k) => <button key={p} type="button" aria-pressed={k === n} aria-label={`Photo ${k + 1}`} onClick={() => setN(k)}><span /></button>)}
-          </div>
-        )}
-      </div>
-      <div className="ec-s3-infos">
-        <p className="ec-s3-code">{code}</p>
-        <h2 className="ec-s3-nom">{el.nom}</h2>
-        {prevu && <p className="ec-s3-prevu">Prévu : <b>{prevu}</b></p>}
-        {el.muscles?.length > 0 && <p className="ec-s3-muscles">{el.muscles.join(' · ')}</p>}
-        {el.consignes && <p className="ec-s3-consignes">{el.consignes}</p>}
-        {(photos.length > 0 || el.consignes) && <button type="button" className="ec-s3-agrandir" onClick={voirConsignes}>Agrandir les photos et consignes</button>}
-      </div>
-    </aside>
+          ? <PhotoStockee key={photos[n]} chemin={photos[n]} alt="" classe="ec-s4-photo__img" />
+          : <span className="ec-s4-photo__vide"><Image /><span>Pas encore de photo</span></span>}
+      </button>
+      {photos.length > 1 && (
+        <div className="ec-s4-points" role="group" aria-label={`Photos : ${el.nom}`}>
+          {photos.map((p, k) => <button key={p} type="button" aria-pressed={k === n} aria-label={`Photo ${k + 1}`} onClick={() => setN(k)}><span /></button>)}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -183,36 +167,24 @@ function Reglage({ libelle, valeur, changer, mode, id }) {
   )
 }
 
+// Retour en arrière d'un bloc à l'autre : le bloc précédent s'ouvre sur son dernier exercice
+const versLaFin = { actif: false }
+
 export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, voirConsignes, aller, finir, retour }) {
   const els = bloc.elements ?? []
-  const [exo, setExo] = useState(() => Math.max(0, els.findIndex((e) => lignes(e).some((l) => !l.fait))))
+  const [exo, setExo] = useState(() => {
+    // en revenant en arrière depuis le bloc suivant, on arrive sur le dernier exercice de ce bloc
+    if (versLaFin.actif) { versLaFin.actif = false; return Math.max(0, els.length - 1) }
+    return Math.max(0, els.findIndex((e) => lignes(e).some((l) => !l.fait)))
+  })
   const [choisie, setChoisie] = useState(null)
   const [brouillon, setBrouillon] = useState(null)
-  const [fin, setFin] = useState(false)
   const [plan, setPlan] = useState(false)
   const [detail, setDetail] = useState(false)
   const nb = blocs.length
   const dernier = etape >= nb - 1
 
   if (els.length === 0) return <p className="ec-texte">Ce bloc n’a pas encore d’exercice.</p>
-
-  if (fin) {
-    const p = prog.blocs[etape]
-    const suivant = blocs[etape + 1]
-    return (
-      <div className="ec-s2-fin">
-        <div className="ec-s2-fin__haut">{retour}</div>
-        <span className="ec-s2-fin__ok" aria-hidden="true"><Coche /></span>
-        <h2>{nomBloc(bloc)} terminé</h2>
-        <p>{els.length} exercice{els.length > 1 ? 's' : ''} · {p?.faites ?? 0} série{(p?.faites ?? 0) > 1 ? 's' : ''}</p>
-        {suivant && (
-          <div className="ec-s2-fin__suivant"><small>Bloc suivant</small><b>{nomBloc(suivant)}</b><span>{(suivant.elements ?? []).map((e) => e.nom).join(', ')}</span></div>
-        )}
-        <Gros onClick={() => (dernier ? finir() : aller(etape + 1))}>{dernier ? 'Terminer la séance →' : `Commencer : ${nomBloc(suivant)} →`}</Gros>
-        <button type="button" className="ec-lien" onClick={() => setFin(false)}>← Revoir ce bloc</button>
-      </div>
-    )
-  }
 
   const el = els[Math.min(exo, els.length - 1)]
   const ls = lignes(el)
@@ -228,13 +200,19 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
   const prochaineExo = (apres) => els.findIndex((e, k) => k !== apres && !exoFait(e))
 
   const allerExo = (k) => { setExo(k); setChoisie(null); setBrouillon(null); setDetail(false) }
-  const suite = () => { const k = prochaineExo(exo); if (k >= 0) allerExo(k); else setFin(true) }
+  // bloc fini : directement le bloc suivant (ou la fin de séance), sans page intermédiaire
+  const blocSuivant = () => (dernier ? finir() : aller(etape + 1))
+  const suite = () => { const k = prochaineExo(exo); if (k >= 0) allerExo(k); else blocSuivant() }
+  const precedent = () => {
+    if (exo > 0) allerExo(exo - 1)
+    else if (etape > 0) { versLaFin.actif = true; aller(etape - 1) }
+  }
   const faite = () => {
     actions.serieComplete(el, cur, { reps: repsV, charge: chargeV, rpe: rpeV })
     setBrouillon(null); setChoisie(null)
     if (!ls.some((l, i) => i !== cur && !l.fait)) {
       const k = els.findIndex((e, j) => j !== exo && !exoFait(e))
-      if (k >= 0) allerExo(k); else setFin(true)
+      if (k >= 0) allerExo(k); else blocSuivant()
     }
   }
   const maj = (champ) => (v) => setBrouillon((b) => ({ ...(b ?? {}), [champ]: v }))
@@ -306,7 +284,11 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         </div>
       )}
 
-      <Gros onClick={cur >= 0 ? faite : suite}>{cur >= 0 ? 'Série faite ✓' : 'Exercice suivant →'}</Gros>
+      <div className="ec-s2-nav">
+        {(exo > 0 || etape > 0) && <button type="button" className="ec-s2-precedent" onClick={precedent}>← {exo > 0 ? 'Exercice précédent' : 'Bloc précédent'}</button>}
+        {cur >= 0 && <button type="button" className="ec-s2-passer" onClick={suite}>Passer →</button>}
+      </div>
+      <Gros onClick={cur >= 0 ? faite : suite}>{cur >= 0 ? 'Série faite ✓' : (prochaineExo(exo) >= 0 ? 'Exercice suivant →' : dernier ? 'Terminer la séance →' : 'Bloc suivant →')}</Gros>
     </div>
   )
 }

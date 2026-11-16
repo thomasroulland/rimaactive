@@ -5,7 +5,7 @@ import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth, db, stockage } from './firebase.js'
 import { semaineCourante, aujourdhuiIso } from './donnees/calculs.js'
 import { reduireImage } from './donnees/photos.js'
-import { contenuNotes, contenuFin } from './donnees/seances.js'
+import { contenuNotes, contenuFin, contenuCorrection } from './donnees/seances.js'
 
 // Appelle une route /api/... avec le jeton du coach. Renvoie { statut, donnees } ; ne lève que si le réseau échoue.
 export async function appelerApi(chemin, corps) {
@@ -333,6 +333,13 @@ const baseSeance = (programmeId, seanceId) => ({
 // ne pas l'attendre pour mettre l'écran à jour (le cache hors ligne l'applique tout de suite).
 export function noterSeance(programmeId, seanceId, donnees) {
   return setDoc(refSeance(programmeId, seanceId), contenuNotes(baseSeance(programmeId, seanceId), donnees), { merge: true })
+}
+
+// Le coaché corrige une séance déjà faite : seules ses notes changent (statut, date et heure de fin restent)
+export function corrigerSeance(programmeId, seanceId, donnees) {
+  const contenu = contenuCorrection(donnees)
+  if (Object.keys(contenu).length === 0) return Promise.resolve()
+  return setDoc(refSeance(programmeId, seanceId), contenu, { merge: true })
 }
 
 // « Fin de séance » : { effort, ressenti, commentaire, distance, temps } (+ `series`, `notes`, `blocs` facultatifs,

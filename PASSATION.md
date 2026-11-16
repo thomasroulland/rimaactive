@@ -551,3 +551,14 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
 - **Gardé** : le commentaire du coach sur une séance faite (« Votre commentaire pour … ») : ce n'est pas la messagerie.
 - Les anciens messages restent dans Firestore (`conversations/…`) : rien n'a été effacé ; les règles `firestore.rules` n'ont pas changé
   (la suppression d'un compte coaché efface toujours ses conversations).
+
+## Séance du coaché : enchaînement, correction d'une séance faite, grandes photos (16 novembre 2026)
+- **Téléphone** : plus de page « Bloc terminé » ; le dernier exercice d'un bloc mène directement au bloc suivant (ou à la fin de
+  séance, seule page de bilan). « ← Exercice précédent / Bloc précédent » pour revenir corriger, « Passer → » pour avancer.
+- **Corriger une séance déjà faite** : bouton « Modifier ma séance » sur une séance faite ; chaque changement est enregistré
+  (`corrigerSeance`, `contenuCorrection`) sans toucher au statut, à la date ni à l'heure de fin ; « J'ai fini » referme.
+  **Règle Firestore ajoutée** (`firestore.rules`, `seancesFaites` update) : le client peut changer `series`, `notes`, `blocs`,
+  `distance`, `temps`, `fc`, `zones` d'une séance terminée à lui. **À recopier dans la console Firebase**, sinon la correction est refusée.
+  Testé (`npm run test:regles`, 98 tests).
+- **Ordinateur** : chaque exercice du bloc a sa grande photo à gauche dans sa carte (photos à faire défiler, clic = agrandir avec les
+  consignes), consignes sous le nom, séries en grand ; séance sur toute la largeur (1320 px).

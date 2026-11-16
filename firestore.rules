@@ -158,6 +158,11 @@ service cloud.firestore {
           && request.resource.data.seance == resource.data.seance
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(champsClient())
           && request.resource.data.statut in ['en cours', 'terminée'])
+        // Le client corrige une séance déjà faite (16 novembre 2026) : ses notes seulement, la séance reste terminée à la même date.
+        || (estClient()
+          && resource.data.client == request.auth.uid
+          && resource.data.statut == 'terminée'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['series', 'notes', 'blocs', 'distance', 'temps', 'fc', 'zones']))
         // Le coach commente la séance (en cours ou terminée), rien d'autre.
         || (estCoach()
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentaireCoach', 'majLe']));

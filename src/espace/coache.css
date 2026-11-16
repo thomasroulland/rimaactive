@@ -1144,3 +1144,31 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-s3-photo { aspect-ratio: 4 / 3; max-height: 46vh; width: 100%; }
 .ec-seance--large .ec-s2-carte.est-choisi { outline: 2px solid var(--encre); outline-offset: -2px; }
 .ec-s3-media { max-height: calc(100vh - 180px); overflow: auto; }
+
+/* ---------- Séance sur ordinateur, version 2 : chaque exercice du bloc avec sa grande photo ---------- */
+.ec-seance--large .ec-s2-carte.est-grand { display: grid; grid-template-columns: minmax(240px, 36%) minmax(0, 1fr); gap: 20px; align-items: start; padding: 16px; cursor: default; }
+.ec-s2-carte__corps { min-width: 0; display: grid; gap: 4px; }
+.ec-s4-photo { position: relative; border-radius: 18px; overflow: hidden; background: #ebe7df; aspect-ratio: 4 / 3.4; }
+.ec-s4-photo__bouton { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.ec-s4-photo__img, .ec-s4-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+.ec-s4-photo__bouton:hover img { transform: scale(1.03); }
+.ec-s4-photo__vide { height: 100%; display: grid; place-content: center; justify-items: center; gap: 8px; color: var(--gris-chaud); font-size: 13px; font-weight: 600; }
+.ec-s4-points { position: absolute; left: 0; right: 0; bottom: 8px; display: flex; justify-content: center; gap: 6px; }
+.ec-s4-points button { width: 26px; height: 26px; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
+.ec-s4-points span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, .6); box-shadow: 0 1px 4px rgba(0, 0, 0, .3); }
+.ec-s4-points button[aria-pressed="true"] span { width: 20px; border-radius: 999px; background: #fff; }
+.ec-s2-carte__consignes { margin: 6px 0 2px; padding: 8px 12px; border-radius: 12px; background: #f6f4ef; font-size: 14px; line-height: 1.45; color: var(--encre); white-space: pre-line; }
+@media (max-width: 1100px) { .ec-seance--large .ec-s2-carte.est-grand { grid-template-columns: minmax(200px, 34%) minmax(0, 1fr); } }
+
+/* ---------- Corriger une séance déjà faite ---------- */
+.ec-correction { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 4px 0 6px; padding: 12px 14px 12px 18px; border-radius: 18px; background: #fff; border: 1px solid #e6e2da; font-size: 15px; }
+.ec-correction.est-active { background: rgba(242, 194, 48, .22); border-color: rgba(242, 194, 48, .7); }
+.ec-correction__bouton { min-height: 42px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--ec-encre, #161514); color: var(--ec-craie, #f4f3ef); font: 800 14px/1 var(--font-sans); cursor: pointer; }
+.ec-correction-fin { display: grid; gap: 10px; justify-items: start; padding: 22px; border-radius: 22px; background: #fff; }
+
+/* ---------- Téléphone : revenir en arrière, passer ---------- */
+.ec-s2-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; }
+.ec-s2-precedent, .ec-s2-passer { min-height: 40px; padding: 0 4px; border: 0; background: none; font: 700 14px/1 var(--font-sans); color: var(--ec-gris, #6b665f); cursor: pointer; }
+.ec-s2-passer { margin-left: auto; }
+.ec-s2-carte.est-grand .ec-s2-carte__tete { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px; }
+.ec-seance--large .ec-s2-carte.est-grand .ec-s2-carte__nom { font-size: 24px; }

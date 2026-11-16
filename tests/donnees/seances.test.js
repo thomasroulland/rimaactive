@@ -258,3 +258,18 @@ describe('serieTerminee (un exercice à la fois)', () => {
     expect(serieTerminee({ ...vide, rpe: '7' }, {}, squat).rpe).toBe('7')
   })
 })
+
+import { contenuCorrection } from '../../src/espace/donnees/seances.js'
+describe('contenuCorrection (corriger une séance déjà faite)', () => {
+  it('ne contient que les notes du coaché : ni statut, ni date, ni heure', () => {
+    const c = contenuCorrection({ series: { e1: [{ reps: '9', charge: '20', rpe: '', fait: true }] }, notes: { e1: 'ok' } })
+    expect(c.series.e1[0]).toMatchObject({ reps: '9', charge: '20', fait: true })
+    expect(c.notes.e1).toBe('ok')
+    expect(c.statut).toBeUndefined()
+    expect(c.date).toBeUndefined()
+    expect(c.majLe).toBeUndefined()
+  })
+  it('rien à corriger : objet vide', () => {
+    expect(contenuCorrection({})).toEqual({})
+  })
+})

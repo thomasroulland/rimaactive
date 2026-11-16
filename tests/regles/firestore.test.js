@@ -147,6 +147,12 @@ describe('seancesFaites', () => {
   it('le client A ne modifie plus une séance terminée', async () => {
     await assertFails(updateDoc(doc(A, 'seancesFaites/P1_S2'), { effort: 3 }))
   })
+  it('le client A corrige les séries et notes d’une séance terminée, sans toucher au statut, à la date ni au bilan', async () => {
+    await assertSucceeds(updateDoc(doc(A, 'seancesFaites/P1_S2'), { 'series.e1': [{ reps: '9', charge: '20', rpe: '', fait: true }], 'notes.e1': 'corrigé' }))
+    await assertFails(updateDoc(doc(A, 'seancesFaites/P1_S2'), { statut: 'en cours' }))
+    await assertFails(updateDoc(doc(A, 'seancesFaites/P1_S2'), { date: '2020-01-01' }))
+    await assertFails(updateDoc(doc(B, 'seancesFaites/P1_S2'), { 'notes.e1': 'pas à moi' }))
+  })
   it('le coach change seulement commentaireCoach et majLe sur une séance terminée', async () => {
     await assertSucceeds(updateDoc(doc(coach, 'seancesFaites/P1_S2'), { commentaireCoach: 'Bravo', majLe: serverTimestamp() }))
     await assertFails(updateDoc(doc(coach, 'seancesFaites/P1_S2'), { effort: 2 }))
