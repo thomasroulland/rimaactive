@@ -1889,3 +1889,59 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 
 /* La bulle de confirmation se détache du pied de page (même noir) : liseré clair et ombre plus nette */
 body .snack, body .gp-annuler { background: #232120; box-shadow: 0 0 0 1px rgba(255, 255, 255, .22), 0 14px 36px rgba(0, 0, 0, .45); }
+
+/* ---------- Calendrier de 3 semaines (Vue d'ensemble du coaché, 16 novembre 2026) ---------- */
+.cal3 { min-width: 0; display: grid; gap: 14px; padding: 18px 20px 16px; border-radius: 22px; background: rgba(255, 255, 255, .72); border: 1px solid #fff; box-shadow: 0 8px 24px rgba(22, 21, 20, .06); }
+.cal3__tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cal3__tete .espace-sous-titre { margin: 0; }
+.cal3__nav { display: flex; align-items: center; gap: 6px; }
+.cal3__auj { height: 38px; padding: 0 14px; border: 1px solid #e6e2da; border-radius: 999px; background: #fff; font: 700 13px/1 var(--font-sans); color: var(--encre); cursor: pointer; }
+.cal3__auj:disabled { opacity: .45; cursor: default; }
+.cal3__semaines { display: grid; gap: 12px; }
+.cal3__semaine { position: relative; display: grid; gap: 10px; padding: 12px; border-radius: 18px; background: rgba(244, 243, 239, .7); border: 1px solid transparent; }
+.cal3__semaine.est-courante { background: #fff; border-color: var(--vermillon); box-shadow: 0 6px 18px rgba(255, 74, 28, .1); }
+.cal3__entete { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 0 2px; }
+.cal3__entete p { margin: 0; }
+.cal3__libelle { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+.est-courante .cal3__libelle { color: #c2370f; }
+.cal3__num { padding: 2px 8px; border-radius: 999px; background: var(--encre); color: var(--craie); font-size: 11px; font-weight: 800; letter-spacing: .02em; }
+.cal3__dates { font-size: 13px; font-weight: 600; color: var(--gris-chaud); }
+.cal3__compte { margin-left: auto !important; font-size: 13px; font-weight: 600; color: var(--gris-chaud); }
+.cal3__compte b { color: var(--encre); font-size: 15px; }
+.cal3__plan { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.cal3__prevue { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 4px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #fff; border: 1px dashed #bdb7ab; color: var(--gris-chaud); }
+.cal3__puce { width: 20px; height: 20px; display: inline-grid; place-items: center; border-radius: 50%; background: #eeebe4; font-size: 11px; line-height: 1; }
+.cal3__prevue.est-faite { border: 1px solid transparent; background: #e3f1e7; color: #1f6b3a; }
+.cal3__prevue.est-faite .cal3__puce { background: #2f9e5b; color: #fff; }
+.cal3__prevue.est-manquee { border: 1px solid transparent; background: rgba(255, 74, 28, .1); color: #a3300d; }
+.cal3__prevue.est-manquee .cal3__puce { background: rgba(255, 74, 28, .2); color: #a3300d; }
+.cal3__jours { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.cal3__jour { box-sizing: border-box; width: 100%; min-height: 76px; display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 7px 7px 8px; border: 1px solid transparent; border-radius: 12px; background: rgba(255, 255, 255, .75); font: inherit; text-align: left; color: var(--encre); }
+.cal3__semaine.est-courante .cal3__jour { background: #f8f7f3; }
+.cal3__jour.est-passe:not(.a-des-evts) { opacity: .6; }
+button.cal3__jour { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+button.cal3__jour:hover { transform: translateY(-1px); border-color: #d9d4ca; box-shadow: 0 6px 14px rgba(22, 21, 20, .08); }
+button.cal3__jour:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.cal3__jour.est-choisi { border-color: var(--encre); }
+.cal3__jour-tete { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+.cal3__jour-nom { font-size: 11px; font-weight: 700; color: var(--gris-chaud); text-transform: capitalize; }
+.cal3__jour-num { min-width: 24px; height: 24px; display: inline-grid; place-items: center; padding: 0 5px; border-radius: 999px; font-size: 13px; font-weight: 800; }
+.cal3__jour.est-aujourdhui .cal3__jour-num { background: var(--vermillon); color: #fff; }
+.cal3__evts { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.cal3__evt { display: block; max-width: 100%; padding: 3px 7px; border-radius: 7px; font-size: 11px; font-weight: 700; line-height: 1.25; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cal3__evt--seance { background: var(--encre); color: var(--craie); }
+.cal3__evt--bilan { background: var(--jaune); color: var(--encre); }
+.cal3__evt--encours { background: transparent; border: 1px dashed var(--encre); color: var(--encre); }
+.cal3__legende { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 12px; }
+.cal3__legende .cal3__evt { display: inline-block; }
+@media (max-width: 700px) {
+  .cal3 { padding: 14px 12px; }
+  .cal3__semaine { padding: 10px 8px; }
+  .cal3__jours { gap: 4px; }
+  .cal3__jour { min-height: 58px; padding: 5px 4px; align-items: center; }
+  .cal3__jour-tete { flex-direction: column; gap: 0; }
+  .cal3__jour-nom { font-size: 10px; }
+  .cal3__evts { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 3px; }
+  .cal3__jours .cal3__evt { width: 8px; height: 8px; padding: 0; border-radius: 50%; font-size: 0; }
+}
+@media (max-width: 980px) { .ens-cote { order: 0; } } /* téléphone : le calendrier d'abord, puis le résumé */

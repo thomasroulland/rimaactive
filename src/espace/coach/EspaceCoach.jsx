@@ -3,7 +3,7 @@ import ProgrammesCoach from './ProgrammesCoach.jsx'
 import MesCoaches from './MesCoaches.jsx'
 import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
-import { Bilans, Ensemble, Historique, Messages, Notes, Photos, Stats } from './OngletsCoache.jsx'
+import { Bilans, Ensemble, Messages, Notes, Photos, Stats } from './OngletsCoache.jsx'
 import Messagerie, { useConversations } from './Messagerie.jsx'
 import { nonLu } from '../donnees/messages.js'
 import EditeurProgramme from './EditeurProgramme.jsx'
@@ -35,7 +35,7 @@ export default function EspaceCoach({ profil }) {
         <Route path="clients/:uid" element={<PageCoache />}>
           <Route index element={<Ensemble />} />
           <Route path="programme" element={<EditeurProgramme />} />
-          <Route path="historique" element={<Historique />} />
+          <Route path="historique" element={<Navigate to=".." replace />} />
           <Route path="bilans" element={<Bilans />} />
           <Route path="stats" element={<Stats />} />
           <Route path="photos" element={<Photos />} />

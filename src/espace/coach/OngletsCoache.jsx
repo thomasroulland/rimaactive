@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   ajouterBilan, ajouterNoteCoach, ecouterBilans, ecouterMesMesures, ecouterMesPhotos, ecouterNotesCoach,
   majProfilSportif, supprimerBilan, supprimerNoteCoach, urlPdf,
 } from '../depots.js'
-import { aujourdhuiIso, grilleMois, listeSeances, regularite, tonnage, tonnages } from '../donnees/calculs.js'
+import { ajoutJours, aujourdhuiIso, listeSeances, lundiDe, regularite, tonnage, tonnages } from '../donnees/calculs.js'
 import { dateComplete, dateSeance, evolutionMesures } from '../donnees/progression.js'
 import { exercicesDe } from '../donnees/seances.js'
 import { chiffresCoache, effortParSemaine, suiviCoache } from '../donnees/alertes.js'
@@ -58,20 +58,7 @@ export function Ensemble() {
       </section>
 
       <div className="ens-cols">
-      <section className="onglet-pile ens-seances" aria-labelledby="t-seances">
-        <div className="suivi-titre">
-          <h2 id="t-seances" className="espace-sous-titre">Dernières séances</h2>
-          <Link className="lien-souligne" to={`/espace/coach/clients/${uid}/historique`}>Tout l’historique</Link>
-        </div>
-        {seances === null ? <p className="espace-aide" role="status">Chargement…</p>
-          : seances.length === 0 ? <p className="espace-aide">{client.prenom} n’a pas encore enregistré de séance.</p> : (
-            <ul className="fiche-liste seances-coache">
-              {seances.slice(0, 3).map((sf, i) => (
-                <SeanceFaite key={sf.id} sf={sf} seance={trouverSeance(programmes, sf)} prenom={client.prenom} ouvrirSiEcart={i === 0} />
-              ))}
-            </ul>
-          )}
-      </section>
+      <Calendrier3Semaines />
       <aside className="ens-cote" aria-label="Résumé">
         <Carte titre="Progression" id="t-prog">
           <p className="ens-gros"><b>{ch.faites}</b> séance{ch.faites > 1 ? 's' : ''} sur {ch.prevues}</p>
@@ -144,101 +131,129 @@ function ProfilSportif({ client, uid }) {
   )
 }
 
-// ---------- Historique : calendrier du mois (14 novembre 2026) ----------
-const MOIS_NOMS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+// ---------- Calendrier de la Vue d'ensemble (16 novembre 2026, remplace l'onglet Historique) ----------
+// Trois semaines (la dernière, celle en cours, la prochaine) : pour chaque semaine, les séances prévues au programme
+// (faites, à faire, pas faites) et, jour par jour, les séances faites et les bilans. Les flèches font glisser les trois
+// semaines d'une semaine ; un jour avec une activité se touche pour en voir le détail.
+const MOIS_COURTS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
 const JOURS_COURTS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.']
+const LIBELLES_SEMAINE = { '-1': 'Semaine dernière', 0: 'Cette semaine', 1: 'Semaine prochaine' }
+const jourMois = (iso) => `${Number(iso.slice(8))} ${MOIS_COURTS[Number(iso.slice(5, 7)) - 1]}`
+const Fleche = ({ vers }) => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d={vers === 'gauche' ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'} />
+  </svg>
+)
 
-export function Historique() {
-  const { client, uid, programmes, seances } = useCoache()
+function Calendrier3Semaines() {
+  const { client, uid, programmes, seances, progEnCours } = useCoache()
   const [bilans, setBilans] = useState([])
   useEffect(() => ecouterBilans(uid, setBilans, () => setBilans([])), [uid])
-  const terminees = (seances ?? []).filter((s) => s.statut === 'terminée')
-  const aujourdhui = aujourdhuiIso()
-  // mois affiché : celui de la dernière séance faite (sinon le mois en cours)
-  const derniere = terminees.map((s) => s.date).filter(Boolean).sort().pop() ?? aujourdhui
-  const [mois, setMois] = useState(null)
+  const [decalage, setDecalage] = useState(0) // en semaines, par rapport à la semaine en cours
   const [choisi, setChoisi] = useState(null)
-  const courant = mois ?? { a: Number(derniere.slice(0, 4)), m: Number(derniere.slice(5, 7)) }
   if (seances === null) return <p className="espace-texte" role="status">Chargement…</p>
 
+  const aujourdhui = aujourdhuiIso()
+  const lundiCourant = lundiDe(aujourdhui)
+  const faites = seances.filter((x) => x.statut === 'terminée')
+  const commencees = seances.filter((x) => x.statut !== 'terminée' && x.date)
   const parJour = new Map()
   const ajouter = (date, x) => { if (!date) return; if (!parJour.has(date)) parJour.set(date, []); parJour.get(date).push(x) }
-  terminees.forEach((sf) => ajouter(sf.date, { genre: 'seance', sf }))
+  faites.forEach((sf) => ajouter(sf.date, { genre: 'seance', sf }))
   ;(bilans ?? []).forEach((b) => ajouter(b.date, { genre: 'bilan', b }))
-  const grille = grilleMois(courant.a, courant.m)
-  const prefixe = `${courant.a}-${String(courant.m).padStart(2, '0')}`
-  const duMois = terminees.filter((s) => s.date?.startsWith(prefixe))
-  const tonnageMois = duMois.reduce((t, sf) => t + tonnage(sf), 0)
-  const bilansMois = (bilans ?? []).filter((b) => b.date?.startsWith(prefixe)).length
-  const jourChoisi = choisi && parJour.has(choisi) ? choisi : null
-  const changerMois = (pas) => {
-    const d = new Date(Date.UTC(courant.a, courant.m - 1 + pas, 1))
-    setMois({ a: d.getUTCFullYear(), m: d.getUTCMonth() + 1 }); setChoisi(null)
-  }
   const titreSeance = (sf) => trouverSeance(programmes, sf)?.titre || (trouverSeance(programmes, sf) ? 'Séance' : 'Séance retirée')
+  const faitesProg = new Set(faites.filter((x) => x.programme === progEnCours?.id).map((x) => x.seance))
+  const prevues = progEnCours ? listeSeances(progEnCours) : []
+
+  const semaines = [-1, 0, 1].map((k) => {
+    const rel = k + decalage
+    const lundi = ajoutJours(lundiCourant, rel * 7)
+    const jours = Array.from({ length: 7 }, (_, i) => ajoutJours(lundi, i))
+    // une semaine du programme va dans la semaine du calendrier qui contient son milieu (si le programme ne commence pas un lundi)
+    const plan = prevues.filter((x) => { const m = ajoutJours(x.date, 3); return m >= lundi && m <= jours[6] })
+    return { rel, lundi, jours, plan, passee: jours[6] < aujourdhui, numero: plan[0]?.semaine }
+  })
+  const jourChoisi = choisi && parJour.has(choisi) ? choisi : null
 
   return (
-    <div className="onglet-pile historique-cal">
-      <div className="espace-carte calendrier">
-        <div className="calendrier__tete">
-          <button type="button" className="calendrier__fleche" aria-label="Mois précédent" onClick={() => changerMois(-1)}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
-          </button>
-          <h2 className="calendrier__mois" aria-live="polite">{MOIS_NOMS[courant.m - 1]} {courant.a}</h2>
-          <button type="button" className="calendrier__fleche" aria-label="Mois suivant" onClick={() => changerMois(1)}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-          </button>
-          <button type="button" className="lien-souligne calendrier__auj" onClick={() => { setMois({ a: Number(aujourdhui.slice(0, 4)), m: Number(aujourdhui.slice(5, 7)) }); setChoisi(aujourdhui) }}>Aujourd’hui</button>
+    <section className="cal3" aria-labelledby="t-cal3">
+      <div className="cal3__tete">
+        <h2 id="t-cal3" className="espace-sous-titre">Calendrier</h2>
+        <div className="cal3__nav">
+          <button type="button" className="calendrier__fleche" aria-label="Une semaine plus tôt" onClick={() => setDecalage((d) => d - 1)}><Fleche vers="gauche" /></button>
+          <button type="button" className="cal3__auj" disabled={decalage === 0} onClick={() => setDecalage(0)}>Aujourd’hui</button>
+          <button type="button" className="calendrier__fleche" aria-label="Une semaine plus tard" onClick={() => setDecalage((d) => d + 1)}><Fleche vers="droite" /></button>
         </div>
-        <p className="calendrier__resume">
-          <span><strong>{duMois.length}</strong> séance{duMois.length > 1 ? 's' : ''} faite{duMois.length > 1 ? 's' : ''}</span>
-          <span><strong>{bilansMois}</strong> bilan{bilansMois > 1 ? 's' : ''}</span>
-          {tonnageMois > 0 && <span><strong>{frNombre(Math.round(tonnageMois))} kg</strong> soulevés</span>}
-        </p>
-        <table className="calendrier__grille">
-          <caption className="sr-only">Séances faites et bilans de {client.prenom}, {MOIS_NOMS[courant.m - 1]} {courant.a}</caption>
-          <thead><tr>{JOURS_COURTS.map((j) => <th key={j} scope="col">{j}</th>)}</tr></thead>
-          <tbody key={prefixe}>
-            {grille.map((sem) => (
-              <tr key={sem[0].date}>
-                {sem.map(({ date, dansLeMois }) => {
-                  const evts = parJour.get(date) ?? []
-                  const nbS = evts.filter((e) => e.genre === 'seance').length
-                  const nbB = evts.length - nbS
-                  const etiquette = `${Number(date.slice(8))} ${MOIS_NOMS[Number(date.slice(5, 7)) - 1]}${nbS ? `, ${nbS} séance${nbS > 1 ? 's' : ''}` : ''}${nbB ? `, ${nbB} bilan${nbB > 1 ? 's' : ''}` : ''}`
+      </div>
+
+      <div className="cal3__semaines">
+        {semaines.map((w) => {
+          const nbFaites = w.plan.filter((x) => faitesProg.has(x.seance.id)).length
+          const libelle = LIBELLES_SEMAINE[w.rel] ?? (w.rel < 0 ? `Il y a ${-w.rel} semaines` : `Dans ${w.rel} semaines`)
+          return (
+            <article key={w.lundi} className={`cal3__semaine${w.rel === 0 ? ' est-courante' : ''}`} aria-label={`${libelle}, du ${jourMois(w.lundi)} au ${jourMois(w.jours[6])}`}>
+              <header className="cal3__entete">
+                <p className="cal3__libelle">{libelle}{w.numero && <span className="cal3__num">S{w.numero}</span>}</p>
+                <p className="cal3__dates">{jourMois(w.lundi)} – {jourMois(w.jours[6])}</p>
+                {w.plan.length > 0 && <p className="cal3__compte"><b>{nbFaites}</b>/{w.plan.length} faite{nbFaites > 1 ? 's' : ''}</p>}
+              </header>
+              {w.plan.length > 0 && (
+                <ul className="cal3__plan" aria-label="Séances prévues au programme">
+                  {w.plan.map((x) => {
+                    const faite = faitesProg.has(x.seance.id)
+                    const etat = faite ? 'faite' : w.passee ? 'manquee' : 'afaire'
+                    return (
+                      <li key={x.seance.id} className={`cal3__prevue est-${etat}`}>
+                        <span className="cal3__puce" aria-hidden="true">{faite ? '✓' : etat === 'manquee' ? '✕' : ''}</span>
+                        {x.seance.titre || 'Séance sans titre'}
+                        <span className="sr-only">{faite ? ', faite' : etat === 'manquee' ? ', pas faite' : ', à faire'}</span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+              <ol className="cal3__jours">
+                {w.jours.map((d, i) => {
+                  const evts = parJour.get(d) ?? []
+                  const enCours = commencees.filter((x) => x.date === d)
                   const contenu = (
                     <>
-                      <span className="calendrier__num">{Number(date.slice(8))}</span>
-                      <span className="calendrier__evts">
-                        {evts.slice(0, 2).map((e, i) => (
-                          <span key={i} className={`calendrier__pastille calendrier__pastille--${e.genre}`}>{e.genre === 'seance' ? titreSeance(e.sf) : (e.b.titre || 'Bilan')}</span>
+                      <span className="cal3__jour-tete"><span className="cal3__jour-nom">{JOURS_COURTS[i]}</span><span className="cal3__jour-num">{Number(d.slice(8))}</span></span>
+                      <span className="cal3__evts">
+                        {evts.map((e, k) => (
+                          <span key={k} className={`cal3__evt cal3__evt--${e.genre}`}>{e.genre === 'seance' ? titreSeance(e.sf) : (e.b.titre || 'Bilan')}</span>
                         ))}
-                        {evts.length > 2 && <span className="calendrier__plus">+{evts.length - 2}</span>}
+                        {enCours.map((x) => <span key={x.id} className="cal3__evt cal3__evt--encours">En cours</span>)}
                       </span>
                     </>
                   )
-                  const classes = `calendrier__jour${dansLeMois ? '' : ' calendrier__jour--hors'}${date === aujourdhui ? ' calendrier__jour--auj' : ''}${jourChoisi === date ? ' calendrier__jour--choisi' : ''}`
+                  const classes = `cal3__jour${d === aujourdhui ? ' est-aujourdhui' : ''}${d < aujourdhui ? ' est-passe' : ''}${jourChoisi === d ? ' est-choisi' : ''}${evts.length ? ' a-des-evts' : ''}`
+                  const etiquette = `${JOURS_COURTS[i]} ${jourMois(d)}${evts.length ? `, ${evts.length} activité${evts.length > 1 ? 's' : ''}` : ''}`
                   return (
-                    <td key={date}>
+                    <li key={d}>
                       {evts.length
-                        ? <button type="button" className={classes} aria-label={etiquette} aria-pressed={jourChoisi === date} onClick={() => setChoisi(jourChoisi === date ? null : date)}>{contenu}</button>
+                        ? <button type="button" className={classes} aria-label={etiquette} aria-pressed={jourChoisi === d} onClick={() => setChoisi(d)}>{contenu}</button>
                         : <span className={classes} aria-label={etiquette}>{contenu}</span>}
-                    </td>
+                    </li>
                   )
                 })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p className="calendrier__legende"><span className="calendrier__pastille calendrier__pastille--seance">Séance faite</span><span className="calendrier__pastille calendrier__pastille--bilan">Bilan</span></p>
+              </ol>
+            </article>
+          )
+        })}
       </div>
+      <p className="cal3__legende" aria-hidden="true">
+        <span className="cal3__evt cal3__evt--seance">Séance faite</span>
+        <span className="cal3__evt cal3__evt--bilan">Bilan</span>
+        <span className="cal3__prevue est-faite"><span className="cal3__puce">✓</span>Prévue et faite</span>
+        <span className="cal3__prevue est-manquee"><span className="cal3__puce">✕</span>Pas faite</span>
+      </p>
 
       {jourChoisi && (
         <JourCalendrier date={jourChoisi} evts={parJour.get(jourChoisi)} programmes={programmes} prenom={client.prenom}
           jours={[...parJour.keys()].sort()} aller={setChoisi} fermer={() => setChoisi(null)} />
       )}
-      {!terminees.length && !(bilans ?? []).length && <p className="espace-texte">Aucune séance faite ni bilan pour l’instant.</p>}
-    </div>
+    </section>
   )
 }
 
