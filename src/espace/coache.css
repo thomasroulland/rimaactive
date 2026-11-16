@@ -1093,3 +1093,14 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .ec-seance--v2 .ec-s2-un > * { flex-shrink: 0; }
   .ec-seance--v2 .ec-s2-un > .ec-s2-photo { flex-shrink: 1; }
 }
+
+/* Mon programme : les semaines en colonnes (comme chez le coach), la semaine en cours en vermillon */
+.ec-sem { display: flex; gap: 14px; align-items: flex-start; overflow-x: auto; padding: 16px 4px 12px; margin: 0 -4px; scroll-snap-type: x proximity; scrollbar-width: thin; }
+.ec-sem__col { position: relative; flex: 0 0 clamp(250px, 24%, 340px); display: grid; gap: 12px; padding: 14px 12px 12px; border-radius: 22px; background: rgba(255, 255, 255, .5); border: 1px solid rgba(255, 255, 255, .9); box-shadow: 0 8px 24px rgba(22, 21, 20, .06); scroll-snap-align: start; }
+.ec-sem__col.est-courante { outline: 2px solid var(--vermillon); outline-offset: -1px; }
+.ec-sem__titre { margin: 0; padding: 0 4px; font-size: 20px; line-height: 1.2; letter-spacing: -.02em; }
+.ec-sem__pastille { position: absolute; top: -11px; left: 14px; padding: 3px 10px; border-radius: 999px; background: var(--vermillon); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: 0; box-shadow: 0 4px 10px rgba(255, 74, 28, .3); }
+.ec-sem__mot { margin: 0; padding: 8px 10px; border-radius: 12px; background: rgba(242, 194, 48, .22); font-size: 14px; font-weight: 600; }
+.ec-sem__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.ec-sem__liste > li { display: flex; }
+@media (max-width: 700px) { .ec-sem__col { flex-basis: 84%; } }

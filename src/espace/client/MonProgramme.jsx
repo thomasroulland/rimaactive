@@ -26,23 +26,27 @@ export default function MonProgramme({ profil, programmes, programme, seances })
   const blocs = useMemo(() => blocsDuClient(programmes, aujourdhui), [programmes, aujourdhui])
   const defaut = Math.max(0, blocs.findIndex((b) => b.programme.id === programme?.id))
   const [choisi, setChoisi] = useState(null)
-  const [semaineChoisie, setSemaineChoisie] = useState(null)
   const index = choisi !== null && blocs[choisi] ? choisi : defaut
   const bloc = blocs[index]
   const frise = useRef(null)
+  const grille = useRef(null)
   // Au chargement, le bloc en cours est amené dans la frise (on ne fait défiler que la frise, jamais la page).
   useEffect(() => {
     const f = frise.current
     const b = f?.querySelector('[data-bloc-courant]')
     if (f && b) f.scrollLeft = Math.max(0, b.offsetLeft - f.offsetLeft - 2)
   }, [blocs.length, defaut])
+  // La semaine en cours est amenée dans la grille (seule la grille défile, jamais la page).
+  useEffect(() => {
+    const g = grille.current
+    const c = g?.querySelector('.est-courante')
+    if (g && c) g.scrollLeft += c.getBoundingClientRect().left - g.getBoundingClientRect().left - 4
+  }, [index, blocs.length])
   const nom = [profil?.prenom, profil?.nom].filter(Boolean).join(' ')
 
-  const choisirBloc = (i) => { setChoisi(i); setSemaineChoisie(null) }
+  const choisirBloc = (i) => { setChoisi(i) }
   const nbSemaines = (bloc?.programme.semaines ?? []).length
-  const semaine = Math.min(semaineChoisie ?? (bloc?.etat === 'en cours' ? bloc.semaine : 1), Math.max(1, nbSemaines))
   const faites = useMemo(() => (bloc ? seancesFaitesDe(seances, bloc.programme.id) : new Set()), [seances, bloc])
-  const lignes = bloc ? seancesDeLaSemaine(bloc.programme, semaine, faites) : []
   const aVenir = blocs.some((b) => b.etat === 'à venir')
 
   return (
@@ -82,44 +86,43 @@ export default function MonProgramme({ profil, programmes, programme, seances })
       {bloc && nbSemaines > 0 && (
         <section className="ec-prog__rubrique" aria-labelledby="titre-semaines">
           <h2 id="titre-semaines" className="ec-h2">Mes semaines</h2>
-          <div className="ec-pastilles" role="group" aria-label="Choisir une semaine">
-            {Array.from({ length: nbSemaines }, (_, k) => k + 1).map((n) => (
-              <button
-                key={n}
-                type="button"
-                className={`ec-pastille${bloc.etat === 'en cours' && n === bloc.semaine ? ' encours' : ''}`}
-                aria-pressed={n === semaine}
-                aria-label={`Semaine ${n}${bloc.etat === 'en cours' && n === bloc.semaine ? ', en cours' : ''}`}
-                onClick={() => setSemaineChoisie(n)}
-              >
-                S{n}
-              </button>
-            ))}
-          </div>
-          <ul className="ec-prog__seances">
-            {lignes.map((x) => {
-              const statut = statutSeance(seances, bloc.programme.id, x.seance.id)
-              const meta = [x.seance.lieu, x.seance.objectif].filter(Boolean).join(' · ')
+          <div className="ec-sem" ref={grille}>
+            {Array.from({ length: nbSemaines }, (_, k) => k + 1).map((n) => {
+              const courante = bloc.etat === 'en cours' && n === bloc.semaine
+              const lignes = seancesDeLaSemaine(bloc.programme, n, faites)
+              const mot = (bloc.programme.semaines[n - 1]?.mot ?? '').trim()
               return (
-                <li key={x.seance.id}>
-                  <Link
-                    className="ec-pcarte"
-                    to={`/espace/seance/${bloc.programme.id}/${x.seance.id}`}
-                    state={{ depuis: 'programme' }}
-                    aria-label={`Séance ${x.numero}, ${x.seance.titre || 'sans titre'}, ${statut}`}
-                  >
-                    <span className="ec-pcarte__numero" aria-hidden="true">{String(x.numero).padStart(2, '0')}</span>
-                    <span className="ec-pcarte__corps">
-                      <span className="ec-pcarte__titre">{x.seance.titre || `Séance ${x.numero}`}</span>
-                      {x.seance.titre && <span className="ec-pcarte__num">Séance {x.numero}</span>}
-                      {meta && <span className="ec-pcarte__meta">{meta}</span>}
-                      <span className="ec-pcarte__bas"><Statut statut={statut} /></span>
-                    </span>
-                  </Link>
-                </li>
+                <section key={n} className={`ec-sem__col${courante ? ' est-courante' : ''}`} aria-label={`Semaine ${n}${courante ? ', en cours' : ''}`} aria-current={courante ? 'date' : undefined}>
+                  <h3 className="ec-sem__titre">Semaine {n}{courante && <span className="ec-sem__pastille">En cours</span>}</h3>
+                  {mot && <p className="ec-sem__mot">{mot}</p>}
+                  <ul className="ec-sem__liste">
+                    {lignes.map((x) => {
+                      const statut = statutSeance(seances, bloc.programme.id, x.seance.id)
+                      const meta = [x.seance.lieu, x.seance.objectif].filter(Boolean).join(' · ')
+                      return (
+                        <li key={x.seance.id}>
+                          <Link
+                            className="ec-pcarte"
+                            to={`/espace/seance/${bloc.programme.id}/${x.seance.id}`}
+                            state={{ depuis: 'programme' }}
+                            aria-label={`Séance ${x.numero}, ${x.seance.titre || 'sans titre'}, ${statut}`}
+                          >
+                            <span className="ec-pcarte__numero" aria-hidden="true">{String(x.numero).padStart(2, '0')}</span>
+                            <span className="ec-pcarte__corps">
+                              <span className="ec-pcarte__titre">{x.seance.titre || `Séance ${x.numero}`}</span>
+                              {x.seance.titre && <span className="ec-pcarte__num">Séance {x.numero}</span>}
+                              {meta && <span className="ec-pcarte__meta">{meta}</span>}
+                              <span className="ec-pcarte__bas"><Statut statut={statut} /></span>
+                            </span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </section>
               )
             })}
-          </ul>
+          </div>
         </section>
       )}
     </div>
