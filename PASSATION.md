@@ -543,3 +543,11 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
     (ou ＋ pour choisir la semaine) : la séance ajoutée est une copie indépendante (Annuler possible). Glisser une séance de la grille
     sur le panneau l'enregistre comme modèle ; aussi « Enregistrer comme modèle » dans le menu ⋯ d'une séance et en haut d'une séance.
   - « Partir d'un modèle » / « Enregistrer ce programme comme modèle » sont retirés de la barre du programme.
+
+## Messagerie retirée (16 novembre 2026, demande de Thomas : « on n'en a plus besoin »)
+- Supprimés : la page Messages du coach (et `/messages/:uid`), l'onglet Messages de la fiche d'un coaché, la page Messages du coaché,
+  les pastilles de non-lus dans les barres, `Discussion.jsx`, `Messagerie.jsx`, `MesMessages.jsx`, `donnees/messages.js` (+ test),
+  les fonctions de discussion de `depots.js` et leurs styles. Les anciennes adresses ramènent à l'accueil de l'espace.
+- **Gardé** : le commentaire du coach sur une séance faite (« Votre commentaire pour … ») : ce n'est pas la messagerie.
+- Les anciens messages restent dans Firestore (`conversations/…`) : rien n'a été effacé ; les règles `firestore.rules` n'ont pas changé
+  (la suppression d'un compte coaché efface toujours ses conversations).

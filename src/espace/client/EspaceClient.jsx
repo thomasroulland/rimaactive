@@ -8,7 +8,6 @@ import MonProgramme from './MonProgramme.jsx'
 import PageProgression from './PageProgression.jsx'
 import Seance from './Seance.jsx'
 import Squelette from './Squelette.jsx'
-import MesMessages from './MesMessages.jsx'
 
 // Données du client en direct : programme affiché (en cours, sinon à venir, sinon le dernier), tous ses programmes publiés, ses séances faites.
 function useDonneesClient(uid) {
@@ -54,7 +53,7 @@ export default function EspaceClient({ uid, profil }) {
             <Route index element={<TableauDeBord uid={uid} profil={profil} {...donnees} />} />
             <Route path="programme" element={<MonProgramme profil={profil} {...donnees} />} />
             <Route path="progression" element={<PageProgression uid={uid} profil={profil} {...donnees} />} />
-            <Route path="messages" element={<MesMessages uid={uid} programmes={donnees.programmes} />} />
+            <Route path="messages" element={<Navigate to="/espace" replace />} />
             <Route path="seance/:programmeId/:seanceId" element={<Seance {...donnees} />} />
             <Route path="*" element={<Navigate to="/espace" replace />} />
           </Routes>

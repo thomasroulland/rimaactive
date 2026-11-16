@@ -3,9 +3,7 @@ import ProgrammesCoach from './ProgrammesCoach.jsx'
 import MesCoaches from './MesCoaches.jsx'
 import Exercices from './Exercices.jsx'
 import FicheExercice from './FicheExercice.jsx'
-import { Bilans, Ensemble, Messages, Notes, Photos, Stats } from './OngletsCoache.jsx'
-import Messagerie, { useConversations } from './Messagerie.jsx'
-import { nonLu } from '../donnees/messages.js'
+import { Bilans, Ensemble, Notes, Photos, Stats } from './OngletsCoache.jsx'
 import EditeurModeleSeance from './EditeurModeleSeance.jsx'
 import EditeurProgramme from './EditeurProgramme.jsx'
 import { PageCoache } from './EnteteCoache.jsx'
@@ -15,7 +13,6 @@ export const LIENS_COACH = [
   { to: '/espace/coach', label: 'Mes coachés', court: 'Coachés', end: true },
   { to: '/espace/coach/exercices', label: 'Banque d’exercices', court: 'Exercices' },
   { to: '/espace/coach/modeles', label: 'Modèles' },
-  { to: '/espace/coach/messages', label: 'Messages' },
 ]
 
 // Espace coach : l'écran choisi
@@ -27,8 +24,7 @@ export default function EspaceCoach({ profil }) {
         <Route path="modeles" element={<ProgrammesCoach />} />
         <Route path="programmes" element={<Navigate to="/espace/coach/modeles" replace />} />
         <Route path="modeles/:modeleId" element={<EditeurModeleSeance />} />
-        <Route path="messages" element={<Messagerie />} />
-        <Route path="messages/:uid" element={<Messagerie />} />
+        <Route path="messages/*" element={<Navigate to="/espace/coach" replace />} />
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />
         <Route path="exercices/:id" element={<FicheExercice />} />
@@ -40,7 +36,7 @@ export default function EspaceCoach({ profil }) {
           <Route path="bilans" element={<Bilans />} />
           <Route path="stats" element={<Stats />} />
           <Route path="photos" element={<Photos />} />
-          <Route path="messages" element={<Messages />} />
+          <Route path="messages" element={<Navigate to=".." replace />} />
           <Route path="notes" element={<Notes />} />
           <Route path="mesures" element={<Navigate to="../stats" replace />} />
         </Route>
@@ -50,9 +46,7 @@ export default function EspaceCoach({ profil }) {
   )
 }
 
-// Pages du coach : « Messages » porte le nombre de coachés qui ont écrit sans réponse lue (15 novembre 2026)
+// Pages du coach dans la barre de menu (la messagerie a été retirée le 16 novembre 2026)
 export function useLiensCoach() {
-  const conversations = useConversations()
-  const n = [...(conversations?.values() ?? [])].filter((c) => nonLu(c, 'coach')).length
-  return LIENS_COACH.map((l) => (l.to === '/espace/coach/messages' ? { ...l, badge: n } : l))
+  return LIENS_COACH
 }
