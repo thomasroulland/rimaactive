@@ -501,3 +501,8 @@ Deux PDF de Marie (« Page d'accueil », « Page Mes offres »), appliqués tels
   existe ne prouve pas qu'on la voit.
 - **Outils d'essai** (machine temporaire, à refaire si elle est recréée) : `/tmp/claude-0/relance.sh` (émulateurs, données de démo,
   site sur le port 4202), `scratchpad/outils/semer.mjs`, `scratchpad/glass/tour.cjs` (15 pages) et `tout.cjs` (23 clics rejoués).
+
+## Couleurs du fond plus fortes, survol jaune dans la barre (16 novembre 2026, en ligne, accord écrit : « ok »)
+- **Fond** (`body::before`, `src/verre.css`) : jaune du haut .30 → .40, rose .13 → .19, jaune du bas .16 → .22 (demande de Thomas).
+- **Barre de menu, ordinateur** : au survol, la pilule du lien passe en jaune, texte encre (simple changement de couleur en 0,15 s, sans
+  glissement ni texte qui défile : ces animations ont été retirées le matin même à la demande de Thomas). La page en cours garde sa pilule blanche.
