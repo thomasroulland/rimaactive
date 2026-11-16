@@ -1548,3 +1548,63 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
   .gp-nouvelle { min-height: 160px; }
 }
 @media (prefers-reduced-motion: reduce) { .gp-col { transition: none; } }
+
+/* ===== Page de séance du coach : recomposée (16 novembre 2026) — tout le contenu visible sans défiler, la banque à gauche toute la hauteur ===== */
+/* le titre est déjà dans le champ « Titre » : le grand titre reste pour les lecteurs d'écran seulement */
+.page-seance__titre-ligne { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.page-seance__nav { padding-block: 2px; }
+.es2 { grid-template-columns: minmax(290px, 340px) minmax(0, 1fr); gap: 16px; padding-bottom: 96px; }
+/* fiche de la séance : une seule ligne */
+.es2__seance .espace-params--seance { grid-template-columns: minmax(180px, 2fr) minmax(110px, 1fr) minmax(110px, 1fr) 84px minmax(110px, 1.2fr); gap: 8px 12px; padding: 12px 14px; align-items: end; margin: 0; }
+.es2__seance .espace-params--seance .espace-param--large { grid-column: auto; }
+.es2__seance .espace-params--seance .champ-groupe > label { font-size: 12px; line-height: 16px; }
+.es2__seance .espace-params--seance input.champ, .es2__seance .espace-params--seance select.champ { height: 42px; min-height: 42px; font-size: 15px; }
+.es2__resume { margin: 10px 4px 0; font-size: 14px; }
+.es2__resume b { font-size: 15px; }
+.es2-bloc { margin-top: 10px; }
+.es2-ligne .espace-vignette, .es2-ligne__principal .espace-vignette { width: 40px; height: 40px; }
+.es2-bloc[data-format="series"] { --es2-cols: 40px minmax(130px, 1fr) 60px 60px 70px 64px 38px; }
+.es2-bloc[data-format="autre"] { --es2-cols: 40px minmax(130px, 1fr) 70px 70px 38px; }
+.es2-cellule { height: 38px; font-size: 15px; }
+.es2-ligne__principal { padding-block: 6px; }
+/* banque : une colonne qui prend la hauteur de l'écran, la liste défile dedans */
+.es2__banque { top: 76px; height: calc(100vh - 168px); max-height: none; overflow: visible; display: flex; flex-direction: column; }
+.es2__banque .espace-choix { flex: 1; min-height: 0; margin: 0; padding: 14px; gap: 10px; display: flex; flex-direction: column; overflow: hidden; }
+.es2__banque .espace-choix__tete { flex: none; flex-wrap: nowrap; gap: 10px; }
+.es2__banque .espace-sous-titre { font-size: 17px; margin: 0; }
+.es2__banque .espace-choix .champ-groupe.espace-choix__bloc { gap: 6px; }
+.es2__banque .espace-choix__bloc > label { font-size: 12px; }
+.es2__banque .espace-choix .espace-choix__bloc .champ { width: 74px; min-height: 36px; height: 36px; padding-block: 0; }
+.es2__banque .champ-groupe > label { font-size: 12px; line-height: 16px; }
+.es2__banque input.champ { min-height: 40px; height: 40px; padding-block: 0; }
+.es2__banque .onglets-parties { flex: none; align-self: stretch; }
+.es2__banque .filtres-coaches { flex: none; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.es2__banque .filtres-coaches::-webkit-scrollbar { display: none; }
+.es2__banque .filtre-coaches { flex: none; min-height: 32px; padding: 0 12px; font-size: 13px; }
+.es2__banque .espace-choix__matos { flex: none; display: grid; gap: 4px; }
+.es2__banque .espace-choix__matos .banque-filtres__lib { font-size: 12px; }
+.es2__banque .espace-choix__liste { flex: 1 1 auto; min-height: 0; max-height: none; overflow-y: auto; margin-inline: -4px; padding-inline: 4px; }
+.es2__banque .espace-choix__creer { flex: none; margin: 0; }
+.es2__banque .espace-choix__creer > summary { font-size: 14px; }
+.es2__banque .espace-aide, .es2__banque .espace-texte { flex: none; margin: 0; }
+@media (max-width: 1100px) {
+  .es2 { grid-template-columns: minmax(0, 1fr); }
+  .es2__banque { order: 0; position: static; height: auto; }
+  .es2__banque .espace-choix { overflow: visible; }
+  .es2__banque .espace-choix__liste { max-height: 320px; }
+  .es2__seance .espace-params--seance { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .es2__seance .espace-params--seance .espace-param--large { grid-column: 1 / -1; }
+}
+/* lignes de la banque : une ligne par exercice, bouton rond « + » */
+.es2__banque .espace-choix__ligne { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+.es2__banque .espace-choix__ligne .espace-vignette { width: 38px; height: 38px; }
+.es2__banque .espace-choix__nom { flex: 1; min-width: 0; display: grid; gap: 0; }
+.es2__banque .espace-choix__exo { font-size: 15px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.es2__banque .espace-choix__muscles { font-size: 12px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.es2__banque .espace-choix__ligne .picto-materiel, .es2__banque .espace-choix__ligne > svg { display: none; }
+.es2__banque .espace-choix__ligne .bouton { flex: none; width: 36px; min-width: 36px; height: 36px; min-height: 36px; padding: 0; border-radius: 50%; font-size: 0; background: var(--jaune); border-color: var(--jaune); }
+.es2__banque .espace-choix__ligne .bouton::before { content: "+"; font: 800 22px/1 var(--font-sans); color: #161514; }
+/* résumé de la séance : petit texte discret en bas à droite de la fiche */
+.es2__seance .es2__resume { grid-column: 1 / -1; justify-self: end; margin: -2px 2px -4px; font-size: 12px; font-weight: 600; color: var(--gris-chaud); }
+.es2__seance .es2__resume b { font-size: inherit; color: inherit; }
+.es2__banque .materiel-picto { display: none; }

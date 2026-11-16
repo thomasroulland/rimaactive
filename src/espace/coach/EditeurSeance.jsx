@@ -80,6 +80,11 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
             <Champ id={ids('lieu')} label="Lieu" valeur={seance.lieu} changer={(v) => majSeance('lieu', v)} />
             <Champ id={ids('duree')} label="Durée (min)" valeur={seance.duree} changer={(v) => majSeance('duree', v)} />
             <Champ id={ids('objectif')} label="Objectif" valeur={seance.objectif} changer={(v) => majSeance('objectif', v)} />
+            {seance.type !== 'course' && (
+              <p className="es2__resume" aria-live="polite">
+                {nbExos} exercice{nbExos > 1 ? 's' : ''} · {nbSeries} série{nbSeries > 1 ? 's' : ''}{blocs.length > 0 && <> · {blocs.length} bloc{blocs.length > 1 ? 's' : ''}</>}
+              </p>
+            )}
             {seance.type === 'course' && (
               <>
                 <Champ id={ids('distance')} label="Distance" valeur={seance.distance} changer={(v) => majSeance('distance', v)} />
@@ -91,10 +96,6 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
 
           {seance.type !== 'course' && (
             <>
-              <p className="es2__resume" aria-live="polite">
-                <b>{nbExos}</b> exercice{nbExos > 1 ? 's' : ''} · <b>{nbSeries}</b> série{nbSeries > 1 ? 's' : ''}
-                {blocs.length > 0 && <> · {blocs.length} bloc{blocs.length > 1 ? 's' : ''}</>}
-              </p>
               {blocs.length === 0 && (
                 <p className="espace-texte">Aucun exercice pour l’instant. Cherchez-en un dans la banque et touchez ＋, ou glissez-le ici.</p>
               )}
