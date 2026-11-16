@@ -201,7 +201,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
 // Panneau « Modèles de séance » (16 novembre 2026) : à gauche de la grille, on glisse un modèle dans une semaine (ou ＋ pour choisir
 // la semaine) ; glisser une séance de la grille sur le panneau l'enregistre comme modèle. Se replie pour laisser la place.
 function PanneauModeles({ modeles, types, semaines, courante, glisserModele, finGlisse, ajouter, seanceGlissee, versModele }) {
-  const [ouvert, setOuvert] = useState(() => { try { return localStorage.getItem('rima-panneau-modeles') !== 'ferme' } catch { return true } })
+  const [ouvert, setOuvert] = useState(() => { try { return localStorage.getItem('rima-panneau-modeles') === 'ouvert' } catch { return false } })
   const [recherche, setRecherche] = useState('')
   const [cible, setCible] = useState(false)
   const basculer = () => setOuvert((o) => { try { localStorage.setItem('rima-panneau-modeles', o ? 'ferme' : 'ouvert') } catch { /* rien */ } return !o })
