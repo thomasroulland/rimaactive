@@ -130,7 +130,6 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                         draggable={!f && !attente}
                         onDragStart={(ev) => { ev.dataTransfer.setData(TYPE_SEANCE, `${s}:${i}`); ev.dataTransfer.effectAllowed = 'copyMove'; enCours.current = { s, se: i }; setGlisse({ s, se: i }) }}
                         onDragEnd={() => { enCours.current = null; setGlisse(null); setDepot(null) }}>
-                        {!f && <span className="gp-poignee" aria-hidden="true" title="Glisser pour déplacer">⋮⋮</span>}
                         <div className="gp-seance__corps">
                           <p className="gp-seance__haut"><span className="gp-num">{String(i + 1).padStart(2, '0')}</span><span>{nomType(x.type, types)}</span></p>
                           <h3 className="gp-seance__titre">

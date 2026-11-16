@@ -1761,3 +1761,16 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 .prog-outils__actions { flex: 0 0 auto; }
 @media (max-width: 1180px) { .prog-outils__debut { flex: 1 1 260px; min-width: 0; } .prog-outils__gauche { flex-wrap: wrap; } }
 .gp-mot { position: absolute; left: 6px; right: 6px; top: 44px; z-index: 6; padding: 10px; border-radius: 14px; background: #fff; border: 1px solid var(--filet); box-shadow: 0 14px 30px rgba(22, 21, 20, .18); animation: menu-ouvre var(--net, 220ms) var(--doux, ease) both; }
+.gp-seance { grid-template-columns: minmax(0, 1fr) auto; padding-left: 14px; }
+.gp-annuler { left: 0; right: 0; margin-inline: auto; width: fit-content; max-width: calc(100vw - 32px); transform: none; }
+
+/* Les messages de confirmation sont montrés par la bulle en bas de l'écran (Snack) : sur la page, ils restent
+   pour les lecteurs d'écran seulement. Les erreurs, elles, restent visibles à leur place. */
+.espace-coach .espace-message:not(.espace-message--erreur),
+.ec-page .espace-message:not(.espace-message--erreur) { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Banque d'exercices de la création de séance : plus large sur grand écran, jamais écrasée sur écran bas */
+@media (min-width: 1101px) {
+  .es2 { grid-template-columns: minmax(300px, clamp(340px, 26vw, 500px)) minmax(0, 1fr); }
+  .es2__banque { height: max(600px, calc(100vh - 168px)); }
+}
