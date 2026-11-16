@@ -1711,3 +1711,28 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
 @media (max-width: 1180px) { .prog-outils { flex-wrap: wrap; } .prog-outils__gauche { flex-wrap: wrap; } .prog-outils__actions { flex-wrap: wrap; } }
 .prog-modele summary.prog-modele__bouton { width: auto; height: 40px; border-radius: 999px; padding: 0 16px; display: inline-flex; place-items: initial; font: 700 15px/1 var(--font-sans); }
 .prog-modele[open] summary.prog-modele__bouton, .prog-modele summary.prog-modele__bouton:hover { background: var(--encre); color: var(--craie); }
+/* bouton « + » de la banque : la croix est dessinée (deux traits), pas écrite, pour être exactement au centre du rond */
+.es2__banque .espace-choix__ligne .bouton { position: relative; display: block; padding: 0; line-height: 0; }
+.es2__banque .espace-choix__ligne .bouton::before, .es2__banque .espace-choix__ligne .bouton::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 2.5px; border-radius: 2px; background: #161514; font: 0/0 sans-serif; transform: translate(-50%, -50%); }
+.es2__banque .espace-choix__ligne .bouton::after { transform: translate(-50%, -50%) rotate(90deg); }
+/* boutons ronds de la grille et de la création de séance : icône au centre exact */
+.gp-dup, .gp-menu summary, .es2-plus { display: grid; place-items: center; padding: 0; line-height: 0; }
+.gp-dup svg, .gp-menu summary svg, .es2-plus svg { display: block; }
+
+/* ===== Menus : passent devant tout, s'ouvrent avec une animation, bouton « Partir d'un modèle » centré ===== */
+.gp-col:has(.gp-menu[open]), .gp-item:has(.gp-menu[open]), .gp-seance:has(.gp-menu[open]) { position: relative; z-index: 70; }
+.gp-seance:has(.gp-menu[open]) .gp-seance__outils { z-index: 71; }
+.prog-outils__actions:has(.gp-menu[open]) { position: relative; z-index: 70; }
+.gp-menu__liste, .ajout-seance__menu { transform-origin: top right; }
+.prog-modele .gp-menu__liste { transform-origin: top left; }
+@keyframes menu-ouvre { from { opacity: 0; transform: translateY(-8px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes pli-ouvre { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .gp-menu[open] > .gp-menu__liste, .ajout-seance__menu { animation: menu-ouvre .22s cubic-bezier(.22, 1, .36, 1) both; }
+  .es2-ligne__plus, .sf-detail, .ec-s2-detail { animation: pli-ouvre .24s cubic-bezier(.22, 1, .36, 1) both; }
+  .gp-annuler { animation: menu-ouvre .3s cubic-bezier(.3, 1.4, .5, 1) both; }
+  .gp-menu summary, .gp-dup, .es2-plus, .prog-pas button { transition: background-color .15s ease, color .15s ease, transform .15s ease; }
+  .gp-menu summary:active, .gp-dup:active, .es2-plus:active { transform: scale(.92); }
+}
+.prog-modele summary.prog-modele__bouton { display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0 16px; height: 40px; }

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { nomType } from '../donnees/reglages.js'
 import AjoutSeance from './AjoutSeance.jsx'
+import { IconeCopier, IconePoints } from './Icones.jsx'
 
 // Grille du programme (maquette de Thomas, 15 novembre 2026) : une colonne par semaine, les séances empilées dedans.
 // On glisse une séance d'une colonne à l'autre (ou plus haut, plus bas) ; Alt en glissant la copie ; ⧉ la duplique juste après ;
@@ -16,7 +17,7 @@ const fermer = (ev) => { const d = ev.currentTarget.closest('details'); if (d) d
 function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, supprimer }) {
   return (
     <details className="gp-menu">
-      <summary aria-label={`Actions : ${nom}`} title="Actions"><span aria-hidden="true">⋯</span></summary>
+      <summary aria-label={`Actions : ${nom}`} title="Actions"><IconePoints /></summary>
       <div className="gp-menu__liste" role="group" aria-label={`Actions : ${nom}`}>
         <button type="button" onClick={(e) => { fermer(e); dupliquer(courante) }}>Dupliquer juste après</button>
         <p className="gp-menu__titre">Copier vers…</p>
@@ -85,7 +86,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
               <header className="gp-col__tete">
                 <h2 id={`gp-sem-${w.id}`}>Semaine {s + 1}</h2>
                 <details className="gp-menu gp-menu--semaine">
-                  <summary aria-label={`Actions : semaine ${s + 1}`} title="Actions de la semaine"><span aria-hidden="true">⋯</span></summary>
+                  <summary aria-label={`Actions : semaine ${s + 1}`} title="Actions de la semaine"><IconePoints /></summary>
                   <div className="gp-menu__liste" role="group" aria-label={`Actions : semaine ${s + 1}`}>
                     <button type="button" onClick={(e) => { fermer(e); actions.dupliquerSemaine(s) }}>Dupliquer dans la semaine {s + 2}</button>
                     <button type="button" onClick={(e) => { fermer(e); setMots((m) => ({ ...m, [w.id]: !m[w.id] })) }}>Mot pour le coaché</button>
@@ -129,7 +130,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                         </div>
                         {!attente && (
                           <div className="gp-seance__outils">
-                            <button type="button" className="gp-dup" aria-label={`Dupliquer la séance ${i + 1} de la semaine ${s + 1}`} title="Dupliquer juste après" onClick={() => actions.dupliquer({ s, se: i }, { vers: s, index: i + 1 })}>⧉</button>
+                            <button type="button" className="gp-dup" aria-label={`Dupliquer la séance ${i + 1} de la semaine ${s + 1}`} title="Dupliquer juste après" onClick={() => actions.dupliquer({ s, se: i }, { vers: s, index: i + 1 })}><IconeCopier /></button>
                             <MenuSeance nom={`séance ${i + 1}, semaine ${s + 1}`} semaines={semaines} courante={s} faite={f}
                               dupliquer={(vers) => actions.dupliquer({ s, se: i }, vers === s ? { vers, index: i + 1 } : { vers })}
                               deplacer={(vers) => actions.deplacer({ s, se: i }, { vers })}

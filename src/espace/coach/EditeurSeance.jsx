@@ -6,6 +6,7 @@ import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice, { TYPE_GLISSE } from './ChoixExercice.jsx'
 import { chargeIndicative } from '../donnees/banque.js'
 import { frNombre } from '../donnees/resume.js'
+import { IconePoints } from './Icones.jsx'
 
 export const FORMATS = [
   ['series', 'Séries classiques'],
@@ -228,7 +229,7 @@ function LigneExo({ element: el, code, series, verrou, rm, rpeSemaine, maj, reti
         {cellule('reps', duree ? 'durée' : 'répétitions', duree ? 'text' : 'numeric', duree ? '45 s' : undefined)}
         {cellule('charge', 'charge en kilos', 'decimal', calculee !== null ? frNombre(calculee) : undefined)}
         {series && cellule('repos', 'repos')}
-        <button type="button" className="es2-plus" aria-expanded={plus} aria-label={`Plus de réglages pour ${el.nom}`} onClick={() => setPlus((p) => !p)}>⋯</button>
+        <button type="button" className="es2-plus" aria-expanded={plus} aria-label={`Plus de réglages pour ${el.nom}`} onClick={() => setPlus((p) => !p)}><IconePoints /></button>
       </div>
       {plus && (
         <div className="es2-ligne__plus">

@@ -133,9 +133,74 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 .heros.heros--v3 { padding-right: 0 !important; max-width: none !important; }
 .heros.heros--v3 .heros__outil.ecrans { margin-right: 0 !important; padding-right: 18px !important; }
 
-/* barre du haut et pied de page : aucune animation (entrée, glissement de la pastille, défilement du texte au survol, reflet, appui) */
-.entete, .entete *, .pied, .pied * { animation: none !important; transition: none !important; }
-.entete .nav__lien:hover .roule { transform: none !important; }
-.entete .nav__lien .roule::after { display: none; }
-.entete, .entete:hover { background-image: none !important; }
-.entete .nav__lien:active, .entete .entete__compte:active, .entete .entete__ecrire:active, .pied a:active { transform: none !important; }
+/* barre du haut et pied de page : pas d'animation d'apparition (les autres animations de la barre restent : pastille, texte qui défile, reflet, appui) */
+.entete, .pied { animation: none !important; }
+
+/* pages de travail du coach (grille du programme, création de séance, séance faite) : tout l'écran est utilisé, la barre et le pied de page suivent */
+/* même largeur sur toutes les pages du coach (fiche d'un coaché et ses onglets, listes) : rien ne bouge d'un onglet à l'autre ; la barre de défilement garde sa place */
+:root:has(.espace-coach) { --largeur: 2400px; }
+html { scrollbar-gutter: stable; }
+
+/* =====================================================================================================
+   20 PRINCIPES D'UX ET D'ANIMATION (16 novembre 2026) — ce qui est appliqué, et où
+   - Fitts / zones de clic plus grandes : tout petit bouton rond garde son dessin mais gagne une zone de clic de 44 px (ci-dessous)
+   - Snappy timing / Doherty / fréquence d'usage : micro-interactions de 120 à 280 ms ; ce qu'on voit souvent (cartes qui arrivent) est plus court
+   - Slow in & slow out : une seule courbe douce pour tout (--doux), jamais de vitesse constante
+   - Anticipation + squash & stretch + follow through : le bouton se creuse à l'appui (anticipation), puis rebondit (--ressort)
+   - Exaggerated feedback : une série cochée, un envoi réussi « pop » franchement
+   - Staging the focus : pendant un glissement, tout s'efface sauf la colonne visée
+   - Secondary action : le trait de coche se dessine en plus du changement de couleur
+   - Solid drawing : les séances se soulèvent (ombre) au survol
+   - Hick / Miller / Jakob / Postel : peu de choix par écran, blocs regroupés, motifs connus, saisie souple (« 22,5 » ou « 22.5 »)
+   ===================================================================================================== */
+:root { --vif: 140ms; --net: 220ms; --posé: 300ms; }
+
+/* Fitts + zones de clic : on agrandit la zone sensible sans changer le dessin */
+.gp-dup, .gp-menu summary, .es2-plus, .sf-chevron, .prog-pas button, .es2-crayon, .coache-retour, .ec-s2-retour, .ec-s2-rond, .nav__lien, .ecrans__vignette { position: relative; }
+.gp-dup::after, .gp-menu summary::after, .es2-plus::after, .sf-chevron::after, .prog-pas button::after, .es2-crayon::after, .ec-s2-rond::after {
+  content: ""; position: absolute; inset: 50% auto auto 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); border-radius: 50%; }
+/* le « + » de la banque dessine déjà ses deux traits avec ::before et ::after : sa zone de clic est le bouton lui-même, déjà 36 px, on l'étend avec un cadre */
+.es2__banque .espace-choix__ligne .bouton { box-shadow: 0 0 0 4px transparent; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* durées courtes et une seule courbe */
+  .nav--prete .nav__bulle { transition: transform .38s var(--ressort), width .38s var(--ressort), height .25s var(--doux), opacity .2s ease; }
+  .entete { transition-duration: var(--net); }
+  .carte-coache, .ec-pcarte, .ec-carte, .service, .question, .gp-seance { transition: transform var(--net) var(--doux), box-shadow var(--net) var(--doux), --lueur var(--net) ease; }
+  .ec-noire, .ec-semaine, .ec-etape, .ec-pcarte, .ec-chiffre, .ec-records, .ec-regul, .ec-histo__carte, .ec-carte, .espace-carte, .carte-coache, .bandeau-coach, .disc, .messagerie__fil, .ec-s2-bandeau { animation-duration: .32s; }
+  .carte-coache:nth-child(2), .espace-carte:nth-of-type(2) { animation-delay: .03s; }
+  .carte-coache:nth-child(3), .espace-carte:nth-of-type(3) { animation-delay: .06s; }
+  .carte-coache:nth-child(n+4) { animation-delay: .09s; }
+  @keyframes verre-monte { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .gp-menu[open] > .gp-menu__liste, .ajout-seance__menu { animation-duration: .2s; }
+  .es2-ligne__plus, .sf-detail, .ec-s2-detail { animation-duration: .2s; }
+
+  /* anticipation puis rebond (squash & stretch, follow through) : tous les petits boutons ronds et les pastilles */
+  .gp-dup, .gp-menu summary, .es2-plus, .sf-chevron, .prog-pas button, .es2-crayon, .coache-retour, .ec-s2-rond, .ec-s2-chips button, .gp-nouvelle button, .es2-nouveau button, .es2-ajouter, .sf-modes button, .filtre-coaches, .ajout-seance__bouton {
+    transition: transform .34s var(--ressort), background-color var(--vif) ease, color var(--vif) ease, border-color var(--vif) ease, box-shadow var(--net) ease; }
+  .gp-dup:active, .gp-menu summary:active, .es2-plus:active, .sf-chevron:active, .prog-pas button:active, .es2-crayon:active, .coache-retour:active, .ec-s2-rond:active, .ec-s2-chips button:active,
+  .gp-nouvelle button:active, .es2-nouveau button:active, .es2-ajouter:active, .sf-modes button:active, .filtre-coaches:active, .ajout-seance__bouton:active { transform: scale(.9); transition-duration: .09s; }
+  .es2__banque .espace-choix__ligne .bouton:hover { transform: scale(1.08); } .es2__banque .espace-choix__ligne .bouton:active { transform: scale(.88); transition-duration: .09s; }
+  .es2__banque .espace-choix__ligne .bouton { transition: transform .34s var(--ressort), background-color var(--vif) ease; }
+  .ec-s2-gros:active { transform: scale(.97); transition-duration: .09s; } .ec-s2-gros { transition: transform .34s var(--ressort), box-shadow var(--net) ease; }
+
+  /* exaggerated feedback + secondary action : la coche « pop », le trait se dessine */
+  @keyframes pop { 0% { transform: scale(.6); } 55% { transform: scale(1.22); } 100% { transform: scale(1); } }
+  @keyframes trait { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+  .ec-s2-rond[aria-pressed="true"] { animation: pop .34s var(--ressort); }
+  .ec-s2-rond[aria-pressed="true"] svg path { stroke-dasharray: 24; animation: trait .26s var(--doux) .05s both; }
+  .ec-s2-chips button.est-faite { animation: pop .34s var(--ressort); }
+  .sf-verdict, .gp-seance__etat { animation: pop .3s var(--ressort) backwards; }
+
+  /* solid drawing : une séance se soulève au survol ; la colonne visée par un glissement ressort, les autres s'effacent (staging the focus) */
+  .gp-seance:not(.est-faite):hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(22, 21, 20, .14) !important; }
+  .gp:has(.gp-seance.est-leve) .gp-col:not(.est-depot) { opacity: .62; transition: opacity var(--net) var(--doux); }
+  .gp:has(.gp-seance.est-leve) .gp-col.est-depot { transform: scale(1.01); transition: transform var(--net) var(--ressort); }
+  .gp-seance.est-leve { transform: scale(.97); transition: transform var(--net) var(--doux), opacity var(--net) ease; }
+  /* l'exercice qu'on glisse depuis la banque : la zone du bloc visé s'illumine tout de suite (Doherty) */
+  .es2-bloc.est-depot, .es2-nouveau.est-depot { transition: outline-color var(--vif) ease, background-color var(--vif) ease; }
+}
+/* appareil qui demande moins de mouvement : la coche change de couleur, sans pop ni trait */
+@media (prefers-reduced-motion: reduce) {
+  .ec-s2-rond, .ec-s2-chips button, .gp-seance { animation: none !important; }
+}
