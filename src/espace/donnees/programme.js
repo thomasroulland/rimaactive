@@ -101,6 +101,31 @@ export function renommerBloc(programme, { s, se }, lettre, nom) {
   return p
 }
 
+// « Partir d'un modèle » (grille, 16 novembre 2026) : les semaines du modèle (copiées avec de nouveaux identifiants) remplacent celles du programme ;
+// le nom, la date de début, le coaché et le statut du programme ne changent pas
+export function appliquerModele(programme, modele) {
+  const m = structuredClone(modele)
+  return { ...programme, parSemaine: m.parSemaine ?? programme.parSemaine, semaines: (m.semaines ?? []).map(copierSemaine) }
+}
+
+// « Enregistrer comme modèle » : le programme sans coaché, sans date et sans statut, avec de nouveaux identifiants
+export function versModele(programme, nom) {
+  const { id, majLe, client, statut, debut, ...reste } = structuredClone(programme) // eslint-disable-line no-unused-vars
+  return { ...reste, nom, debut: '', semaines: (reste.semaines ?? []).map(copierSemaine) }
+}
+
+// Nombre de semaines : en ajoute (vides, à la fin) ou en retire (les dernières) ; `faites` = séances déjà faites, jamais retirées
+export function reglerNbSemaines(programme, n, faites = new Set()) {
+  const p = structuredClone(programme)
+  while (p.semaines.length < n) p.semaines.push(nouvelleSemaine(p.parSemaine))
+  while (p.semaines.length > n && p.semaines.length > 1) {
+    const derniere = p.semaines[p.semaines.length - 1]
+    if (derniere.seances.some((x) => faites.has(x.id))) break
+    p.semaines.pop()
+  }
+  return p
+}
+
 // ---------- Séances : copier, dupliquer, déplacer (grille du programme, 15 novembre 2026) ----------
 
 // Copie d'une séance avec de nouveaux identifiants (séance, blocs, exercices) : la copie n'est jamais « faite »

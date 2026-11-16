@@ -1683,3 +1683,31 @@ a.disc-piece:hover, button.disc-piece:hover { border-color: #b9b4ab; }
   .sf-detail { margin-left: 14px; }
 }
 .sf-ligne .espace-vignette { width: 40px; height: 40px; }
+/* barre d'outils du programme : nombre de semaines avec − et ＋, menu des modèles */
+.prog-outils__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.prog-pas { display: inline-flex; align-items: center; gap: 4px; padding: 3px; border-radius: 999px; background: #fff; border: 1px solid var(--filet); }
+.prog-pas button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: #f4f3ef; color: var(--encre); font: 800 18px/1 var(--font-sans); cursor: pointer; }
+.prog-pas button:disabled { opacity: .4; cursor: default; }
+.prog-pas span { min-width: 92px; text-align: center; font-weight: 700; font-size: 14px; }
+.prog-modele summary { list-style: none; cursor: pointer; }
+.prog-modele summary::-webkit-details-marker { display: none; }
+.prog-modele .gp-menu__liste { right: auto; left: 0; width: 280px; }
+.prog-modele .gp-menu__liste small { float: right; color: var(--gris-chaud); font-weight: 600; }
+.prog-outils__actions > * { flex: none; }
+
+.prog-outils { flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; }
+.prog-outils__actions { margin-left: auto; }
+/* haut de la page du programme : une seule ligne (nom, début, actions), moins d'espace autour */
+.prog-outils { flex-wrap: nowrap; align-items: flex-end; gap: 12px; }
+.prog-outils__gauche { flex: 1 1 auto; flex-wrap: nowrap; gap: 12px; min-width: 0; }
+.prog-outils__choix { flex: 1 1 200px; min-width: 150px; }
+.prog-outils__debut { flex: 0 1 230px; min-width: 170px; }
+.prog-outils__actions { flex: none; flex-wrap: nowrap; margin-left: 0; }
+.prog-outils__actions .bouton { white-space: nowrap; }
+.prog-modele__bouton { display: inline-flex; align-items: center; white-space: nowrap; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--filet); background: #fff; font: 700 15px/1 var(--font-sans); color: var(--encre); cursor: pointer; list-style: none; }
+.prog-modele__bouton:hover { background: var(--encre); color: var(--craie); }
+.espace-coach:has(.gp-zone) { gap: 12px; }
+.espace-coach:has(.gp-zone) .espace-message:empty { display: none; }
+@media (max-width: 1180px) { .prog-outils { flex-wrap: wrap; } .prog-outils__gauche { flex-wrap: wrap; } .prog-outils__actions { flex-wrap: wrap; } }
+.prog-modele summary.prog-modele__bouton { width: auto; height: 40px; border-radius: 999px; padding: 0 16px; display: inline-flex; place-items: initial; font: 700 15px/1 var(--font-sans); }
+.prog-modele[open] summary.prog-modele__bouton, .prog-modele summary.prog-modele__bouton:hover { background: var(--encre); color: var(--craie); }

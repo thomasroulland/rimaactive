@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
   ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
-  ecouterModele, enregistrerModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
+  ecouterModele, ecouterModeles, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, retirerElement,
-  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance,
+  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { nomType } from '../donnees/reglages.js'
@@ -50,6 +50,7 @@ export default function EditeurProgramme() {
   const [erreurVerrous, setErreurVerrous] = useState('')
   const [message, setMessage] = useState('')
   const [seancesFaites, setSeancesFaites] = useState([]) // ce que le coaché a fait : affiché sur une séance faite
+  const [modeles, setModeles] = useState([]) // pour « Partir d'un modèle »
   const [annulable, setAnnulable] = useState(null) // dernier déplacement ou duplication de séance : { texte, avant }
   const [banqueMaj, setBanqueMaj] = useState(false) // photos et consignes repris de la banque : à enregistrer pour que le coaché les voie
   useEffect(() => { if (!modifie) setBanqueMaj(false) }, [modifie])
@@ -82,6 +83,7 @@ export default function EditeurProgramme() {
     ? ecouterModele(modeleId, setProgrammes, () => setErreur('Impossible de charger le modèle. Vérifiez votre connexion.'))
     : ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.'))), [uid, modele, modeleId])
   useEffect(() => ecouterExercices(setExercices, () => setExercices([])), [])
+  useEffect(() => (modele ? undefined : ecouterModeles(setModeles, () => setModeles([]))), [modele])
   useEffect(() => (modele ? undefined : ecouterSeancesClient(uid, setSeancesFaites, () => setSeancesFaites([]))), [uid, modele])
 
   // Ouvre d'abord le programme en cours, sinon le prochain, sinon le plus récent (14 novembre 2026)
@@ -306,6 +308,31 @@ export default function EditeurProgramme() {
     setErreur('')
     avecAnnulation(`Séance copiée en semaine ${(a.vers ?? de.s) + 1}.`, (p) => dupliquerSeance(p, de, a))
   }
+  // nombre de semaines avec − et ＋ ; modèles
+  function changerNbSemaines(n) {
+    if (n < 1 || n > MAX_SEMAINES) return
+    if (n < nbSem && verrous === null) { setErreur('Vérification des séances déjà faites en cours : réessayez dans un instant.'); return }
+    const apres = reglerNbSemaines(prog, n, verrous ?? new Set())
+    if (apres.semaines.length !== n) { setErreur('Une semaine avec des séances déjà faites ne peut pas être retirée.'); return }
+    const retirees = prog.semaines.slice(n).filter((w) => !semaineVide(w)).length
+    const faire = () => { setErreur(''); muter((p) => { p.semaines = reglerNbSemaines(p, n, verrous ?? new Set()).semaines }) }
+    if (n < nbSem && retirees > 0) demander({ titre: `Retirer ${nbSem - n} semaine${nbSem - n > 1 ? 's' : ''} ?`, texte: 'Les séances de ces dernières semaines seront supprimées.', libelle: 'Retirer', action: faire })
+    else faire()
+  }
+  function partirDunModele(m) {
+    if (verrous === null || prog.semaines.some((w) => w.seances.some((x) => verrous.has(x.id)))) { setErreur('Ce programme contient déjà des séances faites : le modèle ne peut pas le remplacer.'); return }
+    const faire = () => { setErreur(''); avecAnnulation(`Modèle « ${m.nom} » appliqué.`, (p) => appliquerModele(p, m)) }
+    if (prog.semaines.every(semaineVide)) faire()
+    else demander({ titre: `Partir du modèle « ${m.nom} » ?`, texte: 'Les semaines et séances actuelles seront remplacées par celles du modèle. Vous pourrez annuler juste après.', libelle: 'Remplacer', action: faire })
+  }
+  async function enregistrerCommeModele() {
+    const nom = window.prompt('Nom du modèle', prog.nom || 'Nouveau modèle')
+    if (!nom || !nom.trim()) return
+    try {
+      await enregistrerModele({ id: nouvelIdModele(), ...versModele(prog, nom.trim()) }, { creation: true })
+      setMessage(`Modèle « ${nom.trim()} » enregistré. Retrouvez-le dans Modèles.`)
+    } catch (e) { setErreur(messageErreur(e.code)) }
+  }
   const majSemaine = (i, cle, v) => muter((p) => { p.semaines[i][cle] = v })
 
   // Supprimer la semaine affichée : impossible s'il n'en reste qu'une ou si une de ses séances est faite.
@@ -483,6 +510,19 @@ export default function EditeurProgramme() {
                 </div>
               </div>
               <div className="prog-outils__actions">
+                <div className="prog-pas" role="group" aria-label="Nombre de semaines">
+                  <button type="button" aria-label="Une semaine de moins" disabled={nbSem <= 1} onClick={() => changerNbSemaines(nbSem - 1)}>−</button>
+                  <span>{nbSem} semaine{nbSem > 1 ? 's' : ''}</span>
+                  <button type="button" aria-label="Une semaine de plus" disabled={nbSem >= MAX_SEMAINES} onClick={() => changerNbSemaines(nbSem + 1)}>＋</button>
+                </div>
+                <details className="gp-menu prog-modele">
+                  <summary className="prog-modele__bouton">Partir d’un modèle ▾</summary>
+                  <div className="gp-menu__liste" role="group" aria-label="Modèles">
+                    {modeles.length === 0 && <p className="gp-menu__titre">Aucun modèle enregistré</p>}
+                    {modeles.map((m) => <button key={m.id} type="button" onClick={(e) => { e.currentTarget.closest('details').open = false; partirDunModele(m) }}>{m.nom || 'Modèle sans nom'} <small>{m.semaines?.length ?? 0} sem.</small></button>)}
+                    <button type="button" onClick={(e) => { e.currentTarget.closest('details').open = false; enregistrerCommeModele() }}>Enregistrer ce programme comme modèle</button>
+                  </div>
+                </details>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setGestion(true)}>Gérer le programme</button>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => {
                   const go = () => aller({ nouveau: true })
@@ -547,7 +587,7 @@ export default function EditeurProgramme() {
           )}
         </div>
       </section>
-      {barre}
+      {!(seance && !modele && estVerrou(seance.id)) && barre}
       {dialogue}
       {gererTypes && <GestionListes titre="Types de séance" reglages={reglages} fermer={() => setGererTypes(false)} listes={[{ cle: 'types', titre: 'Types de séance' }]} />}
       {gestion && (

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nouveauProgramme, dupliquerSemaine, ajouterElement, ajouterAuBloc, copierSeance, dupliquerSeance, deplacerSeance, nomBloc, renommerBloc, NOM_BLOC_MAX, nouvelId } from '../../src/espace/donnees/programme.js'
+import { nouveauProgramme, dupliquerSemaine, ajouterElement, ajouterAuBloc, copierSeance, dupliquerSeance, deplacerSeance, appliquerModele, versModele, reglerNbSemaines, nomBloc, renommerBloc, NOM_BLOC_MAX, nouvelId } from '../../src/espace/donnees/programme.js'
 
 const sansIds = (o) => JSON.parse(JSON.stringify(o, (k, v) => (k === 'id' ? undefined : v)))
 
@@ -223,5 +223,34 @@ describe('copier, dupliquer et déplacer une séance', () => {
     const q = deplacerSeance(p, { s: 0, se: 0 }, { vers: 1 })
     expect(titres(q, 1)).toEqual(['S2-1', 'S2-2', 'S2-3', 'S1-1'])
     expect(q.semaines[1].seances[3].id).toBe(p.semaines[0].seances[0].id)
+  })
+})
+
+describe('modèles et nombre de semaines', () => {
+  const prog = () => {
+    const p = nouveauProgramme({ client: 'c', nom: 'Mon programme', debut: '2026-11-16', semaines: 2, parSemaine: 2 })
+    p.semaines[0].seances[0].titre = 'A'
+    return { ...p, id: 'p1' }
+  }
+  it('versModele : sans coaché, date ni statut, avec de nouveaux identifiants', () => {
+    const p = prog(); const m = versModele(p, 'Mon modèle')
+    expect(m).toMatchObject({ nom: 'Mon modèle', debut: '' })
+    expect(m.client).toBeUndefined(); expect(m.statut).toBeUndefined(); expect(m.id).toBeUndefined()
+    expect(m.semaines[0].id).not.toBe(p.semaines[0].id)
+    expect(m.semaines[0].seances[0].titre).toBe('A')
+  })
+  it('appliquerModele : remplace les semaines, garde nom, date et coaché', () => {
+    const p = prog(); const m = { ...versModele(nouveauProgramme({ client: '', nom: 'M', debut: '', semaines: 3, parSemaine: 1 }), 'M') }
+    const q = appliquerModele(p, m)
+    expect(q.semaines).toHaveLength(3); expect(q.nom).toBe('Mon programme'); expect(q.client).toBe('c'); expect(q.debut).toBe('2026-11-16'); expect(q.parSemaine).toBe(1)
+    expect(q.semaines[0].id).not.toBe(m.semaines[0].id)
+  })
+  it('reglerNbSemaines : ajoute, retire, jamais une semaine faite ni la dernière restante', () => {
+    const p = prog()
+    expect(reglerNbSemaines(p, 5).semaines).toHaveLength(5)
+    expect(reglerNbSemaines(p, 1).semaines).toHaveLength(1)
+    expect(reglerNbSemaines(p, 0).semaines).toHaveLength(1)
+    const faite = new Set([p.semaines[1].seances[0].id])
+    expect(reglerNbSemaines(p, 1, faite).semaines).toHaveLength(2)
   })
 })
