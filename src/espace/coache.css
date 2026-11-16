@@ -1246,3 +1246,6 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-s5-blocs button.est-actif { background: #161514; color: #fff; border-color: #161514; }
 .ec-s5-blocs button.est-fini { background: #eef7f1; color: #2f9e5b; border-color: #cfe8d7; }
 .ec-s5 { gap: 14px; }
+/* flèche de retour de la barre : plus discrète */
+.ec-s5-retour { width: 30px; height: 30px; font-size: 14px; background: transparent; }
+.ec-s5-barre { padding-left: 10px; }
