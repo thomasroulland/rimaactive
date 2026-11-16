@@ -7,6 +7,7 @@ import { enregistrerExercice } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import { basculerDetails } from '../../components/basculerDetails.js'
+import RangeeDefilante from './RangeeDefilante.jsx'
 import OngletsParties from './OngletsParties.jsx'
 import { partieDe } from '../donnees/reglages.js'
 
@@ -77,18 +78,18 @@ export default function ChoixExercice({ exercices, lettres, ajouter, cible, chan
           value={recherche} onChange={(e) => setRecherche(e.target.value)} />
       </div>
       <OngletsParties parties={reglages.parties} valeur={partie} changer={(p) => { setPartie(p); setCategorie('Toutes') }} />
-      <div className="filtres-coaches espace-choix__filtres" role="group" aria-label="Catégorie">
+      <RangeeDefilante className="filtres-coaches espace-choix__filtres" role="group" aria-label="Catégorie">
         {['Toutes', ...reglages.categories.filter((c) => partie === 'Tout' || partieDe(c, reglages) === partie)].map((c) => (
           <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
         ))}
-      </div>
+      </RangeeDefilante>
       <div className="espace-choix__matos">
         <span className="banque-filtres__lib" id="choix-f-mat">Matériel</span>
-        <div className="filtres-coaches espace-choix__filtres" role="group" aria-labelledby="choix-f-mat">
+        <RangeeDefilante className="filtres-coaches espace-choix__filtres" role="group" aria-labelledby="choix-f-mat">
           {['Tous', ...reglages.materiels].map((m) => (
             <button key={m} type="button" className="filtre-coaches" aria-pressed={materiel === m} onClick={() => setMateriel(m)}>{m}</button>
           ))}
-        </div>
+        </RangeeDefilante>
       </div>
       {exercices === null && <p className="espace-texte" role="status">Chargement de la banque…</p>}
       {aucun && (
