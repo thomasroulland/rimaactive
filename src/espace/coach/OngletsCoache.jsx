@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ajouterBilan, ajouterNoteCoach, ecouterBilans, ecouterMesMesures, ecouterMesPhotos, ecouterNotesCoach,
-  majProfilSportif, supprimerBilan, supprimerNoteCoach, urlPdf,
+  majProfilSportif, supprimerBilan, supprimerNoteCoach, urlPdf, ecouterExercices, commenterSeance,
 } from '../depots.js'
+import SeanceFaiteCoach from './SeanceFaiteCoach.jsx'
 import { ajoutJours, aujourdhuiIso, listeSeances, lundiDe, regularite, tonnage, tonnages } from '../donnees/calculs.js'
 import { dateComplete, dateSeance, evolutionMesures } from '../donnees/progression.js'
 import { exercicesDe } from '../donnees/seances.js'
@@ -257,46 +258,96 @@ function Calendrier3Semaines() {
   )
 }
 
-// Fenêtre d'un jour du calendrier : séances faites et bilans de ce jour, flèches vers le jour précédent / suivant
+// Détail d'un jour du calendrier (refait le 16 novembre 2026) : grande fenêtre ; à gauche la liste des activités du jour
+// (séances faites, bilans), à droite l'activité choisie, avec la même vue « séance faite » que dans le programme
+// (bilan, prévu / fait / comparer, réponse au coaché). Flèches : jour précédent / suivant avec une activité.
 function JourCalendrier({ date, evts, programmes, prenom, jours, aller, fermer }) {
   const ref = useRef(null)
+  const [banque, setBanque] = useState(null)
+  const [actif, setActif] = useState(0)
   useEffect(() => { const d = ref.current; if (d && !d.open) d.showModal() }, [])
+  useEffect(() => ecouterExercices(setBanque, () => setBanque([])), [])
+  useEffect(() => { setActif(0) }, [date])
   const i = jours.indexOf(date)
   const precedent = i > 0 ? jours[i - 1] : null
   const suivant = i >= 0 && i < jours.length - 1 ? jours[i + 1] : null
   const nbS = evts.filter((e) => e.genre === 'seance').length
   const nbB = evts.length - nbS
+  const choisi = evts[Math.min(actif, evts.length - 1)]
+  const infosSeance = (sf) => {
+    const p = (programmes ?? []).find((x) => x.id === sf.programme)
+    const w = p ? (p.semaines ?? []).findIndex((x) => (x.seances ?? []).some((y) => y.id === sf.seance)) : -1
+    const se = w >= 0 ? p.semaines[w].seances.findIndex((y) => y.id === sf.seance) : -1
+    return { p, w, se, seance: trouverSeance(programmes, sf) }
+  }
+  const heure = (sf) => { const d = sf.finLe?.toDate?.() ?? sf.majLe?.toDate?.(); return d ? d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '' }
+
   return (
-    <dialog ref={ref} className="espace-dialogue jour-cal" aria-labelledby="jour-cal-titre" onClose={fermer}
+    <dialog ref={ref} className="espace-dialogue jour-cal jour2" aria-labelledby="jour-cal-titre" onClose={fermer}
       onClick={(e) => { if (e.target === ref.current) ref.current.close() }}>
-      <header className="jour-cal__tete">
+      <header className="jour2__tete">
         <button type="button" className="calendrier__fleche" aria-label="Jour précédent avec une activité" disabled={!precedent} onClick={() => aller(precedent)}>
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
         </button>
-        <div className="jour-cal__titres">
-          <h2 id="jour-cal-titre" className="jour-cal__date">{dateComplete(date)}</h2>
-          <p className="espace-aide">{[nbS ? `${nbS} séance${nbS > 1 ? 's' : ''} faite${nbS > 1 ? 's' : ''}` : '', nbB ? `${nbB} bilan${nbB > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ')}</p>
+        <div className="jour2__titres">
+          <h2 id="jour-cal-titre" className="jour2__date">{dateComplete(date)}</h2>
+          <p className="jour2__resume">{[nbS ? `${nbS} séance${nbS > 1 ? 's' : ''} faite${nbS > 1 ? 's' : ''}` : '', nbB ? `${nbB} bilan${nbB > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ')}</p>
         </div>
         <button type="button" className="calendrier__fleche" aria-label="Jour suivant avec une activité" disabled={!suivant} onClick={() => aller(suivant)}>
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
         </button>
-        <button type="button" className="panneau-seance__fermer jour-cal__fermer" aria-label="Fermer" onClick={() => ref.current.close()}>
+        <button type="button" className="jour2__fermer" aria-label="Fermer" onClick={() => ref.current.close()}>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
         </button>
       </header>
-      <div className="jour-cal__corps" key={date}>
-        {evts.map((e, k) => e.genre === 'seance' ? (
-          <article key={k} className="jour-cal__bloc"><SeanceDetail sf={e.sf} programmes={programmes} prenom={prenom} /></article>
-        ) : (
-          <article key={k} className="jour-cal__bloc">
-            <p className="calendrier__pastille calendrier__pastille--bilan">Bilan</p>
-            <h3 className="bilan__titre">{e.b.titre || 'Bilan'}</h3>
-            {e.b.semaine ? <p className="espace-aide">Semaine {e.b.semaine}</p> : null}
-            {e.b.texte && <p className="fiche-carte__texte">{e.b.texte}</p>}
-            {e.b.ajuster && <p className="espace-verrou"><strong>À ajuster :</strong> {e.b.ajuster}</p>}
-            {e.b.pdf?.chemin && <LienPdf pdf={e.b.pdf} />}
-          </article>
-        ))}
+      <div className={`jour2__corps${evts.length > 1 ? ' a-une-liste' : ''}`}>
+        {evts.length > 1 && (
+          <nav className="jour2__liste" aria-label="Activités du jour">
+            {evts.map((e, k) => {
+              const s = e.genre === 'seance' ? infosSeance(e.sf).seance : null
+              return (
+                <button key={k} type="button" className={`jour2__item${k === actif ? ' est-actif' : ''}`} aria-current={k === actif ? 'true' : undefined} onClick={() => setActif(k)}>
+                  <span className={`jour2__pastille jour2__pastille--${e.genre}`}>{e.genre === 'seance' ? 'Séance' : 'Bilan'}</span>
+                  <span className="jour2__item-nom">{e.genre === 'seance' ? (s ? s.titre || 'Séance' : 'Séance retirée') : (e.b.titre || 'Bilan')}</span>
+                  {e.genre === 'seance' && <span className="jour2__item-infos">{[heure(e.sf), Number.isInteger(e.sf.effort) ? `effort ${e.sf.effort}/10` : ''].filter(Boolean).join(' · ')}</span>}
+                </button>
+              )
+            })}
+          </nav>
+        )}
+        <div className="jour2__detail" key={`${date}-${actif}`}>
+          {choisi?.genre === 'seance' && (() => {
+            const { p, w, se, seance } = infosSeance(choisi.sf)
+            if (!seance) {
+              return (
+                <article className="jour2__retiree">
+                  <p className="jour2__note">Cette séance a été retirée du programme : il ne reste que ce que {prenom} a noté.</p>
+                  <SeanceDetail sf={choisi.sf} programmes={programmes} prenom={prenom} />
+                </article>
+              )
+            }
+            return (
+              <>
+                <div className="jour2__titre-seance">
+                  <p className="jour2__surtitre">{p?.nom || 'Programme'} · Semaine {w + 1} · Séance {se + 1}</p>
+                  <h3>{seance.titre || 'Séance'}</h3>
+                </div>
+                <SeanceFaiteCoach seance={seance} sf={choisi.sf} prenom={prenom} banque={banque} rpeVise={p?.semaines?.[w]?.rpe} semaine={w + 1} numero={se + 1}
+                  commenter={(texte) => commenterSeance(choisi.sf.id, texte)} />
+              </>
+            )
+          })()}
+          {choisi?.genre === 'bilan' && (
+            <article className="jour2__bilan">
+              <p className="jour2__pastille jour2__pastille--bilan">Bilan</p>
+              <h3 className="bilan__titre">{choisi.b.titre || 'Bilan'}</h3>
+              {choisi.b.semaine ? <p className="espace-aide">Semaine {choisi.b.semaine}</p> : null}
+              {choisi.b.texte && <p className="fiche-carte__texte">{choisi.b.texte}</p>}
+              {choisi.b.ajuster && <p className="espace-verrou"><strong>À ajuster :</strong> {choisi.b.ajuster}</p>}
+              {choisi.b.pdf?.chemin && <LienPdf pdf={choisi.b.pdf} />}
+            </article>
+          )}
+        </div>
       </div>
     </dialog>
   )

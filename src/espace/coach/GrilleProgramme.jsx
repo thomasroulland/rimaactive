@@ -46,6 +46,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
   const colonnes = useRef({})
   const enCours = useRef(null) // la séance glissée, lisible tout de suite (l'état `glisse` ne sert qu'à l'affichage)
   const modeleEnCours = useRef(null) // id du modèle de séance glissé depuis le panneau
+  const [modeleGlisse, setModeleGlisse] = useState(false) // pour montrer où le déposer
   const semaines = prog.semaines
   const zone = useRef(null)
   // à l'ouverture, la grille défile jusqu'à la semaine en cours (visible sans chercher)
@@ -78,7 +79,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
       ev.preventDefault()
       const id = modeleEnCours.current
       modeleEnCours.current = null
-      setDepot(null)
+      setModeleGlisse(false); setDepot(null)
       actions.ajouterModele(s, id, indexDepuis(ev, s))
       return
     }
@@ -94,10 +95,10 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
   const quitter = (ev) => { if (!ev.currentTarget.contains(ev.relatedTarget)) setDepot(null) }
 
   return (
-    <div className={`gp-zone${modeles ? ' gp-zone--modeles' : ''}`}>
+    <div className={`gp-zone${modeles ? ' gp-zone--modeles' : ''}${modeleGlisse ? ' est-glisse-modele' : ''}`}>
       {modeles && (
         <PanneauModeles modeles={modeles} types={types} semaines={semaines} courante={courante}
-          glisserModele={(id) => { modeleEnCours.current = id }} finGlisse={() => { modeleEnCours.current = null; setDepot(null) }}
+          glisserModele={(id) => { modeleEnCours.current = id; setModeleGlisse(true) }} finGlisse={() => { modeleEnCours.current = null; setModeleGlisse(false); setDepot(null) }}
           ajouter={actions.ajouterModele} seanceGlissee={enCours} versModele={(de) => { enCours.current = null; setGlisse(null); setDepot(null); actions.versModele(de.s, de.se) }} />
       )}
       {annulable && (
@@ -214,12 +215,12 @@ function PanneauModeles({ modeles, types, semaines, courante, glisserModele, fin
   return (
     <aside className={`gp-modeles${cible ? ' est-cible' : ''}`} aria-labelledby="gp-modeles-titre" {...accueillir}>
       <header className="gp-modeles__tete">
-        <h2 id="gp-modeles-titre">Modèles de séance</h2>
+        <h2 id="gp-modeles-titre">Séances types</h2>
         <button type="button" className="gp-modeles__replier" onClick={basculer} aria-expanded="true" aria-label="Replier les modèles" title="Replier">‹</button>
       </header>
       <label className="sr-only" htmlFor="gp-modeles-cherche">Chercher un modèle</label>
       <input id="gp-modeles-cherche" className="gp-modeles__cherche" type="search" autoComplete="off" placeholder="Chercher un modèle…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
-      <p className="gp-modeles__aide">Glissez un modèle dans une semaine.</p>
+      <p className="gp-modeles__aide"><span>Glissez une séance type dans une semaine</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></p>
       {modeles.length === 0
         ? <p className="gp-modeles__vide">Aucun modèle pour l’instant. Glissez une séance de la grille ici pour en créer un, ou créez-en dans « Modèles ».</p>
         : liste.length === 0 ? <p className="gp-modeles__vide">Aucun modèle ne correspond.</p> : (
@@ -231,7 +232,7 @@ function PanneauModeles({ modeles, types, semaines, courante, glisserModele, fin
                 <li key={m.id} className="gp-modele" draggable
                   onDragStart={(ev) => { ev.dataTransfer.setData(TYPE_MODELE, m.id); ev.dataTransfer.effectAllowed = 'copy'; glisserModele(m.id) }}
                   onDragEnd={finGlisse}>
-                  <span className="gp-modele__poignee" aria-hidden="true" />
+                  <span className="gp-modele__poignee" aria-hidden="true"><svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor"><circle cx="2" cy="2" r="1.5" /><circle cx="8" cy="2" r="1.5" /><circle cx="2" cy="8" r="1.5" /><circle cx="8" cy="8" r="1.5" /><circle cx="2" cy="14" r="1.5" /><circle cx="8" cy="14" r="1.5" /></svg></span>
                   <span className="gp-modele__corps">
                     <span className="gp-modele__type">{nomType(m.seance?.type, types)}</span>
                     <span className="gp-modele__nom">{m.nom || 'Modèle sans nom'}</span>
