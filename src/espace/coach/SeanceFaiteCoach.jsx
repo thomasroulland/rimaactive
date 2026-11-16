@@ -1,3 +1,4 @@
+import { estEnSeries } from '../donnees/seances.js'
 import { useState } from 'react'
 import { casesExercice, comparerSeance, detailSeries, bilanSeance } from '../donnees/ecarts.js'
 import { nomBloc } from '../donnees/programme.js'
@@ -124,7 +125,7 @@ export default function SeanceFaiteCoach({ seance, sf, prenom, banque, rpeVise, 
           </div>
         </div>
         {blocs.map((b) => {
-          const serie = (b.format ?? 'series') === 'series'
+          const serie = estEnSeries(b.format)
           return (
             <section key={b.id} className="es2-bloc sf-bloc" aria-labelledby={`sfb-${b.id}`} data-format="series">
               <div className="es2-bloc__tete">

@@ -132,27 +132,117 @@ export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes
     </ol>
   )
 }
-export function BlocOrdinateur(props) {
-  return <ListeBloc {...props} grand />
-}
-
-// Grande photo d'un exercice (ordinateur) : les photos se font défiler avec les points, un clic agrandit avec les consignes
-function GrandePhoto({ el, voirConsignes }) {
-  const photos = el.photos ?? []
-  const [n, setN] = useState(0)
+// Ordinateur (16 novembre 2026, mélange « Focus » + « Galerie » choisi par Thomas) : les exercices du bloc côte à côte avec
+// leur grande photo, et sous chaque photo les séries avec de vraies cases répétitions / charge.
+// Superset (biset, triset) : on avance par tour (A1 → A2 → A3, puis tour suivant) ; bloc classique : exercice après exercice.
+export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirConsignes, etape, nb, aller, finir, suivant }) {
+  const els = bloc.elements ?? []
+  const superset = bloc.format === 'superset'
+  // série à faire maintenant : { e: index de l'exercice, i: index de la série }
+  const actuelle = (() => {
+    if (lecture) return null
+    if (superset) {
+      const max = Math.max(0, ...els.map((e) => lignes(e).length))
+      for (let i = 0; i < max; i++) {
+        for (let e = 0; e < els.length; e++) {
+          const l = lignes(els[e])[i]
+          if (l && !l.fait) return { e, i }
+        }
+      }
+      return null
+    }
+    for (let e = 0; e < els.length; e++) {
+      const i = lignes(els[e]).findIndex((l) => !l.fait)
+      if (i >= 0) return { e, i }
+    }
+    return null
+  })()
+  const dernier = etape >= nb - 1
+  const resume = (() => {
+    if (!actuelle) return 'Tout le bloc est fait'
+    if (!superset) return `${bloc.lettre}${actuelle.e + 1} · série ${actuelle.i + 1}`
+    const t = actuelle.i
+    return `Tour ${t + 1} : ` + els.map((e, k) => `${bloc.lettre}${k + 1} ${lignes(e)[t]?.fait ? '✓' : k === actuelle.e ? 'en cours' : 'à faire'}`).join(' · ')
+  })()
+  const valider = () => {
+    if (!actuelle) { if (dernier) finir(); else aller(etape + 1); return }
+    actions.serie(els[actuelle.e], actuelle.i, 'fait', true)
+  }
   return (
-    <div className="ec-s4-photo">
-      <button type="button" className="ec-s4-photo__bouton" onClick={voirConsignes} aria-label={`Agrandir les photos et consignes : ${el.nom}`}>
-        {photos.length > 0
-          ? <PhotoStockee key={photos[n]} chemin={photos[n]} alt="" classe="ec-s4-photo__img" />
-          : <span className="ec-s4-photo__vide"><Image /><span>Pas encore de photo</span></span>}
-      </button>
-      {photos.length > 1 && (
-        <div className="ec-s4-points" role="group" aria-label={`Photos : ${el.nom}`}>
-          {photos.map((p, k) => <button key={p} type="button" aria-pressed={k === n} aria-label={`Photo ${k + 1}`} onClick={() => setN(k)}><span /></button>)}
+    <div className="ec-s5">
+      {superset && (
+        <p className="ec-s5-consigne">Enchaînez {els.map((_, k) => `${bloc.lettre}${k + 1}`).join(' → ')}{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}. On avance tour par tour.</p>
+      )}
+      <ol className={`ec-s5-grille ec-s5-grille--${Math.min(els.length, 3)}`}>
+        {els.map((el, e) => (
+          <CarteGalerie key={el.id} el={el} code={`${bloc.lettre}${e + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture}
+            actuelle={actuelle?.e === e ? actuelle.i : -1} voirConsignes={() => voirConsignes(el)} />
+        ))}
+      </ol>
+      {!lecture && (
+        <div className="ec-s5-bas">
+          <span className="ec-s5-resume" aria-live="polite">{resume}</span>
+          <button type="button" className="ec-s5-gros" onClick={valider}>
+            {actuelle ? 'Série faite ✓' : dernier ? 'Terminer la séance →' : `Bloc suivant : ${nomBloc(suivant)} →`}
+          </button>
         </div>
       )}
     </div>
+  )
+}
+
+function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirConsignes }) {
+  const photos = el.photos ?? []
+  const [n, setN] = useState(0)
+  const [detail, setDetail] = useState(false)
+  const duree = enDuree(el)
+  const cle = duree ? 'duree' : 'reps'
+  const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
+  const fini = ls.length > 0 && ls.every((l) => l.fait)
+  const base = `g-${el.id}`
+  return (
+    <li className={`ec-s5-carte${actuelle >= 0 ? ' est-actuelle' : ''}${fini ? ' est-finie' : ''}`} aria-labelledby={`${base}-nom`}>
+      <div className="ec-s5-photo">
+        <button type="button" className="ec-s5-photo__bouton" onClick={voirConsignes} aria-label={`Agrandir les photos et consignes : ${el.nom}`}>
+          {photos.length > 0
+            ? <PhotoStockee key={photos[n]} chemin={photos[n]} alt="" classe="ec-s5-photo__img" />
+            : <span className="ec-s5-photo__vide"><Image /><span>Pas encore de photo</span></span>}
+        </button>
+        <span className="ec-s5-code">{code}</span>
+        {fini && <span className="ec-s5-fait">✓ Fait</span>}
+        {photos.length > 1 && (
+          <div className="ec-s4-points" role="group" aria-label={`Photos : ${el.nom}`}>
+            {photos.map((p, k) => <button key={p} type="button" aria-pressed={k === n} aria-label={`Photo ${k + 1}`} onClick={() => setN(k)}><span /></button>)}
+          </div>
+        )}
+      </div>
+      <div className="ec-s5-corps">
+        <h3 id={`${base}-nom`} className="ec-s5-nom">{el.nom}</h3>
+        {prevu && <p className="ec-s5-prevu">Prévu {prevu}</p>}
+        {el.consignes && <p className="ec-s5-consignes">{el.consignes}</p>}
+        <div className="ec-s5-ligne ec-s5-entete" aria-hidden="true"><span /><span>{duree ? 'Durée' : 'Reps'}</span><span>Charge</span></div>
+        {ls.map((l, i) => (
+          <div key={i} className={`ec-s5-ligne${l.fait ? ' est-faite' : ''}${i === actuelle ? ' est-actuelle' : ''}`} role="group" aria-label={`${el.nom}, série ${i + 1}`}>
+            <button type="button" className="ec-s5-rond" aria-pressed={!!l.fait} aria-label={`Série ${i + 1}, ${l.fait ? 'faite (toucher pour décocher)' : 'à faire (toucher pour cocher)'}`} disabled={lecture}
+              onClick={() => actions?.serie(el, i, 'fait', !l.fait)}>{l.fait ? <Coche /> : i + 1}</button>
+            <input className="ec-s5-champ" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
+              value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : String(el.reps ?? '')} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, cle, ev.target.value)} />
+            <span className="ec-s5-kg">
+              <input className="ec-s5-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos`}
+                value={l.charge ?? ''} placeholder={fr(el.charge ?? '') || '–'} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, 'charge', ev.target.value)} />
+              <small>kg</small>
+            </span>
+            {(detail || (lecture && l.rpe)) && (
+              <span className="ec-s5-rpe"><ChoixRpe id={`${base}-rpe${i}`} libelle={`${el.nom}, série ${i + 1}, effort`} valeur={l.rpe} lecture={lecture} changer={(v) => actions?.valeur(el, i, 'rpe', v)} /></span>
+            )}
+          </div>
+        ))}
+        {!lecture && <button type="button" className="ec-s5-plus" aria-expanded={detail} onClick={() => setDetail((d) => !d)}>{detail ? '− Masquer effort et note' : '＋ Effort ou note'}</button>}
+        {(detail || (lecture && note)) && (
+          <input className="ec-s5-note" type="text" autoComplete="off" aria-label={`Note sur ${el.nom}`} value={note} readOnly={lecture} placeholder="Note sur l’exercice (ex. dernière rep difficile)" onChange={(ev) => actions?.note(el.id, ev.target.value)} />
+        )}
+      </div>
+    </li>
   )
 }
 
@@ -210,6 +300,18 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
   const faite = () => {
     actions.serieComplete(el, cur, { reps: repsV, charge: chargeV, rpe: rpeV })
     setBrouillon(null); setChoisie(null)
+    if (bloc.format === 'superset') {
+      // superset : exercice suivant du tour (A1 → A2 → A3), puis tour suivant
+      const premiere = (k) => lignes(els[k]).findIndex((l, i) => !(l.fait || (k === exo && i === cur)))
+      let cible = -1, mieux = Infinity
+      for (let d = 1; d <= els.length; d++) {
+        const k = (exo + d) % els.length
+        const i = premiere(k)
+        if (i >= 0 && i < mieux) { mieux = i; cible = k }
+      }
+      if (cible >= 0) allerExo(cible); else blocSuivant()
+      return
+    }
     if (!ls.some((l, i) => i !== cur && !l.fait)) {
       const k = els.findIndex((e, j) => j !== exo && !exoFait(e))
       if (k >= 0) allerExo(k); else blocSuivant()

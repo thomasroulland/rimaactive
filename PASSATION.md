@@ -562,3 +562,10 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
   Testé (`npm run test:regles`, 98 tests).
 - **Ordinateur** : chaque exercice du bloc a sa grande photo à gauche dans sa carte (photos à faire défiler, clic = agrandir avec les
   consignes), consignes sous le nom, séries en grand ; séance sur toute la largeur (1320 px).
+- **Séance sur ordinateur, version finale (mélange « Focus » + « Galerie »)** : les exercices du bloc côte à côte, chacun avec sa grande
+  photo (à gauche dans la carte pour 1-2 exercices, en haut pour 3), et ses séries avec de vraies cases Répétitions / Charge
+  (pré-remplies en gris avec le prévu ; taper ne coche plus la série). Barre en bas : où on en est + « Série faite ✓ ».
+  Le rond de chaque série coche / décoche. « ＋ Effort ou note » par exercice.
+- **Nouveau format de bloc « Superset (enchaîner) »** (menu du bloc côté coach) : biset / triset selon le nombre d'exercices.
+  Le coaché avance **par tour** (A1 → A2 → A3, puis tour suivant), sur ordinateur comme sur téléphone. `estEnSeries` (seances.js)
+  traite le superset comme des séries partout (écarts, bilans, séance faite côté coach).

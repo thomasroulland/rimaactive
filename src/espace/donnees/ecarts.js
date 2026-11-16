@@ -1,3 +1,4 @@
+import { estEnSeries } from './seances.js'
 import { enDuree, fr, lignesExercice, resumeFormat, texteDuree } from './seances.js'
 // Prévu / fait d'une séance, pour le coach (15 novembre 2026) : exercice par exercice, ce que Marie avait prévu,
 // ce que le coaché a noté, et l'écart en une phrase. Calculs purs.
@@ -71,7 +72,7 @@ export function comparerSeance(seance, sf) {
   const lignes = []
   const connus = new Set()
   for (const bloc of seance?.blocs ?? []) {
-    if ((bloc.format ?? 'series') === 'series') {
+    if (estEnSeries(bloc.format)) {
       for (const el of bloc.elements ?? []) { connus.add(el.id); lignes.push(exerciceEnSeries(el, series[el.id])) }
     } else {
       for (const el of bloc.elements ?? []) connus.add(el.id)
@@ -157,7 +158,7 @@ export function detailSeries(el, lignes) {
 export function bilanSeance(seance, sf) {
   let faites = 0; let total = 0; const rpes = []
   for (const b of seance?.blocs ?? []) {
-    if ((b.format ?? 'series') !== 'series') continue
+    if (!estEnSeries(b.format)) continue
     for (const el of b.elements ?? []) {
       const l = sf?.series?.[el.id] ?? []
       total += Math.max(parseInt(String(el.series ?? '').trim(), 10) || 0, l.length)

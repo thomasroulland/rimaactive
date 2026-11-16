@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { resumeFormat } from '../donnees/seances.js'
+import { estEnSeries, resumeFormat } from '../donnees/seances.js'
 import { LETTRES, NOM_BLOC_MAX, nomBloc } from '../donnees/programme.js'
 import useReglages from './useReglages.js'
 import PhotoStockee from './PhotoStockee.jsx'
@@ -10,6 +10,7 @@ import { IconeCorbeille, IconePoints } from './Icones.jsx'
 
 export const FORMATS = [
   ['series', 'Séries classiques'],
+  ['superset', 'Superset (enchaîner)'],
   ['emom', 'EMOM'],
   ['amrap', 'AMRAP'],
   ['tabata', 'TABATA'],
@@ -48,7 +49,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
   const [survol, setSurvol] = useState(null) // lettre du bloc au-dessus duquel on glisse un exercice
   const cibleOk = cible && (lettres.includes(cible) || cible === prochaine) ? cible : (lettres[lettres.length - 1] ?? 'A')
   const nbExos = blocs.reduce((t, b) => t + (b.elements ?? []).length, 0)
-  const nbSeries = blocs.reduce((t, b) => t + (b.elements ?? []).reduce((u, e) => u + (b.format === 'series' ? (parseInt(e.series, 10) || 0) : 0), 0), 0)
+  const nbSeries = blocs.reduce((t, b) => t + (b.elements ?? []).reduce((u, e) => u + (estEnSeries(b.format) ? (parseInt(e.series, 10) || 0) : 0), 0), 0)
 
   const pourDeposer = (lettre) => ({
     onDragOver: (ev) => { if ([...ev.dataTransfer.types].includes(TYPE_GLISSE)) { ev.preventDefault(); setSurvol(lettre) } },
@@ -101,7 +102,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                 <p className="espace-texte">Aucun exercice pour l’instant. Cherchez-en un dans la banque et touchez ＋, ou glissez-le ici.</p>
               )}
               {blocs.map((b, bi) => (
-                <section key={b.id} className={`es2-bloc${cibleOk === b.lettre ? ' est-cible' : ''}${survol === b.lettre ? ' est-depot' : ''}`} aria-labelledby={`bloc-${b.id}`} data-format={b.format === 'series' ? 'series' : 'autre'} {...pourDeposer(b.lettre)}>
+                <section key={b.id} className={`es2-bloc${cibleOk === b.lettre ? ' est-cible' : ''}${survol === b.lettre ? ' est-depot' : ''}`} aria-labelledby={`bloc-${b.id}`} data-format={estEnSeries(b.format) ? 'series' : 'autre'} {...pourDeposer(b.lettre)}>
                   <div className="es2-bloc__tete">
                     <EnteteBloc bloc={b} verrou={verrou} renommer={(v) => majBloc(bi, 'nom', v)} idTitre={`bloc-${b.id}`} />
                     <div className="champ-groupe es2-bloc__format">
@@ -134,16 +135,16 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                     <div className="es2-colonnes" aria-hidden="true">
                       <span />
                       <span className="es2-colonnes__vide" />
-                      {b.format === 'series' && <span>Séries</span>}
+                      {estEnSeries(b.format) && <span>Séries</span>}
                       <span>Reps</span>
                       <span>Charge</span>
-                      {b.format === 'series' && <span>Repos</span>}
+                      {estEnSeries(b.format) && <span>Repos</span>}
                       <span />
                     </div>
                   )}
                   <ol className="es2-lignes">
                     {(b.elements ?? []).map((el, ei) => (
-                      <LigneExo key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={b.format === 'series'} verrou={verrou} rm={rm} rpeSemaine={rpeSemaine}
+                      <LigneExo key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={estEnSeries(b.format)} verrou={verrou} rm={rm} rpeSemaine={rpeSemaine}
                         maj={(cle, v) => majElement(bi, ei, cle, v)} retirer={() => retirer(el)}
                         photo={el.photos?.[0] || (exercices ?? []).find((x) => x.id === el.exoId)?.photos?.[0]} />
                     ))}

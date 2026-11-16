@@ -3,7 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement } from '../donnees/progression.js'
 import { nomBloc } from '../donnees/programme.js'
-import { allureVitesse, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
+import { allureVitesse, estEnSeries, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
 import { nouveauxRecords } from '../donnees/records.js'
 import { corrigerSeance, noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
@@ -168,6 +168,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   }
   const actions = verrou ? null : {
     serie: (el, i, cle, v) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? saisirSerie(l, cle, v, el) : l))),
+    // ordinateur : taper une valeur ne coche pas la série (on coche avec « Série faite » ou le rond)
+    valeur: (el, i, cle, v) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? { ...l, [cle]: v } : l))),
     // téléphone : « Série faite » prend d'un coup répétitions, charge et RPE saisis
     serieComplete: (el, i, valeurs) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? serieTerminee(l, valeurs, el) : l))),
     note: (id, v) => noter('notes', id, v),
@@ -194,7 +196,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
         for (const el of b.elements ?? []) {
           if (series[el.id]) toutes[el.id] = series[el.id]
           // séries jamais touchées : enregistrées avec le prévu, non faites
-          else if ((b.format ?? 'series') === 'series') toutes[el.id] = preRemplir(el).map((l) => ({ ...l, fait: false }))
+          else if (estEnSeries(b.format)) toutes[el.id] = preRemplir(el).map((l) => ({ ...l, fait: false }))
         }
       }
     }
@@ -218,7 +220,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const ici = Math.min(etape, nb)
     const aller = (i) => setEtape(Math.max(0, Math.min(nb, i)))
     const bloc = listeBlocs[ici]
-    const enSeries = bloc && (bloc.format ?? 'series') === 'series'
+    const enSeries = bloc && estEnSeries(bloc.format)
     const unExercice = Boolean(bloc) && mobile && !verrou && enSeries
     return (
       <section className={`ec-page ec-seance ec-seance--v2${!mobile ? ' ec-seance--large' : ''}`}>
@@ -235,9 +237,9 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                 <>
                   <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />
                   {enSeries
-                    ? <BlocOrdinateur key={bloc.id} bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={verrou} voirConsignes={setFiche} />
+                    ? <BlocOrdinateur key={bloc.id} bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={verrou} voirConsignes={setFiche} etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]} />
                     : <BlocSeries key={bloc.id} bloc={bloc} saisie={{ lignes, notes, blocs }} actions={actions} lecture={verrou} voirConsignes={setFiche} sansTete />}
-                  {!verrou && <BoutonBloc etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]} />}
+                  {!verrou && !enSeries && <BoutonBloc etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]} />}
                 </>
               )
             ) : (

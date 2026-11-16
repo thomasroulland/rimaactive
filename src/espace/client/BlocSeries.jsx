@@ -1,6 +1,6 @@
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { avecChargeSeule, fr, lignesExercice, resumeFormat, texteDuree } from '../donnees/seances.js'
+import { avecChargeSeule, estEnSeries, fr, lignesExercice, resumeFormat, texteDuree } from '../donnees/seances.js'
 import BlocResultat, { ChoixRpe } from './BlocResultat.jsx'
 
 const Image = () => (
@@ -12,7 +12,7 @@ const Image = () => (
 // Un bloc de la séance : « Bloc A » ou « Bloc C · EMOM 10 min », ses exercices, puis « Mon résultat » (autres formats).
 // `saisie` : lignes de séries, notes et résultat du bloc ; `actions` : fonctions de saisie (absentes en lecture seule).
 export default function BlocSeries({ bloc, saisie, actions, lecture, voirConsignes, sansTete = false }) {
-  const enSeries = (bloc.format ?? 'series') === 'series'
+  const enSeries = estEnSeries(bloc.format)
   const resultat = saisie.blocs[bloc.id]
   return (
     <section className="ec-sbloc" aria-labelledby={`bloc-${bloc.id}`}>

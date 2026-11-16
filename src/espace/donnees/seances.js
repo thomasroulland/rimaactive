@@ -30,8 +30,15 @@ export function fr(v) {
 }
 
 // 'Séries classiques', 'EMOM 12 min', 'TABATA 4 min, repos 10 s'
+// Bloc « en séries » : séries classiques ou superset (biset, triset : on enchaîne les exercices du bloc, tour par tour)
+export const estEnSeries = (format) => (format ?? 'series') === 'series' || format === 'superset'
+
 export function resumeFormat(bloc) {
   const f = bloc?.format
+  if (f === 'superset') {
+    const n = (bloc.elements ?? []).length
+    return n === 2 ? 'Biset' : n === 3 ? 'Triset' : 'Superset'
+  }
   if (f === 'emom' || f === 'amrap') return bloc.duree ? `${f.toUpperCase()} ${bloc.duree} min` : f.toUpperCase()
   // TABATA / HIIT (maquette de Marie) : « TABATA 8 × 20 s / 10 s » = tours × travail / repos
   if (f === 'tabata' || f === 'hiit') {
@@ -319,7 +326,7 @@ export function serieTerminee(ligne, valeurs, element) {
 // Renvoie { blocs: [{ id, lettre, faites, total, complet }], faites, total }.
 export function progressionBlocs(blocs, lignes, resultats = {}) {
   const liste = (blocs ?? []).map((b) => {
-    if ((b.format ?? 'series') !== 'series') {
+    if (!estEnSeries(b.format)) {
       const fait = !!resultats?.[b.id]?.fait
       return { id: b.id, lettre: b.lettre, faites: fait ? 1 : 0, total: 1, complet: fait }
     }
