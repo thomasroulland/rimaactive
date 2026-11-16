@@ -132,3 +132,10 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 /* accueil : le panneau de l'espace client va jusqu'au bord droit de l'écran (même marge de 18 px qu'en haut et en bas), plus de bande vide */
 .heros.heros--v3 { padding-right: 0 !important; max-width: none !important; }
 .heros.heros--v3 .heros__outil.ecrans { margin-right: 0 !important; padding-right: 18px !important; }
+
+/* barre du haut et pied de page : aucune animation (entrée, glissement de la pastille, défilement du texte au survol, reflet, appui) */
+.entete, .entete *, .pied, .pied * { animation: none !important; transition: none !important; }
+.entete .nav__lien:hover .roule { transform: none !important; }
+.entete .nav__lien .roule::after { display: none; }
+.entete, .entete:hover { background-image: none !important; }
+.entete .nav__lien:active, .entete .entete__compte:active, .entete .entete__ecrire:active, .pied a:active { transform: none !important; }
