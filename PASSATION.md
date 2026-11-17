@@ -577,3 +577,14 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
     « 200 à 250 € / mois pour 4 à 5 séances » à domicile et « 180 à 225 € » en salle (en jaune), bouton « Commencer mon suivi ».
 - Le mot « Compris » est retiré de toutes les cartes ; l'élément reste vide pour garder le trait et la rangée (`.offre__titre-points:empty`).
 - Jaune : `accent: true` sur la carte (`.offre__accent`). Le formulaire M'écrire propose les nouveaux noms de formules.
+
+## Mes offres : textes, couleurs et photos (17 novembre 2026, en ligne, accord écrit : « Parfait publie ! »)
+- **En ligne** : « 100 % à distance » (jaune), « Coaching en ligne », Minimum 2 mois, 45 € par mois, « soit 90 € les 2 mois » (jaune),
+  Programme personnalisé / Bilan et ajustements chaque semaine / Suivi sur votre espace personnel, bouton « Commencer mon suivi ».
+- **Groupes** : « 2 à 8 personnes » (vermillon), « Coaching en petit groupe », « À partir de 15 € » puis « par personne » à la ligne (vermillon),
+  Entraînement collectif / Exercices adaptés aux participants / Matériel fourni, bouton « Organiser une séance ».
+- **Entreprises** : « Jusqu'à 16 personnes » (jaune), « Coaching en entreprise », Sur devis (sans « selon les besoins »), « Demander un devis ».
+- **Individuel** : « À la carte » en vermillon ; Coaching régulier : « Minimum 2 mois ».
+- **Titres au-dessus des cartes** retirés (gardés pour les lecteurs d'écran) ; bouton « À domicile / En salle » aligné à gauche sur les cartes.
+- **Photos** : à droite pour En ligne et Entreprises, à gauche pour Groupes (`inverse` dans `Offres.jsx`). Sur téléphone, photo au-dessus.
+- Couleurs par carte : `couleurSurtitre: 'vermillon' | 'jaune'` et, sur un tarif, `couleur` ou `accent` (`.offre__couleur--*`, `.offre__accent`).
