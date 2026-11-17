@@ -569,3 +569,11 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
 - **Nouveau format de bloc « Superset (enchaîner) »** (menu du bloc côté coach) : biset / triset selon le nombre d'exercices.
   Le coaché avance **par tour** (A1 → A2 → A3, puis tour suivant), sur ordinateur comme sur téléphone. `estEnSeries` (seances.js)
   traite le superset comme des séries partout (écarts, bilans, séance faite côté coach).
+
+## Mes offres, Individuel : « Séance ponctuelle » et « Coaching régulier » (17 novembre 2026, en ligne, accord écrit : « Publie »)
+- À domicile et en salle, même structure (Thomas : « garde la même structure pour en salle avec les prix correspondants ») :
+  - gauche : « À la carte », « Séance ponctuelle », 60 min • Sans engagement, 65 € / 60 € la séance, bouton « Réserver une séance » ;
+  - droite : « Sur la durée » (jaune), « Coaching régulier », « Engagement minimum de 2 mois », 50 € / 45 € la séance,
+    « 200 à 250 € / mois pour 4 à 5 séances » à domicile et « 180 à 225 € » en salle (en jaune), bouton « Commencer mon suivi ».
+- Le mot « Compris » est retiré de toutes les cartes ; l'élément reste vide pour garder le trait et la rangée (`.offre__titre-points:empty`).
+- Jaune : `accent: true` sur la carte (`.offre__accent`). Le formulaire M'écrire propose les nouveaux noms de formules.
