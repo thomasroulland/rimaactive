@@ -51,6 +51,7 @@ export function ajouterElement(programme, { s, se, b }, exercice) {
     exoId: exercice.id,
     nom: exercice.nom,
     consignes: exercice.consignes ?? '',
+    materiel: exercice.materiel ?? '', // pour « À préparer » d'un superset côté coaché
     muscles: [...(exercice.muscles ?? [])],
     musclesSecondaires: [...(exercice.musclesSecondaires ?? [])],
     photos: [...(exercice.photos ?? [])],

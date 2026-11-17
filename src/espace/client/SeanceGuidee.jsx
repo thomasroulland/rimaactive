@@ -133,13 +133,32 @@ export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes
     </ol>
   )
 }
+// Superset (biset, triset) : le coaché le voit d'emblée et sait quoi préparer avant de commencer (17 novembre 2026)
+export function nomSuperset(bloc) {
+  const n = (bloc?.elements ?? []).length
+  return n === 2 ? 'Biset' : n === 3 ? 'Triset' : 'Superset'
+}
+export function SupersetInfo({ bloc, tour, compact = false }) {
+  const els = bloc.elements ?? []
+  const tours = Math.max(0, ...els.map((e) => parseInt(e.series, 10) || 0))
+  const materiel = (e) => [e.materiel && e.materiel !== 'Poids du corps' && e.materiel !== 'À préciser' ? e.materiel : '', String(e.charge ?? '').trim() ? `${fr(e.charge)} kg` : ''].filter(Boolean).join(' ')
+  return (
+    <div className={`ec-super${compact ? ' est-compact' : ''}`} role="note" aria-label={`${nomSuperset(bloc)} : exercices enchaînés`}>
+      <p className="ec-super__titre">
+        <span className="ec-super__badge">{nomSuperset(bloc)}</span>
+        Enchaînez {els.length} exercices sans pause{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}{tours > 0 ? ` · ${tour ? `tour ${tour} sur ${tours}` : `${tours} tours`}` : ''}
+      </p>
+      <p className="ec-super__preparer"><b>À préparer :</b> {els.map((e, k) => `${bloc.lettre}${k + 1} ${e.nom}${materiel(e) ? ` (${materiel(e)})` : ''}`).join(' · ')}</p>
+    </div>
+  )
+}
+
 // En-tête de la séance sur ordinateur (maquette) : barre noire fine (retour, séance, où on en est), titre du bloc
 // (Biset / Triset, consigne du superset), pastilles des blocs. Le même pour tous les blocs et pour la fin de séance.
 export function EnteteOrdi({ titre, sousTitre, lienRetour, bloc, blocs, prog, etape, aller, finir, lecture }) {
   const els = bloc?.elements ?? []
   const superset = bloc?.format === 'superset'
   const nomFormat = superset ? (els.length === 2 ? 'Biset' : els.length === 3 ? 'Triset' : 'Superset') : null
-  const tours = Math.max(0, ...els.map((e) => parseInt(e.series, 10) || 0))
   const p = prog?.blocs?.[etape]
   const etat = !bloc ? (lecture ? 'Séance faite' : 'Fin de séance')
     : `${nomBloc(bloc)} · ${p?.faites ?? 0} sur ${p?.total ?? 0}`
@@ -153,7 +172,7 @@ export function EnteteOrdi({ titre, sousTitre, lienRetour, bloc, blocs, prog, et
       <div className="ec-s5-tete">
         <div>
           <h2 className={`ec-s5-titre${bloc ? '' : ' sr-only'}`}>{bloc ? nomBloc(bloc) : (lecture ? 'Bilan de la séance' : 'Fin de séance')}{nomFormat && <span> · {nomFormat}</span>}{bloc && !superset && bloc.format && bloc.format !== 'series' && <span> · {resumeFormat(bloc)}</span>}</h2>
-          {superset && <p className="ec-s5-consigne">Enchaînez {els.map((_, k) => `${bloc.lettre}${k + 1}`).join(' → ')}{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}.{tours > 0 && <b> {tours} tours.</b>}</p>}
+          {superset && <SupersetInfo bloc={bloc} />}
         </div>
         <nav className="ec-s5-blocs" aria-label="Blocs de la séance">
           {blocs.map((b, i) => (
@@ -369,7 +388,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
           </div>
         </div>
         <div className="ec-s2-un__compte">
-          <span>Exercice {exo + 1} sur {els.length} · {nomBloc(bloc)}</span>
+          <span>Exercice {exo + 1} sur {els.length} · {nomBloc(bloc)}{bloc.format === 'superset' ? ` · ${nomSuperset(bloc)}` : ''}</span>
           <button type="button" aria-expanded={plan} onClick={() => setPlan((p) => !p)}>{plan ? 'Fermer' : 'Plan'}</button>
         </div>
         {plan && (
@@ -383,6 +402,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         )}
       </div>
 
+      {bloc.format === 'superset' && <SupersetInfo bloc={bloc} tour={cur >= 0 ? cur + 1 : null} compact />}
       <button type="button" className="ec-s2-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
         {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-photo__img" /> : <Image />}
         <span>Voir les consignes</span>

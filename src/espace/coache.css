@@ -1272,3 +1272,13 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-s2-pas span { font-size: 20px; line-height: 1; }
 .ec-s2-pas:disabled { opacity: .35; cursor: default; }
 .ec-s2-pas:active:not(:disabled) { background: #f4f3ef; }
+
+/* Superset bien visible (17 novembre 2026) : badge, consigne, et ce qu'il faut préparer */
+.ec-super { display: grid; gap: 4px; margin-top: 6px; padding: 10px 14px; border-radius: 14px; background: rgba(242, 194, 48, .22); border: 1px solid rgba(242, 194, 48, .6); }
+.ec-super p { margin: 0; }
+.ec-super__titre { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 15px; font-weight: 700; color: #161514; }
+.ec-super__badge { padding: 3px 10px; border-radius: 999px; background: #161514; color: #f2c230; font-size: 12px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+.ec-super__preparer { font-size: 14px; color: #4a4640; line-height: 1.45; }
+.ec-super.est-compact { padding: 8px 12px; border-radius: 12px; margin: 0; }
+.ec-super.est-compact .ec-super__titre { font-size: 13px; }
+.ec-super.est-compact .ec-super__preparer { font-size: 12px; }
