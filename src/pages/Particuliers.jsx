@@ -24,12 +24,12 @@ export const PAGE = {
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Une personne, chez vous, quel que soit votre niveau.',
       titre: 'Séance ponctuelle',
+      bouton: 'Réserver une séance',
       picto: 'house',
       puce: 'kettlebell',
       surtitre: 'À la carte',
       infos: '60\u00a0min • Sans engagement',
       tarifs: [{ montant: '65\u00a0€', apres: 'la séance' }],
-      titrePoints: 'Compris',
       points: ['Séance personnalisée', 'Mobilité & renforcement musculaire', 'Accompagnement individuel'],
     },
     {
@@ -37,13 +37,13 @@ export const PAGE = {
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Une personne, chez vous, qui veut progresser durablement : une séance par semaine, deux mois au minimum.',
       titre: 'Coaching régulier',
+      bouton: 'Commencer mon suivi',
       picto: 'kettlebell',
       puce: 'kettlebell',
-      surtitre: 'Pour progresser durablement',
+      surtitre: 'Sur la durée',
       accent: true, // surtitre et ligne sous le prix en jaune (Marie, 17 novembre 2026)
       infos: 'Engagement minimum de 2\u00a0mois',
       tarifs: [{ montant: '50\u00a0€', apres: 'la séance', detail: '200 à 250\u00a0€ / mois pour 4 à 5\u00a0séances' }],
-      titrePoints: 'Compris',
       points: ['1 séance individuelle par semaine', 'Programme d’entraînement sur mesure', 'Suivi sur votre espace personnel'],
       sombre: true,
     },
@@ -52,12 +52,12 @@ export const PAGE = {
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Une personne, en salle, quel que soit votre niveau.',
       titre: 'Séance ponctuelle',
+      bouton: 'Réserver une séance',
       picto: 'barbell',
       puce: 'barbell',
       surtitre: 'À la carte',
       infos: '60\u00a0min • Sans engagement',
       tarifs: [{ montant: '60\u00a0€', apres: 'la séance' }],
-      titrePoints: 'Compris',
       points: ['Séance personnalisée', 'Mobilité & renforcement musculaire', 'Accompagnement individuel'],
     },
     {
@@ -65,13 +65,13 @@ export const PAGE = {
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Une personne, en salle, qui veut progresser durablement : une séance par semaine, deux mois au minimum.',
       titre: 'Coaching régulier',
+      bouton: 'Commencer mon suivi',
       picto: 'barbell',
       puce: 'barbell',
-      surtitre: 'Pour progresser durablement',
+      surtitre: 'Sur la durée',
       accent: true, // surtitre et ligne sous le prix en jaune (Marie, 17 novembre 2026)
       infos: 'Engagement minimum de 2\u00a0mois',
       tarifs: [{ montant: '45\u00a0€', apres: 'la séance', detail: '180 à 225\u00a0€ / mois pour 4 à 5\u00a0séances' }],
-      titrePoints: 'Compris',
       points: ['1 séance individuelle par semaine', 'Programme d’entraînement sur mesure', 'Suivi sur votre espace personnel'],
       sombre: true,
     },

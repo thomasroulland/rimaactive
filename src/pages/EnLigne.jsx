@@ -21,7 +21,6 @@ export const PAGE = {
       infos: 'Minimum 2\u00a0mois',
       // prix et « Compris » de Marie (PDF du 16 novembre 2026)
       tarifs: [{ montant: '45\u00a0€', apres: 'par mois', detail: 'soit 90\u00a0€ les 2\u00a0mois' }],
-      titrePoints: 'Compris',
       points: ['Programme sur mesure', 'Bilan et ajustements chaque semaine', 'Suivi sur votre espace en ligne'],
       sombre: true,
     },

@@ -20,7 +20,6 @@ export const PAGE = {
       infos: '60\u00a0min • Sans engagement',
       // prix de Marie (PDF du 16 novembre 2026)
       tarifs: [{ montant: '15\u00a0€ à 30\u00a0€', apres: 'par personne', detail: '(selon la taille du groupe)' }],
-      titrePoints: 'Compris',
       // intitulés courts de Marie sur la carte ; le détail garde ses explications
       points: [
         ['Mobilité & activation musculaire', 'Un réveil articulaire et musculaire ciblé que nous faisons ensemble pour préparer le corps à l’effort en toute sécurité.'],

@@ -98,7 +98,8 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte, direct = false }) {
           </div>
         ))}
       </div>}
-      {f.titrePoints && <p className="offre__titre-points">{f.titrePoints}</p>}
+      {/* plus de mot « Compris » au-dessus de la liste (Marie, 17 novembre 2026) : l'élément reste, vide, pour garder le trait de séparation et la rangée */}
+      {f.points && <p className="offre__titre-points" aria-hidden={f.titrePoints ? undefined : true}>{f.titrePoints ?? ''}</p>}
       {f.points && (
         <ul className="offre__points">
           {f.points.map((point) => (

@@ -2180,3 +2180,6 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 
 /* Mes offres, « Coaching régulier » (Marie, 17 novembre 2026) : surtitre et ligne sous le prix en jaune, sur la carte encre */
 .offre .offre__accent, .offre--sombre .offre__accent { color: var(--jaune); }
+
+/* « Compris » retiré (17 novembre 2026) : il ne reste que le trait de séparation, sans la hauteur d'une ligne de texte */
+.offre__titre-points:empty { font-size: 0; line-height: 0; min-height: 0; }

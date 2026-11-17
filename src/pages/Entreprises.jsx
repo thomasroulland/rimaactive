@@ -19,7 +19,6 @@ export const PAGE = {
       surtitre: 'Jusqu’à 16 personnes',
       infos: '60\u00a0min • Ponctuel ou régulier',
       tarifs: [{ montant: 'Sur devis', detail: '(selon les besoins)' }],
-      titrePoints: 'Compris',
       // « Compris » de Marie (PDF du 16 novembre 2026) ; carte sur fond noir
       points: ['Réveil musculaire & mobilité', 'Renforcement adapté à tous les niveaux', 'Challenge & cohésion d’équipe'],
       sombre: true,
