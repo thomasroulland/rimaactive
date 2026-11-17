@@ -1306,3 +1306,11 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-super.est-compact .ec-super__liste li { flex: none; }
 .ec-super:not(.est-compact) .ec-super__badge { display: none; } /* ordinateur : « Triset » est déjà dans le titre du bloc */
 .ec-super.est-compact .ec-super__titre { gap: 4px 8px; }
+/* ordinateur : les exercices sont déjà visibles en cartes, pas de liste en plus */
+.ec-super:not(.est-compact) .ec-super__liste { display: none; }
+/* téléphone : les exercices du bloc les uns sous les autres, tous visibles, celui en cours en noir */
+.ec-super.est-compact .ec-super__liste { flex-direction: column; flex-wrap: nowrap; overflow: visible; gap: 6px; }
+.ec-super.est-compact .ec-super__liste li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; padding: 8px 12px 8px 8px; border-radius: 12px; font-size: 14px; }
+.ec-super.est-compact .ec-super__nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ec-super.est-compact .ec-super__mat { font-size: 12px; white-space: nowrap; }
+.ec-super.est-compact .ec-super__code { height: 26px; min-width: 32px; font-size: 12px; }
