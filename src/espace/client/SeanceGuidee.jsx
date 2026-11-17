@@ -141,23 +141,41 @@ export function nomSuperset(bloc) {
 export function SupersetInfo({ bloc, tour, compact = false, actuel = -1 }) {
   const els = bloc.elements ?? []
   const tours = Math.max(0, ...els.map((e) => parseInt(e.series, 10) || 0))
+  // téléphone : replié par défaut (une ligne), on l'ouvre pour voir les exercices et le matériel (17 novembre 2026)
+  const [ouvert, setOuvert] = useState(() => { try { return localStorage.getItem('rima-superset-ouvert') === '1' } catch { return false } })
+  const basculer = () => setOuvert((o) => { try { localStorage.setItem('rima-superset-ouvert', o ? '0' : '1') } catch { /* rien */ } return !o })
   const materiel = (e) => [e.materiel && e.materiel !== 'Poids du corps' && e.materiel !== 'À préciser' ? e.materiel : '', String(e.charge ?? '').trim() ? `${fr(e.charge)} kg` : ''].filter(Boolean).join(' ')
+  const consigne = `Enchaînez ${els.length} exercices sans pause${bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}`
+  const tourTxt = tours > 0 ? (tour ? `tour ${tour} sur ${tours}` : `${tours} tours`) : ''
+  if (compact) {
+    return (
+      <div className={`ec-super est-compact${ouvert ? ' est-ouvert' : ''}`}>
+        <button type="button" className="ec-super__ligne" aria-expanded={ouvert} onClick={basculer}>
+          <span className="ec-super__badge">{nomSuperset(bloc)}</span>
+          <span className="ec-super__codes">{els.map((_, k) => <span key={k} className={k === actuel ? 'est-actuel' : ''}>{bloc.lettre}{k + 1}</span>)}</span>
+          {tourTxt && <span className="ec-super__tour">{tourTxt}</span>}
+          <svg className="ec-super__chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+        {ouvert && (
+          <>
+            <p className="ec-super__titre">{consigne}.</p>
+            <ol className="ec-super__liste" aria-label="Exercices du bloc, à préparer">
+              {els.map((e, k) => (
+                <li key={e.id} className={k === actuel ? 'est-actuel' : ''} aria-current={k === actuel ? 'step' : undefined}>
+                  <span className="ec-super__code">{bloc.lettre}{k + 1}</span>
+                  <span className="ec-super__nom">{e.nom}</span>
+                  {materiel(e) && <span className="ec-super__mat">{materiel(e)}</span>}
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
+      </div>
+    )
+  }
   return (
-    <div className={`ec-super${compact ? ' est-compact' : ''}`} role="note" aria-label={`${nomSuperset(bloc)} : exercices enchaînés`}>
-      <p className="ec-super__titre">
-        <span className="ec-super__badge">{nomSuperset(bloc)}</span>
-        Enchaînez {els.length} exercices sans pause{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}{tours > 0 ? ` · ${tour ? `tour ${tour} sur ${tours}` : `${tours} tours`}` : ''}
-      </p>
-      {/* les exercices du bloc, dans l'ordre où on les enchaîne, avec ce qu'il faut préparer */}
-      <ol className="ec-super__liste" aria-label="Exercices du bloc, à préparer">
-        {els.map((e, k) => (
-          <li key={e.id} className={k === actuel ? 'est-actuel' : ''} aria-current={k === actuel ? 'step' : undefined}>
-            <span className="ec-super__code">{bloc.lettre}{k + 1}</span>
-            <span className="ec-super__nom">{e.nom}</span>
-            {materiel(e) && <span className="ec-super__mat">{materiel(e)}</span>}
-          </li>
-        ))}
-      </ol>
+    <div className="ec-super" role="note" aria-label={`${nomSuperset(bloc)} : exercices enchaînés`}>
+      <p className="ec-super__titre">{consigne}{tourTxt ? ` · ${tourTxt}` : ''}</p>
     </div>
   )
 }

@@ -1314,3 +1314,15 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-super.est-compact .ec-super__nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ec-super.est-compact .ec-super__mat { font-size: 12px; white-space: nowrap; }
 .ec-super.est-compact .ec-super__code { height: 26px; min-width: 32px; font-size: 12px; }
+/* téléphone : superset replié sur une ligne, s'ouvre au toucher */
+.ec-super.est-compact { padding: 0; gap: 0; overflow: hidden; }
+.ec-super__ligne { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 8px 12px; border: 0; background: none; font: inherit; color: #161514; text-align: left; cursor: pointer; }
+.ec-super__codes { display: flex; gap: 4px; }
+.ec-super__codes span { min-width: 28px; height: 22px; display: grid; place-items: center; padding: 0 6px; border-radius: 999px; background: #ece8e0; font-size: 11px; font-weight: 900; }
+.ec-super__codes span.est-actuel { background: #161514; color: #fff; }
+.ec-super__tour { margin-left: auto; font-size: 13px; font-weight: 700; color: #6b665f; }
+.ec-super__chevron { flex: none; color: #6b665f; transition: transform .2s ease; }
+.ec-super.est-ouvert .ec-super__chevron { transform: rotate(180deg); }
+.ec-super.est-compact.est-ouvert { padding-bottom: 10px; }
+.ec-super.est-compact .ec-super__titre, .ec-super.est-compact .ec-super__liste { margin: 0 12px; }
+.ec-super.est-compact .ec-super__liste { margin-top: 8px; }
