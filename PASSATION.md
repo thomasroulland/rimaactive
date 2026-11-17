@@ -594,3 +594,12 @@ Dernier bloc de `src/styles.css` (≥ 900 px) : même structure dans les cinq ca
 ligne réservée dessous (`min-height: 74px`), trait au même endroit, 24 px du trait à la liste, 6 px entre les lignes, 24 px de la liste au
 bouton. Mesuré à 1440 et 1100 px : positions identiques à 1 px près (`scratchpad/glass/uniforme.cjs`). Téléphone inchangé (déjà uniforme).
 Ces règles ont une précision renforcée (`.offres-page__rubrique.offres-page__rubrique …`) pour passer devant d'anciennes règles plus précises.
+
+## M'écrire et dessous des offres (17 novembre 2026, en ligne, accord écrit : « Publie »)
+- **M'écrire** : « Quel coaching vous intéresse ? » en quatre tuiles avec pictogramme (`choix-offre`, `PICTO_OFFRE` dans `Contact.jsx` ;
+  pictos `personne`, `ecran`, `mallette` ajoutés à `Picto.jsx`), cochée d'office depuis une carte de Mes offres, libre sinon.
+  Surtitre « Échangeons ensemble », « Contactez-moi » sans trait, localisation « Basée à Houdan, j'interviens dans le 78, le 28 et le 27. »
+  avec un repère vermillon. Le titre est décalé de la moitié du retrait intérieur de l'encart (`--retrait-encart / 2`), choix de Thomas.
+- **Sous les offres** : « Matériel inclus · Je m'occupe de tout. » et « Déplacement inclus · Dans un rayon de 20 km autour de Houdan. »,
+  pictogrammes encre (`AVANTAGES` dans `Offres.jsx`, reconnus d'après les textes `liste` des pages). Centrés sous la carte pour
+  Groupes et Entreprises (pas sous la photo), alignés à gauche pour Individuel.
