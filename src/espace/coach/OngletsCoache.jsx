@@ -136,7 +136,6 @@ function ProfilSportif({ client, uid }) {
 // semaines d'une semaine ; un jour avec une activité se touche pour en voir le détail.
 const MOIS_COURTS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
 const JOURS_COURTS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.']
-const LIBELLES_SEMAINE = { '-1': 'Semaine dernière', 0: 'Cette semaine', 1: 'Semaine prochaine' }
 const jourMois = (iso) => `${Number(iso.slice(8))} ${MOIS_COURTS[Number(iso.slice(5, 7)) - 1]}`
 const Fleche = ({ vers }) => (
   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -161,16 +160,13 @@ function Calendrier3Semaines() {
   faites.forEach((sf) => ajouter(sf.date, { genre: 'seance', sf }))
   ;(bilans ?? []).forEach((b) => ajouter(b.date, { genre: 'bilan', b }))
   const titreSeance = (sf) => trouverSeance(programmes, sf)?.titre || (trouverSeance(programmes, sf) ? 'Séance' : 'Séance retirée')
-  const faitesProg = new Set(faites.filter((x) => x.programme === progEnCours?.id).map((x) => x.seance))
-  const prevues = progEnCours ? listeSeances(progEnCours) : []
 
   const semaines = [-1, 0, 1].map((k) => {
     const rel = k + decalage
     const lundi = ajoutJours(lundiCourant, rel * 7)
     const jours = Array.from({ length: 7 }, (_, i) => ajoutJours(lundi, i))
     // une semaine du programme va dans la semaine du calendrier qui contient son milieu (si le programme ne commence pas un lundi)
-    const plan = prevues.filter((x) => { const m = ajoutJours(x.date, 3); return m >= lundi && m <= jours[6] })
-    return { rel, lundi, jours, plan, passee: jours[6] < aujourdhui, numero: plan[0]?.semaine }
+    return { rel, lundi, jours }
   })
   const jourChoisi = choisi && parJour.has(choisi) ? choisi : null
 
@@ -185,67 +181,45 @@ function Calendrier3Semaines() {
         </div>
       </div>
 
-      <div className="cal3__semaines">
-        {semaines.map((w) => {
-          const nbFaites = w.plan.filter((x) => faitesProg.has(x.seance.id)).length
-          const libelle = LIBELLES_SEMAINE[w.rel] ?? (w.rel < 0 ? `Il y a ${-w.rel} semaines` : `Dans ${w.rel} semaines`)
-          return (
-            <article key={w.lundi} className={`cal3__semaine${w.rel === 0 ? ' est-courante' : ''}`} aria-label={`${libelle}, du ${jourMois(w.lundi)} au ${jourMois(w.jours[6])}`}>
-              <header className="cal3__entete">
-                <p className="cal3__libelle">{libelle}{w.numero && <span className="cal3__num">S{w.numero}</span>}</p>
-                <p className="cal3__dates">{jourMois(w.lundi)} – {jourMois(w.jours[6])}</p>
-                {w.plan.length > 0 && <p className="cal3__compte"><b>{nbFaites}</b>/{w.plan.length} faite{nbFaites > 1 ? 's' : ''}</p>}
-              </header>
-              {w.plan.length > 0 && (
-                <ul className="cal3__plan" aria-label="Séances prévues au programme">
-                  {w.plan.map((x) => {
-                    const faite = faitesProg.has(x.seance.id)
-                    const etat = faite ? 'faite' : w.passee ? 'manquee' : 'afaire'
-                    return (
-                      <li key={x.seance.id} className={`cal3__prevue est-${etat}`}>
-                        <span className="cal3__puce" aria-hidden="true">{faite ? '✓' : etat === 'manquee' ? '✕' : ''}</span>
-                        {x.seance.titre || 'Séance sans titre'}
-                        <span className="sr-only">{faite ? ', faite' : etat === 'manquee' ? ', pas faite' : ', à faire'}</span>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
-              <ol className="cal3__jours">
-                {w.jours.map((d, i) => {
-                  const evts = parJour.get(d) ?? []
-                  const enCours = commencees.filter((x) => x.date === d)
-                  const contenu = (
-                    <>
-                      <span className="cal3__jour-tete"><span className="cal3__jour-nom">{JOURS_COURTS[i]}</span><span className="cal3__jour-num">{Number(d.slice(8))}</span></span>
-                      <span className="cal3__evts">
-                        {evts.map((e, k) => (
-                          <span key={k} className={`cal3__evt cal3__evt--${e.genre}`}>{e.genre === 'seance' ? titreSeance(e.sf) : (e.b.titre || 'Bilan')}</span>
-                        ))}
-                        {enCours.map((x) => <span key={x.id} className="cal3__evt cal3__evt--encours">En cours</span>)}
-                      </span>
-                    </>
-                  )
-                  const classes = `cal3__jour${d === aujourdhui ? ' est-aujourdhui' : ''}${d < aujourdhui ? ' est-passe' : ''}${jourChoisi === d ? ' est-choisi' : ''}${evts.length ? ' a-des-evts' : ''}`
-                  const etiquette = `${JOURS_COURTS[i]} ${jourMois(d)}${evts.length ? `, ${evts.length} activité${evts.length > 1 ? 's' : ''}` : ''}`
-                  return (
-                    <li key={d}>
-                      {evts.length
-                        ? <button type="button" className={classes} aria-label={etiquette} aria-pressed={jourChoisi === d} onClick={() => setChoisi(d)}>{contenu}</button>
-                        : <span className={classes} aria-label={etiquette}>{contenu}</span>}
-                    </li>
-                  )
-                })}
-              </ol>
-            </article>
-          )
-        })}
+      {/* les 3 semaines regroupées en une seule grille : une ligne par semaine, seul aujourd'hui est en rouge (17 novembre 2026) */}
+      <div className="cal3__grille" role="grid" aria-label={`Du ${jourMois(semaines[0].lundi)} au ${jourMois(semaines[2].jours[6])}`}>
+        <div className="cal3__noms" role="row">
+          {JOURS_COURTS.map((j) => <span key={j} role="columnheader" className="cal3__nom-jour">{j}</span>)}
+        </div>
+        {semaines.map((w) => (
+          <ol key={w.lundi} className="cal3__jours" role="row">
+            {w.jours.map((d, i) => {
+              const evts = parJour.get(d) ?? []
+              const enCours = commencees.filter((x) => x.date === d)
+              const premierDuMois = d.endsWith('-01')
+              const contenu = (
+                <>
+                  <span className="cal3__jour-tete"><span className="cal3__jour-num">{Number(d.slice(8))}</span>{(premierDuMois || d === semaines[0].lundi) && <span className="cal3__mois">{MOIS_COURTS[Number(d.slice(5, 7)) - 1]}</span>}</span>
+                  <span className="cal3__evts">
+                    {evts.map((e, k) => (
+                      <span key={k} className={`cal3__evt cal3__evt--${e.genre}`}>{e.genre === 'seance' ? titreSeance(e.sf) : (e.b.titre || 'Bilan')}</span>
+                    ))}
+                    {enCours.map((x) => <span key={x.id} className="cal3__evt cal3__evt--encours">En cours</span>)}
+                  </span>
+                </>
+              )
+              const classes = `cal3__jour${d === aujourdhui ? ' est-aujourdhui' : ''}${d < aujourdhui ? ' est-passe' : ''}${jourChoisi === d ? ' est-choisi' : ''}${evts.length ? ' a-des-evts' : ''}`
+              const etiquette = `${JOURS_COURTS[i]} ${jourMois(d)}${evts.length ? `, ${evts.length} activité${evts.length > 1 ? 's' : ''}` : ''}`
+              return (
+                <li key={d} role="gridcell">
+                  {evts.length
+                    ? <button type="button" className={classes} aria-label={etiquette} aria-pressed={jourChoisi === d} onClick={() => setChoisi(d)}>{contenu}</button>
+                    : <span className={classes} aria-label={etiquette}>{contenu}</span>}
+                </li>
+              )
+            })}
+          </ol>
+        ))}
       </div>
       <p className="cal3__legende" aria-hidden="true">
         <span className="cal3__evt cal3__evt--seance">Séance faite</span>
         <span className="cal3__evt cal3__evt--bilan">Bilan</span>
-        <span className="cal3__prevue est-faite"><span className="cal3__puce">✓</span>Prévue et faite</span>
-        <span className="cal3__prevue est-manquee"><span className="cal3__puce">✕</span>Pas faite</span>
+        <span className="cal3__legende-auj">Aujourd’hui</span>
       </p>
 
       {jourChoisi && (

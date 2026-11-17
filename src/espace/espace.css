@@ -2056,3 +2056,18 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 .banque-filtres .rangee-defilante { min-width: 0; }
 /* bouton Inviter (téléphone) bien en jaune */
 @media (max-width: 700px) { .mes-coaches__tete .bouton.espace-coach__action { background: var(--jaune) !important; border-color: var(--jaune) !important; color: var(--encre) !important; } .mes-coaches__tete .surtitre { white-space: nowrap; } }
+
+/* Calendrier regroupé (17 novembre 2026) : une seule grille de 3 semaines, noms des jours une fois en haut, seul aujourd'hui en rouge */
+.cal3__grille { display: grid; gap: 6px; }
+.cal3__noms { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; padding: 0 2px; }
+.cal3__nom-jour { font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #6b665f; text-align: center; }
+.cal3__grille .cal3__jours { gap: 6px; }
+.cal3__grille .cal3__jour { min-height: 82px; background: #fff; }
+.cal3__grille .cal3__jour.est-passe:not(.a-des-evts) { background: #f3f1ec; }
+.cal3__grille .cal3__jour-tete { justify-content: flex-start; gap: 6px; }
+.cal3__mois { font-size: 11px; font-weight: 700; color: #6b665f; }
+.cal3__grille .cal3__jours .cal3__jour.est-aujourdhui.est-aujourdhui { border-color: var(--vermillon); box-shadow: 0 0 0 1px var(--vermillon), 0 4px 12px rgba(255, 74, 28, .18); }
+.cal3__legende-auj { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: #6b665f; }
+.cal3__legende-auj::before { content: ""; width: 12px; height: 12px; border-radius: 4px; border: 2px solid var(--vermillon); }
+@media (max-width: 700px) { .cal3__noms { gap: 4px; } .cal3__nom-jour { font-size: 10px; } .cal3__grille .cal3__jour { min-height: 52px; } }
+@media (max-width: 700px) { .cal3__mois { display: none; } }
