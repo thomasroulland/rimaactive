@@ -2194,3 +2194,17 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 /* Mes offres : surtitres et petites lignes colorées, au choix par carte (essai du 17 novembre 2026) */
 .offre .offre__couleur--vermillon { color: var(--vermillon); }
 .offre .offre__couleur--jaune { color: var(--jaune); }
+
+/* Mes offres, ordinateur : mêmes tailles et mêmes espacements dans toutes les cartes (Thomas, 17 novembre 2026).
+   Nom → durée 12 px ; trait → liste 24 px ; 6 px entre les lignes de la liste ; liste → bouton 20 px ;
+   prix calé en haut, à la hauteur du nom, avec la place d'une ligne sous le prix réservée partout (le trait tombe au même endroit). */
+@media (min-width: 900px) {
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre { row-gap: 4px !important; }
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre > .titre { margin: 0 !important; }
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__infos { margin: 12px 0 0 !important; align-self: start !important; }
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__tarifs { align-self: start !important; min-height: 74px; }
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__titre-points { margin-top: 14px !important; padding-top: 24px !important; }
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__points { margin: 0 0 20px !important; gap: 6px !important; }
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__points li { line-height: 20px !important; }
+  .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__bouton { margin-top: 0 !important; }
+}
