@@ -7,6 +7,7 @@ import GestionListes from './GestionListes.jsx'
 import MaterielPicto from './MaterielPicto.jsx'
 import Picto from '../../components/Picto.jsx'
 import OngletsParties from './OngletsParties.jsx'
+import RangeeDefilante from './RangeeDefilante.jsx'
 import { partieDe } from '../donnees/reglages.js'
 
 const simple = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -63,17 +64,17 @@ export default function Exercices() {
           </div>
           <div className="banque-filtres">
             <span className="banque-filtres__lib" id="f-cat">Catégorie</span>
-            <div className="filtres-coaches" role="group" aria-labelledby="f-cat">
+            <RangeeDefilante className="filtres-coaches filtres-ligne" role="group" aria-labelledby="f-cat">
               {['Toutes', ...categoriesVisibles].map((c) => (
                 <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
               ))}
-            </div>
+            </RangeeDefilante>
             <span className="banque-filtres__lib" id="f-mat">Matériel</span>
-            <div className="filtres-coaches" role="group" aria-labelledby="f-mat">
+            <RangeeDefilante className="filtres-coaches filtres-ligne" role="group" aria-labelledby="f-mat">
               {['Tous', ...reglages.materiels].map((m) => (
                 <button key={m} type="button" className="filtre-coaches" aria-pressed={materiel === m} onClick={() => setMateriel(m)}>{m}</button>
               ))}
-            </div>
+            </RangeeDefilante>
           </div>
           <div className="banque-filtres__bas">
             <label className="espace-case">

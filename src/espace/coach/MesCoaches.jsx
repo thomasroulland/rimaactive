@@ -75,7 +75,7 @@ export default function MesCoaches() {
             <p className="espace-texte">{resumeTete}</p>
           </div>
           <button type="button" className="bouton bouton--secondaire bouton--compact espace-coach__action" onClick={() => { setMessage(''); setDialogue(true) }}>
-            <Picto nom="users" taille={18} /> Inviter un client
+            <Picto nom="users" taille={18} /> Inviter<span className="mes-coaches__suite"> un client</span>
           </button>
         </header>
 

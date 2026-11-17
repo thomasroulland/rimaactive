@@ -2042,3 +2042,17 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
   .prog-outils__actions { flex-wrap: wrap; width: 100%; }
   .prog-outils__actions > * { flex: 1 1 auto; }
 }
+/* téléphone : « Inviter » en petit bouton jaune à droite du titre, au lieu d'une ligne à lui seul */
+@media (max-width: 700px) {
+  .mes-coaches__tete { flex-wrap: nowrap; align-items: flex-start; position: relative; }
+  .mes-coaches__tete > div { min-width: 0; }
+  .mes-coaches__tete .espace-coach__action { flex: none; margin-top: 22px; min-height: 40px; padding: 0 14px; gap: 6px; background: var(--jaune); border-color: var(--jaune); color: var(--encre); font-size: 14px; }
+  .mes-coaches__suite { display: none; }
+}
+/* filtres de la banque : une seule ligne avec ascenseur horizontal (comme dans la création de séance) */
+.filtres-ligne { flex-wrap: nowrap !important; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding-bottom: 2px; scroll-snap-type: x proximity; overscroll-behavior-x: contain; }
+.filtres-ligne::-webkit-scrollbar { display: none; }
+.filtres-ligne .filtre-coaches { flex: none; scroll-snap-align: start; }
+.banque-filtres .rangee-defilante { min-width: 0; }
+/* bouton Inviter (téléphone) bien en jaune */
+@media (max-width: 700px) { .mes-coaches__tete .bouton.espace-coach__action { background: var(--jaune) !important; border-color: var(--jaune) !important; color: var(--encre) !important; } .mes-coaches__tete .surtitre { white-space: nowrap; } }
