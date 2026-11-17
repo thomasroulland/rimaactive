@@ -1,12 +1,13 @@
 import { CONTACT } from './liens.js'
+import Picto from './Picto.jsx'
 
 // Colonne de gauche du bloc « Contactez-moi », reprise en haut de la page M'écrire (avec l'e-mail)
 export default function PresentationContact({ titre: Titre = 'h2', avecEmail = false }) {
   return (
     <div className="presentation-contact">
-      <p className="surtitre">Besoin d’en savoir plus ?</p>
-      <Titre id="contact-titre" className="titre titre--section">Contactez-<span className="mot-avant">moi</span></Titre>
-      <p className="texte presentation-contact__lieu">Basée à Houdan, je me déplace dans les Yvelines (78), l’Eure-et-Loir (28) et l’Eure (27).</p>
+      <p className="surtitre">Échangeons ensemble</p>
+      <Titre id="contact-titre" className="titre titre--section">Contactez-moi</Titre>
+      <p className="texte presentation-contact__lieu presentation-contact__lieu--court"><Picto nom="map-pin" taille={18} />Basée à Houdan, j’interviens dans le 78, le 28 et le 27.</p>
       {avecEmail && (
         <div className="presentation-contact__email">
           <p className="mention">E-mail</p>

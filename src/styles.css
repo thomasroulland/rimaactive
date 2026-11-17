@@ -2230,3 +2230,13 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 .offres-page__avantages strong { display: block; font-size: 15px; line-height: 20px; font-weight: 700; color: var(--encre); }
 .offres-page__avantages li > span > span { display: block; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
 @media (max-width: 599px) { .offres-page__avantages { flex-direction: column; gap: 12px; margin-top: 16px; } }
+
+/* Mes offres : les avantages sous la carte (pas sous la photo), centrés ; sous Individuel, centrés sur toute la largeur (17 novembre 2026) */
+@media (min-width: 600px) {
+  .offres-page__avantages { justify-content: center; }
+  .offres-page__corps--photo > .offres-page__avantages { grid-column: 2; margin-top: 4px; }
+  .offres-page__corps--photo.offres-page__corps--inverse > .offres-page__avantages { grid-column: 1; }
+}
+/* M'écrire : la localisation en une ligne courte, avec un repère de carte (17 novembre 2026) */
+.page-contact .presentation-contact .presentation-contact__lieu--court { display: flex; align-items: center; gap: 8px; white-space: normal; font-size: 16px; line-height: 24px; color: var(--gris-chaud); }
+.page-contact .presentation-contact .presentation-contact__lieu--court .picto { flex: none; color: var(--gris-chaud); }

@@ -108,15 +108,16 @@ function Rubrique({ id, page, sous, fonce, inverse }) {
           <ul className={`offres offres--${cartes.length === 1 ? '1' : '2'}`}>
             {cartes.map((f) => <CarteOffre key={f.nom} f={f} contexte={page.titre} direct />)}
           </ul>
+          {/* sous la carte elle-même (pas sous la photo), centré ; sous les deux cartes d'Individuel, centré sur toute la largeur */}
+          {liste.length > 0 && (
+            <ul className="offres-page__avantages">
+              {liste.map((point) => {
+                const a = avantage(point)
+                return <li key={point}><Picto nom={a.picto} taille={24} /><span><strong>{a.titre}</strong>{a.texte && <span>{a.texte}</span>}</span></li>
+              })}
+            </ul>
+          )}
         </div>
-        {liste.length > 0 && (
-          <ul className="offres-page__avantages">
-            {liste.map((point) => {
-              const a = avantage(point)
-              return <li key={point}><Picto nom={a.picto} taille={24} /><span><strong>{a.titre}</strong>{a.texte && <span>{a.texte}</span>}</span></li>
-            })}
-          </ul>
-        )}
       </div>
     </section>
   )
