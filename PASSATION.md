@@ -603,3 +603,6 @@ Ces règles ont une précision renforcée (`.offres-page__rubrique.offres-page__
 - **Sous les offres** : « Matériel inclus · Je m'occupe de tout. » et « Déplacement inclus · Dans un rayon de 20 km autour de Houdan. »,
   pictogrammes encre (`AVANTAGES` dans `Offres.jsx`, reconnus d'après les textes `liste` des pages). Centrés sous la carte pour
   Groupes et Entreprises (pas sous la photo), alignés à gauche pour Individuel.
+- **Correctif (17 novembre 2026, accord écrit : « Publie »)** : photo et carte forcées sur la première rangée de la grille, avantages sur la
+  seconde (`grid-row`). Sans cela, quand la photo est à droite (`inverse`), elle tombait sur la seconde rangée. Avantages d'Individuel
+  centrés sous la première carte (« Séance ponctuelle »). Vérifié à 1440, 1100, 700 et 390 px (`scratchpad/glass/place.cjs`).
