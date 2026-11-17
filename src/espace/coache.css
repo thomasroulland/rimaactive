@@ -1282,3 +1282,27 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-super.est-compact { padding: 8px 12px; border-radius: 12px; margin: 0; }
 .ec-super.est-compact .ec-super__titre { font-size: 13px; }
 .ec-super.est-compact .ec-super__preparer { font-size: 12px; }
+.ec-super__liste { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.ec-super__liste li { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px; background: #fff; border: 1px solid rgba(22, 21, 20, .1); font-size: 13px; font-weight: 700; }
+.ec-super__liste li.est-actuel { border-color: var(--ec-vermillon, #ff4a1c); box-shadow: 0 0 0 1px var(--ec-vermillon, #ff4a1c); }
+.ec-super__code { min-width: 26px; height: 22px; display: grid; place-items: center; padding: 0 6px; border-radius: 999px; background: #161514; color: #fff; font-size: 11px; font-weight: 900; }
+.ec-super__mat { color: #6b665f; font-weight: 600; }
+.ec-super.est-compact .ec-super__liste li { font-size: 12px; }
+
+/* Superset, version intégrée (17 novembre 2026) : plus de cadre jaune ; une ligne discrète dans le style du site */
+.ec-super { margin-top: 4px; padding: 0; border: 0; background: none; gap: 6px; }
+.ec-super__titre { gap: 8px; font-size: 15px; font-weight: 600; color: #6b665f; }
+.ec-super__badge { padding: 0; background: none; color: var(--ec-vermillon, #ff4a1c); font-size: 12px; font-weight: 900; letter-spacing: .1em; }
+.ec-super__liste { margin: 0; gap: 8px; }
+.ec-super__liste li { padding: 5px 12px 5px 5px; background: rgba(255, 255, 255, .85); border: 1px solid #e6e2da; box-shadow: 0 2px 6px rgba(22, 21, 20, .04); font-size: 13px; }
+.ec-super__liste li.est-actuel { background: #161514; color: #f4f3ef; border-color: #161514; box-shadow: none; }
+.ec-super__liste li.est-actuel .ec-super__code { background: var(--ec-vermillon, #ff4a1c); }
+.ec-super__liste li.est-actuel .ec-super__mat { color: rgba(244, 243, 239, .7); }
+.ec-super__code { height: 22px; min-width: 28px; background: #ece8e0; color: #161514; }
+/* téléphone : une petite carte blanche comme le reste */
+.ec-super.est-compact { padding: 10px 12px; border-radius: 16px; background: rgba(255, 255, 255, .8); border: 1px solid #fff; box-shadow: 0 6px 18px rgba(22, 21, 20, .06); }
+.ec-super.est-compact .ec-super__titre { font-size: 13px; }
+.ec-super.est-compact .ec-super__liste { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.ec-super.est-compact .ec-super__liste li { flex: none; }
+.ec-super:not(.est-compact) .ec-super__badge { display: none; } /* ordinateur : « Triset » est déjà dans le titre du bloc */
+.ec-super.est-compact .ec-super__titre { gap: 4px 8px; }

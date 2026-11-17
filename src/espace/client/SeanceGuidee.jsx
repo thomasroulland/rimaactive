@@ -138,7 +138,7 @@ export function nomSuperset(bloc) {
   const n = (bloc?.elements ?? []).length
   return n === 2 ? 'Biset' : n === 3 ? 'Triset' : 'Superset'
 }
-export function SupersetInfo({ bloc, tour, compact = false }) {
+export function SupersetInfo({ bloc, tour, compact = false, actuel = -1 }) {
   const els = bloc.elements ?? []
   const tours = Math.max(0, ...els.map((e) => parseInt(e.series, 10) || 0))
   const materiel = (e) => [e.materiel && e.materiel !== 'Poids du corps' && e.materiel !== 'À préciser' ? e.materiel : '', String(e.charge ?? '').trim() ? `${fr(e.charge)} kg` : ''].filter(Boolean).join(' ')
@@ -148,7 +148,16 @@ export function SupersetInfo({ bloc, tour, compact = false }) {
         <span className="ec-super__badge">{nomSuperset(bloc)}</span>
         Enchaînez {els.length} exercices sans pause{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}{tours > 0 ? ` · ${tour ? `tour ${tour} sur ${tours}` : `${tours} tours`}` : ''}
       </p>
-      <p className="ec-super__preparer"><b>À préparer :</b> {els.map((e, k) => `${bloc.lettre}${k + 1} ${e.nom}${materiel(e) ? ` (${materiel(e)})` : ''}`).join(' · ')}</p>
+      {/* les exercices du bloc, dans l'ordre où on les enchaîne, avec ce qu'il faut préparer */}
+      <ol className="ec-super__liste" aria-label="Exercices du bloc, à préparer">
+        {els.map((e, k) => (
+          <li key={e.id} className={k === actuel ? 'est-actuel' : ''} aria-current={k === actuel ? 'step' : undefined}>
+            <span className="ec-super__code">{bloc.lettre}{k + 1}</span>
+            <span className="ec-super__nom">{e.nom}</span>
+            {materiel(e) && <span className="ec-super__mat">{materiel(e)}</span>}
+          </li>
+        ))}
+      </ol>
     </div>
   )
 }
@@ -388,7 +397,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
           </div>
         </div>
         <div className="ec-s2-un__compte">
-          <span>Exercice {exo + 1} sur {els.length} · {nomBloc(bloc)}{bloc.format === 'superset' ? ` · ${nomSuperset(bloc)}` : ''}</span>
+          <span>Exercice {exo + 1} sur {els.length} · {nomBloc(bloc)}</span>
           <button type="button" aria-expanded={plan} onClick={() => setPlan((p) => !p)}>{plan ? 'Fermer' : 'Plan'}</button>
         </div>
         {plan && (
@@ -402,7 +411,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         )}
       </div>
 
-      {bloc.format === 'superset' && <SupersetInfo bloc={bloc} tour={cur >= 0 ? cur + 1 : null} compact />}
+      {bloc.format === 'superset' && <SupersetInfo bloc={bloc} tour={cur >= 0 ? cur + 1 : null} compact actuel={exo} />}
       <button type="button" className="ec-s2-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
         {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-photo__img" /> : <Image />}
         <span>Voir les consignes</span>
