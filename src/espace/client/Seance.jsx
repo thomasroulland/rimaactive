@@ -128,7 +128,9 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
 
   // téléphone, un exercice à la fois : le retour tient dans la ligne du haut, sous forme d'une simple flèche
   const retourPetit = (
-    <Link className="ec-s2-retour" to={depuisProgramme ? '/espace/programme' : '/espace'} aria-label={depuisProgramme ? 'Retour à Mon programme' : 'Retour au tableau de bord'}><Fleche /></Link>
+    <Link className="ec-s2-retour ec-s2-quitter" to={depuisProgramme ? '/espace/programme' : '/espace'} aria-label="Quitter la séance (tout est enregistré)" title="Quitter la séance">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </Link>
   )
 
   if (!item) {

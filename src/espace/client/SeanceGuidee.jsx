@@ -233,8 +233,7 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
   const cle = duree ? 'duree' : 'reps'
   const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
   const fini = ls.length > 0 && ls.every((l) => l.fait)
-  // pas de charge prévue ni notée (poids du corps, durée) : la colonne Charge n'apparaît pas
-  const avecCharge = String(el.charge ?? '').trim() !== '' || ls.some((l) => String(l.charge ?? '').trim() !== '')
+    const avecCharge = true // la charge se note toujours (demande de Thomas, 17 novembre 2026), même sans charge prévue
   const base = `g-${el.id}`
   return (
     <li className={`ec-s5-carte${actuelle >= 0 ? ' est-actuelle' : ''}${fini ? ' est-finie' : ''}`} aria-labelledby={`${base}-nom`}>
@@ -424,9 +423,14 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         </div>
       )}
 
-      <div className="ec-s2-nav">
-        {(exo > 0 || etape > 0) && <button type="button" className="ec-s2-precedent" onClick={precedent}>← {exo > 0 ? 'Exercice précédent' : 'Bloc précédent'}</button>}
-        {cur >= 0 && <button type="button" className="ec-s2-passer" onClick={suite}>Passer →</button>}
+      {/* revenir / avancer : deux boutons bien visibles, toujours à la même place (17 novembre 2026) */}
+      <div className="ec-s2-nav" role="group" aria-label="Changer d’exercice">
+        <button type="button" className="ec-s2-pas" onClick={precedent} disabled={exo === 0 && etape === 0}>
+          <span aria-hidden="true">‹</span> {exo > 0 ? 'Exercice précédent' : 'Bloc précédent'}
+        </button>
+        <button type="button" className="ec-s2-pas" onClick={suite}>
+          {prochaineExo(exo) >= 0 ? 'Exercice suivant' : dernier ? 'Fin de séance' : 'Bloc suivant'} <span aria-hidden="true">›</span>
+        </button>
       </div>
       <Gros onClick={cur >= 0 ? faite : suite}>{cur >= 0 ? 'Série faite ✓' : (prochaineExo(exo) >= 0 ? 'Exercice suivant →' : dernier ? 'Terminer la séance →' : 'Bloc suivant →')}</Gros>
     </div>

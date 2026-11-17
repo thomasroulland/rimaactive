@@ -1262,3 +1262,13 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-s5-tete { padding: 6px 2px 0; align-items: center; }
 .ec-s5-blocs__fin.est-actif { background: #161514 !important; color: #fff !important; border-color: #161514 !important; }
 .ec-seance--large .ec-correction { margin: 0; }
+/* les cartes d'un même bloc font la même hauteur */
+.ec-s5-grille { align-items: stretch; }
+.ec-s5-carte { height: 100%; }
+/* téléphone : la croix en haut quitte la séance ; « ‹ précédent » et « suivant › » sont deux vrais boutons */
+.ec-s2-quitter { color: #6b665f; }
+.ec-s2-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+.ec-s2-pas { min-height: 46px; padding: 0 12px; border: 1px solid #d9d4ca; border-radius: 999px; background: #fff; font: 800 14px/1.2 var(--font-sans); color: #161514; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.ec-s2-pas span { font-size: 20px; line-height: 1; }
+.ec-s2-pas:disabled { opacity: .35; cursor: default; }
+.ec-s2-pas:active:not(:disabled) { background: #f4f3ef; }
