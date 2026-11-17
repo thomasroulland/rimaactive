@@ -2248,6 +2248,6 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 @media (max-width: 599px) { .page-contact { --retrait-encart: 18px; } }
 @media (min-width: 900px) and (max-height: 1000px) { .page-contact { --retrait-encart: 28px; } }
 @media (min-width: 900px) and (max-height: 780px) { .page-contact { --retrait-encart: 22px; } }
-.page-contact .presentation-contact { padding-left: var(--retrait-encart); }
+.page-contact .presentation-contact { padding-left: calc(var(--retrait-encart) / 2); } /* à mi-chemin entre le bord de l'encart et son contenu (Thomas : « un peu plus proche à gauche ») */
 /* Mes offres, Individuel (deux cartes, pas de photo) : avantages alignés à gauche, sur le bord des cartes */
 @media (min-width: 600px) { .offres-page__corps:not(.offres-page__corps--photo) > .offres-page__avantages { justify-content: flex-start; } }
