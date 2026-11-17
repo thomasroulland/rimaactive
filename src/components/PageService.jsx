@@ -94,7 +94,7 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte, direct = false }) {
               {t.montant}
               {t.apres && <span className="offre__apres">{t.apres}</span>}
             </p>
-            {[t.detail].flat().filter(Boolean).map((d) => <p key={d} className={`offre__detail${f.accent ? ' offre__accent' : ''}`}>{d}</p>)}
+            {[t.detail].flat().filter(Boolean).map((d) => <p key={d} className={`offre__detail${f.accent || t.accent ? ' offre__accent' : ''}`}>{d}</p>)}
           </div>
         ))}
       </div>}

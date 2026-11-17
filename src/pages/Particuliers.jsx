@@ -42,7 +42,7 @@ export const PAGE = {
       puce: 'kettlebell',
       surtitre: 'Sur la durée',
       accent: true, // surtitre et ligne sous le prix en jaune (Marie, 17 novembre 2026)
-      infos: 'Engagement minimum de 2\u00a0mois',
+      infos: 'Minimum 2\u00a0mois',
       tarifs: [{ montant: '50\u00a0€', apres: 'la séance', detail: '200 à 250\u00a0€ / mois pour 4 à 5\u00a0séances' }],
       points: ['1 séance individuelle par semaine', 'Programme d’entraînement sur mesure', 'Suivi sur votre espace personnel'],
       sombre: true,
@@ -70,7 +70,7 @@ export const PAGE = {
       puce: 'barbell',
       surtitre: 'Sur la durée',
       accent: true, // surtitre et ligne sous le prix en jaune (Marie, 17 novembre 2026)
-      infos: 'Engagement minimum de 2\u00a0mois',
+      infos: 'Minimum 2\u00a0mois',
       tarifs: [{ montant: '45\u00a0€', apres: 'la séance', detail: '180 à 225\u00a0€ / mois pour 4 à 5\u00a0séances' }],
       points: ['1 séance individuelle par semaine', 'Programme d’entraînement sur mesure', 'Suivi sur votre espace personnel'],
       sombre: true,
