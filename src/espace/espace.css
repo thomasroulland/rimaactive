@@ -2035,3 +2035,10 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 }
 /* la vue « séance faite » garde un bilan étroit partout (la règle large de la banque d'exercices ne s'applique qu'à la création de séance) */
 @media (min-width: 1101px) { .es2.sf { grid-template-columns: minmax(270px, 320px) minmax(0, 1fr); } }
+/* petits écrans : les boutons-liens longs passent à la ligne au lieu de dépasser */
+.espace-coach .lien-souligne, .espace-coach button.lien-souligne { white-space: normal; text-align: left; max-width: 100%; }
+/* barre d'outils du programme sur téléphone : les boutons passent à la ligne */
+@media (max-width: 700px) {
+  .prog-outils__actions { flex-wrap: wrap; width: 100%; }
+  .prog-outils__actions > * { flex: 1 1 auto; }
+}
