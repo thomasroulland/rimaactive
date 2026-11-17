@@ -428,11 +428,15 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         <button type="button" className="ec-s2-pas" onClick={precedent} disabled={exo === 0 && etape === 0}>
           <span aria-hidden="true">‹</span> {exo > 0 ? 'Exercice précédent' : 'Bloc précédent'}
         </button>
-        <button type="button" className="ec-s2-pas" onClick={suite}>
-          {prochaineExo(exo) >= 0 ? 'Exercice suivant' : dernier ? 'Fin de séance' : 'Bloc suivant'} <span aria-hidden="true">›</span>
+        {/* simple navigation : l'exercice d'après (fait ou non), puis le bloc suivant */}
+        <button type="button" className="ec-s2-pas" onClick={() => (exo < els.length - 1 ? allerExo(exo + 1) : blocSuivant())}>
+          {exo < els.length - 1 ? 'Exercice suivant' : dernier ? 'Fin de séance' : 'Bloc suivant'} <span aria-hidden="true">›</span>
         </button>
       </div>
-      <Gros onClick={cur >= 0 ? faite : suite}>{cur >= 0 ? 'Série faite ✓' : (prochaineExo(exo) >= 0 ? 'Exercice suivant →' : dernier ? 'Terminer la séance →' : 'Bloc suivant →')}</Gros>
+      {/* exercice fini : on passe à l'exercice d'après (même s'il est déjà fait), puis au bloc suivant */}
+      <Gros onClick={cur >= 0 ? faite : () => (exo < els.length - 1 ? allerExo(exo + 1) : blocSuivant())}>
+        {cur >= 0 ? 'Série faite ✓' : exo < els.length - 1 ? 'Exercice suivant →' : dernier ? 'Terminer la séance →' : 'Bloc suivant →'}
+      </Gros>
     </div>
   )
 }
