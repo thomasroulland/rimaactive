@@ -588,3 +588,9 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
 - **Titres au-dessus des cartes** retirés (gardés pour les lecteurs d'écran) ; bouton « À domicile / En salle » aligné à gauche sur les cartes.
 - **Photos** : à droite pour En ligne et Entreprises, à gauche pour Groupes (`inverse` dans `Offres.jsx`). Sur téléphone, photo au-dessus.
 - Couleurs par carte : `couleurSurtitre: 'vermillon' | 'jaune'` et, sur un tarif, `couleur` ou `accent` (`.offre__couleur--*`, `.offre__accent`).
+
+## Mes offres : cartes uniformes sur ordinateur (17 novembre 2026, en ligne, accord écrit : « Ok »)
+Dernier bloc de `src/styles.css` (≥ 900 px) : même structure dans les cinq cartes — nom puis durée à 12 px, prix calé en haut avec une
+ligne réservée dessous (`min-height: 74px`), trait au même endroit, 24 px du trait à la liste, 6 px entre les lignes, 24 px de la liste au
+bouton. Mesuré à 1440 et 1100 px : positions identiques à 1 px près (`scratchpad/glass/uniforme.cjs`). Téléphone inchangé (déjà uniforme).
+Ces règles ont une précision renforcée (`.offres-page__rubrique.offres-page__rubrique …`) pour passer devant d'anciennes règles plus précises.
