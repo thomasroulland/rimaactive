@@ -18,6 +18,7 @@ export const PAGE = {
       picto: 'buildings',
       puce: 'kettlebell',
       surtitre: 'Jusqu’à 16 personnes',
+      couleurSurtitre: 'jaune', // essai du 17 novembre 2026
       infos: '60\u00a0min • Ponctuel ou régulier',
       tarifs: [{ montant: 'Sur devis' }],
       // « Compris » de Marie (PDF du 16 novembre 2026) ; carte sur fond noir

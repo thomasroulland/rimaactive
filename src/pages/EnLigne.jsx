@@ -19,6 +19,7 @@ export const PAGE = {
       picto: 'laptop',
       puce: 'haltere',
       surtitre: '100\u00a0% à distance',
+      couleurSurtitre: 'jaune', // essai du 17 novembre 2026
       infos: 'Minimum 2\u00a0mois',
       // prix de Marie (PDF du 16 novembre 2026) ; textes de la carte du 17 novembre 2026
       tarifs: [{ montant: '45\u00a0€', apres: 'par mois', detail: 'soit 90\u00a0€ les 2\u00a0mois', accent: true }], // ligne en jaune (Marie, 17 novembre 2026)

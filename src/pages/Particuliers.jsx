@@ -28,6 +28,7 @@ export const PAGE = {
       picto: 'house',
       puce: 'kettlebell',
       surtitre: 'À la carte',
+      couleurSurtitre: 'vermillon', // essai du 17 novembre 2026
       infos: '60\u00a0min • Sans engagement',
       tarifs: [{ montant: '65\u00a0€', apres: 'la séance' }],
       points: ['Séance personnalisée', 'Mobilité & renforcement musculaire', 'Accompagnement individuel'],
@@ -56,6 +57,7 @@ export const PAGE = {
       picto: 'barbell',
       puce: 'barbell',
       surtitre: 'À la carte',
+      couleurSurtitre: 'vermillon', // essai du 17 novembre 2026
       infos: '60\u00a0min • Sans engagement',
       tarifs: [{ montant: '60\u00a0€', apres: 'la séance' }],
       points: ['Séance personnalisée', 'Mobilité & renforcement musculaire', 'Accompagnement individuel'],

@@ -19,9 +19,10 @@ export const PAGE = {
       picto: 'users',
       puce: 'kettlebell',
       surtitre: '2 à 8 personnes',
+      couleurSurtitre: 'vermillon', // essai du 17 novembre 2026
       infos: '60\u00a0min • Sans engagement',
       // textes et prix de Marie (17 novembre 2026)
-      tarifs: [{ avant: 'À partir de', montant: '15\u00a0€', detail: 'par personne' }], // « par personne » à la ligne (Marie, 17 novembre 2026)
+      tarifs: [{ avant: 'À partir de', montant: '15\u00a0€', detail: 'par personne', couleur: 'vermillon' }], // « par personne » à la ligne (Marie, 17 novembre 2026)
       points: ['Entraînement collectif', 'Exercices adaptés aux participants', 'Matériel fourni'],
     },
   ],
