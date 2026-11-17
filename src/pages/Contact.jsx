@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import photoMarie from '../assets/portrait-contact.jpg'
 import PresentationContact from '../components/AppelContact.jsx'
 import useTitre from '../components/useTitre.js'
+import Picto from '../components/Picto.jsx'
 import { PAGE as INDIVIDUEL } from './Particuliers.jsx'
 import { PAGE as GROUPES } from './Groupes.jsx'
 import { PAGE as ENTREPRISES } from './Entreprises.jsx'
@@ -14,6 +15,9 @@ const OFFRES = [INDIVIDUEL, EN_LIGNE, GROUPES, ENTREPRISES].map((page) => ({
   nom: page.titre,
   formules: page.cartes.map((f) => `${f.nom} · ${f.mode ?? page.titre}`),
 }))
+
+// pictogramme de chaque offre dans le choix du formulaire
+const PICTO_OFFRE = { Individuel: 'personne', 'En ligne': 'ecran', Groupes: 'users', Entreprises: 'mallette' }
 
 export default function Contact() {
   useTitre('Contact')
@@ -55,13 +59,14 @@ export default function Contact() {
         ) : (
           <form className="formulaire" onSubmit={envoyer}>
             <fieldset className="champ-groupe pleine">
-              <legend>Vous êtes intéressé(e) par</legend>
-              <div className="choix">
+              {/* quatre tuiles avec pictogramme (Thomas, 17 novembre 2026) ; déjà cochée quand on vient d'une carte de Mes offres */}
+              <legend>Quel coaching vous intéresse ?</legend>
+              <div className="choix-offre">
                 {OFFRES.map((o) => (
-                  <label key={o.nom}>
+                  <label key={o.nom} className="choix-offre__tuile">
                     <input type="radio" name="offre" value={o.nom} checked={offre === o.nom} required
                       onChange={() => { setOffre(o.nom); setFormule(seuleFormule(o.nom)) }} />
-                    <span>{o.nom}</span>
+                    <span className="choix-offre__corps"><Picto nom={PICTO_OFFRE[o.nom]} taille={22} />{o.nom}</span>
                   </label>
                 ))}
               </div>

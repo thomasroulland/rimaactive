@@ -2208,3 +2208,17 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__points li { line-height: 20px !important; }
   .offres-page__rubrique.offres-page__rubrique .offres > .offre > .offre__bouton { margin-top: 0 !important; }
 }
+
+/* M'écrire : choix de l'offre en quatre tuiles avec pictogramme, deux par ligne (17 novembre 2026).
+   Cochée : fond jaune pâle et contour jaune. Les boutons radio restent (clavier, lecteurs d'écran). */
+.choix-offre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.choix-offre__tuile { position: relative; display: block; }
+.choix-offre__tuile input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.choix-offre__corps { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 68px; padding: 10px 12px;
+  border: 1px solid var(--filet); border-radius: 12px; background: var(--blanc); color: var(--encre); font-size: 15px; line-height: 20px; font-weight: 600; text-align: center;
+  transition: background-color .15s ease, border-color .15s ease; }
+.choix-offre__tuile input:hover + .choix-offre__corps { border-color: var(--gris-controle); }
+.choix-offre__tuile input:checked + .choix-offre__corps { background: #fdf3d0; border-color: var(--jaune); }
+.choix-offre__tuile input:focus-visible + .choix-offre__corps { outline: 2px solid var(--encre); outline-offset: 2px; }
+@media (max-width: 599px) { .choix-offre { gap: 8px; } .choix-offre__corps { min-height: 60px; font-size: 14px; } }
+@media (prefers-reduced-motion: reduce) { .choix-offre__corps { transition: none; } }

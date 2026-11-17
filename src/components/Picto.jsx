@@ -37,6 +37,15 @@ export default function Picto({ nom, taille = 24 }) {
       </svg>
     )
   }
+  // personne, écran et mallette au trait (choix de l'offre dans M'écrire, 17 novembre 2026), même épaisseur que Phosphor Light
+  const trait = { personne: <><circle cx="128" cy="92" r="44" /><path d="M48 212c12-40 44-64 80-64s68 24 80 64" /></>,
+    ecran: <><rect x="32" y="48" width="192" height="128" rx="14" /><path d="M96 216h64M128 176v40" /></>,
+    mallette: <><rect x="32" y="76" width="192" height="136" rx="12" /><path d="M92 76V60a16 16 0 0 1 16-16h40a16 16 0 0 1 16 16v16M32 132h192" /></> }[nom]
+  if (trait) {
+    return (
+      <svg className="picto" width={taille} height={taille} viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{trait}</svg>
+    )
+  }
   // silhouette dans un rond (espace de connexion), au trait, même épaisseur que Phosphor Light
   if (nom === 'user-circle') {
     return (
