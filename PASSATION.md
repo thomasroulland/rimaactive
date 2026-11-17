@@ -569,3 +569,40 @@ trait, « Compris », liste et bouton à la même hauteur, même si une carte a 
 - **Nouveau format de bloc « Superset (enchaîner) »** (menu du bloc côté coach) : biset / triset selon le nombre d'exercices.
   Le coaché avance **par tour** (A1 → A2 → A3, puis tour suivant), sur ordinateur comme sur téléphone. `estEnSeries` (seances.js)
   traite le superset comme des séries partout (écarts, bilans, séance faite côté coach).
+
+## Mes offres, Individuel : « Séance ponctuelle » et « Coaching régulier » (17 novembre 2026, en ligne, accord écrit : « Publie »)
+- À domicile et en salle, même structure (Thomas : « garde la même structure pour en salle avec les prix correspondants ») :
+  - gauche : « À la carte », « Séance ponctuelle », 60 min • Sans engagement, 65 € / 60 € la séance, bouton « Réserver une séance » ;
+  - droite : « Sur la durée » (jaune), « Coaching régulier », « Engagement minimum de 2 mois », 50 € / 45 € la séance,
+    « 200 à 250 € / mois pour 4 à 5 séances » à domicile et « 180 à 225 € » en salle (en jaune), bouton « Commencer mon suivi ».
+- Le mot « Compris » est retiré de toutes les cartes ; l'élément reste vide pour garder le trait et la rangée (`.offre__titre-points:empty`).
+- Jaune : `accent: true` sur la carte (`.offre__accent`). Le formulaire M'écrire propose les nouveaux noms de formules.
+
+## Mes offres : textes, couleurs et photos (17 novembre 2026, en ligne, accord écrit : « Parfait publie ! »)
+- **En ligne** : « 100 % à distance » (jaune), « Coaching en ligne », Minimum 2 mois, 45 € par mois, « soit 90 € les 2 mois » (jaune),
+  Programme personnalisé / Bilan et ajustements chaque semaine / Suivi sur votre espace personnel, bouton « Commencer mon suivi ».
+- **Groupes** : « 2 à 8 personnes » (vermillon), « Coaching en petit groupe », « À partir de 15 € » puis « par personne » à la ligne (vermillon),
+  Entraînement collectif / Exercices adaptés aux participants / Matériel fourni, bouton « Organiser une séance ».
+- **Entreprises** : « Jusqu'à 16 personnes » (jaune), « Coaching en entreprise », Sur devis (sans « selon les besoins »), « Demander un devis ».
+- **Individuel** : « À la carte » en vermillon ; Coaching régulier : « Minimum 2 mois ».
+- **Titres au-dessus des cartes** retirés (gardés pour les lecteurs d'écran) ; bouton « À domicile / En salle » aligné à gauche sur les cartes.
+- **Photos** : à droite pour En ligne et Entreprises, à gauche pour Groupes (`inverse` dans `Offres.jsx`). Sur téléphone, photo au-dessus.
+- Couleurs par carte : `couleurSurtitre: 'vermillon' | 'jaune'` et, sur un tarif, `couleur` ou `accent` (`.offre__couleur--*`, `.offre__accent`).
+
+## Mes offres : cartes uniformes sur ordinateur (17 novembre 2026, en ligne, accord écrit : « Ok »)
+Dernier bloc de `src/styles.css` (≥ 900 px) : même structure dans les cinq cartes — nom puis durée à 12 px, prix calé en haut avec une
+ligne réservée dessous (`min-height: 74px`), trait au même endroit, 24 px du trait à la liste, 6 px entre les lignes, 24 px de la liste au
+bouton. Mesuré à 1440 et 1100 px : positions identiques à 1 px près (`scratchpad/glass/uniforme.cjs`). Téléphone inchangé (déjà uniforme).
+Ces règles ont une précision renforcée (`.offres-page__rubrique.offres-page__rubrique …`) pour passer devant d'anciennes règles plus précises.
+
+## M'écrire et dessous des offres (17 novembre 2026, en ligne, accord écrit : « Publie »)
+- **M'écrire** : « Quel coaching vous intéresse ? » en quatre tuiles avec pictogramme (`choix-offre`, `PICTO_OFFRE` dans `Contact.jsx` ;
+  pictos `personne`, `ecran`, `mallette` ajoutés à `Picto.jsx`), cochée d'office depuis une carte de Mes offres, libre sinon.
+  Surtitre « Échangeons ensemble », « Contactez-moi » sans trait, localisation « Basée à Houdan, j'interviens dans le 78, le 28 et le 27. »
+  avec un repère vermillon. Le titre est décalé de la moitié du retrait intérieur de l'encart (`--retrait-encart / 2`), choix de Thomas.
+- **Sous les offres** : « Matériel inclus · Je m'occupe de tout. » et « Déplacement inclus · Dans un rayon de 20 km autour de Houdan. »,
+  pictogrammes encre (`AVANTAGES` dans `Offres.jsx`, reconnus d'après les textes `liste` des pages). Centrés sous la carte pour
+  Groupes et Entreprises (pas sous la photo), alignés à gauche pour Individuel.
+- **Correctif (17 novembre 2026, accord écrit : « Publie »)** : photo et carte forcées sur la première rangée de la grille, avantages sur la
+  seconde (`grid-row`). Sans cela, quand la photo est à droite (`inverse`), elle tombait sur la seconde rangée. Avantages d'Individuel
+  centrés sous la première carte (« Séance ponctuelle »). Vérifié à 1440, 1100, 700 et 390 px (`scratchpad/glass/place.cjs`).

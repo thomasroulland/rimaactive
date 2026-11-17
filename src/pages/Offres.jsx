@@ -16,11 +16,23 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 // Ordre de Marie (16 novembre 2026) : Individuel, En ligne, Groupes, Entreprises ; seulement le nom de l'offre en titre (plus de sous-titre)
 const RUBRIQUES = [
   { id: 'individuel', page: INDIVIDUEL },
-  { id: 'en-ligne', page: EN_LIGNE },
-  // Groupes : la carte à gauche et la photo à droite, pour rompre la répétition (essai demandé par Marie, 16 novembre 2026)
-  { id: 'groupes', page: GROUPES, inverse: true },
-  { id: 'entreprises', page: ENTREPRISES },
+  // photo à droite pour En ligne et Entreprises, à gauche pour Groupes (Thomas, 17 novembre 2026)
+  { id: 'en-ligne', page: EN_LIGNE, inverse: true },
+  { id: 'groupes', page: GROUPES },
+  { id: 'entreprises', page: ENTREPRISES, inverse: true },
 ]
+
+// Sous les cartes : pictogramme, intitulé en gras et une phrase (Thomas, 17 novembre 2026), à la place des cases cochées.
+// Les textes de la liste restent dans les fichiers des pages ; on les reconnaît ici.
+const AVANTAGES = {
+  materiel: { picto: 'haltere', titre: 'Matériel inclus', texte: 'Je m’occupe de tout.' },
+  deplacement: { picto: 'map-pin', titre: 'Déplacement inclus', texte: 'Dans un rayon de 20\u00a0km autour de Houdan.' },
+}
+function avantage(point) {
+  if (point.startsWith('Matériel')) return AVANTAGES.materiel
+  if (point.startsWith('Déplacement')) return AVANTAGES.deplacement
+  return { picto: 'check-square', titre: point }
+}
 
 export default function Offres() {
   useTitre('Mes offres')
@@ -96,12 +108,16 @@ function Rubrique({ id, page, sous, fonce, inverse }) {
           <ul className={`offres offres--${cartes.length === 1 ? '1' : '2'}`}>
             {cartes.map((f) => <CarteOffre key={f.nom} f={f} contexte={page.titre} direct />)}
           </ul>
+          {/* sous la carte elle-même (pas sous la photo), centré ; sous les deux cartes d'Individuel, centré sur toute la largeur */}
+          {liste.length > 0 && (
+            <ul className="offres-page__avantages">
+              {liste.map((point) => {
+                const a = avantage(point)
+                return <li key={point}><Picto nom={a.picto} taille={24} /><span><strong>{a.titre}</strong>{a.texte && <span>{a.texte}</span>}</span></li>
+              })}
+            </ul>
+          )}
         </div>
-        {liste.length > 0 && (
-          <ul className="offres-page__liste">
-            {liste.map((point) => <li key={point}><Picto nom="check-square" taille={18} />{point}</li>)}
-          </ul>
-        )}
       </div>
     </section>
   )

@@ -79,7 +79,7 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte, direct = false }) {
     <li onClick={direct ? undefined : onOuvrir} className={`offre ${direct ? '' : 'offre--cliquable'} ${f.sombre ? 'offre--sombre' : ''} ${grisee ? 'offre--grisee' : ''}`} aria-disabled={grisee ? true : undefined}>
       {/* le pictogramme est sur la ligne du surtitre : le nom de la formule garde toute la largeur */}
       <div className="offre__tete">
-        <p className="surtitre">{f.surtitre}</p>
+        <p className={`surtitre${f.accent ? ' offre__accent' : ''}${f.couleurSurtitre ? ` offre__couleur--${f.couleurSurtitre}` : ''}`}>{f.surtitre}</p>
         <Picto nom={f.picto} taille={24} />
       </div>
       <h3 className="titre titre--tuile">{f.titre ?? f.nom}</h3>
@@ -94,11 +94,12 @@ export function CarteOffre({ f, grisee, onOuvrir, contexte, direct = false }) {
               {t.montant}
               {t.apres && <span className="offre__apres">{t.apres}</span>}
             </p>
-            {[t.detail].flat().filter(Boolean).map((d) => <p key={d} className="offre__detail">{d}</p>)}
+            {[t.detail].flat().filter(Boolean).map((d) => <p key={d} className={`offre__detail${f.accent || t.accent ? ' offre__accent' : ''}${t.couleur ? ` offre__couleur--${t.couleur}` : ''}`}>{d}</p>)}
           </div>
         ))}
       </div>}
-      {f.titrePoints && <p className="offre__titre-points">{f.titrePoints}</p>}
+      {/* plus de mot « Compris » au-dessus de la liste (Marie, 17 novembre 2026) : l'élément reste, vide, pour garder le trait de séparation et la rangée */}
+      {f.points && <p className="offre__titre-points" aria-hidden={f.titrePoints ? undefined : true}>{f.titrePoints ?? ''}</p>}
       {f.points && (
         <ul className="offre__points">
           {f.points.map((point) => (

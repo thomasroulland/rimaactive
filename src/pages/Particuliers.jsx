@@ -3,86 +3,78 @@ import photoIndividuel from '../assets/service-en-ligne.jpg'
 import PageService from '../components/PageService.jsx'
 import useTitre from '../components/useTitre.js'
 
-// Page Individuel : formules et prix donnés par Marie (mis à jour le 16 novembre 2026 : « Suivi hebdomadaire », nouveaux prix, bouton « À domicile » / « En salle »)
+// Page Individuel : formules et prix donnés par Marie (mis à jour le 17 novembre 2026 : « Séance ponctuelle » et « Coaching régulier »)
 export const PAGE = {
   titre: 'Individuel',
   image: photoIndividuel,
   cadrage: '50% 45%',
   liste: ['Matériel fourni : tapis, kettlebells, slam balls, etc.', 'Déplacements compris jusqu’à 20\u00a0km autour de Houdan'],
-  // deux boutons pour choisir À domicile / À la salle (remis par Marie le 14 novembre 2026) ;
-  // page.cartes garde toutes les formules (le formulaire de contact s'en sert)
+  // deux boutons pour choisir À domicile / En salle ; page.cartes garde toutes les formules (le formulaire de contact s'en sert)
   onglets: [
-    { nom: 'À domicile', noms: ['Séance à l’unité à domicile', 'Suivi hebdomadaire à domicile'] },
+    { nom: 'À domicile', noms: ['Séance ponctuelle à domicile', 'Coaching régulier à domicile'] },
     // en salle : seulement « Déplacements compris… » sous les cartes (demande de Marie, 16 novembre 2026)
-    { nom: 'En salle', noms: ['Séance à l’unité en salle', 'Suivi hebdomadaire en salle'], liste: ['Déplacements compris jusqu’à 20\u00a0km autour de Houdan'] },
+    { nom: 'En salle', noms: ['Séance ponctuelle en salle', 'Coaching régulier en salle'], liste: ['Déplacements compris jusqu’à 20\u00a0km autour de Houdan'] },
   ],
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
-  // formules, prix et « Compris » de Marie (PDF du 16 novembre 2026) ; puces : kettlebell à domicile, barre en salle
+  // textes de Marie (17 novembre 2026) : « Séance ponctuelle » à la carte, « Coaching régulier » ; puces : kettlebell à domicile, barre en salle.
+  // En salle, la fourchette mensuelle est calculée sur 45 € la séance (4 à 5 séances), comme 200 à 250 € l'est sur 50 € à domicile.
   cartes: [
     {
-      nom: 'Séance à l’unité à domicile',
+      nom: 'Séance ponctuelle à domicile',
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Une personne, chez vous, quel que soit votre niveau.',
-      titre: 'Séance à l’unité',
+      titre: 'Séance ponctuelle',
+      bouton: 'Réserver une séance',
       picto: 'house',
       puce: 'kettlebell',
-      surtitre: 'À domicile',
+      surtitre: 'À la carte',
+      couleurSurtitre: 'vermillon', // essai du 17 novembre 2026
       infos: '60\u00a0min • Sans engagement',
       tarifs: [{ montant: '65\u00a0€', apres: 'la séance' }],
-      titrePoints: 'Compris',
-      // intitulés courts de Marie (16 novembre 2026) sur la carte ; le détail garde ses explications
-      points: [
-        ['Mobilité & activation musculaire', 'Un réveil articulaire et musculaire ciblé que nous faisons ensemble pour préparer votre corps à l’effort en toute sécurité.'],
-        ['Renforcement fonctionnel ciblé', 'L’apprentissage des mouvements fondamentaux et le renforcement musculaire à travers des exercices ciblés que je choisis selon vos objectifs.'],
-        ['Fin de séance selon votre énergie', 'Un bloc de fin sur mesure selon votre énergie du jour et vos objectifs spécifiques (travail de l’endurance, renforcement postural ou retour au calme).'],
-      ],
-      pointsCourts: true,
+      points: ['Séance personnalisée', 'Mobilité & renforcement musculaire', 'Accompagnement individuel'],
     },
     {
-      nom: 'Suivi hebdomadaire à domicile',
+      nom: 'Coaching régulier à domicile',
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
-      pourQui: 'Une personne, chez vous, qui veut un suivi régulier : une séance par semaine, deux mois au minimum.',
-      titre: 'Suivi hebdomadaire',
+      pourQui: 'Une personne, chez vous, qui veut progresser durablement : une séance par semaine, deux mois au minimum.',
+      titre: 'Coaching régulier',
+      bouton: 'Commencer mon suivi',
       picto: 'kettlebell',
       puce: 'kettlebell',
-      surtitre: 'À domicile',
+      surtitre: 'Sur la durée',
+      accent: true, // surtitre et ligne sous le prix en jaune (Marie, 17 novembre 2026)
       infos: 'Minimum 2\u00a0mois',
-      tarifs: [{ montant: '50\u00a0€', apres: 'la séance', detail: '(facturation mensuelle)' }],
-      titrePoints: 'Compris',
-      points: ['1 séance / semaine en présentiel', 'Programme sur mesure', 'Suivi sur votre espace en ligne'],
+      tarifs: [{ montant: '50\u00a0€', apres: 'la séance', detail: '200 à 250\u00a0€ / mois pour 4 à 5\u00a0séances' }],
+      points: ['1 séance individuelle par semaine', 'Programme d’entraînement sur mesure', 'Suivi sur votre espace personnel'],
       sombre: true,
     },
     {
-      nom: 'Séance à l’unité en salle',
+      nom: 'Séance ponctuelle en salle',
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Une personne, en salle, quel que soit votre niveau.',
-      titre: 'Séance à l’unité',
+      titre: 'Séance ponctuelle',
+      bouton: 'Réserver une séance',
       picto: 'barbell',
       puce: 'barbell',
-      surtitre: 'En salle',
+      surtitre: 'À la carte',
+      couleurSurtitre: 'vermillon', // essai du 17 novembre 2026
       infos: '60\u00a0min • Sans engagement',
       tarifs: [{ montant: '60\u00a0€', apres: 'la séance' }],
-      titrePoints: 'Compris',
-      // intitulés courts de Marie (16 novembre 2026) sur la carte ; le détail garde ses explications
-      points: [
-        ['Mobilité & activation musculaire', 'Un réveil articulaire et musculaire ciblé que nous faisons ensemble pour préparer votre corps à l’effort en toute sécurité.'],
-        ['Renforcement fonctionnel ciblé', 'L’apprentissage des mouvements fondamentaux et le renforcement musculaire à travers des exercices ciblés que je choisis selon vos objectifs.'],
-        ['Fin de séance selon votre énergie', 'Un bloc de fin sur mesure selon votre énergie du jour et vos objectifs spécifiques (travail de l’endurance, renforcement postural ou retour au calme).'],
-      ],
-      pointsCourts: true,
+      points: ['Séance personnalisée', 'Mobilité & renforcement musculaire', 'Accompagnement individuel'],
     },
     {
-      nom: 'Suivi hebdomadaire en salle',
+      nom: 'Coaching régulier en salle',
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
-      pourQui: 'Une personne, en salle, qui veut un suivi régulier : une séance par semaine, deux mois au minimum.',
-      titre: 'Suivi hebdomadaire',
+      pourQui: 'Une personne, en salle, qui veut progresser durablement : une séance par semaine, deux mois au minimum.',
+      titre: 'Coaching régulier',
+      bouton: 'Commencer mon suivi',
       picto: 'barbell',
       puce: 'barbell',
-      surtitre: 'En salle',
+      surtitre: 'Sur la durée',
+      accent: true, // surtitre et ligne sous le prix en jaune (Marie, 17 novembre 2026)
       infos: 'Minimum 2\u00a0mois',
-      tarifs: [{ montant: '45\u00a0€', apres: 'la séance', detail: '(facturation mensuelle)' }],
-      titrePoints: 'Compris',
-      points: ['1 séance / semaine en présentiel', 'Programme sur mesure', 'Suivi sur votre espace en ligne'],
+      tarifs: [{ montant: '45\u00a0€', apres: 'la séance', detail: '180 à 225\u00a0€ / mois pour 4 à 5\u00a0séances' }],
+      points: ['1 séance individuelle par semaine', 'Programme d’entraînement sur mesure', 'Suivi sur votre espace personnel'],
       sombre: true,
     },
   ],
