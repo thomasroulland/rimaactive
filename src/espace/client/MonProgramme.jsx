@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement, blocsDuClient, dateSeance, seancesDeLaSemaine } from '../donnees/progression.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
-import { Statut } from './Statut.jsx'
 
 const ETATS = { 'en cours': 'encours', passé: 'passe', 'à venir': 'avenir' }
 const ETIQUETTES = { 'en cours': 'En cours', passé: 'Terminé', 'à venir': 'À venir' }
@@ -102,18 +101,22 @@ export default function MonProgramme({ profil, programmes, programme, seances })
                       return (
                         <li key={x.seance.id}>
                           <Link
-                            className="ec-pcarte"
+                            className={`ec-pcarte ec-ps est-${{ Faite: 'faite', 'En cours': 'encours' }[statut] ?? 'afaire'}`}
                             to={`/espace/seance/${bloc.programme.id}/${x.seance.id}`}
                             state={{ depuis: 'programme' }}
                             aria-label={`Séance ${x.numero}, ${x.seance.titre || 'sans titre'}, ${statut}`}
                           >
-                            <span className="ec-pcarte__numero" aria-hidden="true">{String(x.numero).padStart(2, '0')}</span>
-                            <span className="ec-pcarte__corps">
-                              <span className="ec-pcarte__titre">{x.seance.titre || `Séance ${x.numero}`}</span>
-                              {x.seance.titre && <span className="ec-pcarte__num">Séance {x.numero}</span>}
-                              {meta && <span className="ec-pcarte__meta">{meta}</span>}
-                              <span className="ec-pcarte__bas"><Statut statut={statut} /></span>
+                            {/* rond : numéro, coche verte si faite, point rouge si en cours */}
+                            <span className="ec-ps__rond" aria-hidden="true">
+                              {statut === 'Faite'
+                                ? <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                                : x.numero}
                             </span>
+                            <span className="ec-ps__corps">
+                              <span className="ec-ps__titre">{x.seance.titre || `Séance ${x.numero}`}</span>
+                              <span className="ec-ps__meta">{statut === 'En cours' ? 'En cours · à reprendre' : statut === 'Faite' ? 'Faite' : meta}</span>
+                            </span>
+                            <svg className="ec-ps__fleche" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
                           </Link>
                         </li>
                       )

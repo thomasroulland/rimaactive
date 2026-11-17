@@ -1326,3 +1326,25 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-super.est-compact.est-ouvert { padding-bottom: 10px; }
 .ec-super.est-compact .ec-super__titre, .ec-super.est-compact .ec-super__liste { margin: 0 12px; }
 .ec-super.est-compact .ec-super__liste { margin-top: 8px; }
+
+/* Mon programme (coaché), séances en lignes nettes (17 novembre 2026) : rond numéroté / coche verte, titre, infos, flèche */
+.ec-sem__col { gap: 10px; padding: 16px 12px 12px; }
+.ec-sem__titre { font-size: 18px; }
+.ec-sem__liste { gap: 8px; }
+.ec-pcarte.ec-ps { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; padding: 12px 12px 12px 12px; border-radius: 16px; background: #fff; border: 1px solid #ece8e0; box-shadow: 0 2px 6px rgba(22, 21, 20, .04); color: var(--ec-encre); text-decoration: none; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.ec-pcarte.ec-ps:hover { transform: translateY(-1px); border-color: #d9d4ca; box-shadow: 0 8px 18px rgba(22, 21, 20, .08); }
+.ec-ps__rond { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; border: 2px solid #e2ddd3; background: #fff; font: 900 15px/1 var(--font-sans); color: var(--ec-encre); }
+.ec-ps__corps { display: grid; gap: 2px; min-width: 0; }
+.ec-ps__titre { font: 800 16px/1.25 var(--font-sans); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ec-ps__meta { font: 600 13px/1.3 var(--font-sans); color: var(--ec-gris); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ec-ps__meta:empty { display: none; }
+.ec-ps__fleche { color: #b5aea2; }
+.ec-ps.est-faite { background: #f3f9f5; border-color: #d7ecdf; }
+.ec-ps.est-faite .ec-ps__rond { background: #2f9e5b; border-color: #2f9e5b; color: #fff; }
+.ec-ps.est-faite .ec-ps__titre { color: #3d5a47; }
+.ec-ps.est-encours { border-color: var(--ec-vermillon); box-shadow: 0 0 0 1px var(--ec-vermillon), 0 6px 16px rgba(255, 74, 28, .12); }
+.ec-ps.est-encours .ec-ps__rond { border-color: var(--ec-vermillon); color: var(--ec-vermillon); }
+.ec-ps.est-encours .ec-ps__meta { color: #c2370f; }
+.ec-pcarte.ec-ps { min-height: 0 !important; padding: 10px 12px !important; }
+.ec-ps.est-encours { border: 1px solid var(--ec-vermillon) !important; }
+.ec-ps.est-faite .ec-ps__meta { color: #2f9e5b; }
