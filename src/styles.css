@@ -2240,3 +2240,14 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 /* M'écrire : la localisation en une ligne courte, avec un repère de carte (17 novembre 2026) */
 .page-contact .presentation-contact .presentation-contact__lieu--court { display: flex; align-items: center; gap: 8px; white-space: normal; font-size: 16px; line-height: 24px; color: var(--gris-chaud); }
 .page-contact .presentation-contact .presentation-contact__lieu--court .picto { flex: none; color: var(--gris-chaud); }
+
+/* M'écrire (17 novembre 2026) : le repère de la localisation en vermillon ; le titre (surtitre, « Contactez-moi », localisation)
+   aligné sur le contenu de l'encart blanc : même retrait que le formulaire à l'intérieur de l'encart. */
+.page-contact .presentation-contact .presentation-contact__lieu--court .picto { color: var(--vermillon); }
+.page-contact { --retrait-encart: clamp(20px, calc(2.6 * var(--vw)), 36px); }
+@media (max-width: 599px) { .page-contact { --retrait-encart: 18px; } }
+@media (min-width: 900px) and (max-height: 1000px) { .page-contact { --retrait-encart: 28px; } }
+@media (min-width: 900px) and (max-height: 780px) { .page-contact { --retrait-encart: 22px; } }
+.page-contact .presentation-contact { padding-left: var(--retrait-encart); }
+/* Mes offres, Individuel (deux cartes, pas de photo) : avantages alignés à gauche, sur le bord des cartes */
+@media (min-width: 600px) { .offres-page__corps:not(.offres-page__corps--photo) > .offres-page__avantages { justify-content: flex-start; } }
