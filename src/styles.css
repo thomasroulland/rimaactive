@@ -2250,4 +2250,16 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 @media (min-width: 900px) and (max-height: 780px) { .page-contact { --retrait-encart: 22px; } }
 .page-contact .presentation-contact { padding-left: calc(var(--retrait-encart) / 2); } /* à mi-chemin entre le bord de l'encart et son contenu (Thomas : « un peu plus proche à gauche ») */
 /* Mes offres, Individuel (deux cartes, pas de photo) : avantages alignés à gauche, sur le bord des cartes */
-@media (min-width: 600px) { .offres-page__corps:not(.offres-page__corps--photo) > .offres-page__avantages { justify-content: flex-start; } }
+/* Individuel : avantages centrés sous la première carte (« Séance ponctuelle »), demande de Thomas */
+@media (min-width: 600px) { .offres-page__corps:not(.offres-page__corps--photo) > .offres-page__avantages { justify-content: center; width: calc((100% - 14px) / 2); } }
+@media (min-width: 900px) { .offres-page__corps:not(.offres-page__corps--photo) > .offres-page__avantages { width: calc((100% - 20px) / 2); } }
+/* photo et carte toujours sur la première rangée, les avantages sur la seconde (sinon, quand la photo est à droite,
+   elle tombait sur la seconde rangée, à côté des avantages) */
+@media (min-width: 600px) {
+  .offres-page__corps--photo > .offres-page__photo, .offres-page__corps--photo > .offres { grid-row: 1; }
+  .offres-page__corps--photo > .offres-page__photo { grid-column: 1; }
+  .offres-page__corps--photo > .offres { grid-column: 2; }
+  .offres-page__corps--photo.offres-page__corps--inverse > .offres-page__photo { grid-column: 2; }
+  .offres-page__corps--photo.offres-page__corps--inverse > .offres { grid-column: 1; }
+  .offres-page__corps--photo > .offres-page__avantages { grid-row: 2; }
+}
