@@ -2071,3 +2071,29 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 .cal3__legende-auj::before { content: ""; width: 12px; height: 12px; border-radius: 4px; border: 2px solid var(--vermillon); }
 @media (max-width: 700px) { .cal3__noms { gap: 4px; } .cal3__nom-jour { font-size: 10px; } .cal3__grille .cal3__jour { min-height: 52px; } }
 @media (max-width: 700px) { .cal3__mois { display: none; } }
+/* Calendrier sur téléphone (17 novembre 2026) : compact comme un calendrier de téléphone — petites cases, numéro centré, point pour une séance */
+@media (max-width: 700px) {
+  .cal3 { padding: 14px 12px 12px; gap: 10px; border-radius: 20px; }
+  .cal3__tete .espace-sous-titre { font-size: 19px; }
+  .cal3__nav { gap: 4px; }
+  .cal3__nav .calendrier__fleche { width: 34px; height: 34px; }
+  .cal3__auj { height: 34px; padding: 0 10px; font-size: 12px; }
+  .cal3__grille { gap: 4px; }
+  .cal3__noms, .cal3__grille .cal3__jours { gap: 3px; }
+  .cal3__nom-jour { font-size: 10px; letter-spacing: 0; }
+  .cal3__grille .cal3__jour { min-height: 0; aspect-ratio: 1 / 1; padding: 4px 2px; gap: 3px; align-items: center; justify-content: center; border-radius: 10px; box-shadow: none; border-color: #e6e2da; }
+  .cal3__grille .cal3__jour-tete { justify-content: center; }
+  .cal3__grille .cal3__jour-num { min-width: 26px; height: 26px; font-size: 14px; }
+  .cal3__grille .cal3__jour.est-passe:not(.a-des-evts) { background: transparent; border-color: transparent; }
+  .cal3__grille .cal3__jours .cal3__jour.est-aujourdhui.est-aujourdhui { box-shadow: none; border-color: transparent; background: transparent; }
+  .cal3__grille .cal3__jour.a-des-evts { background: #fff; border-color: #d9d4ca; }
+  .cal3__grille .cal3__evts { flex-direction: row; justify-content: center; gap: 3px; min-height: 6px; }
+  .cal3__grille .cal3__jours .cal3__evt { width: 6px; height: 6px; padding: 0; border-radius: 50%; font-size: 0; }
+  .cal3__legende { gap: 6px 12px; font-size: 11px; }
+  .cal3__legende-auj::before { width: 10px; height: 10px; border-radius: 50%; border: 0; background: var(--vermillon); }
+}
+@media (max-width: 700px) {
+  .cal3__grille .cal3__jour { background: transparent; border-color: transparent; }
+  .cal3__grille .cal3__jour.a-des-evts { background: #fff; border-color: #d9d4ca; box-shadow: 0 2px 6px rgba(22, 21, 20, .06); }
+}
+@media (max-width: 700px) { .cal3__grille .cal3__jours li .cal3__jour:not(.a-des-evts) { background: transparent !important; box-shadow: none !important; } }
