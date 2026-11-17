@@ -16,10 +16,10 @@ import { PAGE as EN_LIGNE } from './EnLigne.jsx'
 // Ordre de Marie (16 novembre 2026) : Individuel, En ligne, Groupes, Entreprises ; seulement le nom de l'offre en titre (plus de sous-titre)
 const RUBRIQUES = [
   { id: 'individuel', page: INDIVIDUEL },
-  { id: 'en-ligne', page: EN_LIGNE },
-  // Groupes : la carte à gauche et la photo à droite, pour rompre la répétition (essai demandé par Marie, 16 novembre 2026)
-  { id: 'groupes', page: GROUPES, inverse: true },
-  { id: 'entreprises', page: ENTREPRISES },
+  // photo à droite pour En ligne et Entreprises, à gauche pour Groupes (Thomas, 17 novembre 2026)
+  { id: 'en-ligne', page: EN_LIGNE, inverse: true },
+  { id: 'groupes', page: GROUPES },
+  { id: 'entreprises', page: ENTREPRISES, inverse: true },
 ]
 
 export default function Offres() {
