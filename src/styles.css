@@ -2183,3 +2183,10 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 
 /* « Compris » retiré (17 novembre 2026) : il ne reste que le trait de séparation, sans la hauteur d'une ligne de texte */
 .offre__titre-points:empty { font-size: 0; line-height: 0; min-height: 0; }
+
+/* Mes offres : plus de titre au-dessus des cartes (Marie, 17 novembre 2026). Le titre reste pour les lecteurs d'écran ;
+   la barre d'onglets du haut et le surtitre de chaque carte disent de quelle offre il s'agit. Le bouton À domicile / En salle passe à gauche. */
+.offres-page__entete h2 { position: absolute !important; width: 1px; height: 1px; margin: -1px !important; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.offres-page__entete { justify-content: flex-start; column-gap: 0 !important; }
+.offres-page__entete > div:has(> h2) { position: absolute; }
+.offres-page__entete:not(:has(.bascule)) { margin-bottom: 0 !important; }

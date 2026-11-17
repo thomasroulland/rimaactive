@@ -11,14 +11,15 @@ export const PAGE = {
   note: 'TVA non applicable, art. 293\u00a0B du CGI.',
   cartes: [
     {
-      nom: 'Séance en entreprise',
+      nom: 'Coaching en entreprise',
       // « Pour qui ? » repris des informations du site (provisoire : à remplacer par le texte de Marie)
       pourQui: 'Vos équipes, jusqu’à 16 personnes, dans vos locaux ou en extérieur.',
+      titre: 'Coaching en entreprise',
       picto: 'buildings',
       puce: 'kettlebell',
       surtitre: 'Jusqu’à 16 personnes',
       infos: '60\u00a0min • Ponctuel ou régulier',
-      tarifs: [{ montant: 'Sur devis', detail: '(selon les besoins)' }],
+      tarifs: [{ montant: 'Sur devis' }],
       // « Compris » de Marie (PDF du 16 novembre 2026) ; carte sur fond noir
       points: ['Réveil musculaire & mobilité', 'Renforcement adapté à tous les niveaux', 'Challenge & cohésion d’équipe'],
       sombre: true,
