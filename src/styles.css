@@ -2177,3 +2177,6 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .offres-page__corps--inverse { grid-template-columns: 3fr 2fr; }
   .offres-page__corps--inverse .offres-page__photo { order: 2; }
 }
+
+/* Mes offres, « Coaching régulier » (Marie, 17 novembre 2026) : surtitre et ligne sous le prix en jaune, sur la carte encre */
+.offre .offre__accent, .offre--sombre .offre__accent { color: var(--jaune); }
