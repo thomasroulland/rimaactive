@@ -46,45 +46,38 @@ export default function MonProgramme({ profil, programmes, programme, seances })
   const choisirBloc = (i) => { setChoisi(i) }
   const nbSemaines = (bloc?.programme.semaines ?? []).length
   const faites = useMemo(() => (bloc ? seancesFaitesDe(seances, bloc.programme.id) : new Set()), [seances, bloc])
-  const aVenir = blocs.some((b) => b.etat === 'à venir')
 
   return (
     <div className="ec-page ec-prog">
-      <div className="ec-prog__tete">
-        {nom && <p className="ec-surtitre">{nom}</p>}
-        <h1 className="ec-h1">Mon programme</h1>
-      </div>
-
-      <section className="ec-prog__rubrique" aria-labelledby="titre-blocs">
-        <h2 id="titre-blocs" className="ec-h2">Mes blocs</h2>
-        <div className="ec-frise" ref={frise} role="group" aria-label={`Mes blocs de ${nbSemaines || 4} semaines`}>
-          {blocs.map((b, i) => (
-            <button
-              key={b.programme.id}
-              type="button"
-              className={`ec-etape ${ETATS[b.etat]}`}
-              aria-pressed={i === index}
-              data-bloc-courant={i === defaut ? '' : undefined}
-              aria-label={`Bloc ${i + 1}, ${etatTexte(b)}`}
-              onClick={() => choisirBloc(i)}
-            >
-              <span className="ec-etape__tete">
-                <span className="ec-etape__nom">Bloc {i + 1}</span>
-                <span className={`ec-etat ec-etat--${ETATS[b.etat]}`}>{ETIQUETTES[b.etat]}</span>
-              </span>
-              <span className="ec-etape__dates">{dateSeance(b.debut)} → {dateSeance(b.fin)}</span>
-              <Semaines bloc={b} />
-            </button>
-          ))}
-          {!aVenir && <p className="ec-etape-vide">Votre prochain bloc apparaîtra ici.</p>}
+      {/* en-tête : titre à gauche ; à droite, les blocs en petites pastilles discrètes (17 novembre 2026) */}
+      <div className="ec-prog__tete ec-prog__tete--ligne">
+        <div>
+          {nom && <p className="ec-surtitre">{nom}</p>}
+          <h1 className="ec-h1">Mon programme</h1>
+          {bloc && (
+            <p className="ec-prog__resume">
+              Bloc {index + 1} · {dateSeance(bloc.debut)} → {dateSeance(bloc.fin)}
+              {bloc.etat === 'en cours' ? ` · semaine ${bloc.semaine} sur ${nbSemaines}` : bloc.etat === 'passé' ? ' · terminé' : ' · à venir'}
+            </p>
+          )}
         </div>
-      </section>
+        {blocs.length > 1 && (
+          <div className="ec-blocs" ref={frise} role="group" aria-label="Mes blocs">
+            {blocs.map((b, i) => (
+              <button key={b.programme.id} type="button" className={`ec-blocs__pastille est-${ETATS[b.etat]}`} aria-pressed={i === index}
+                data-bloc-courant={i === defaut ? '' : undefined} aria-label={`Bloc ${i + 1}, ${etatTexte(b)}`} title={`${dateSeance(b.debut)} → ${dateSeance(b.fin)}`}
+                onClick={() => choisirBloc(i)}>
+                Bloc {i + 1}<span className="ec-blocs__etat">{ETIQUETTES[b.etat]}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {bloc?.etat === 'passé' && <Bilan bloc={bloc} numero={index + 1} faites={faites} />}
 
       {bloc && nbSemaines > 0 && (
-        <section className="ec-prog__rubrique" aria-labelledby="titre-semaines">
-          <h2 id="titre-semaines" className="ec-h2">Mes semaines</h2>
+        <section className="ec-prog__rubrique" aria-label="Mes semaines">
           <div className="ec-sem" ref={grille}>
             {Array.from({ length: nbSemaines }, (_, k) => k + 1).map((n) => {
               const courante = bloc.etat === 'en cours' && n === bloc.semaine
@@ -132,21 +125,6 @@ export default function MonProgramme({ profil, programmes, programme, seances })
   )
 }
 
-// Fine frise des semaines du bloc : faites (ou passées) en encre, à venir en craie foncé.
-function Semaines({ bloc }) {
-  const n = (bloc.programme.semaines ?? []).length
-  if (n === 0) return null
-  const pleines = bloc.etat === 'passé' ? n : bloc.etat === 'en cours' ? bloc.semaine : 0
-  const texte = bloc.etat === 'en cours' ? `Semaine ${bloc.semaine} sur ${n}` : `${n} semaine${n > 1 ? 's' : ''}`
-  return (
-    <span className="ec-etape__semaines">
-      <span className="ec-etape__barres" aria-hidden="true">
-        {Array.from({ length: n }, (_, k) => <span key={k} className={k < pleines ? 'pleine' : undefined} />)}
-      </span>
-      <span className="ec-etape__texte">{texte}</span>
-    </span>
-  )
-}
 
 function Bilan({ bloc, numero, faites }) {
   const { faites: nb, prevues } = avancement(bloc.programme, faites)
