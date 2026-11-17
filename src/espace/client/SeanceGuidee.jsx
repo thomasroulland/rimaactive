@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { enDuree, fr, lignesExercice, texteDuree } from '../donnees/seances.js'
+import { enDuree, fr, lignesExercice, resumeFormat, texteDuree } from '../donnees/seances.js'
 import { ChoixRpe } from './BlocResultat.jsx'
 
 // Séance du coaché, version simple (15 novembre 2026, choix de Thomas) :
@@ -133,10 +133,46 @@ export function ListeBloc({ bloc, lignes, notes, actions, lecture, voirConsignes
     </ol>
   )
 }
+// En-tête de la séance sur ordinateur (maquette) : barre noire fine (retour, séance, où on en est), titre du bloc
+// (Biset / Triset, consigne du superset), pastilles des blocs. Le même pour tous les blocs et pour la fin de séance.
+export function EnteteOrdi({ titre, sousTitre, lienRetour, bloc, blocs, prog, etape, aller, finir, lecture }) {
+  const els = bloc?.elements ?? []
+  const superset = bloc?.format === 'superset'
+  const nomFormat = superset ? (els.length === 2 ? 'Biset' : els.length === 3 ? 'Triset' : 'Superset') : null
+  const tours = Math.max(0, ...els.map((e) => parseInt(e.series, 10) || 0))
+  const p = prog?.blocs?.[etape]
+  const etat = !bloc ? (lecture ? 'Séance faite' : 'Fin de séance')
+    : `${nomBloc(bloc)} · ${p?.faites ?? 0} sur ${p?.total ?? 0}`
+  return (
+    <>
+      <div className="ec-s5-barre">
+        <Link className="ec-s5-retour" to={lienRetour ?? '/espace'} aria-label={lienRetour === '/espace/programme' ? 'Retour à Mon programme' : 'Retour au tableau de bord'}><span aria-hidden="true">←</span></Link>
+        <b>{titre}</b><span className="ec-s5-barre__sous">{sousTitre}</span>
+        <span className="ec-s5-barre__etat">{etat}</span>
+      </div>
+      <div className="ec-s5-tete">
+        <div>
+          <h2 className={`ec-s5-titre${bloc ? '' : ' sr-only'}`}>{bloc ? nomBloc(bloc) : (lecture ? 'Bilan de la séance' : 'Fin de séance')}{nomFormat && <span> · {nomFormat}</span>}{bloc && !superset && bloc.format && bloc.format !== 'series' && <span> · {resumeFormat(bloc)}</span>}</h2>
+          {superset && <p className="ec-s5-consigne">Enchaînez {els.map((_, k) => `${bloc.lettre}${k + 1}`).join(' → ')}{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}.{tours > 0 && <b> {tours} tours.</b>}</p>}
+        </div>
+        <nav className="ec-s5-blocs" aria-label="Blocs de la séance">
+          {blocs.map((b, i) => (
+            <button key={b.id} type="button" className={`${i === etape ? 'est-actif' : prog?.blocs?.[i]?.complet ? 'est-fini' : ''}`} aria-current={i === etape ? 'step' : undefined}
+              aria-label={`${nomBloc(b)}${prog?.blocs?.[i]?.complet ? ', fait' : ''}`} title={nomBloc(b)} onClick={() => aller(i)}>
+              {prog?.blocs?.[i]?.complet && i !== etape ? '✓' : b.lettre}
+            </button>
+          ))}
+          <button type="button" className={`ec-s5-blocs__fin${!bloc ? ' est-actif' : ''}`} aria-current={!bloc ? 'step' : undefined} onClick={finir}>{lecture ? 'Bilan' : 'Fin'}</button>
+        </nav>
+      </div>
+    </>
+  )
+}
+
 // Ordinateur (16 novembre 2026, mélange « Focus » + « Galerie » choisi par Thomas) : les exercices du bloc côte à côte avec
 // leur grande photo, et sous chaque photo les séries avec de vraies cases répétitions / charge.
 // Superset (biset, triset) : on avance par tour (A1 → A2 → A3, puis tour suivant) ; bloc classique : exercice après exercice.
-export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirConsignes, etape, nb, aller, finir, suivant, blocs = [], prog, titre, sousTitre, lienRetour }) {
+export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirConsignes, etape, nb, aller, finir, suivant }) {
   const els = bloc.elements ?? []
   const superset = bloc.format === 'superset'
   // série à faire maintenant : { e: index de l'exercice, i: index de la série }
@@ -169,33 +205,8 @@ export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirCons
     if (!actuelle) { if (dernier) finir(); else aller(etape + 1); return }
     actions.serie(els[actuelle.e], actuelle.i, 'fait', true)
   }
-  const tours = Math.max(0, ...els.map((e) => lignes(e).length))
-  const p = prog?.blocs?.[etape]
-  const etat = superset && actuelle ? `${nomBloc(bloc)} · tour ${actuelle.i + 1} sur ${tours}` : `${nomBloc(bloc)} · ${p?.faites ?? 0} série${(p?.faites ?? 0) > 1 ? 's' : ''} sur ${p?.total ?? 0}`
-  const nomFormat = superset ? (els.length === 2 ? 'Biset' : els.length === 3 ? 'Triset' : 'Superset') : null
   return (
     <div className="ec-s5">
-      {/* barre noire fine (maquette) : retour, séance, où on en est */}
-      <div className="ec-s5-barre">
-        <Link className="ec-s5-retour" to={lienRetour ?? '/espace'} aria-label={lienRetour === '/espace/programme' ? 'Retour à Mon programme' : 'Retour au tableau de bord'}><span aria-hidden="true">←</span></Link>
-        <b>{titre}</b><span className="ec-s5-barre__sous">{sousTitre}</span>
-        <span className="ec-s5-barre__etat">{etat}</span>
-      </div>
-      <div className="ec-s5-tete">
-        <div>
-          <h2 className="ec-s5-titre">{nomBloc(bloc)}{nomFormat && <span> · {nomFormat}</span>}</h2>
-          {superset && <p className="ec-s5-consigne">Enchaînez {els.map((_, k) => `${bloc.lettre}${k + 1}`).join(' → ')}{bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}. <b>{tours} tours.</b></p>}
-        </div>
-        <nav className="ec-s5-blocs" aria-label="Blocs de la séance">
-          {blocs.map((b, i) => (
-            <button key={b.id} type="button" className={`${i === etape ? 'est-actif' : prog?.blocs?.[i]?.complet ? 'est-fini' : ''}`} aria-current={i === etape ? 'step' : undefined}
-              aria-label={`${nomBloc(b)}${prog?.blocs?.[i]?.complet ? ', fait' : ''}`} title={nomBloc(b)} onClick={() => aller(i)}>
-              {prog?.blocs?.[i]?.complet && i !== etape ? '✓' : b.lettre}
-            </button>
-          ))}
-          <button type="button" className="ec-s5-blocs__fin" onClick={finir}>{lecture ? 'Bilan' : 'Fin'}</button>
-        </nav>
-      </div>
       <ol className={`ec-s5-grille ec-s5-grille--${Math.min(els.length, 3)}`}>
         {els.map((el, e) => (
           <CarteGalerie key={el.id} el={el} code={`${bloc.lettre}${e + 1}`} ls={lignes(el)} note={notes[el.id] ?? ''} actions={actions} lecture={lecture}
@@ -222,6 +233,8 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
   const cle = duree ? 'duree' : 'reps'
   const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
   const fini = ls.length > 0 && ls.every((l) => l.fait)
+  // pas de charge prévue ni notée (poids du corps, durée) : la colonne Charge n'apparaît pas
+  const avecCharge = String(el.charge ?? '').trim() !== '' || ls.some((l) => String(l.charge ?? '').trim() !== '')
   const base = `g-${el.id}`
   return (
     <li className={`ec-s5-carte${actuelle >= 0 ? ' est-actuelle' : ''}${fini ? ' est-finie' : ''}`} aria-labelledby={`${base}-nom`}>
@@ -243,18 +256,20 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
         <h3 id={`${base}-nom`} className="ec-s5-nom">{el.nom}</h3>
         {prevu && <p className="ec-s5-prevu">Prévu {prevu}</p>}
         {el.consignes && <p className="ec-s5-consignes">{el.consignes}</p>}
-        <div className="ec-s5-ligne ec-s5-entete" aria-hidden="true"><span /><span>{duree ? 'Durée' : 'Reps'}</span><span>Charge</span></div>
+        <div className={`ec-s5-ligne ec-s5-entete${avecCharge ? '' : ' sans-charge'}`} aria-hidden="true"><span /><span>{duree ? 'Durée' : 'Répétitions'}</span>{avecCharge && <span>Charge</span>}</div>
         {ls.map((l, i) => (
-          <div key={i} className={`ec-s5-ligne${l.fait ? ' est-faite' : ''}${i === actuelle ? ' est-actuelle' : ''}`} role="group" aria-label={`${el.nom}, série ${i + 1}`}>
+          <div key={i} className={`ec-s5-ligne${avecCharge ? '' : ' sans-charge'}${l.fait ? ' est-faite' : ''}${i === actuelle ? ' est-actuelle' : ''}`} role="group" aria-label={`${el.nom}, série ${i + 1}`}>
             <button type="button" className="ec-s5-rond" aria-pressed={!!l.fait} aria-label={`Série ${i + 1}, ${l.fait ? 'faite (toucher pour décocher)' : 'à faire (toucher pour cocher)'}`} disabled={lecture}
               onClick={() => actions?.serie(el, i, 'fait', !l.fait)}>{l.fait ? <Coche /> : i + 1}</button>
             <input className="ec-s5-champ" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
               value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : String(el.reps ?? '')} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, cle, ev.target.value)} />
+            {avecCharge && (
             <span className="ec-s5-kg">
               <input className="ec-s5-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos`}
                 value={l.charge ?? ''} placeholder={fr(el.charge ?? '') || '–'} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, 'charge', ev.target.value)} />
               <small>kg</small>
             </span>
+            )}
             {(detail || (lecture && l.rpe)) && (
               <span className="ec-s5-rpe"><ChoixRpe id={`${base}-rpe${i}`} libelle={`${el.nom}, série ${i + 1}, effort`} valeur={l.rpe} lecture={lecture} changer={(v) => actions?.valeur(el, i, 'rpe', v)} /></span>
             )}

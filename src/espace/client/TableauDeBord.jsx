@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
-import { avancement, semaineDe, bonjour } from '../donnees/progression.js'
+import { avancement, semaineDe, bonjour, numeroDansSemaine } from '../donnees/progression.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
 import Avatar from './Avatar.jsx'
 import CetteSemaine from './CetteSemaine.jsx'
@@ -30,7 +30,7 @@ export default function TableauDeBord({ uid, profil, programme, programmes, fait
           <Avatar uid={uid} profil={profil} onErreur={setErreurAvatar} />
           <div className="ec-tdb__texte">
             <p className="ec-texte ec-gris">{salut}</p>
-            {etat.type === 'prochaine' && <h1 className="ec-h1">Séance {av.numero} sur {av.prevues}</h1>}
+            {etat.type === 'prochaine' && <h1 className="ec-h1">Semaine {etat.semaine} · séance {numeroDansSemaine(programme, etat.seance.id)}</h1>}
           </div>
         </div>
         {erreurAvatar && <p className="ec-erreur" role="alert">{erreurAvatar}</p>}
@@ -41,7 +41,7 @@ export default function TableauDeBord({ uid, profil, programme, programmes, fait
         )}
       </div>
 
-      <CarteNoire etat={etat} programme={programme} statut={etat.type === 'prochaine' ? statutSeance(seances, programme.id, etat.seance.id) : null} numero={av.numero} />
+      <CarteNoire etat={etat} programme={programme} statut={etat.type === 'prochaine' ? statutSeance(seances, programme.id, etat.seance.id) : null} numero={av.numero} total={av.prevues} />
 
       <Duo>
         {programme && etat.type !== 'aucun' && <CetteSemaine programme={programme} semaine={semaine} faites={faites} seances={seances} />}
@@ -51,12 +51,12 @@ export default function TableauDeBord({ uid, profil, programme, programmes, fait
   )
 }
 
-function CarteNoire({ etat, programme, statut, numero }) {
+function CarteNoire({ etat, programme, statut, numero, total }) {
   if (etat.type === 'prochaine') {
     const { seance } = etat
     return (
       <article className="ec-noire" aria-labelledby="titre-prochaine">
-        <p className="ec-surtitre ec-noire__surtitre">Séance {numero}</p>
+        <p className="ec-surtitre ec-noire__surtitre">Prochaine séance · {numero}<sup>e</sup> sur {total} du programme</p>
         <div className="ec-noire__ligne">
           <h2 id="titre-prochaine" className="ec-noire__titre">{seance.titre || 'Ma prochaine séance'}</h2>
           <Link className="ec-bouton" to={`/espace/seance/${programme.id}/${seance.id}`}>

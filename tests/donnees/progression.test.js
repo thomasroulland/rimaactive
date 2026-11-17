@@ -72,7 +72,8 @@ describe('seancesDeLaSemaine', () => {
   const p = prog('2026-11-16')
   it('séances, numéros, dates, faites', () => {
     const r = seancesDeLaSemaine(p, 2, new Set(['ps4']))
-    expect(r.map((x) => x.numero)).toEqual([4, 5, 6])
+    expect(r.map((x) => x.numero)).toEqual([1, 2, 3])
+    expect(r.map((x) => x.rang)).toEqual([4, 5, 6])
     expect(r.map((x) => x.date)).toEqual(['2026-11-23', '2026-11-23', '2026-11-23'])
     expect(r.map((x) => x.faite)).toEqual([true, false, false])
     expect(r[0].seance.id).toBe('ps4')

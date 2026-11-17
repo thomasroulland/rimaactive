@@ -10,7 +10,7 @@ import Picto from '../../components/Picto.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
 import Consignes from './Consignes.jsx'
 import FinDeSeance from './FinDeSeance.jsx'
-import { BandeauBloc, BlocOrdinateur, BoutonBloc, UnExercice, useMobile } from './SeanceGuidee.jsx'
+import { BandeauBloc, BlocOrdinateur, BoutonBloc, EnteteOrdi, UnExercice, useMobile } from './SeanceGuidee.jsx'
 
 const DELAI = 600 // ms entre la dernière frappe et l'enregistrement
 
@@ -222,13 +222,18 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const bloc = listeBlocs[ici]
     const enSeries = bloc && estEnSeries(bloc.format)
     const unExercice = Boolean(bloc) && mobile && !verrou && enSeries
-    const galerie = Boolean(bloc) && !mobile && enSeries // ordinateur : en-tête resserré de la maquette (pas de bandeau noir ni de surtitre)
+    const galerie = !mobile // ordinateur : en-tête de la maquette pour tous les blocs et la fin (pas de bandeau ni de surtitre)
     return (
       <section className={`ec-page ec-seance ec-seance--v2${!mobile ? ' ec-seance--large' : ''}`}>
-        {unExercice || galerie ? barreCorrection : retour}
+        {unExercice ? barreCorrection : galerie ? null : retour}
         {refus && <p className="ec-erreur" role="alert">{refus}</p>}
         <div className="ec-s2">
           {!galerie && <p className="ec-s2-surtitre">{surtitre} · {titre}</p>}
+          {galerie && (
+            <EnteteOrdi titre={titre} sousTitre={surtitre} lienRetour={depuisProgramme ? '/espace/programme' : '/espace'} bloc={bloc} blocs={listeBlocs} prog={prog} etape={ici}
+              aller={aller} finir={() => aller(nb)} lecture={verrou} />
+          )}
+          {galerie && barreCorrection}
           <div className="ec-s2-principal">
             {bloc ? (
               unExercice ? (
@@ -238,8 +243,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                 <>
                   {!galerie && <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />}
                   {enSeries
-                    ? <BlocOrdinateur key={bloc.id} bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={verrou} voirConsignes={setFiche} etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]}
-                        blocs={listeBlocs} prog={prog} titre={titre} sousTitre={surtitre} lienRetour={depuisProgramme ? '/espace/programme' : '/espace'} />
+                    ? <BlocOrdinateur key={bloc.id} bloc={bloc} lignes={lignes} notes={notes} actions={actions} lecture={verrou} voirConsignes={setFiche} etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]} />
                     : <BlocSeries key={bloc.id} bloc={bloc} saisie={{ lignes, notes, blocs }} actions={actions} lecture={verrou} voirConsignes={setFiche} sansTete />}
                   {!verrou && !enSeries && <BoutonBloc etape={ici} nb={nb} aller={aller} finir={() => aller(nb)} suivant={listeBlocs[ici + 1]} />}
                 </>

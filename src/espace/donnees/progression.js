@@ -45,11 +45,20 @@ export function programmeAffiche(programmes, aujourdhui) {
   return choisi?.programme ?? null
 }
 
+// Séances d'une semaine, numérotées dans la semaine (1, 2, 3…), comme dans la séance elle-même et chez le coach ;
+// `rang` = place dans tout le programme.
 export function seancesDeLaSemaine(programme, n, faites) {
   return listeSeances(programme)
-    .map((x, i) => ({ ...x, numero: i + 1 }))
+    .map((x, i) => ({ ...x, rang: i + 1 }))
     .filter((x) => x.semaine === n)
-    .map((x) => ({ seance: x.seance, numero: x.numero, date: x.date, faite: faites.has(x.seance.id) }))
+    .map((x, k) => ({ seance: x.seance, numero: k + 1, rang: x.rang, date: x.date, faite: faites.has(x.seance.id) }))
+}
+
+// Numéro d'une séance dans sa semaine (1, 2, 3…)
+export function numeroDansSemaine(programme, seanceId) {
+  const liste = listeSeances(programme)
+  const x = liste.find((y) => y.seance.id === seanceId)
+  return x ? liste.filter((y) => y.semaine === x.semaine).indexOf(x) + 1 : 0
 }
 
 export function bonjour(prenom, date) {
