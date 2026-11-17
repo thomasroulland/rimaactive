@@ -69,7 +69,7 @@ export default function Accueil() {
             </div>
           </div>
         </div>
-        {/* Les vrais écrans de l'espace coaché, en pile 3D qui défile (15 novembre 2026) ; caché sous 1100 px */}
+        {/* Les vrais écrans de l’espace coaché, qui défilent (15 novembre 2026) ; sous 1100 px, ils passent sous la photo (17 novembre) */}
         <EcransEspace />
       </section>
 
