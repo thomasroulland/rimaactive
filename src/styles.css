@@ -2222,3 +2222,11 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 .choix-offre__tuile input:focus-visible + .choix-offre__corps { outline: 2px solid var(--encre); outline-offset: 2px; }
 @media (max-width: 599px) { .choix-offre { gap: 8px; } .choix-offre__corps { min-height: 60px; font-size: 14px; } }
 @media (prefers-reduced-motion: reduce) { .choix-offre__corps { transition: none; } }
+
+/* Mes offres, sous les cartes : pictogramme, intitulé en gras, phrase en gris (17 novembre 2026) */
+.offres-page__avantages { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 48px; }
+.offres-page__avantages li { display: flex; align-items: center; gap: 12px; }
+.offres-page__avantages .picto { flex: none; color: var(--encre); }
+.offres-page__avantages strong { display: block; font-size: 15px; line-height: 20px; font-weight: 700; color: var(--encre); }
+.offres-page__avantages li > span > span { display: block; font-size: 14px; line-height: 20px; color: var(--gris-chaud); }
+@media (max-width: 599px) { .offres-page__avantages { flex-direction: column; gap: 12px; margin-top: 16px; } }

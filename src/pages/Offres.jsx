@@ -22,6 +22,18 @@ const RUBRIQUES = [
   { id: 'entreprises', page: ENTREPRISES, inverse: true },
 ]
 
+// Sous les cartes : pictogramme, intitulé en gras et une phrase (Thomas, 17 novembre 2026), à la place des cases cochées.
+// Les textes de la liste restent dans les fichiers des pages ; on les reconnaît ici.
+const AVANTAGES = {
+  materiel: { picto: 'haltere', titre: 'Matériel inclus', texte: 'Je m’occupe de tout.' },
+  deplacement: { picto: 'map-pin', titre: 'Déplacement inclus', texte: 'Dans un rayon de 20\u00a0km autour de Houdan.' },
+}
+function avantage(point) {
+  if (point.startsWith('Matériel')) return AVANTAGES.materiel
+  if (point.startsWith('Déplacement')) return AVANTAGES.deplacement
+  return { picto: 'check-square', titre: point }
+}
+
 export default function Offres() {
   useTitre('Mes offres')
   const { hash } = useLocation()
@@ -98,8 +110,11 @@ function Rubrique({ id, page, sous, fonce, inverse }) {
           </ul>
         </div>
         {liste.length > 0 && (
-          <ul className="offres-page__liste">
-            {liste.map((point) => <li key={point}><Picto nom="check-square" taille={18} />{point}</li>)}
+          <ul className="offres-page__avantages">
+            {liste.map((point) => {
+              const a = avantage(point)
+              return <li key={point}><Picto nom={a.picto} taille={24} /><span><strong>{a.titre}</strong>{a.texte && <span>{a.texte}</span>}</span></li>
+            })}
           </ul>
         )}
       </div>
