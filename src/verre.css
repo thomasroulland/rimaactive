@@ -264,3 +264,14 @@ body { min-height: 100vh; isolation: isolate; }
   .heros.heros--v3 .heros__outil.ecrans { margin-top: -28px !important; }
   .heros.heros--v3 .ecrans__panneau { background: #f4f3ef !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 }
+
+/* Menu du téléphone (vitrine), refait le 18 novembre 2026 : liens clairs sur le fond noir (avant : noir sur noir),
+   la page en cours en pastille claire, chaque lien dans une ligne nette avec sa flèche dans un rond */
+@media (max-width: 960px) {
+  .menu-mobile.ouvert { display: grid !important; gap: 6px; padding: 12px var(--gouttiere, 20px) 20px !important; }
+  .menu-mobile a { min-height: 56px; padding: 0 8px 0 18px; border: 0 !important; border-radius: 16px; background: rgba(255, 255, 255, .06); color: #f4f3ef !important; font-size: 20px; font-weight: 800; letter-spacing: -.02em; transition: background-color .15s ease; }
+  .menu-mobile a:active { background: rgba(255, 255, 255, .14); }
+  .menu-mobile a svg { width: 38px; height: 38px; padding: 10px; border-radius: 50%; background: rgba(255, 255, 255, .1); color: #f4f3ef; box-sizing: border-box; }
+  .menu-mobile a[aria-current="page"] { background: #f4f3ef; color: #161514 !important; }
+  .menu-mobile a[aria-current="page"] svg { background: var(--vermillon); color: #fff; }
+}
