@@ -6,8 +6,6 @@ import { enregistrerExercice } from '../depots.js'
 import { messageErreur } from '../erreurs.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import { basculerDetails } from '../../components/basculerDetails.js'
-import RangeeDefilante from './RangeeDefilante.jsx'
-import OngletsParties from './OngletsParties.jsx'
 import { partieDe } from '../donnees/reglages.js'
 
 const simplifier = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -65,19 +63,14 @@ export default function ChoixExercice({ exercices, ajouter, laterale = false }) 
         <input id="choix-recherche" className="champ" type="search" autoComplete="off" placeholder="Nom, muscle, matériel…"
           value={recherche} onChange={(e) => setRecherche(e.target.value)} />
       </div>
-      <OngletsParties parties={reglages.parties} valeur={partie} changer={(p) => { setPartie(p); setCategorie('Toutes') }} />
-      <RangeeDefilante className="filtres-coaches espace-choix__filtres" role="group" aria-label="Catégorie">
-        {['Toutes', ...reglages.categories.filter((c) => partie === 'Tout' || partieDe(c, reglages) === partie)].map((c) => (
-          <button key={c} type="button" className="filtre-coaches" aria-pressed={categorie === c} onClick={() => setCategorie(c)}>{c}</button>
-        ))}
-      </RangeeDefilante>
-      <div className="espace-choix__matos">
-        <span className="banque-filtres__lib" id="choix-f-mat">Matériel</span>
-        <RangeeDefilante className="filtres-coaches espace-choix__filtres" role="group" aria-labelledby="choix-f-mat">
-          {['Tous', ...reglages.materiels].map((m) => (
-            <button key={m} type="button" className="filtre-coaches" aria-pressed={materiel === m} onClick={() => setMateriel(m)}>{m}</button>
-          ))}
-        </RangeeDefilante>
+      {/* filtres en trois menus compacts sur une ligne (choix de Thomas, 18 novembre 2026) : tout se voit d'un coup,
+          le filtre choisi reste écrit dans son bouton, la croix l'enlève */}
+      <div className="choix-filtres" role="group" aria-label="Filtrer la banque">
+        <MenuFiltre id="choix-f-partie" nom="Partie" valeur={partie} tous="Tout" options={reglages.parties}
+          changer={(v) => { setPartie(v); setCategorie('Toutes') }} />
+        <MenuFiltre id="choix-f-cat" nom="Catégorie" valeur={categorie} tous="Toutes"
+          options={reglages.categories.filter((c) => partie === 'Tout' || partieDe(c, reglages) === partie)} changer={setCategorie} />
+        <MenuFiltre id="choix-f-mat" nom="Matériel" valeur={materiel} tous="Tous" options={reglages.materiels} changer={setMateriel} />
       </div>
       {exercices === null && <p className="espace-texte" role="status">Chargement de la banque…</p>}
       {aucun && (
@@ -126,5 +119,25 @@ export default function ChoixExercice({ exercices, ajouter, laterale = false }) 
         </div>
       </details>
     </section>
+  )
+}
+
+// Un filtre : un vrai menu déroulant (liste complète, pratique au doigt), habillé en pastille ;
+// quand un choix est fait, la pastille devient noire avec le choix écrit et une croix pour revenir à « tous »
+function MenuFiltre({ id, nom, valeur, tous, options, changer }) {
+  const actif = valeur !== tous
+  return (
+    <span className={`choix-filtre${actif ? ' est-actif' : ''}`}>
+      <label className="sr-only" htmlFor={id}>{nom}</label>
+      <select id={id} value={valeur} onChange={(e) => changer(e.target.value)}>
+        <option value={tous}>{nom}</option>
+        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+      </select>
+      {actif
+        ? <button type="button" className="choix-filtre__x" aria-label={`Enlever le filtre ${nom} : ${valeur}`} onClick={() => changer(tous)}>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+        : <svg className="choix-filtre__fleche" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>}
+    </span>
   )
 }
