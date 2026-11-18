@@ -19,6 +19,9 @@ function seancesFaitesDe(seances, programmeId) {
   )
 }
 
+// « 9 nov. » au lieu de « Lun. 9 nov. » (pastilles des blocs)
+const sansJour = (t) => String(t ?? '').replace(/^[^ ]+\. /, '')
+
 // « Mon programme » : blocs (en cours, terminés, à venir), puis les semaines du bloc choisi et leurs séances.
 export default function MonProgramme({ profil, programmes, programme, seances }) {
   const aujourdhui = aujourdhuiIso()
@@ -56,20 +59,21 @@ export default function MonProgramme({ profil, programmes, programme, seances })
           <h1 className="ec-h1">Mon programme</h1>
           {bloc && (
             <p className="ec-prog__resume">
-              Bloc {index + 1} · {dateSeance(bloc.debut)} → {dateSeance(bloc.fin)}
-              {bloc.etat === 'en cours' ? ` · semaine ${bloc.semaine} sur ${nbSemaines}` : bloc.etat === 'passé' ? ' · terminé' : ' · à venir'}
+              {bloc.etat === 'en cours' ? `Semaine ${bloc.semaine} sur ${nbSemaines}` : bloc.etat === 'passé' ? `Bloc ${index + 1} terminé` : `Bloc ${index + 1} à venir`}
             </p>
           )}
         </div>
-        {blocs.length > 1 && (
+        {blocs.length > 0 && (
           <div className="ec-blocs" ref={frise} role="group" aria-label="Mes blocs">
             {blocs.map((b, i) => (
               <button key={b.programme.id} type="button" className={`ec-blocs__pastille est-${ETATS[b.etat]}`} aria-pressed={i === index}
                 data-bloc-courant={i === defaut ? '' : undefined} aria-label={`Bloc ${i + 1}, ${etatTexte(b)}`} title={`${dateSeance(b.debut)} → ${dateSeance(b.fin)}`}
                 onClick={() => choisirBloc(i)}>
-                Bloc {i + 1}<span className="ec-blocs__etat">{ETIQUETTES[b.etat]}</span>
+                <span className="ec-blocs__textes"><span>Bloc {i + 1}</span><small>{sansJour(dateSeance(b.debut))} → {sansJour(dateSeance(b.fin))}</small></span>
+                <span className="ec-blocs__etat">{ETIQUETTES[b.etat]}</span>
               </button>
             ))}
+            {!blocs.some((b) => b.etat === 'à venir') && <span className="ec-blocs__pastille est-prochain" aria-label="Le prochain bloc apparaîtra ici"><span className="ec-blocs__textes"><span>Bloc {blocs.length + 1}</span><small>Dates à venir</small></span><span className="ec-blocs__etat">Bientôt</span></span>}
           </div>
         )}
       </div>
