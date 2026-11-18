@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-// « + Séance » : un seul bouton, qui ouvre la liste des types (et « Gérer les types »)
-export default function AjoutSeance({ types, ajouter, gerer }) {
+// « + Séance » : un seul bouton, qui ouvre la liste des types (liste fixe depuis le 18 novembre 2026)
+export default function AjoutSeance({ types, ajouter }) {
   const [ouvert, setOuvert] = useState(false)
   const zone = useRef(null)
   useEffect(() => {
@@ -23,7 +23,6 @@ export default function AjoutSeance({ types, ajouter, gerer }) {
           {types.map((t) => (
             <button key={t.id} type="button" className="ajout-seance__choix" onClick={() => { setOuvert(false); ajouter(t.id) }}>{t.nom}</button>
           ))}
-          <button type="button" className="ajout-seance__gerer" onClick={() => { setOuvert(false); gerer() }}>Gérer les types…</button>
         </div>
       )}
     </div>

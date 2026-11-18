@@ -6,13 +6,12 @@ import {
   ecouterModele, ecouterModelesSeance, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
-  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, supprimerBloc, sansBlocsVides, retirerElement,
+  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, deplacerBloc, supprimerBloc, sansBlocsVides, retirerElement,
   garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, reglerNbSemaines, semaineEnCours,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { nomType } from '../donnees/reglages.js'
 import useReglages from './useReglages.js'
-import GestionListes from './GestionListes.jsx'
 import EnteteCoache, { useCoache } from './EnteteCoache.jsx'
 import { messageErreur } from '../erreurs.js'
 import { ChoixDebut } from './CreationProgramme.jsx'
@@ -59,7 +58,6 @@ export default function EditeurProgramme() {
   const [envoi, setEnvoi] = useState(false)
   const [confirmation, setConfirmation] = useState(null)
   const [gestion, setGestion] = useState(false) // fenêtre « Gérer le programme »
-  const [gererTypes, setGererTypes] = useState(false) // fenêtre « Types de séance »
   const [renommer, setRenommer] = useState(false) // nom du programme en cours de modification
   const reglages = useReglages()
   const [aOuvrir, setAOuvrir] = useState(null) // copie créée : ouverte dès qu'elle arrive du serveur
@@ -530,7 +528,7 @@ export default function EditeurProgramme() {
 
           {!seance && (
             <GrilleProgramme prog={prog} verrous={verrous} types={reglages.types} lien={(w, id) => `?semaine=${w + 1}&seance=${id}`}
-              gererTypes={() => setGererTypes(true)} maxSemaines={MAX_SEMAINES} courante={modele ? -1 : semaineEnCours(prog, aujourdhuiIso())} annulable={annulable} annuler={annulerDernier}
+              maxSemaines={MAX_SEMAINES} courante={modele ? -1 : semaineEnCours(prog, aujourdhuiIso())} annulable={annulable} annuler={annulerDernier}
               actions={{
                 ajouterSeance: (w, type) => ajouterSeance(type, w),
                 dupliquer: dupliquerLaSeance, deplacer: deplacerLaSeance,
@@ -578,11 +576,12 @@ export default function EditeurProgramme() {
                   ? <SeanceFaiteCoach seance={seance} sf={sf} prenom={client?.prenom} banque={exercices} rpeVise={semaine?.rpe} semaine={semIdx + 1} numero={seIdx + 1}
                     commenter={(texte) => commenterSeance(sf.id, texte).then(() => setMessage('Commentaire envoyé.')).catch((e) => setErreur(messageErreur(e.code)))} />
                   : (
-              <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm} rpeSemaine={semaine?.rpe ?? ''}
+              <EditeurSeance seance={seance} numero={seIdx + 1} semaine={semIdx + 1} verrou={estVerrou(seance.id)} attente={verrous === null} exercices={exercices} rm={modele ? undefined : client?.rm}
                 majSeance={majSeance} majBloc={majBloc} majElement={majElement}
                 retirer={(el) => { changer((p) => retirerElement(p, { s: semIdx, se: seIdx }, el.id)); setMessage(`« ${el.nom} » retiré de la séance.`) }}
                 supprimerBloc={(blocId, nom) => { changer((p) => supprimerBloc(p, { s: semIdx, se: seIdx }, blocId)); setMessage(`${nom} supprimé.`) }}
                 ajouterBloc={() => changer((p) => ajouterBlocVide(p, { s: semIdx, se: seIdx }))}
+                deplacerBloc={(de, vers) => changer((p) => deplacerBloc(p, { s: semIdx, se: seIdx }, de, vers))}
                 ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
                   )
               })()}
@@ -592,7 +591,6 @@ export default function EditeurProgramme() {
       </section>
       {!(seance && !modele && estVerrou(seance.id)) && barre}
       {dialogue}
-      {gererTypes && <GestionListes titre="Types de séance" reglages={reglages} fermer={() => setGererTypes(false)} listes={[{ cle: 'types', titre: 'Types de séance' }]} />}
       {gestion && (
         <GestionProgramme prog={prog} prenom={client.prenom} aDesModifs={modifie} fermer={() => setGestion(false)}
           fait={(action, d) => {

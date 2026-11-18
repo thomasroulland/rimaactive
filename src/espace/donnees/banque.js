@@ -43,3 +43,6 @@ export function genreMateriel(materiel) {
   return 'autre'
 }
 
+
+// Haltères (18 novembre 2026) : la charge notée est celle d'un seul haltère, « par main »
+export const chargeParMain = (materiel) => genreMateriel(materiel) === 'haltere'

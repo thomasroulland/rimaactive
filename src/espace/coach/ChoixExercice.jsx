@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { LETTRES } from '../donnees/programme.js'
 import useReglages from './useReglages.js'
 import ChoixAvecAjout from './ChoixAvecAjout.jsx'
 import MaterielPicto from './MaterielPicto.jsx'
@@ -14,16 +13,12 @@ import { partieDe } from '../donnees/reglages.js'
 const simplifier = (t) => String(t ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 const VIDE = { nom: '', categorie: '', materiel: '', consignes: '' }
 
-// « Ajouter un exercice » (maquette coach) : recherche et catégories dans la banque, choix du bloc,
-// et création d'un nouvel exercice sans quitter la séance (fiche complétée plus tard dans la banque).
+// Banque à côté de la séance : recherche et catégories, on glisse un exercice dans un bloc (18 novembre 2026 : plus de choix
+// du bloc ni de bouton « Ajouter »), et création d'un nouvel exercice sans quitter la séance (il va dans le dernier bloc).
 // Glisser un exercice depuis la banque vers un bloc (EditeurSeance lit ce type de donnée au dépôt)
 export const TYPE_GLISSE = 'application/x-rimaactive-exercice'
 
-export default function ChoixExercice({ exercices, lettres, ajouter, cible, changerCible, laterale = false }) {
-  const prochaine = LETTRES[lettres.length]
-  const [blocLocal, setBlocLocal] = useState(lettres[lettres.length - 1] ?? 'A')
-  const bloc = cible ?? blocLocal // l'éditeur de séance peut imposer le bloc (clic sur « Ajouter ici »)
-  const setBloc = changerCible ?? setBlocLocal
+export default function ChoixExercice({ exercices, ajouter, laterale = false }) {
   const [recherche, setRecherche] = useState('')
   const [partie, setPartie] = useState('Tout')
   const [categorie, setCategorie] = useState('Toutes')
@@ -33,7 +28,6 @@ export default function ChoixExercice({ exercices, lettres, ajouter, cible, chan
   const [envoi, setEnvoi] = useState(false)
   const [erreur, setErreur] = useState('')
   const reglages = useReglages()
-  const blocChoisi = lettres.includes(bloc) || bloc === prochaine ? bloc : (lettres[0] ?? 'A')
 
   const t = simplifier(recherche.trim())
   const resultats = (exercices ?? [])
@@ -52,7 +46,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter, cible, chan
     try {
       const exo = { ...nouvel, nom, categorie: nouvel.categorie || reglages.categories[0] || '', materiel: nouvel.materiel || reglages.materiels[reglages.materiels.length - 1] || '', consignes: nouvel.consignes.trim(), muscles: [], photos: [] }
       const id = await enregistrerExercice(exo)
-      ajouter(blocChoisi, { ...exo, id })
+      ajouter({ ...exo, id })
       setNouvel(VIDE); setCreationOuverte(false); setRecherche('')
     } catch (err) {
       setErreur(messageErreur(err.code))
@@ -64,13 +58,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter, cible, chan
   return (
     <section className={`espace-carte espace-choix${laterale ? ' espace-choix--lateral' : ''}`} aria-labelledby="choix-titre">
       <div className="espace-choix__tete">
-        <h2 id="choix-titre" className="espace-sous-titre">Ajouter un exercice</h2>
-        <div className="champ-groupe espace-choix__bloc">
-          <label htmlFor="choix-bloc">Dans le bloc</label>
-          <select id="choix-bloc" className="champ" value={blocChoisi} onChange={(e) => setBloc(e.target.value)}>
-            {(lettres.length ? lettres : ['A']).map((l) => <option key={l} value={l}>Bloc {l}</option>)}
-          </select>
-        </div>
+        <h2 id="choix-titre" className="espace-sous-titre">Glisser un exercice</h2>
       </div>
       <div className="champ-groupe">
         <label htmlFor="choix-recherche">Rechercher dans ma banque</label>
@@ -107,9 +95,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter, cible, chan
                 <span className="espace-choix__muscles">{[e.categorie, e.materiel].filter(Boolean).join(' · ') || (e.muscles ?? []).join(', ')}</span>
               </span>
               <MaterielPicto materiel={e.materiel} />
-              <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => ajouter(blocChoisi, e)}>
-                Ajouter<span className="sr-only"> {e.nom} au bloc {blocChoisi}</span>
-              </button>
+              <span className="espace-choix__poignee" aria-hidden="true"><svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor"><circle cx="2" cy="2" r="1.5" /><circle cx="8" cy="2" r="1.5" /><circle cx="2" cy="8" r="1.5" /><circle cx="8" cy="8" r="1.5" /><circle cx="2" cy="14" r="1.5" /><circle cx="8" cy="14" r="1.5" /></svg></span>
             </li>
           ))}
         </ul>
@@ -135,7 +121,7 @@ export default function ChoixExercice({ exercices, lettres, ajouter, cible, chan
         {erreur && <p id="nx-erreur" className="espace-message espace-message--erreur" role="alert">{erreur}</p>}
         <p className="espace-aide">Vous compléterez la fiche (photos, erreurs à éviter…) plus tard dans la banque.</p>
         <button type="button" className="bouton bouton--principal bouton--compact" onClick={creer} disabled={envoi}>
-          {envoi ? 'Création…' : `Créer et ajouter au bloc ${blocChoisi}`}
+          {envoi ? 'Création…' : 'Créer et ajouter à la séance'}
         </button>
         </div>
       </details>

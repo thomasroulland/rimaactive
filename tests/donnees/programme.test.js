@@ -101,7 +101,7 @@ describe('ordreProgrammes', () => {
 
 import { rafraichirExercices } from '../../src/espace/donnees/programme.js'
 describe('rafraichirExercices', () => {
-  const prog = { semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'e1', exoId: 'X', nom: 'Squat', photos: [], consignes: '', muscles: [], musclesSecondaires: [], lateralites: [], lateralite: '', series: '3' }, { id: 'e2', exoId: 'Z', nom: 'Autre' }] }] }] }] }
+  const prog = { semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'e1', exoId: 'X', nom: 'Squat', photos: [], consignes: '', muscles: [], musclesSecondaires: [], lateralites: [], lateralite: '', materiel: '', series: '3' }, { id: 'e2', exoId: 'Z', nom: 'Autre' }] }] }] }] }
   it('recopie la photo ajoutée plus tard dans la fiche, sans toucher au reste', () => {
     const r = rafraichirExercices(prog, [{ id: 'X', nom: 'Squat', photos: ['exercices/X/a.jpg'], consignes: 'Dos droit', muscles: ['Quadriceps'] }])
     const el = r.semaines[0].seances[0].blocs[0].elements
@@ -268,5 +268,34 @@ describe('semaineEnCours', () => {
     expect(semaineEnCours(p, '2026-11-01')).toBe(-1)
     expect(semaineEnCours(p, '2026-11-30')).toBe(-1)
     expect(semaineEnCours({ semaines: [{}] }, '2026-11-16')).toBe(-1)
+  })
+})
+
+import { deplacerBloc } from '../../src/espace/donnees/programme.js'
+describe('deplacerBloc', () => {
+  const prog = { semaines: [{ seances: [{ blocs: [
+    { id: 'x', lettre: 'A', nom: 'Échauffement', elements: [{ id: 'e1' }] },
+    { id: 'y', lettre: 'B', elements: [{ id: 'e2' }] },
+    { id: 'z', lettre: 'C', nom: 'Retour au calme', elements: [] },
+  ] }] }] }
+  it('met le dernier bloc en premier et recalcule les lettres', () => {
+    const p = deplacerBloc(prog, { s: 0, se: 0 }, 2, 0)
+    const b = p.semaines[0].seances[0].blocs
+    expect(b.map((x) => x.id)).toEqual(['z', 'x', 'y'])
+    expect(b.map((x) => x.lettre)).toEqual(['A', 'B', 'C'])
+    expect(b[0].nom).toBe('Retour au calme')
+    expect(prog.semaines[0].seances[0].blocs[0].id).toBe('x') // l'original ne bouge pas
+  })
+  it('ne change rien pour une place identique ou hors limites', () => {
+    expect(deplacerBloc(prog, { s: 0, se: 0 }, 1, 1)).toBe(prog)
+    expect(deplacerBloc(prog, { s: 0, se: 0 }, 0, 5)).toBe(prog)
+  })
+})
+
+describe('rafraichirExercices et matériel', () => {
+  it('recopie le matériel de la fiche (charge par main pour les haltères)', () => {
+    const p = { semaines: [{ seances: [{ blocs: [{ elements: [{ id: 'e', exoId: 'H', nom: 'Curl' }] }] }] }] }
+    const r = rafraichirExercices(p, [{ id: 'H', nom: 'Curl', materiel: 'Haltère' }])
+    expect(r.semaines[0].seances[0].blocs[0].elements[0].materiel).toBe('Haltère')
   })
 })

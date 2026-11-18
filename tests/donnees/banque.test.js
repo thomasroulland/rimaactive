@@ -18,11 +18,13 @@ describe('chargeIndicative', () => {
 
 import { completerReglages, nomType } from '../../src/espace/donnees/reglages.js'
 describe('réglages', () => {
-  it('garde toujours Force et Course, et des listes par défaut', () => {
+  it('donne toujours la liste fixe des types de séance, et des listes par défaut', () => {
     const r = completerReglages({ types: [{ id: 'mob', nom: 'Mobilité' }] })
-    expect(r.types.map((t) => t.id)).toEqual(['mob', 'force', 'course'])
+    const attendu = ['Renforcement', 'Contraste', 'Endurance fondamentale', 'HIIT', 'LIIT', 'Série', 'Superset']
+    expect(r.types.map((t) => t.nom)).toEqual(attendu)
     expect(r.categories.length).toBeGreaterThan(0)
-    expect(completerReglages(null).types.map((t) => t.id)).toEqual(['force', 'course'])
+    expect(completerReglages(null).types.map((t) => t.nom)).toEqual(attendu)
+    expect(r.types.find((t) => t.id === 'course').nom).toBe('Endurance fondamentale')
   })
   it('nomme un type, même supprimé', () => {
     expect(nomType('mob', [{ id: 'mob', nom: 'Mobilité' }])).toBe('Mobilité')
@@ -67,5 +69,16 @@ describe('parties de la banque', () => {
     const rg = [{ categorie: 'Gainage', partie: 'Échauffement' }]
     expect(renommerRangement(rg, 'categorie', 'Gainage', 'Core')).toEqual([{ categorie: 'Core', partie: 'Échauffement' }])
     expect(renommerRangement(rg, 'partie', 'Échauffement', 'Activation')).toEqual([{ categorie: 'Gainage', partie: 'Activation' }])
+  })
+})
+
+import { chargeParMain } from '../../src/espace/donnees/banque.js'
+describe('chargeParMain', () => {
+  it('vaut pour les haltères seulement', () => {
+    expect(chargeParMain('Haltère')).toBe(true)
+    expect(chargeParMain('haltères')).toBe(true)
+    expect(chargeParMain('Barre')).toBe(false)
+    expect(chargeParMain('Kettlebell')).toBe(false)
+    expect(chargeParMain('')).toBe(false)
   })
 })

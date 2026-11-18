@@ -39,7 +39,7 @@ function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, suppr
   )
 }
 
-export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes, actions, annulable, annuler, maxSemaines, courante = -1, modeles = null }) {
+export default function GrilleProgramme({ prog, verrous, types, lien, actions, annulable, annuler, maxSemaines, courante = -1, modeles = null }) {
   const [glisse, setGlisse] = useState(null) // { s, se } de la séance en train d'être glissée
   const [depot, setDepot] = useState(null) // { s, index } : où elle tomberait
   const [mots, setMots] = useState({}) // semaines dont le « mot pour le coaché » est ouvert
@@ -183,7 +183,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, gererTypes
                 })}
                 {depot?.s === s && depot.index >= w.seances.length && <li className="gp-item"><span className="gp-depot" aria-hidden="true"><span>Ici : séance {w.seances.length + 1}</span></span></li>}
               </ol>
-              <AjoutSeance types={types} ajouter={(type) => actions.ajouterSeance(s, type)} gerer={gererTypes} />
+              <AjoutSeance types={types} ajouter={(type) => actions.ajouterSeance(s, type)} />
             </section>
           )
         })}

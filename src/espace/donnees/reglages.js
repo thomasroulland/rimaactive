@@ -2,9 +2,18 @@
 // Elles sont rangées dans le document Firestore `reglages/coach` ; sans ce document, on prend ces valeurs.
 import { CATEGORIES, MATERIELS, MUSCLES } from './banque.js'
 
-// « force » et « course » existent depuis le début : leurs séances gardent leur fonctionnement
-// (blocs d'exercices / distance et temps). Ils se renomment mais ne se suppriment pas.
-export const TYPES_DE_BASE = [{ id: 'force', nom: 'Force' }, { id: 'course', nom: 'Course' }]
+// Types de séance : liste fixe choisie par Marie (18 novembre 2026), plus réglable.
+// « force » (Renforcement) et « course » (Endurance fondamentale) gardent leurs identifiants d'origine :
+// les séances déjà faites restent lisibles, et « course » garde son fonctionnement (distance, temps, consigne).
+export const TYPES_DE_BASE = [
+  { id: 'force', nom: 'Renforcement' },
+  { id: 'contraste', nom: 'Contraste' },
+  { id: 'course', nom: 'Endurance fondamentale' },
+  { id: 'hiit', nom: 'HIIT' },
+  { id: 'liit', nom: 'LIIT' },
+  { id: 'serie', nom: 'Série' },
+  { id: 'superset', nom: 'Superset' },
+]
 
 // Parties de la banque (15 novembre 2026) : chaque catégorie est rangée dans une partie (« Échauffement », « Séance »…).
 // `rangement` : [{ categorie, partie }] ; une catégorie non rangée va dans sa partie par défaut (voir partieDe).
@@ -13,11 +22,9 @@ export const PARTIES = ['Échauffement', 'Séance']
 export const REGLAGES_PAR_DEFAUT = { types: TYPES_DE_BASE, categories: CATEGORIES, materiels: MATERIELS, muscles: MUSCLES, parties: PARTIES, rangement: [] }
 
 export function completerReglages(d) {
-  const types = Array.isArray(d?.types) && d.types.length ? d.types : TYPES_DE_BASE
-  // les types de base restent toujours présents
-  const tous = [...types, ...TYPES_DE_BASE.filter((b) => !types.some((t) => t.id === b.id))]
   return {
-    types: tous,
+    // la liste des types est fixe (18 novembre 2026) : celle enregistrée autrefois dans les réglages n'est plus lue
+    types: TYPES_DE_BASE,
     categories: Array.isArray(d?.categories) ? d.categories : CATEGORIES,
     materiels: Array.isArray(d?.materiels) ? d.materiels : MATERIELS,
     muscles: Array.isArray(d?.muscles) ? d.muscles : MUSCLES,
@@ -30,8 +37,8 @@ export function completerReglages(d) {
 export function nomType(id, types) {
   const t = (types ?? TYPES_DE_BASE).find((x) => x.id === id)
   if (t) return t.nom
-  if (id === 'course') return 'Course'
-  if (id === 'force' || !id) return 'Force'
+  if (id === 'course') return 'Endurance fondamentale'
+  if (id === 'force' || !id) return 'Renforcement'
   return 'Séance'
 }
 

@@ -205,6 +205,18 @@ export function supprimerBloc(programme, { s, se }, blocId) {
   return p
 }
 
+// Déplace un bloc (glisser-déposer, 18 novembre 2026) : le bloc `de` prend la place `vers`, puis lettres A, B, C… recalculées
+export function deplacerBloc(programme, { s, se }, de, vers) {
+  const p = structuredClone(programme)
+  const seance = p.semaines[s].seances[se]
+  const blocs = [...(seance.blocs ?? [])]
+  if (de === vers || de < 0 || vers < 0 || de >= blocs.length || vers >= blocs.length) return programme
+  const [b] = blocs.splice(de, 1)
+  blocs.splice(vers, 0, b)
+  seance.blocs = blocs.map((x, i) => ({ ...x, lettre: LETTRES[i] ?? x.lettre }))
+  return p
+}
+
 // Retire un élément ; le bloc qui devient vide à cause de ce retrait disparaît et les blocs restants sont renommés A, B, C…
 // (un bloc créé vide par le coach, lui, reste en place)
 export function retirerElement(programme, { s, se }, elementId) {
@@ -292,6 +304,8 @@ export function rafraichirExercices(programme, banque) {
             muscles: [...(f.muscles ?? [])],
             musclesSecondaires: [...(f.musclesSecondaires ?? [])],
             lateralites: [...(f.lateralites ?? [])],
+            // le matériel suit la fiche (haltères : charge « par main » chez le coaché)
+            materiel: f.materiel ?? el.materiel ?? '',
             // la façon choisie reste, sauf si elle n'est plus possible sur la fiche
             lateralite: (f.lateralites ?? []).includes(el.lateralite) ? el.lateralite : (f.lateralites?.[0] ?? ''),
           }
