@@ -192,14 +192,17 @@ function Calendrier3Semaines() {
               const evts = parJour.get(d) ?? []
               const enCours = commencees.filter((x) => x.date === d)
               const premierDuMois = d.endsWith('-01')
+              const elements = [
+                ...evts.map((e, k) => ({ el: <span key={`e${k}`} className={`cal3__evt cal3__evt--${e.genre}`}>{e.genre === 'seance' ? titreSeance(e.sf) : (e.b.titre || 'Bilan')}</span> })),
+                ...enCours.map((x) => ({ el: <span key={x.id} className="cal3__evt cal3__evt--encours">En cours</span> })),
+              ]
               const contenu = (
                 <>
                   <span className="cal3__jour-tete"><span className="cal3__jour-num">{Number(d.slice(8))}</span>{(premierDuMois || d === semaines[0].lundi) && <span className="cal3__mois">{MOIS_COURTS[Number(d.slice(5, 7)) - 1]}</span>}</span>
+                  {/* deux lignes au plus : au-delà, la première activité puis « +N » (18 novembre 2026), la case garde sa hauteur */}
                   <span className="cal3__evts">
-                    {evts.map((e, k) => (
-                      <span key={k} className={`cal3__evt cal3__evt--${e.genre}`}>{e.genre === 'seance' ? titreSeance(e.sf) : (e.b.titre || 'Bilan')}</span>
-                    ))}
-                    {enCours.map((x) => <span key={x.id} className="cal3__evt cal3__evt--encours">En cours</span>)}
+                    {elements.map((x, k) => (elements.length > 2 && k > 0 ? <span key={`t${k}`} className="cal3__en-trop">{x.el}</span> : x.el))}
+                    {elements.length > 2 && <span className="cal3__plus">+{elements.length - 1}</span>}
                   </span>
                 </>
               )
