@@ -215,8 +215,8 @@ function PanneauModeles({ modeles, types, semaines, courante, glisserModele, fin
   if (!ouvert) {
     return (
       <aside className={`gp-modeles est-ferme${cible ? ' est-cible' : ''}`} aria-label="Modèles de séance" {...accueillir}>
-        <button type="button" className="gp-modeles__ouvrir" onClick={basculer} aria-expanded="false" title="Afficher les modèles de séance">
-          <span aria-hidden="true">›</span><span className="gp-modeles__vertical">Modèles</span><span className="gp-modeles__nb">{modeles.length}</span>
+        <button type="button" className="gp-modeles__ouvrir" onClick={basculer} aria-expanded="false" title="Afficher les séances types">
+          <svg className="gp-modeles__picto" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2.5" /><path d="M7 5h10M9 2.5h6" /></svg><span className="gp-modeles__vertical">Séances types</span><span className="gp-modeles__nb">{modeles.length}</span><svg className="gp-modeles__chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
         </button>
       </aside>
     )
@@ -224,12 +224,14 @@ function PanneauModeles({ modeles, types, semaines, courante, glisserModele, fin
   return (
     <aside className={`gp-modeles${cible ? ' est-cible' : ''}`} aria-labelledby="gp-modeles-titre" {...accueillir}>
       <header className="gp-modeles__tete">
-        <h2 id="gp-modeles-titre">Séances types</h2>
-        <button type="button" className="gp-modeles__replier" onClick={basculer} aria-expanded="true" aria-label="Replier les modèles" title="Replier">‹</button>
+        {/* tout le haut du panneau se touche pour le replier (18 novembre 2026), pas seulement la petite flèche */}
+        <h2 id="gp-modeles-titre"><button type="button" className="gp-modeles__basculer" onClick={basculer} aria-expanded="true" title="Replier">
+          <svg className="gp-modeles__picto" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2.5" /><path d="M7 5h10M9 2.5h6" /></svg><span className="gp-modeles__titre">Séances types</span><span className="gp-modeles__nb">{modeles.length}</span><svg className="gp-modeles__chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+        </button></h2>
       </header>
       <label className="sr-only" htmlFor="gp-modeles-cherche">Chercher un modèle</label>
       <input id="gp-modeles-cherche" className="gp-modeles__cherche" type="search" autoComplete="off" placeholder="Chercher un modèle…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
-      <p className="gp-modeles__aide"><span>Glissez une séance type dans une semaine</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></p>
+      <p className="gp-modeles__aide"><span className="gp-modeles__aide-ordi">Glissez une séance type dans une semaine</span><span className="gp-modeles__aide-tel">Touchez ＋ pour l’ajouter dans une semaine</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></p>
       {modeles.length === 0
         ? <p className="gp-modeles__vide">Aucun modèle pour l’instant. Glissez une séance de la grille ici pour en créer un, ou créez-en dans « Modèles ».</p>
         : liste.length === 0 ? <p className="gp-modeles__vide">Aucun modèle ne correspond.</p> : (
