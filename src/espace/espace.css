@@ -2225,3 +2225,11 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .choix-filtres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .choix-filtre, .choix-filtre select { width: 100%; }
 .choix-filtre select { padding-left: 12px; white-space: nowrap; overflow: hidden; }
+/* « + » de la banque : seulement sur téléphone et tablette (pas de glisser-déposer au doigt) ; la poignée seulement à la souris */
+.es2__banque .espace-choix__ligne .espace-choix__ajout { display: none; }
+@media (max-width: 900px), (pointer: coarse) {
+  .es2__banque .espace-choix__ligne .espace-choix__ajout { display: block; }
+  .es2__banque .espace-choix__poignee { display: none; }
+}
+.choix-titre--doigt { display: none; }
+@media (max-width: 900px), (pointer: coarse) { .choix-titre--souris { display: none; } .choix-titre--doigt { display: inline; } }

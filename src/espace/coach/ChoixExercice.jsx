@@ -56,7 +56,7 @@ export default function ChoixExercice({ exercices, ajouter, laterale = false }) 
   return (
     <section className={`espace-carte espace-choix${laterale ? ' espace-choix--lateral' : ''}`} aria-labelledby="choix-titre">
       <div className="espace-choix__tete">
-        <h2 id="choix-titre" className="espace-sous-titre">Glisser un exercice</h2>
+        <h2 id="choix-titre" className="espace-sous-titre"><span className="choix-titre--souris">Glisser un exercice</span><span className="choix-titre--doigt">Ajouter un exercice</span></h2>
       </div>
       <div className="champ-groupe">
         <label htmlFor="choix-recherche">Rechercher dans ma banque</label>
@@ -88,6 +88,10 @@ export default function ChoixExercice({ exercices, ajouter, laterale = false }) 
                 <span className="espace-choix__muscles">{[e.categorie, e.materiel].filter(Boolean).join(' · ') || (e.muscles ?? []).join(', ')}</span>
               </span>
               <MaterielPicto materiel={e.materiel} />
+              {/* sur téléphone, on ne peut pas glisser : le « + » ajoute l'exercice au dernier bloc (accord de Thomas, 18 novembre 2026) */}
+              <button type="button" className="bouton bouton--secondaire bouton--compact espace-choix__ajout" onClick={() => ajouter(e)}>
+                Ajouter<span className="sr-only"> {e.nom} à la séance</span>
+              </button>
               <span className="espace-choix__poignee" aria-hidden="true"><svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor"><circle cx="2" cy="2" r="1.5" /><circle cx="8" cy="2" r="1.5" /><circle cx="2" cy="8" r="1.5" /><circle cx="8" cy="8" r="1.5" /><circle cx="2" cy="14" r="1.5" /><circle cx="8" cy="14" r="1.5" /></svg></span>
             </li>
           ))}
