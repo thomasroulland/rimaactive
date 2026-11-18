@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { CarteOffre } from '../components/PageService.jsx'
 import Picto from '../components/Picto.jsx'
@@ -39,16 +39,29 @@ export default function Offres() {
   const { hash } = useLocation()
   // rubrique affichée (soulignée dans les onglets) : celle qui est sous la barre des onglets
   const [courante, setCourante] = useState(RUBRIQUES[0].id)
+  // rubrique choisie d'un clic : soulignée tout de suite, et gardée pendant le défilement qui y mène
+  // (sinon la dernière rubrique, trop courte pour monter sous la barre, n'était jamais soulignée)
+  const choisie = useRef(null)
   useEffect(() => {
+    let fin = null
     const suivre = () => {
+      if (choisie.current) {
+        clearTimeout(fin)
+        fin = setTimeout(() => { choisie.current = null }, 300)
+        return
+      }
       const barre = document.querySelector('.offres-page__bulles')?.getBoundingClientRect().bottom ?? 0
       let id = RUBRIQUES[0].id
       for (const r of RUBRIQUES) { const e = document.getElementById(r.id); if (e && e.getBoundingClientRect().top <= barre + 80) id = r.id }
+      // tout en bas de la page : la dernière rubrique visible
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+        for (const r of RUBRIQUES) { const e = document.getElementById(r.id); if (e && e.getBoundingClientRect().top < window.innerHeight * 0.6) id = r.id }
+      }
       setCourante(id)
     }
     suivre()
     window.addEventListener('scroll', suivre, { passive: true })
-    return () => window.removeEventListener('scroll', suivre)
+    return () => { window.removeEventListener('scroll', suivre); clearTimeout(fin) }
   }, [])
   // un lien vers une rubrique (/offres#groupes) y amène directement
   useEffect(() => {
@@ -66,7 +79,7 @@ export default function Offres() {
         <div className="conteneur">
           <h1 id="offres-titre" className="titre offres-page__titre">Mes offres</h1>
           <div className="offres-page__liens">
-            {RUBRIQUES.map((r) => <a key={r.id} href={`#${r.id}`} aria-current={r.id === courante ? 'location' : undefined}>{r.page.titre}</a>)}
+            {RUBRIQUES.map((r) => <a key={r.id} href={`#${r.id}`} aria-current={r.id === courante ? 'location' : undefined} onClick={() => { choisie.current = r.id; setCourante(r.id) }}>{r.page.titre}</a>)}
           </div>
         </div>
       </nav>
