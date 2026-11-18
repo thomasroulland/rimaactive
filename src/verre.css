@@ -87,6 +87,8 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
     transition-property: transform, background-color, color, border-color, box-shadow; transition-duration: .5s, .16s, .16s, .16s, .3s; transition-timing-function: var(--ressort), ease, ease, ease, ease; }
   .bouton:active, .ec-bouton:active, .heros__ecrire:active, .heros__second:active, .nav__lien:active, .entete__compte:active, .entete__ecrire:active, .ec-rond:active, .ecrans__vignette:active,
   .offres-page__liens a:active, .bascule button:active, .ec-case-fait:active { transform: scale(.94); }
+  /* « M'écrire » de la barre garde aussi son fondu d'apparition et de disparition (l'opacité manquait dans la liste ci-dessus) */
+  .entete__ecrire { transition-property: opacity, transform, background-color, color, border-color, box-shadow; transition-duration: .35s, .5s, .16s, .16s, .16s, .3s; transition-timing-function: ease, var(--ressort), ease, ease, ease, ease; }
   body::before { animation: verre-derive 38s ease-in-out infinite alternate; will-change: transform; }
 }
 /* sans transparence (réglage de l'appareil) ou en contraste renforcé : le verre devient plein */
