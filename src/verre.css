@@ -275,3 +275,24 @@ body { min-height: 100vh; isolation: isolate; }
   .menu-mobile a[aria-current="page"] { background: #f4f3ef; color: #161514 !important; }
   .menu-mobile a[aria-current="page"] svg { background: var(--vermillon); color: #fff; }
 }
+
+/* Burger du menu téléphone (18 novembre 2026) : rond comme celui du compte, trois traits qui deviennent une croix */
+.entete .menu-bouton {
+  width: 40px; height: 40px; min-height: 40px; padding: 0; justify-content: center;
+  border: 1px solid rgba(244, 243, 239, .28); border-radius: 50%;
+  background: rgba(255, 255, 255, .08); color: #f4f3ef;
+  transition: background-color .2s ease, color .2s ease;
+}
+.entete .menu-bouton[aria-expanded="true"] { background: #f4f3ef; color: #161514; }
+.burger { position: relative; display: block; width: 16px; height: 12px; }
+.burger span { position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor; transition: transform .25s ease, opacity .2s ease, top .25s ease; }
+.burger span:nth-child(1) { top: 0; }
+.burger span:nth-child(2) { top: 5px; }
+.burger span:nth-child(3) { top: 10px; }
+.menu-bouton[aria-expanded="true"] .burger span:nth-child(1) { top: 5px; transform: rotate(45deg); }
+.menu-bouton[aria-expanded="true"] .burger span:nth-child(2) { opacity: 0; }
+.menu-bouton[aria-expanded="true"] .burger span:nth-child(3) { top: 5px; transform: rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .burger span { transition: none; } }
+/* « M'écrire » sur sa propre page : pilule craie, comme la page en cours du menu */
+.entete .entete__ecrire[aria-current="page"] { background: #f4f3ef !important; color: #161514 !important; }
+.entete .entete__ecrire[aria-current="page"] svg { background: var(--vermillon); color: #fff; }

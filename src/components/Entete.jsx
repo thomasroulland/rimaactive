@@ -16,9 +16,9 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
   const surPhoto = useSurPhoto(false)
   const [ouvert, setOuvert] = useState(false)
   // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
-  // Sur la page M'écrire elle-même, il est caché aussi (on y est déjà) ; sa place est gardée pour que rien ne bouge
+  // Sur la page M'écrire elle-même, il reste dans la barre, allumé comme page en cours (Thomas, 18 novembre 2026)
   const ecrirePossible = useEcrireVisible(pathname === '/') // le hook est toujours appelé (règle de React)
-  const ecrireCible = ecrire && ecrirePossible && pathname !== '/contact'
+  const ecrireCible = ecrire && ecrirePossible
   // Passage d'une barre à l'autre (connexion ↔ site) : la nouvelle barre part de l'état de la précédente,
   // pour que « M'écrire » se plie ou se déplie en glissant au lieu d'apparaître ou de disparaître d'un coup
   const [ecrireVisible, setEcrireVisible] = useState(() => dernierEcrire ?? ecrireCible)
@@ -64,7 +64,7 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
         </nav>
         <div className="entete__droite">
           {/* « M'écrire » : collé au menu, séparé par un trait fin, texte craie, flèche dans une pastille jaune (choix de Marie, 11 novembre 2026) */}
-          {(ecrire || ecrireVisible) && <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>}
+          {(ecrire || ecrireVisible) && <Link to="/contact" className={`entete__ecrire ${ecrireVisible ? '' : 'entete__ecrire--cache'}`} aria-current={pathname === '/contact' ? 'page' : undefined} tabIndex={ecrireVisible ? undefined : -1} aria-hidden={ecrireVisible ? undefined : true}>M’écrire <FlecheDiagonale /></Link>}
           {/* Espace de connexion : mène à /espace (connexion, puis espace client ou coach). Sur ordinateur, l'icône est dans la marge à droite de « M'écrire », qui garde ainsi sa place */}
           {compte === undefined
             ? (
@@ -78,9 +78,11 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
             className="menu-bouton"
             aria-expanded={ouvert}
             aria-controls="menu-mobile"
+            aria-label={ouvert ? 'Fermer le menu' : 'Ouvrir le menu'}
             onClick={() => setOuvert((o) => !o)}
           >
-            {ouvert ? 'Fermer' : 'Menu'}
+            {/* burger : trois traits qui deviennent une croix (Thomas, 18 novembre 2026) */}
+            <span className="burger" aria-hidden="true"><span /><span /><span /></span>
           </button>}
         </div>
       </div>
