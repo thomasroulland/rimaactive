@@ -163,7 +163,7 @@ body::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-e
 @media (max-width: 960px) { body { overflow-x: clip; } .ec-main, .ec-coque { max-width: 100vw; overflow-x: clip; } }
 /* le fond foncé de html empêche celui de body de servir de toile : sans « isolation », body peint sa craie par-dessus les lumières
    jaune et rose du fond (body::before, z-index -1) et elles disparaissent. Avec, elles repassent au-dessus de la craie, sous le contenu. */
-body { min-height: 100vh; isolation: isolate; }
+body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur iPhone, 100vh dépasse l'écran visible (barres du navigateur) et la page défilait dans le vide */
 
 /* =====================================================================================================
    20 PRINCIPES D'UX ET D'ANIMATION (16 novembre 2026) — ce qui est appliqué, et où

@@ -1401,3 +1401,31 @@ select.ec-champ { appearance: auto; min-width: 0; }
 @media (max-width: 420px) {
   .ec-semaine__retour { padding: 0 10px; }
 }
+
+/* Séance sur téléphone (18 novembre 2026) : la page fait la hauteur de l'écran VISIBLE (dvh), sans vide à faire défiler sous « Série faite » */
+@media (max-width: 899px) {
+  .ec-seance--v2 .ec-s2-un, .ec-seance--v2 .ec-s2-fin { min-height: calc(100dvh - 92px); }
+  html:has(.ec-seance--v2), body:has(.ec-seance--v2) { overscroll-behavior-y: none; }
+}
+/* photos de l'exercice : on glisse pour voir la suivante */
+.ec-s2-photo { cursor: default; }
+.ec-s2-photo__piste { position: absolute; inset: 0; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.ec-s2-photo__piste::-webkit-scrollbar { display: none; }
+.ec-s2-photo__page { position: relative; flex: 0 0 100%; height: 100%; padding: 0; border: 0; background: transparent; scroll-snap-align: start; scroll-snap-stop: always; cursor: pointer; }
+.ec-s2-photo__vide { position: absolute; inset: 0; display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.ec-s2-photo .ec-s2-photo__consignes { position: absolute; left: 12px; bottom: 12px; padding: 7px 12px; border: 0; border-radius: 999px; background: rgba(22, 21, 20, .6); color: #fff; font: 700 12px/1 var(--font-sans); cursor: pointer; }
+.ec-s2-photo .ec-s2-photo__points { position: absolute; left: auto; right: 12px; bottom: 14px; display: flex; gap: 5px; padding: 5px 7px; border-radius: 999px; background: rgba(22, 21, 20, .45); }
+.ec-s2-photo__points button { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .5); cursor: pointer; transition: width .2s ease, background-color .2s ease; }
+.ec-s2-photo__points button.est-vue { width: 18px; border-radius: 999px; background: #fff; }
+/* petits écrans (ou barres du navigateur visibles) : un peu plus serré pour que tout tienne sans défiler */
+@media (max-width: 899px) and (max-height: 760px) {
+  .ec-seance--v2 .ec-s2-photo { min-height: 64px; }
+  .ec-s2-un__haut { gap: 4px; margin-bottom: 2px; }
+  .ec-s2-un__nom { font-size: 22px; }
+  .ec-s2-un__serie { margin-top: 6px; }
+  .ec-s2-reglage input { font-size: 28px; }
+  .ec-s2-chips { margin-top: 6px; }
+  .ec-s2-chips button { height: 36px; }
+  .ec-s2-un .ec-s2-gros { margin-top: 10px; min-height: 54px; }
+  .ec-s2-lien { padding-block: 6px; }
+}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
@@ -431,10 +431,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
       </div>
 
       {bloc.format === 'superset' && <SupersetInfo bloc={bloc} tour={cur >= 0 ? cur + 1 : null} compact actuel={exo} />}
-      <button type="button" className="ec-s2-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
-        {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-photo__img" /> : <Image />}
-        <span>Voir les consignes</span>
-      </button>
+      <PhotosGlissees key={el.id} el={el} ouvrir={() => voirConsignes(el)} />
       <h2 className="ec-s2-un__nom">{el.nom}</h2>
       {prevu && <p className="ec-s2-un__prevu">Prévu : {prevu}</p>}
 
@@ -485,6 +482,40 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
       <Gros onClick={cur >= 0 ? faite : () => (exo < els.length - 1 ? allerExo(exo + 1) : blocSuivant())}>
         {cur >= 0 ? 'Série faite ✓' : exo < els.length - 1 ? 'Exercice suivant →' : dernier ? 'Terminer la séance →' : 'Bloc suivant →'}
       </Gros>
+    </div>
+  )
+}
+
+// Photos de l'exercice sur téléphone (18 novembre 2026) : on glisse du doigt pour voir la suivante (points en dessous) ;
+// toucher la photo ou « Voir les consignes » ouvre la fiche, comme avant.
+function PhotosGlissees({ el, ouvrir }) {
+  const photos = (el.photos ?? []).filter(Boolean)
+  const [vue, setVue] = useState(0)
+  const piste = useRef(null)
+  const suivre = () => {
+    const e = piste.current
+    if (e) setVue(Math.round(e.scrollLeft / Math.max(1, e.clientWidth)))
+  }
+  const aller = (i) => piste.current?.scrollTo({ left: i * piste.current.clientWidth, behavior: 'smooth' })
+  return (
+    <div className="ec-s2-photo">
+      {photos.length === 0
+        ? <button type="button" className="ec-s2-photo__vide" onClick={ouvrir} aria-label={`Voir les consignes : ${el.nom}`}><Image /></button>
+        : (
+          <div className="ec-s2-photo__piste" ref={piste} onScroll={suivre}>
+            {photos.map((ch, i) => (
+              <button key={ch} type="button" className="ec-s2-photo__page" onClick={ouvrir} aria-label={`Photo ${i + 1} sur ${photos.length} : ${el.nom}. Voir les consignes`}>
+                <PhotoStockee chemin={ch} alt="" classe="ec-s2-photo__img" />
+              </button>
+            ))}
+          </div>
+        )}
+      <button type="button" className="ec-s2-photo__consignes" onClick={ouvrir}>Voir les consignes</button>
+      {photos.length > 1 && (
+        <span className="ec-s2-photo__points">
+          {photos.map((ch, i) => <button key={ch} type="button" className={i === vue ? 'est-vue' : ''} aria-label={`Photo ${i + 1}`} aria-current={i === vue ? 'true' : undefined} onClick={() => aller(i)} />)}
+        </span>
+      )}
     </div>
   )
 }
