@@ -1373,3 +1373,31 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-blocs__textes { display: grid; gap: 2px; }
 .ec-blocs__textes small { font-size: 12px; font-weight: 600; opacity: .7; white-space: nowrap; }
 .ec-blocs { border-radius: 22px; }
+
+/* « Ma semaine » : changer de semaine (18 novembre 2026) — titre et dates à gauche, flèches rondes à droite,
+   une rangée de points (une par semaine : passées en encre, la mienne cerclée de vermillon, celle qu'on regarde allongée) */
+.ec-semaine__tete { display: flex; align-items: center; gap: 12px; }
+.ec-semaine__titres { flex: 1; min-width: 0; }
+.ec-semaine__dates { margin: 2px 0 0; font: 600 13px/18px var(--font-sans); color: var(--ec-gris); }
+.ec-semaine__nav { flex: none; display: flex; align-items: center; gap: 6px; }
+.ec-semaine__fleche { width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 1px solid var(--ec-filet); border-radius: 50%; background: #fff; color: var(--ec-encre); cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .15s ease; }
+.ec-semaine__fleche:hover:not(:disabled) { background: var(--ec-encre); border-color: var(--ec-encre); color: #fff; }
+.ec-semaine__fleche:active:not(:disabled) { transform: scale(.92); }
+.ec-semaine__fleche:disabled { opacity: .35; cursor: default; }
+.ec-semaine__fleche:focus-visible, .ec-semaine__retour:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: 2px; }
+.ec-semaine__retour { height: 32px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--jaune); color: var(--ec-encre); font: 700 13px/1 var(--font-sans); cursor: pointer; white-space: nowrap; animation: pli-ouvre .2s ease both; }
+.ec-semaine__points { display: flex; gap: 6px; margin-top: -2px; }
+.ec-semaine__point { flex: 1; max-width: 40px; height: 6px; padding: 0; border: 0; border-radius: 999px; background: #e7e3da; cursor: pointer; transition: background-color .2s ease, flex-grow .25s ease; }
+.ec-semaine__point.est-passee { background: #bdb6a9; }
+.ec-semaine__point.est-moi { background: var(--vermillon); }
+.ec-semaine__point.est-vue { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--ec-encre); }
+.ec-semaine__vide { margin: 4px 0; padding: 18px; border: 1px dashed var(--ec-filet); border-radius: 14px; text-align: center; font: 600 14px/20px var(--font-sans); color: var(--ec-gris); }
+@media (prefers-reduced-motion: no-preference) {
+  .ec-semaine__corps.vient-droite { animation: semaine-droite .28s cubic-bezier(.22, 1, .36, 1) both; }
+  .ec-semaine__corps.vient-gauche { animation: semaine-gauche .28s cubic-bezier(.22, 1, .36, 1) both; }
+  @keyframes semaine-droite { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+  @keyframes semaine-gauche { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+}
+@media (max-width: 420px) {
+  .ec-semaine__retour { padding: 0 10px; }
+}
