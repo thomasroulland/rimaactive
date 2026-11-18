@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { CarteOffre } from '../components/PageService.jsx'
-import Picto from '../components/Picto.jsx'
 import useTitre from '../components/useTitre.js'
 import { PAGE as INDIVIDUEL } from './Particuliers.jsx'
 import { PAGE as GROUPES } from './Groupes.jsx'
@@ -22,17 +21,8 @@ const RUBRIQUES = [
   { id: 'entreprises', page: ENTREPRISES, inverse: true },
 ]
 
-// Sous les cartes : pictogramme, intitulé en gras et une phrase (Thomas, 17 novembre 2026), à la place des cases cochées.
-// Les textes de la liste restent dans les fichiers des pages ; on les reconnaît ici.
-const AVANTAGES = {
-  materiel: { picto: 'haltere', titre: 'Matériel inclus', texte: 'Je m’occupe de tout.' },
-  deplacement: { picto: 'map-pin', titre: 'Déplacement inclus', texte: 'Dans un rayon de 20\u00a0km autour de Houdan.' },
-}
-function avantage(point) {
-  if (point.startsWith('Matériel')) return AVANTAGES.materiel
-  if (point.startsWith('Déplacement')) return AVANTAGES.deplacement
-  return { picto: 'check-square', titre: point }
-}
+// « Matériel inclus » / « Déplacement inclus » sous les cartes : retirés le 18 novembre 2026 (Thomas : « ça rend moche sur téléphone
+// et sur un écran coupé en deux »). Les textes `liste` restent dans les fichiers des pages, sans être affichés ici.
 
 export default function Offres() {
   useTitre('Mes offres')
@@ -98,7 +88,6 @@ function Rubrique({ id, page, sous, fonce, inverse }) {
   const [actif, setActif] = useState(0)
   const onglets = page.onglets
   const cartes = onglets ? page.cartes.filter((c) => onglets[actif].noms.includes(c.nom)) : page.cartes
-  const liste = onglets?.[actif].liste ?? page.liste ?? []
   return (
     <section id={id} className={`offres-page__rubrique ${fonce ? 'offres-page__rubrique--fonce' : ''}`} aria-labelledby={`${id}-titre`}>
       <div className="conteneur">
@@ -121,15 +110,6 @@ function Rubrique({ id, page, sous, fonce, inverse }) {
           <ul className={`offres offres--${cartes.length === 1 ? '1' : '2'}`}>
             {cartes.map((f) => <CarteOffre key={f.nom} f={f} contexte={page.titre} direct />)}
           </ul>
-          {/* sous la carte elle-même (pas sous la photo), centré ; sous les deux cartes d'Individuel, centré sur toute la largeur */}
-          {liste.length > 0 && (
-            <ul className="offres-page__avantages">
-              {liste.map((point) => {
-                const a = avantage(point)
-                return <li key={point}><Picto nom={a.picto} taille={24} /><span><strong>{a.titre}</strong>{a.texte && <span>{a.texte}</span>}</span></li>
-              })}
-            </ul>
-          )}
         </div>
       </div>
     </section>
