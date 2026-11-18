@@ -298,3 +298,11 @@ body { min-height: 100vh; isolation: isolate; }
 /* « M'écrire » sur sa propre page : pilule craie, comme la page en cours du menu */
 .entete .entete__ecrire[aria-current="page"] { background: #f4f3ef !important; color: #161514 !important; }
 .entete .entete__ecrire[aria-current="page"] svg { background: var(--vermillon); color: #fff; }
+
+/* Téléphone (18 novembre 2026) : sur iPhone, la banque d'exercices faisait planter la page (« Un problème récurrent est survenu »).
+   Chaque carte floutait le fond (verre) pendant que ce fond bougeait sans arrêt, avec une grande photo dans chaque carte :
+   trop de mémoire pour Safari. Sur téléphone, le fond ne bouge plus et les cartes des listes sont blanches, sans flou. */
+@media (max-width: 960px) {
+  body::before { animation: none !important; will-change: auto !important; }
+  .espace-grille .espace-carte, .espace-exo { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: rgba(255, 255, 255, .94) !important; animation: none !important; }
+}
