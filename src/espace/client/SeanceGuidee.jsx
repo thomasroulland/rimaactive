@@ -139,7 +139,7 @@ export function nomSuperset(bloc) {
   const n = (bloc?.elements ?? []).length
   return n === 2 ? 'Biset' : n === 3 ? 'Triset' : 'Superset'
 }
-export function SupersetInfo({ bloc, tour, compact = false, actuel = -1 }) {
+export function SupersetInfo({ bloc, tour, compact = false, actuel = -1, choisir }) {
   const els = bloc.elements ?? []
   const tours = Math.max(0, ...els.map((e) => parseInt(e.series, 10) || 0))
   // téléphone : replié par défaut (une ligne), on l'ouvre pour voir les exercices et le matériel (17 novembre 2026)
@@ -162,10 +162,14 @@ export function SupersetInfo({ bloc, tour, compact = false, actuel = -1 }) {
             <p className="ec-super__titre">{consigne}.</p>
             <ol className="ec-super__liste" aria-label="Exercices du bloc, à préparer">
               {els.map((e, k) => (
-                <li key={e.id} className={k === actuel ? 'est-actuel' : ''} aria-current={k === actuel ? 'step' : undefined}>
-                  <span className="ec-super__code">{bloc.lettre}{k + 1}</span>
-                  <span className="ec-super__nom">{e.nom}</span>
-                  {materiel(e) && <span className="ec-super__mat">{materiel(e)}</span>}
+                <li key={e.id} className={k === actuel ? 'est-actuel' : ''}>
+                  {/* toucher un exercice du superset y amène, et la liste se replie pour que l'écran tienne (18 novembre 2026) */}
+                  <button type="button" className="ec-super__choix" aria-current={k === actuel ? 'step' : undefined} disabled={!choisir}
+                    aria-label={`Aller à ${bloc.lettre}${k + 1} : ${e.nom}`} onClick={() => { choisir?.(k); if (choisir) basculer() }}>
+                    <span className="ec-super__code">{bloc.lettre}{k + 1}</span>
+                    <span className="ec-super__nom">{e.nom}</span>
+                    {materiel(e) && <span className="ec-super__mat">{materiel(e)}</span>}
+                  </button>
                 </li>
               ))}
             </ol>
@@ -430,7 +434,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         )}
       </div>
 
-      {bloc.format === 'superset' && <SupersetInfo bloc={bloc} tour={cur >= 0 ? cur + 1 : null} compact actuel={exo} />}
+      {bloc.format === 'superset' && <SupersetInfo bloc={bloc} tour={cur >= 0 ? cur + 1 : null} compact actuel={exo} choisir={allerExo} />}
       <PhotosGlissees key={el.id} el={el} ouvrir={() => voirConsignes(el)} />
       <h2 className="ec-s2-un__nom">{el.nom}</h2>
       {prevu && <p className="ec-s2-un__prevu">Prévu : {prevu}</p>}

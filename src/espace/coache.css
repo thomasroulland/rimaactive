@@ -1429,3 +1429,10 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .ec-s2-un .ec-s2-gros { margin-top: 10px; min-height: 54px; }
   .ec-s2-lien { padding-block: 6px; }
 }
+
+/* superset sur téléphone : chaque exercice de la liste se touche pour y aller (18 novembre 2026) */
+.ec-super.est-compact .ec-super__liste li { display: block; padding: 0; }
+.ec-super__choix { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; min-height: 44px; padding: 8px 12px 8px 8px; border: 0; border-radius: inherit; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ec-super__choix:disabled { cursor: default; }
+.ec-super__choix:focus-visible { outline: 2px solid var(--ec-encre, #161514); outline-offset: 2px; }
+.ec-super__liste li:not(.est-actuel):has(.ec-super__choix:not(:disabled)):active { transform: scale(.98); }
