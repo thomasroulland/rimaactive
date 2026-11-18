@@ -1,4 +1,5 @@
 import PhotoCoache from './PhotoCoache.jsx'
+import RangeeDefilante from './RangeeDefilante.jsx'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ecouterAnciensModeles, ecouterModelesSeance, enregistrerModele, nouvelIdModele, supprimerModele } from '../depots.js'
@@ -87,11 +88,11 @@ function Modeles() {
           </p>
         )}
         {typesPresents.length > 1 && (
-          <div className="filtres-coaches ms-filtres" role="group" aria-label="Type de séance">
+          <RangeeDefilante className="filtres-coaches ms-filtres filtres-ligne" role="group" aria-label="Type de séance">
             {['tous', ...typesPresents].map((t) => (
               <button key={t} type="button" className="filtre-coaches" aria-pressed={filtre === t} onClick={() => setFiltre(t)}>{t === 'tous' ? 'Tous' : nomType(t, types)}</button>
             ))}
-          </div>
+          </RangeeDefilante>
         )}
         {modeles === null && <p className="espace-aide" role="status">Chargement…</p>}
         {modeles?.length === 0 && (

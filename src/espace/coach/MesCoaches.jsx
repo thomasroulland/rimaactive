@@ -9,6 +9,7 @@ import { aUneSuite } from '../donnees/programme.js'
 import { useDonneesCoach } from './donneesCoach.js'
 import { messageErreur } from '../erreurs.js'
 import Picto from '../../components/Picto.jsx'
+import RangeeDefilante from './RangeeDefilante.jsx'
 
 const STATUTS = { 'invité': 'Invité', actif: 'Actif', 'en pause': 'En pause' }
 const VIDE = { prenom: '', nom: '', email: '' }
@@ -93,13 +94,13 @@ export default function MesCoaches() {
 
         {clients && nb === 0 && <p className="espace-texte">Aucun coaché pour l’instant. Invitez votre premier client.</p>}
         {clients && nb > 0 && (
-          <div className="filtres-coaches mes-coaches__filtres" role="group" aria-label="Afficher">
+          <RangeeDefilante className="filtres-coaches mes-coaches__filtres filtres-ligne" role="group" aria-label="Afficher">
             {FILTRES.map(([id, nom]) => (
               <button key={id} type="button" className="filtre-coaches" aria-pressed={filtre === id} onClick={() => setFiltre(id)}>
                 {nom} <span className="filtre-coaches__nb">{compte[id]}</span>
               </button>
             ))}
-          </div>
+          </RangeeDefilante>
         )}
         {clients && nb > 0 && visibles.length === 0 && <p className="espace-texte">Aucun coaché dans cette catégorie.</p>}
         {clients && nb > 0 && (
