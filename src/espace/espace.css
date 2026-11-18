@@ -2125,7 +2125,6 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
 .gp-modeles__basculer { width: 100%; display: flex; align-items: center; gap: 10px; margin: -6px -4px; padding: 6px 8px; border: 0; border-radius: 12px; background: transparent; font: inherit; color: inherit; text-align: left; cursor: pointer; }
 .gp-modeles__titre { flex: 1; min-width: 0; }
 .gp-modeles__basculer .gp-modeles__chevron { transform: rotate(180deg); }
-.gp-modeles__aide-tel { display: none; }
 @media (min-width: 901px) {
   .gp-modeles__ouvrir .gp-modeles__chevron { order: -1; }
   .gp-modeles__basculer { gap: 8px; }
@@ -2140,9 +2139,6 @@ button.cal3__jour:hover { border-color: var(--encre); box-shadow: 0 8px 18px rgb
   .gp-modeles__ouvrir .gp-modeles__chevron { transform: rotate(90deg); }
   .gp-modeles__basculer { min-height: 44px; font-size: 15px; }
   .gp-modeles__basculer .gp-modeles__chevron { transform: rotate(-90deg); }
-  .gp-modeles__aide-ordi { display: none; }
-  .gp-modeles__aide-tel { display: inline; }
-  .gp-modeles__aide svg { display: none; }
   .gp-modeles__liste { grid-auto-columns: minmax(200px, 78%); scroll-snap-type: x proximity; scrollbar-width: none; }
   .gp-modeles__liste::-webkit-scrollbar { display: none; }
   .gp-modele { scroll-snap-align: start; grid-template-columns: minmax(0, 1fr) auto; padding: 12px 10px 12px 14px; }

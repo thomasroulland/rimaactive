@@ -231,7 +231,6 @@ function PanneauModeles({ modeles, types, semaines, courante, glisserModele, fin
       </header>
       <label className="sr-only" htmlFor="gp-modeles-cherche">Chercher un modèle</label>
       <input id="gp-modeles-cherche" className="gp-modeles__cherche" type="search" autoComplete="off" placeholder="Chercher un modèle…" value={recherche} onChange={(e) => setRecherche(e.target.value)} />
-      <p className="gp-modeles__aide"><span className="gp-modeles__aide-ordi">Glissez une séance type dans une semaine</span><span className="gp-modeles__aide-tel">Touchez ＋ pour l’ajouter dans une semaine</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></p>
       {modeles.length === 0
         ? <p className="gp-modeles__vide">Aucun modèle pour l’instant. Glissez une séance de la grille ici pour en créer un, ou créez-en dans « Modèles ».</p>
         : liste.length === 0 ? <p className="gp-modeles__vide">Aucun modèle ne correspond.</p> : (
