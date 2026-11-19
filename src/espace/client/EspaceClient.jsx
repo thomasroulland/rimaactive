@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { ecouterMesProgrammes, ecouterMesSeances } from '../depots.js'
+import { ecouterMesProgrammes, ecouterMesSeances, garderPhotosProgramme } from '../depots.js'
 import { aujourdhuiIso } from '../donnees/calculs.js'
 import { programmeAffiche } from '../donnees/progression.js'
 import TableauDeBord from './TableauDeBord.jsx'
@@ -23,6 +23,8 @@ function useDonneesClient(uid) {
   }, [uid])
 
   const programme = useMemo(() => programmeAffiche(prog.programmes, aujourdhuiIso()), [prog.programmes])
+  // photos du programme gardées dans le téléphone, pour faire ses séances sans réseau (une fois par programme et par version)
+  useEffect(() => { garderPhotosProgramme(programme) }, [programme?.id, programme?.majLe?.seconds]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // séances terminées : identifiants de séance (champ `seance`), jamais les identifiants de documents
   const faites = useMemo(() => new Set(

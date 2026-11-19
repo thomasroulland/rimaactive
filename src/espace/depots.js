@@ -230,12 +230,41 @@ export async function retirerExercice(id) {
   await updateDoc(doc(db, 'exercices', id), { retire: true, majLe: serverTimestamp() })
 }
 
-// Adresse affichable d'une photo (mise en mémoire le temps de la session)
+// Adresse affichable d'une photo (mise en mémoire le temps de la session).
+// Hors ligne (19 novembre 2026) : les adresses déjà obtenues sont aussi gardées dans le téléphone ; sans réseau on reprend
+// celle-ci, et l'image elle-même vient du cache de l'application (voir vite.config.js).
+const CLE_URLS = 'rima-urls-photos'
+function urlsGardees() { try { return JSON.parse(localStorage.getItem(CLE_URLS) || '{}') } catch { return {} } }
+function garderUrl(chemin, url) {
+  try {
+    const t = urlsGardees(); t[chemin] = url
+    const cles = Object.keys(t); if (cles.length > 800) cles.slice(0, cles.length - 800).forEach((c) => delete t[c])
+    localStorage.setItem(CLE_URLS, JSON.stringify(t))
+  } catch { /* stockage plein ou bloqué : tant pis, en ligne cela marche quand même */ }
+}
 export function urlPhoto(chemin) {
   if (!urls.has(chemin)) {
-    urls.set(chemin, getDownloadURL(ref(stockage, chemin)).catch((e) => { urls.delete(chemin); throw e }))
+    const gardee = urlsGardees()[chemin]
+    const demande = (typeof navigator !== 'undefined' && navigator.onLine === false && gardee)
+      ? Promise.resolve(gardee)
+      : getDownloadURL(ref(stockage, chemin)).then((u) => { garderUrl(chemin, u); return u })
+    urls.set(chemin, demande.catch((e) => { urls.delete(chemin); if (gardee) return gardee; throw e }))
   }
   return urls.get(chemin)
+}
+
+// Garde dans le téléphone les photos d'un programme (en ligne seulement), pour pouvoir faire ses séances sans réseau
+export function garderPhotosProgramme(programme) {
+  if (!programme || typeof navigator === 'undefined' || navigator.onLine === false) return
+  const chemins = new Set()
+  for (const w of programme.semaines ?? []) for (const se of w.seances ?? []) for (const b of se.blocs ?? []) for (const el of b.elements ?? []) for (const ph of el.photos ?? []) if (ph) chemins.add(ph)
+  let i = 0
+  const suivant = () => {
+    const lot = [...chemins].slice(i, i + 4); i += 4
+    if (!lot.length) return
+    Promise.allSettled(lot.map((c) => urlPhoto(c).then((u) => fetch(u, { mode: 'no-cors' }).catch(() => {})))).then(() => setTimeout(suivant, 300))
+  }
+  setTimeout(suivant, 2500) // après l'affichage de la page
 }
 
 // ---------- Programmes (tâche 8) ----------
