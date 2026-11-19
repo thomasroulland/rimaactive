@@ -606,3 +606,7 @@ Ces règles ont une précision renforcée (`.offres-page__rubrique.offres-page__
 - **Correctif (17 novembre 2026, accord écrit : « Publie »)** : photo et carte forcées sur la première rangée de la grille, avantages sur la
   seconde (`grid-row`). Sans cela, quand la photo est à droite (`inverse`), elle tombait sur la seconde rangée. Avantages d'Individuel
   centrés sous la première carte (« Séance ponctuelle »). Vérifié à 1440, 1100, 700 et 390 px (`scratchpad/glass/place.cjs`).
+
+## Mes offres : « Matériel inclus » / « Déplacement inclus » retirés (18 novembre 2026, en ligne, accord écrit : « Ok »)
+Thomas : « ça rend moche sur téléphone et sur un écran coupé en deux ». Le bloc et son espace sont retirés de `Offres.jsx` ; les textes
+`liste` restent dans les fichiers des pages (non affichés). Les règles CSS `.offres-page__avantages` restent, sans effet. Ne pas remettre ce bloc sans demande.
