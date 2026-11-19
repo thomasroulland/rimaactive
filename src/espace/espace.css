@@ -2238,3 +2238,9 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 [data-fondu~="droite"] { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); }
 [data-fondu~="gauche"] { -webkit-mask-image: linear-gradient(to right, transparent, #000 44px); mask-image: linear-gradient(to right, transparent, #000 44px); }
 [data-fondu~="gauche"][data-fondu~="droite"] { -webkit-mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); }
+
+/* Banque de l'éditeur de séance : survol d'un exercice en jaune pâle de la charte, arrondi, au lieu d'une bande blanche (19 novembre 2026) */
+.es2__banque .espace-choix__ligne { padding: 6px 8px; border-bottom: 0; border-radius: 12px; transition: background-color .15s ease; }
+.es2__banque .espace-choix__liste { display: grid; gap: 2px; align-content: start; }
+.es2__banque .espace-choix__ligne:hover { background-color: rgba(242, 194, 48, .2) !important; }
+.es2__banque .espace-choix__ligne:hover .espace-choix__exo { color: var(--encre); }
