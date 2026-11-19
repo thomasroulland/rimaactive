@@ -1451,3 +1451,39 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .ec-notifs { flex-wrap: wrap; }
   .ec-notifs__activer { width: 100%; justify-content: center; }
 }
+
+/* ========== « Mon programme » refait (19 novembre 2026, maquette validée) ==========
+   blocs en haut ; ordinateur : toutes les semaines côte à côte ; téléphone : une semaine à la fois avec flèches et barres */
+.ec-prog2 { gap: 18px; }
+.ec-prog2__tete .ec-prog__resume strong { color: var(--ec-encre); }
+.ec-prog2 .ec-blocs { align-self: flex-start; }
+.ec-semgrille { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr)); gap: 16px; align-items: start; }
+.ec-semc { display: grid; gap: 12px; padding: 16px; border-radius: 24px; background: #fff; box-shadow: 0 10px 30px rgba(22, 21, 20, .06); }
+.ec-semc.est-courante { outline: 2px solid var(--ec-vermillon); outline-offset: -2px; }
+.ec-semc__tete { display: flex; align-items: center; gap: 10px; }
+.ec-semc__titres { flex: 1; min-width: 0; }
+.ec-semc__titre { margin: 0; font: 900 21px/1.15 var(--font-sans); letter-spacing: -.03em; }
+.ec-semc__titre span { color: #a39d93; font-weight: 700; }
+.ec-semc__infos { margin: 2px 0 0; font: 600 13px/18px var(--font-sans); color: var(--ec-gris); }
+.ec-semc__badge { flex: none; padding: 5px 10px; border-radius: 999px; background: var(--ec-vermillon); color: #fff; font: 800 12px/1 var(--font-sans); }
+.ec-semc__mot { margin: 0; padding: 10px 12px; border-radius: 12px; background: rgba(242, 194, 48, .2); font: 600 14px/1.4 var(--font-sans); }
+.ec-semc__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ec-semc__liste .ec-pcarte.ec-ps { background: #fff; border: 1px solid #ece8e0; }
+.ec-semc__liste .ec-ps.est-faite { background: #f3f9f5; border-color: #d7ecdf; }
+/* ordinateur : pas de flèches ni de barres, toutes les semaines se voient */
+.ec-semc__nav, .ec-semc__points { display: none; }
+@media (max-width: 899px) {
+  .ec-semgrille { display: block; }
+  .ec-semc:not(.est-vue) { display: none; }
+  .ec-semc__nav, .ec-semc__points { display: flex; }
+  .ec-semc__nav { gap: 6px; }
+  .ec-semc__badge { display: none; } /* la barre vermillon dit déjà « cette semaine » */
+  .ec-semc.est-courante { outline: 0; }
+  .ec-semc__titre { font-size: 23px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ec-semc.vient-droite { animation: semaine-droite .28s cubic-bezier(.22, 1, .36, 1) both; }
+  .ec-semc.vient-gauche { animation: semaine-gauche .28s cubic-bezier(.22, 1, .36, 1) both; }
+}
+.ec-semc__titre .ec-semc__badge { display: inline-block; margin-left: 8px; vertical-align: 3px; font-style: normal; letter-spacing: 0; }
+@media (max-width: 899px) { .ec-semc__titre .ec-semc__badge { display: none; } }
