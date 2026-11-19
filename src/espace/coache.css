@@ -1487,3 +1487,12 @@ select.ec-champ { appearance: auto; min-width: 0; }
 }
 .ec-semc__titre .ec-semc__badge { display: inline-block; margin-left: 8px; vertical-align: 3px; font-style: normal; letter-spacing: 0; }
 @media (max-width: 899px) { .ec-semc__titre .ec-semc__badge { display: none; } }
+
+/* Carte « Installer l'application » (19 novembre 2026) : même allure que celle des notifications, avec les étapes */
+.ec-installer { align-items: flex-start; }
+.ec-installer__etapes { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.ec-installer__etapes li { display: flex; align-items: flex-start; gap: 10px; font: 500 14px/1.45 var(--font-sans); }
+.ec-installer__etapes b { font-weight: 800; }
+.ec-installer__etapes small { color: var(--ec-gris); }
+.ec-installer__num { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: #161514; color: #f4f3ef; font: 800 12px/1 var(--font-sans); }
+.ec-installer__picto { display: inline-block; vertical-align: -4px; margin: 0 2px; color: #0a7aff; }

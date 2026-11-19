@@ -11,7 +11,8 @@ export default function CarteNotifications({ uid }) {
   const [etat, setEtat] = useState(() => (lire() ? 'cachee' : etatNotifications()))
   const [envoi, setEnvoi] = useState(false)
   const [erreur, setErreur] = useState('')
-  if (etat !== 'possible' && etat !== 'installer' && etat !== 'activee') return null
+  // iPhone sans l'application installée : la carte « Installer l'application » explique déjà comment faire
+  if (etat !== 'possible' && etat !== 'activee') return null
   const fermer = () => { ecrire('fermee'); setEtat('cachee') }
   async function activer() {
     setEnvoi(true); setErreur('')
