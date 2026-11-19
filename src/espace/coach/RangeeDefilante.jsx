@@ -42,7 +42,9 @@ export default function RangeeDefilante({ children, ...props }) {
 
   return (
     <div className="rangee-defilante">
-      <div {...props} ref={rangee} onScroll={mesurer}>{children}</div>
+      {/* fondu sur le bord où il reste des filtres à voir (19 novembre 2026) */}
+      <div {...props} ref={rangee} onScroll={mesurer}
+        data-fondu={m.visible ? [m.x > 0.01 ? 'gauche' : '', m.x < 0.99 ? 'droite' : ''].filter(Boolean).join(' ') || undefined : undefined}>{children}</div>
       {m.visible && (
         <div className="rangee-defilante__piste" ref={piste} aria-hidden="true" onPointerDown={toucherPiste}>
           <span className="rangee-defilante__poignee" style={{ width: `${m.largeur * 100}%`, left: `${m.x * (1 - m.largeur) * 100}%` }} onPointerDown={tirer} />

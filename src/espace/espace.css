@@ -2233,3 +2233,8 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 }
 .choix-titre--doigt { display: none; }
 @media (max-width: 900px), (pointer: coarse) { .choix-titre--souris { display: none; } .choix-titre--doigt { display: inline; } }
+
+/* Filtres qui défilent : un fondu sur le bord où il en reste d'autres (19 novembre 2026) */
+[data-fondu~="droite"] { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); }
+[data-fondu~="gauche"] { -webkit-mask-image: linear-gradient(to right, transparent, #000 44px); mask-image: linear-gradient(to right, transparent, #000 44px); }
+[data-fondu~="gauche"][data-fondu~="droite"] { -webkit-mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); }
