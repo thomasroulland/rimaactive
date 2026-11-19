@@ -1436,3 +1436,18 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-super__choix:disabled { cursor: default; }
 .ec-super__choix:focus-visible { outline: 2px solid var(--ec-encre, #161514); outline-offset: 2px; }
 .ec-super__liste li:not(.est-actuel):has(.ec-super__choix:not(:disabled)):active { transform: scale(.98); }
+
+/* Carte « Être prévenu des nouveautés » (notifications, 19 novembre 2026) */
+.ec-notifs { position: relative; display: flex; align-items: center; gap: 14px; padding: 16px 48px 16px 16px; border-radius: 24px; background: var(--blanc, #fff); }
+.ec-notifs__picto { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--jaune); color: #161514; }
+.ec-notifs__texte { flex: 1; min-width: 0; }
+.ec-notifs__titre { margin: 0; font: 800 17px/1.25 var(--font-sans); letter-spacing: -.01em; }
+.ec-notifs__phrase { margin: 2px 0 0; font: 500 14px/1.4 var(--font-sans); color: var(--ec-gris); }
+.ec-notifs__activer { flex: none; }
+.ec-notifs__fermer { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ec-gris); cursor: pointer; }
+.ec-notifs__fermer:hover { background: rgba(22, 21, 20, .06); color: #161514; }
+.ec-notifs__fermer:focus-visible { outline: 2px solid #161514; outline-offset: 2px; }
+@media (max-width: 560px) {
+  .ec-notifs { flex-wrap: wrap; }
+  .ec-notifs__activer { width: 100%; justify-content: center; }
+}

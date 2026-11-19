@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ecouterMesProgrammes, ecouterMesSeances, garderPhotosProgramme } from '../depots.js'
 import { aujourdhuiIso } from '../donnees/calculs.js'
+import { inscrireAppareil } from '../notifications.js'
 import { programmeAffiche } from '../donnees/progression.js'
 import TableauDeBord from './TableauDeBord.jsx'
 import MonProgramme from './MonProgramme.jsx'
@@ -14,6 +15,9 @@ function useDonneesClient(uid) {
   const [prog, setProg] = useState({ pret: false, programmes: [] })
   const [seances, setSeances] = useState(null)
   const [erreur, setErreur] = useState('')
+
+  // notifications déjà acceptées : le jeton du téléphone est renouvelé à chaque ouverture (il peut changer)
+  useEffect(() => { inscrireAppareil(uid).catch(() => {}) }, [uid])
 
   useEffect(() => {
     const message = () => setErreur('Impossible de charger votre programme. Vérifiez votre connexion.')

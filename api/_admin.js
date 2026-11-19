@@ -3,6 +3,7 @@ import { initializeApp, getApps, getApp, cert } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { getStorage } from 'firebase-admin/storage'
+import { getMessaging } from 'firebase-admin/messaging'
 
 const PROJET = process.env.GCLOUD_PROJECT || 'demo-rimaactive'
 
@@ -18,7 +19,7 @@ export function nomBucket(env = process.env) {
   throw erreurHttp(500, 'configuration')
 }
 
-// Initialise firebase-admin une seule fois et renvoie { auth, db, bucket(), horodatage }.
+// Initialise firebase-admin une seule fois et renvoie { auth, db, bucket(), messaging(), horodatage }.
 // bucket() lève une erreur 500 « configuration » si le nom du bucket manque (voir nomBucket).
 export function admin() {
   if (!getApps().length) {
@@ -38,6 +39,7 @@ export function admin() {
     auth: getAuth(app),
     db: getFirestore(app),
     bucket: () => getStorage(app).bucket(nomBucket()),
+    messaging: () => getMessaging(app),
     horodatage: () => FieldValue.serverTimestamp(),
   }
 }

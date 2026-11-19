@@ -59,6 +59,16 @@ service cloud.firestore {
           && request.resource.data.chemin is string
           && request.resource.data.chemin.matches('clients/' + uid + '/progression/[^/]+');
       }
+      // Téléphones du coaché pour les notifications (19 novembre 2026) : il note le sien (l'identifiant est le jeton),
+      // ou l'efface ; personne ne les lit dans l'application, seule l'API (compte de service) s'en sert.
+      match /appareils/{jeton} {
+        allow create, update: if estMoi(uid)
+          && request.resource.data.keys().hasOnly(['jeton', 'creeLe', 'plateforme'])
+          && request.resource.data.jeton == jeton
+          && request.resource.data.creeLe == request.time
+          && request.resource.data.plateforme in ['iphone', 'android', 'autre'];
+        allow delete: if estMoi(uid);
+      }
       // Bilans visio et notes privées : écrits et lus par le coach seulement ; le coaché ne les voit pas.
       match /bilans/{id} {
         allow read, write: if estCoach();

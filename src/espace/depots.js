@@ -306,6 +306,9 @@ export async function enregistrerProgramme(programme, { creation = false } = {})
 
 export async function publierProgramme(id) {
   await updateDoc(doc(db, 'programmes', id), { statut: 'publié', majLe: serverTimestamp() })
+  // notification « nouveau programme » au coaché (une seule fois par programme, voir api/notifier-programme.js) ;
+  // un échec n'empêche pas la publication
+  appelerApi('/api/notifier-programme', { programme: id }).catch(() => {})
 }
 
 // Séances déjà faites (séance faite « terminée ») : elles ne se modifient plus. Renvoie un Set d'identifiants de séance.

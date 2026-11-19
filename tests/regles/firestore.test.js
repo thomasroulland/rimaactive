@@ -374,3 +374,23 @@ describe('conversations (discussion coach ↔ coaché)', () => {
     await assertFails(deleteDoc(doc(coach, 'conversations/A')))
   })
 })
+
+describe('téléphones pour les notifications (19 novembre 2026)', () => {
+  const app = (jeton, extra = {}) => ({ jeton, creeLe: serverTimestamp(), plateforme: 'android', ...extra })
+  it('le coaché note son téléphone, rien d\'autre', async () => {
+    await assertSucceeds(setDoc(doc(A, 'utilisateurs/A/appareils/tokA'), app('tokA')))
+    await assertSucceeds(setDoc(doc(A, 'utilisateurs/A/appareils/tokA'), app('tokA', { plateforme: 'iphone' })))
+    await assertFails(setDoc(doc(A, 'utilisateurs/A/appareils/tokA'), app('autre')))
+    await assertFails(setDoc(doc(A, 'utilisateurs/A/appareils/tokA'), app('tokA', { role: 'coach' })))
+    await assertFails(setDoc(doc(A, 'utilisateurs/A/appareils/tokA'), app('tokA', { plateforme: 'pc' })))
+  })
+  it('personne d\'autre n\'y touche, et rien ne se lit', async () => {
+    await assertFails(setDoc(doc(B, 'utilisateurs/A/appareils/tokB'), app('tokB')))
+    await assertFails(setDoc(doc(coach, 'utilisateurs/A/appareils/tokC'), app('tokC')))
+    await assertSucceeds(setDoc(doc(A, 'utilisateurs/A/appareils/tokA'), app('tokA')))
+    await assertFails(getDoc(doc(A, 'utilisateurs/A/appareils/tokA')))
+    await assertFails(getDoc(doc(coach, 'utilisateurs/A/appareils/tokA')))
+    await assertFails(deleteDoc(doc(B, 'utilisateurs/A/appareils/tokA')))
+    await assertSucceeds(deleteDoc(doc(A, 'utilisateurs/A/appareils/tokA')))
+  })
+})

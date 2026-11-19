@@ -67,6 +67,8 @@ const pwa = VitePWA({
     navigateFallback: '/index.html',
     navigateFallbackDenylist: [/^\/api\//],
     cleanupOutdatedCaches: true,
+    // notifications (nouveau programme) : affichage et ouverture de la bonne page
+    importScripts: ['/notifs-sw.js'],
     runtimeCaching: [
       {
         // photos des exercices (Firebase Storage) : une fois vues, elles restent disponibles sans réseau
