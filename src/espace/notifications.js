@@ -5,7 +5,7 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from './firebase.js'
 
 // Clé publique « Web Push » du projet Firebase (console Firebase > Cloud Messaging > Certificats Web Push). Elle est publique.
-const CLE_VAPID = import.meta.env.VITE_FIREBASE_VAPID_KEY || ''
+const CLE_VAPID = import.meta.env.VITE_FIREBASE_VAPID_KEY || 'BGJnV1vGkJzI87GZ5-LXDvP5Zc52BmXXiTCpeGr7F8uXKGPsNT2dEHp2hpo48Ozg2TFHaSUvVWzgAry-2GvirKM'
 
 const surIphone = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
 const installee = () => window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true
