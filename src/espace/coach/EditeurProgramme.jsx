@@ -2,7 +2,7 @@ import { insererSeance, seanceDepuisModele, versModeleSeance } from '../donnees/
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
-  ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, ecouterVerrous,
+  ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, notifierModification, ecouterVerrous,
   ecouterModele, ecouterModelesSeance, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
@@ -226,6 +226,8 @@ export default function EditeurProgramme() {
       if (publier) {
         await publierProgramme(prog.id)
         setProg((p) => ({ ...p, statut: 'publié' }))
+      } else if (etaitPublie && !silencieux) {
+        notifierModification(prog.id) // le coaché est prévenu (19 novembre 2026)
       }
       if (version.current === v) setModifie(false)
       if (!silencieux) setMessage(publier

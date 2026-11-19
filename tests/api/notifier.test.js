@@ -43,3 +43,21 @@ describe('POST /api/notifier-programme', () => {
     expect(envoyer).not.toHaveBeenCalled()
   })
 })
+
+describe('POST /api/notifier-programme, programme modifié', () => {
+  it('prévient le coaché, au plus une fois par heure', async () => {
+    const r = await appeler(handler, { jeton: coach.jeton, body: { programme: 'P1', type: 'modifie' } })
+    expect(r.code).toBe(200)
+    expect(envoyer.mock.calls[0][1].webpush.notification.title).toBe('Votre programme a été mis à jour')
+    const encore = await appeler(handler, { jeton: coach.jeton, body: { programme: 'P1', type: 'modifie' } })
+    expect(encore.corps).toMatchObject({ deja: true })
+    expect(envoyer).toHaveBeenCalledTimes(1)
+    // la notification « nouveau » reste indépendante
+    await appeler(handler, { jeton: coach.jeton, body: { programme: 'P1' } })
+    expect(envoyer).toHaveBeenCalledTimes(2)
+  })
+  it('rien pour un brouillon', async () => {
+    expect((await appeler(handler, { jeton: coach.jeton, body: { programme: 'P2', type: 'modifie' } })).code).toBe(409)
+    expect(envoyer).not.toHaveBeenCalled()
+  })
+})

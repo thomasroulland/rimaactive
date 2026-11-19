@@ -5,7 +5,7 @@ const CLE = 'rima-carte-notifs'
 const lire = () => { try { return localStorage.getItem(CLE) } catch { return null } }
 const ecrire = (v) => { try { localStorage.setItem(CLE, v) } catch { /* rien */ } }
 
-// Carte du tableau de bord (choix de Thomas, 19 novembre 2026) : proposer les notifications « nouveau programme ».
+// Carte du tableau de bord (choix de Thomas, 19 novembre 2026) : proposer les notifications (programme publié ou modifié).
 // Elle disparaît une fois activée ou fermée. Sur iPhone, hors application installée, elle explique comment l'installer.
 export default function CarteNotifications({ uid }) {
   const [etat, setEtat] = useState(() => (lire() ? 'cachee' : etatNotifications()))
@@ -30,9 +30,9 @@ export default function CarteNotifications({ uid }) {
       <div className="ec-notifs__texte">
         <h2 id="titre-notifs" className="ec-notifs__titre">{etat === 'activee' ? 'Notifications activées' : 'Être prévenu des nouveautés'}</h2>
         <p className="ec-notifs__phrase">
-          {etat === 'activee' ? 'Vous serez prévenu quand Marie publiera votre prochain programme.'
+          {etat === 'activee' ? 'Vous serez prévenu quand Marie publiera ou modifiera votre programme.'
             : etat === 'installer' ? 'Sur iPhone, ajoutez d’abord l’application à l’écran d’accueil : Partager, puis « Sur l’écran d’accueil ».'
-              : 'Une notification quand Marie publie votre nouveau programme.'}
+              : 'Une notification quand Marie publie ou modifie votre programme.'}
         </p>
         {erreur && <p className="ec-erreur" role="alert">{erreur}</p>}
       </div>

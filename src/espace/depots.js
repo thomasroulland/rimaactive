@@ -308,7 +308,12 @@ export async function publierProgramme(id) {
   await updateDoc(doc(db, 'programmes', id), { statut: 'publié', majLe: serverTimestamp() })
   // notification « nouveau programme » au coaché (une seule fois par programme, voir api/notifier-programme.js) ;
   // un échec n'empêche pas la publication
-  appelerApi('/api/notifier-programme', { programme: id }).catch(() => {})
+  appelerApi('/api/notifier-programme', { programme: id, type: 'nouveau' }).catch(() => {})
+}
+
+// Notification « programme modifié » au coaché (au plus une par heure, voir api/notifier-programme.js)
+export function notifierModification(id) {
+  appelerApi('/api/notifier-programme', { programme: id, type: 'modifie' }).catch(() => {})
 }
 
 // Séances déjà faites (séance faite « terminée ») : elles ne se modifient plus. Renvoie un Set d'identifiants de séance.
