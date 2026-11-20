@@ -949,7 +949,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .ec-sexo__img { transition: none; } }
 
-/* ========== Séance simple (15 novembre 2026, choix de Thomas) ===
+/* ========== Séance simple (15 novembre 2026, choix de Thomas) ==========
    Téléphone : un exercice à la fois, un seul gros bouton. Ordinateur : le bloc en liste sous un bandeau noir.
    Plus de minuteur ni de temps de repos affichés. */
 .ec-s2 { display: grid; gap: 12px; width: 100%; max-width: 760px; margin-inline: auto; }
@@ -1510,7 +1510,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-s2-reglage.est-a-remplir { box-shadow: 0 0 0 2px var(--ec-vermillon, #ff4a1c); }
 .ec-s2-reglage.est-a-remplir .ec-s2-reglage__lib { color: #c2370f; }
 .ec-s5-resume.est-alerte { color: #c2370f; font-weight: 800; }
-=======
+
 /* Page de connexion (20 novembre 2026, demandes de Thomas) */
 /* surtitre vermillon au-dessus du titre, comme les cartes des offres */
 .connexion .connexion__surtitre { margin: 0 0 -6px; color: var(--ec-vermillon); }
