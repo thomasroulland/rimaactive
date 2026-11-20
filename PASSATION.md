@@ -610,3 +610,15 @@ Ces règles ont une précision renforcée (`.offres-page__rubrique.offres-page__
 ## Mes offres : « Matériel inclus » / « Déplacement inclus » retirés (18 novembre 2026, en ligne, accord écrit : « Ok »)
 Thomas : « ça rend moche sur téléphone et sur un écran coupé en deux ». Le bloc et son espace sont retirés de `Offres.jsx` ; les textes
 `liste` restent dans les fichiers des pages (non affichés). Les règles CSS `.offres-page__avantages` restent, sans effet. Ne pas remettre ce bloc sans demande.
+
+## Connexion, M'écrire, accueil (20 novembre 2026, en ligne, accord écrit : « Publie tout ce qu'on a validé »)
+- **Accueil** : titre des écrans de l'espace « Un suivi complet de votre programme et de vos entraînements ».
+- **M'écrire** : « Quelle formule vous intéresse ? », « Choisissez une formule » ; sur téléphone, retour à la ligne après « dans le 78, »
+  (`.saut-tel`) et bloc du titre resserré.
+- **Connexion** (`Connexion.jsx`, fin de `coache.css`) : surtitre vermillon « Espace coaching · Rimaactive », « Bienvenue dans votre espace. »,
+  « Retrouvez ici votre programme personnalisé. », lien d'aide petit et centré « Vous souhaitez commencer un accompagnement ? Contacter Marie ».
+  Photo en pied envoyée par Marie (`src/assets/connexion-squat-entier.jpg`), calée sur l'ancien cadrage (barre et disques au même endroit),
+  descendue pour que la tête soit entière ; plus de bandeau noir. « Vos objectifs. / Votre progression. » sur deux lignes, signature
+  « Marie Sillas, coach sportive diplômée ». Dégradé noir sans flou, seulement derrière les écritures, à partir du logo
+  (`.connexion__legende::before`). Champs remplis par le navigateur : fond blanc au lieu de bleu (non vérifiable ici).
+- **Choix de Marie, à ne pas refaire** : aucun flou sur la photo, pas de fondu en haut, ne plus toucher au cadrage sans demande.
