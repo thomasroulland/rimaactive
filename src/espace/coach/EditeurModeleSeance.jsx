@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ecouterExercices, ecouterModele, enregistrerModele } from '../depots.js'
 import {
-  ajouterAuBloc, ajouterBlocVide, deplacerBloc, rafraichirExercices, retirerElement, sansBlocsVides, supprimerBloc,
+  ajouterAuBloc, ajouterBlocVide, deplacerBloc, deplacerElement, rafraichirExercices, retirerElement, sansBlocsVides, supprimerBloc,
 } from '../donnees/programme.js'
 import { nomType } from '../donnees/reglages.js'
 import { messageErreur } from '../erreurs.js'
@@ -95,6 +95,7 @@ export default function EditeurModeleSeance() {
             supprimerBloc={(blocId, nom) => { changer((p) => supprimerBloc(p, POS, blocId)); setMessage(`${nom} supprimé.`) }}
             ajouterBloc={() => changer((p) => ajouterBlocVide(p, POS))}
                 deplacerBloc={(de, vers) => changer((p) => deplacerBloc(p, POS, de, vers))}
+                deplacerElement={(bi, de, vers) => changer((p) => deplacerElement(p, POS, bi, de, vers))}
             ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, POS, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
           <div className="espace-barre" role="region" aria-label="Enregistrement">
             <div className="conteneur espace-barre__ligne">

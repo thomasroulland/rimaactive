@@ -233,6 +233,17 @@ const rempli = (v) => String(v ?? '').trim() !== ''
 // Ce que Marie a prévu pour un exercice, comme la maquette :
 // séries classiques → { prescription: '4 × 5 · 90 kg', details: 'Repos 2 min · Tempo 3-1-1' } ;
 // autres formats → { prescription: '12 reps · 20 kg', details: '' }. Charge 0 : « poids du corps ».
+// Fourchette de répétitions (20 novembre 2026) : Marie écrit « 8-10 » (ou « 8 à 10 ») et le coaché note ce qu'il a fait.
+const FOURCHETTE = /^\s*(\d+)\s*(?:-|–|—|à|a)\s*(\d+)\s*$/i
+export const estFourchette = (reps) => FOURCHETTE.test(String(reps ?? ''))
+// « 8-10 » → « 8 à 10 » ; le reste ne change pas
+export function texteReps(reps) {
+  const m = FOURCHETTE.exec(String(reps ?? ''))
+  return m ? `${m[1]} à ${m[2]}` : String(reps ?? '').trim()
+}
+// Ce qu'une série reprend par défaut : jamais une fourchette (le coaché doit dire combien il en a fait)
+const repsParDefaut = (element) => (rempli(element?.reps) && !estFourchette(element.reps) ? String(element.reps) : '')
+
 export function lignesExercice(element, enSeries = true) {
   const e = element ?? {}
   const charge = estZero(e.charge) ? 'poids du corps'
@@ -240,11 +251,11 @@ export function lignesExercice(element, enSeries = true) {
       : rempli(e.pct) ? `${fr(String(e.pct).trim())} % de 1RM` : ''
   if (!enSeries) {
     const reps = String(e.reps ?? '').trim()
-    const r = enDuree(e) ? texteDuree(reps) : /^\d+$/.test(reps) ? `${reps} reps` : reps
+    const r = enDuree(e) ? texteDuree(reps) : /^\d+$/.test(reps) || estFourchette(reps) ? `${texteReps(reps)} reps` : reps
     return { prescription: [r, charge].filter(Boolean).join(' · '), details: '' }
   }
   const n = String(e.series ?? '').trim()
-  const reps = enDuree(e) ? texteDuree(e.reps) : String(e.reps ?? '').trim()
+  const reps = enDuree(e) ? texteDuree(e.reps) : texteReps(e.reps)
   const volume = n && reps ? `${n} × ${reps}` : n ? `${n} séries` : reps ? (enDuree(e) ? reps : `${reps} reps`) : ''
   const details = [
     rempli(e.repos) && `Repos ${String(e.repos).trim()}`,
@@ -294,7 +305,7 @@ export function allureVitesse(distance, temps) {
 // la série est cochée et les cases vides reprennent ce que Marie a prévu.
 export function saisirSerie(ligne, cle, valeur, element) {
   const mesure = enDuree(element) ? 'duree' : 'reps' // la durée est notée dans `duree`, les répétitions dans `reps`
-  const prevu = { charge: rempli(element?.charge) ? String(element.charge) : '', [mesure]: rempli(element?.reps) ? String(element.reps) : '' }
+  const prevu = { charge: rempli(element?.charge) ? String(element.charge) : '', [mesure]: mesure === 'reps' ? repsParDefaut(element) : (rempli(element?.reps) ? String(element.reps) : '') }
   if (cle === 'fait') {
     if (!valeur) return { ...ligne, fait: false }
     return { ...ligne, fait: true, charge: rempli(ligne.charge) ? ligne.charge : prevu.charge, [mesure]: rempli(ligne[mesure]) ? ligne[mesure] : prevu[mesure] }
@@ -308,7 +319,7 @@ export function saisirSerie(ligne, cle, valeur, element) {
 // charge, RPE) et est cochée. Une valeur laissée vide reprend ce que Marie a prévu.
 export function serieTerminee(ligne, valeurs, element) {
   const cle = enDuree(element) ? 'duree' : 'reps'
-  const prevu = { reps: rempli(element?.reps) ? String(element.reps) : '', charge: rempli(element?.charge) ? String(element.charge) : '' }
+  const prevu = { reps: cle === 'reps' ? repsParDefaut(element) : (rempli(element?.reps) ? String(element.reps) : ''), charge: rempli(element?.charge) ? String(element.charge) : '' }
   const choisi = (v, p) => (rempli(v) ? String(v).trim() : p)
   return {
     ...ligne,

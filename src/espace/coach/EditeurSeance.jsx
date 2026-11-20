@@ -5,8 +5,9 @@ import useReglages from './useReglages.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice, { TYPE_GLISSE } from './ChoixExercice.jsx'
 
-// glisser un bloc pour changer l'ordre
+// glisser un bloc (ou un exercice dans son bloc) pour changer l'ordre
 const TYPE_BLOC = 'application/x-rimaactive-bloc'
+const TYPE_EXO = 'application/x-rimaactive-exo-bloc'
 import { chargeIndicative, chargeParMain } from '../donnees/banque.js'
 import { frNombre } from '../donnees/resume.js'
 import { IconeCorbeille, IconePoints } from './Icones.jsx'
@@ -42,7 +43,7 @@ const IDEES_NOMS = ['Échauffement', 'Force', 'Cardio', 'Gainage', 'Mobilité', 
 // Éditeur d'une séance (maquette B de Thomas, 15 novembre 2026) : la banque d'exercices à gauche, la séance à droite,
 // un exercice par ligne (séries, reps, charge, repos), le reste dans « ⋯ », des blocs que l'on peut renommer.
 // `verrou` : séance faite, tout est en lecture seule.
-export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, majSeance, majBloc, majElement, retirer, ajouter, ajouterBloc, supprimerBloc, deplacerBloc }) {
+export default function EditeurSeance({ seance, numero, semaine, verrou, attente, exercices, rm, majSeance, majBloc, majElement, retirer, ajouter, ajouterBloc, supprimerBloc, deplacerBloc, deplacerElement }) {
   const ids = (cle) => `se-${seance.id}-${cle}`
   const blocs = seance.blocs ?? []
   const lettres = blocs.map((b) => b.lettre)
@@ -52,6 +53,26 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
   // glisser un bloc pour changer l'ordre (18 novembre 2026) : index du bloc tenu, et place où il tomberait
   const [blocTenu, setBlocTenu] = useState(null)
   const [placeBloc, setPlaceBloc] = useState(null)
+  // glisser un exercice dans son bloc pour changer l'ordre (20 novembre 2026) : { bi, ei } tenu, et { bi, ei } où il tomberait
+  const [exoTenu, setExoTenu] = useState(null)
+  const [placeExo, setPlaceExo] = useState(null)
+  const finExo = () => { setExoTenu(null); setPlaceExo(null) }
+  const glisserExo = (bi, ei) => ({
+    onDragOver: (ev) => {
+      if (!exoTenu || exoTenu.bi !== bi || ![...ev.dataTransfer.types].includes(TYPE_EXO)) return
+      ev.preventDefault(); ev.stopPropagation()
+      const r = ev.currentTarget.getBoundingClientRect()
+      const place = ev.clientY < r.top + r.height / 2 ? ei : ei + 1
+      if (placeExo?.bi !== bi || placeExo?.ei !== place) setPlaceExo({ bi, ei: place })
+    },
+    onDrop: (ev) => {
+      if (!exoTenu || exoTenu.bi !== bi || ![...ev.dataTransfer.types].includes(TYPE_EXO)) return
+      ev.preventDefault(); ev.stopPropagation()
+      const place = placeExo?.bi === bi ? placeExo.ei : ei
+      deplacerElement?.(bi, exoTenu.ei, place > exoTenu.ei ? place - 1 : place)
+      finExo()
+    },
+  })
   // un exercice créé dans la banque va dans le dernier bloc (ou crée le bloc A)
   const dernier = lettres[lettres.length - 1] ?? 'A'
   const nbExos = blocs.reduce((t, b) => t + (b.elements ?? []).length, 0)
@@ -182,7 +203,15 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                     {(b.elements ?? []).map((el, ei) => (
                       <LigneExo key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={estEnSeries(b.format)} verrou={verrou} rm={rm}
                         maj={(cle, v) => majElement(bi, ei, cle, v)} retirer={() => retirer(el)}
+                        materiel={el.materiel || (exercices ?? []).find((x) => x.id === el.exoId)?.materiel}
                         parMain={chargeParMain(el.materiel || (exercices ?? []).find((x) => x.id === el.exoId)?.materiel)}
+                        nbDansBloc={(b.elements ?? []).length} monter={ei > 0 ? () => deplacerElement?.(bi, ei, ei - 1) : null}
+                        descendre={ei < (b.elements ?? []).length - 1 ? () => deplacerElement?.(bi, ei, ei + 1) : null}
+                        tenu={exoTenu?.bi === bi && exoTenu.ei === ei}
+                        depot={placeExo?.bi === bi && exoTenu && exoTenu.ei !== ei && exoTenu.ei !== ei - 1 && placeExo.ei === ei ? 'avant'
+                          : placeExo?.bi === bi && exoTenu && ei === (b.elements ?? []).length - 1 && exoTenu.ei !== ei && placeExo.ei === ei + 1 ? 'apres' : ''}
+                        prendre={(ev) => { ev.dataTransfer.setData(TYPE_EXO, el.id); ev.dataTransfer.effectAllowed = 'move'; const li = ev.currentTarget.closest('.es2-ligne'); if (li) ev.dataTransfer.setDragImage(li, 20, 20); setExoTenu({ bi, ei }) }}
+                        lacher={finExo} {...glisserExo(bi, ei)}
                         photo={el.photos?.[0] || (exercices ?? []).find((x) => x.id === el.exoId)?.photos?.[0]} />
                     ))}
                   </ol>
@@ -259,7 +288,7 @@ function EnteteBloc({ bloc, verrou, renommer, idTitre }) {
 // Un exercice sur une ligne : séries, reps, charge, RPE et tempo visibles (18 novembre 2026), le commentaire juste en dessous ;
 // « ⋯ » garde « se mesure en », le % du 1RM et « Retirer ». Plus de repos par exercice, plus de RPE de la semaine en exemple
 // (il se juge sur le ressenti global de fin de séance). Haltères : la charge est celle d'un haltère, « par main ».
-function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, parMain }) {
+function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, parMain, materiel, nbDansBloc, monter, descendre, tenu, depot, prendre, lacher, onDragOver, onDrop }) {
   const [plus, setPlus] = useState(false)
   const id = (cle) => `el-${el.id}-${cle}`
   const calculee = chargeIndicative(el.nom, el.pct, rm)
@@ -269,12 +298,22 @@ function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, 
     <input id={id(cle)} className="es2-cellule" autoComplete="off" inputMode={mode} aria-label={`${code} ${el.nom}, ${libelle}`} value={el[cle] ?? ''} placeholder={indice} onChange={(e) => maj(cle, e.target.value)} />
   )
   return (
-    <li className="es2-ligne">
+    <li className={`es2-ligne${tenu ? ' est-tenu' : ''}${depot ? ` depot-${depot}` : ''}`} onDragOver={onDragOver} onDrop={onDrop}>
       <div className="es2-ligne__principal">
         <PhotoStockee chemin={photo} alt="" classe="espace-vignette" />
-        <p className="es2-ligne__nom"><span className="es2-code" aria-hidden="true">{code}</span> {el.nom}{el.muscles?.length > 0 && <small>{el.muscles.join(', ')}</small>}</p>
+        <p className="es2-ligne__nom">
+          {!verrou && nbDansBloc > 1 && (
+            <span className="es2-ligne__poignee" draggable title="Glisser pour changer l’ordre dans le bloc" onDragStart={prendre} onDragEnd={lacher} aria-hidden="true">
+              <svg viewBox="0 0 10 16" width="8" height="13" fill="currentColor"><circle cx="2" cy="2" r="1.5" /><circle cx="8" cy="2" r="1.5" /><circle cx="2" cy="8" r="1.5" /><circle cx="8" cy="8" r="1.5" /><circle cx="2" cy="14" r="1.5" /><circle cx="8" cy="14" r="1.5" /></svg>
+            </span>
+          )}
+          <span className="es2-code" aria-hidden="true">{code}</span> {el.nom}
+          {/* le matériel, pour distinguer deux exercices du même nom (20 novembre 2026) */}
+          {(materiel || el.muscles?.length > 0) && <small>{materiel && <b className="es2-mat">{materiel}</b>}{materiel && el.muscles?.length > 0 && ' · '}{el.muscles?.join(', ')}</small>}
+        </p>
         {series && cellule('series', 'séries', 'numeric')}
-        {cellule('reps', duree ? 'durée' : 'répétitions', duree ? 'text' : 'numeric', duree ? '45 s' : undefined)}
+        {/* répétitions : un nombre ou une fourchette « 8-10 » (le coaché note ce qu'il a fait) */}
+        {cellule('reps', duree ? 'durée' : 'répétitions (ex. 10 ou 8-10)', 'text', duree ? '45 s' : undefined)}
         <span className={`es2-charge${parMain ? ' es2-charge--main' : ''}`}>
           {cellule('charge', parMain ? 'charge d’un haltère, par main, en kilos' : 'charge en kilos', 'decimal', calculee !== null ? frNombre(calculee) : undefined)}
           {parMain && <span className="es2-charge__main" aria-hidden="true">par main</span>}
@@ -301,6 +340,12 @@ function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, 
               <input id={id('pct')} autoComplete="off" inputMode="decimal" value={el.pct ?? ''} onChange={(e) => maj('pct', e.target.value)} /></label>
           </div>
           {aideCharge && <p className="es2-opt__aide">{aideCharge}</p>}
+          {!verrou && (monter || descendre) && (
+            <div className="es2-opt__ordre" role="group" aria-label="Place dans le bloc">
+              <button type="button" disabled={!monter} onClick={() => monter?.()}>↑ Monter</button>
+              <button type="button" disabled={!descendre} onClick={() => descendre?.()}>↓ Descendre</button>
+            </div>
+          )}
           {!verrou && <button type="button" className="es2-opt__retirer" onClick={retirer}>Retirer {el.nom} de la séance</button>}
         </div>
       )}

@@ -299,3 +299,18 @@ describe('rafraichirExercices et matériel', () => {
     expect(r.semaines[0].seances[0].blocs[0].elements[0].materiel).toBe('Haltère')
   })
 })
+
+import { deplacerElement } from '../../src/espace/donnees/programme.js'
+describe('deplacerElement', () => {
+  const prog = { semaines: [{ seances: [{ blocs: [{ id: 'b', lettre: 'A', elements: [{ id: 'e1' }, { id: 'e2' }, { id: 'e3' }] }] }] }] }
+  it('inverse l\'ordre des exercices d\'un bloc sans toucher à l\'original', () => {
+    const p = deplacerElement(prog, { s: 0, se: 0 }, 0, 2, 0)
+    expect(p.semaines[0].seances[0].blocs[0].elements.map((e) => e.id)).toEqual(['e3', 'e1', 'e2'])
+    expect(prog.semaines[0].seances[0].blocs[0].elements[0].id).toBe('e1')
+  })
+  it('ne change rien hors limites', () => {
+    expect(deplacerElement(prog, { s: 0, se: 0 }, 0, 0, 0)).toBe(prog)
+    expect(deplacerElement(prog, { s: 0, se: 0 }, 0, 0, 9)).toBe(prog)
+    expect(deplacerElement(prog, { s: 0, se: 0 }, 3, 0, 1)).toBe(prog)
+  })
+})

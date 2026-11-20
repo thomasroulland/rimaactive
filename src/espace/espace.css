@@ -2244,3 +2244,14 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .es2__banque .espace-choix__liste { display: grid; gap: 2px; align-content: start; }
 .es2__banque .espace-choix__ligne:hover { background-color: rgba(242, 194, 48, .2) !important; }
 .es2__banque .espace-choix__ligne:hover .espace-choix__exo { color: var(--encre); }
+
+/* Éditeur de séance (20 novembre 2026) : matériel sous le nom, exercices à glisser dans leur bloc */
+.es2-mat { font-weight: 800; color: var(--encre); }
+.es2-ligne__poignee { display: inline-grid; place-items: center; width: 18px; height: 22px; margin: 0 4px 0 -4px; vertical-align: -4px; border-radius: 6px; color: #b3ada2; cursor: grab; }
+.es2-ligne__poignee:hover { color: var(--encre); background: rgba(22, 21, 20, .06); }
+.es2-ligne.est-tenu { opacity: .4; }
+.es2-ligne.depot-avant { box-shadow: inset 0 3px 0 var(--vermillon); }
+.es2-ligne.depot-apres { box-shadow: inset 0 -3px 0 var(--vermillon); }
+.es2-opt__ordre { display: flex; gap: 8px; }
+.es2-opt__ordre button { height: 36px; padding: 0 14px; border: 1px solid var(--filet); border-radius: 999px; background: #fff; font: 700 13px/1 var(--font-sans); color: var(--encre); cursor: pointer; }
+.es2-opt__ordre button:disabled { opacity: .4; cursor: default; }

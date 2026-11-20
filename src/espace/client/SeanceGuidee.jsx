@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { enDuree, fr, lignesExercice, resumeFormat, texteDuree } from '../donnees/seances.js'
+import { enDuree, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteReps } from '../donnees/seances.js'
 import { ChoixRpe } from './BlocResultat.jsx'
 import { chargeParMain } from '../donnees/banque.js'
 
@@ -76,10 +76,10 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, 
     <li className={`ec-s2-carte${grand ? ' est-grand' : ''}`} aria-labelledby={`${base}-nom`}>
       {grand && <GrandePhoto el={el} voirConsignes={voirConsignes} />}
       <div className="ec-s2-carte__corps">
-      <div className="ec-s2-carte__tete">
-        {!grand && (
+      <div className={`ec-s2-carte__tete${!grand && !el.photos?.[0] ? ' sans-vignette' : ''}`}>
+        {!grand && el.photos?.[0] && (
           <button type="button" className="ec-s2-vignette" onClick={voirConsignes} aria-label={`Voir les photos et consignes : ${el.nom}`}>
-            {el.photos?.[0] ? <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-vignette__img" /> : <Image />}
+            <PhotoStockee chemin={el.photos[0]} alt="" classe="ec-s2-vignette__img" />
           </button>
         )}
         <div>
@@ -98,7 +98,7 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, 
             <span className="ec-s2-ligne__nom">Série {i + 1}</span>
             <span className="ec-s2-val">
               <input className="ec-s2-champ" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
-                value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : String(el.reps ?? '')} readOnly={lecture} onChange={(e) => actions?.serie(el, i, cle, e.target.value)} />
+                value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)} readOnly={lecture} onChange={(e) => actions?.serie(el, i, cle, e.target.value)} />
               <span aria-hidden="true">×</span>
               <input className="ec-s2-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
                 value={l.charge ?? ''} placeholder={fr(el.charge ?? '')} readOnly={lecture} onChange={(e) => actions?.serie(el, i, 'charge', e.target.value)} />
@@ -252,9 +252,18 @@ export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirCons
     const t = actuelle.i
     return `Tour ${t + 1} : ` + els.map((e, k) => `${bloc.lettre}${k + 1} ${lignes(e)[t]?.fait ? '✓' : k === actuelle.e ? 'en cours' : 'à faire'}`).join(' · ')
   })()
+  const [manque, setManque] = useState(false)
   const valider = () => {
     if (!actuelle) { if (dernier) finir(); else aller(etape + 1); return }
-    actions.serie(els[actuelle.e], actuelle.i, 'fait', true)
+    const el = els[actuelle.e]
+    // fourchette (« 8 à 10 ») : le coaché écrit d'abord combien de répétitions il a faites (20 novembre 2026)
+    if (!enDuree(el) && estFourchette(el.reps) && !String(lignes(el)[actuelle.i]?.reps ?? '').trim()) {
+      setManque(true)
+      document.querySelector(`[data-serie="${el.id}-${actuelle.i}"]`)?.focus()
+      return
+    }
+    setManque(false)
+    actions.serie(el, actuelle.i, 'fait', true)
   }
   return (
     <div className="ec-s5">
@@ -266,7 +275,7 @@ export function BlocOrdinateur({ bloc, lignes, notes, actions, lecture, voirCons
       </ol>
       {!lecture && (
         <div className="ec-s5-bas">
-          <span className="ec-s5-resume" aria-live="polite">{resume}</span>
+          <span className={`ec-s5-resume${manque ? ' est-alerte' : ''}`} aria-live="polite">{manque ? 'Notez d’abord vos répétitions faites' : resume}</span>
           <button type="button" className="ec-s5-gros" onClick={valider}>
             {actuelle ? 'Série faite ✓' : dernier ? 'Terminer la séance →' : `Bloc suivant : ${nomBloc(suivant)} →`}
           </button>
@@ -288,12 +297,13 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
   const base = `g-${el.id}`
   return (
     <li className={`ec-s5-carte${actuelle >= 0 ? ' est-actuelle' : ''}${fini ? ' est-finie' : ''}`} aria-labelledby={`${base}-nom`}>
-      <div className="ec-s5-photo">
-        <button type="button" className="ec-s5-photo__bouton" onClick={voirConsignes} aria-label={`Agrandir les photos et consignes : ${el.nom}`}>
-          {photos.length > 0
-            ? <PhotoStockee key={photos[n]} chemin={photos[n]} alt="" classe="ec-s5-photo__img" />
-            : <span className="ec-s5-photo__vide"><Image /><span>Pas encore de photo</span></span>}
-        </button>
+      {/* pas de photo : pas d'encart vide (demande de Marie, 20 novembre 2026), seulement le code et « Fait » sur une fine bande */}
+      <div className={`ec-s5-photo${photos.length ? '' : ' ec-s5-photo--sans'}`}>
+        {photos.length > 0 && (
+          <button type="button" className="ec-s5-photo__bouton" onClick={voirConsignes} aria-label={`Agrandir les photos et consignes : ${el.nom}`}>
+            <PhotoStockee key={photos[n]} chemin={photos[n]} alt="" classe="ec-s5-photo__img" />
+          </button>
+        )}
         <span className="ec-s5-code">{code}</span>
         {fini && <span className="ec-s5-fait">✓ Fait</span>}
         {photos.length > 1 && (
@@ -311,8 +321,8 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
           <div key={i} className={`ec-s5-ligne${avecCharge ? '' : ' sans-charge'}${l.fait ? ' est-faite' : ''}${i === actuelle ? ' est-actuelle' : ''}`} role="group" aria-label={`${el.nom}, série ${i + 1}`}>
             <button type="button" className="ec-s5-rond" aria-pressed={!!l.fait} aria-label={`Série ${i + 1}, ${l.fait ? 'faite (toucher pour décocher)' : 'à faire (toucher pour cocher)'}`} disabled={lecture}
               onClick={() => actions?.serie(el, i, 'fait', !l.fait)}>{l.fait ? <Coche /> : i + 1}</button>
-            <input className="ec-s5-champ" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
-              value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : String(el.reps ?? '')} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, cle, ev.target.value)} />
+            <input className="ec-s5-champ" data-serie={`${el.id}-${i}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
+              value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, cle, ev.target.value)} />
             {avecCharge && (
             <span className="ec-s5-kg">
               <input className="ec-s5-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
@@ -336,11 +346,12 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
 
 // ---------- Téléphone : un exercice à la fois ----------
 
-function Reglage({ libelle, valeur, changer, mode, id }) {
+function Reglage({ libelle, valeur, changer, mode, id, indice, alerte }) {
   return (
-    <label className="ec-s2-reglage" htmlFor={id}>
+    <label className={`ec-s2-reglage${alerte ? ' est-a-remplir' : ''}`} htmlFor={id}>
       <span className="ec-s2-reglage__lib">{libelle}</span>
-      <input id={id} type="text" inputMode={mode} autoComplete="off" enterKeyHint="done" value={valeur} onFocus={(e) => e.target.select()} onChange={(e) => changer(e.target.value)} />
+      <input id={id} type="text" inputMode={mode} autoComplete="off" enterKeyHint="done" value={valeur} placeholder={indice}
+        aria-invalid={alerte || undefined} onFocus={(e) => e.target.select()} onChange={(e) => changer(e.target.value)} />
     </label>
   )
 }
@@ -359,6 +370,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
   const [brouillon, setBrouillon] = useState(null)
   const [plan, setPlan] = useState(false)
   const [detail, setDetail] = useState(false)
+  const [manque, setManque] = useState(false) // fourchette : « Série faite » sans avoir dit combien de répétitions
   const nb = blocs.length
   const dernier = etape >= nb - 1
 
@@ -370,14 +382,16 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
   const premiere = ls.findIndex((l) => !l.fait)
   const cur = choisie ?? premiere
   const ligne = cur >= 0 ? ls[cur] : null
-  const repsV = brouillon?.reps ?? (ligne?.[cle] || String(el.reps ?? ''))
+  // fourchette (« 8 à 10 ») : la case reste vide, le coaché écrit combien il en a fait (20 novembre 2026)
+  const fourchette = cle === 'reps' && estFourchette(el.reps)
+  const repsV = brouillon?.reps ?? (ligne?.[cle] || (fourchette ? '' : String(el.reps ?? '')))
   const chargeV = brouillon?.charge ?? (ligne?.charge || String(el.charge ?? ''))
   const rpeV = brouillon?.rpe ?? (ligne?.rpe ?? '')
   const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
   const exoFait = (e) => lignes(e).every((l) => l.fait)
   const prochaineExo = (apres) => els.findIndex((e, k) => k !== apres && !exoFait(e))
 
-  const allerExo = (k) => { setExo(k); setChoisie(null); setBrouillon(null); setDetail(false) }
+  const allerExo = (k) => { setExo(k); setChoisie(null); setBrouillon(null); setDetail(false); setManque(false) }
   // bloc fini : directement le bloc suivant (ou la fin de séance), sans page intermédiaire
   const blocSuivant = () => (dernier ? finir() : aller(etape + 1))
   const suite = () => { const k = prochaineExo(exo); if (k >= 0) allerExo(k); else blocSuivant() }
@@ -386,6 +400,8 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
     else if (etape > 0) { versLaFin.actif = true; aller(etape - 1) }
   }
   const faite = () => {
+    if (fourchette && !String(repsV).trim()) { setManque(true); document.getElementById(`reps-${el.id}`)?.focus(); return }
+    setManque(false)
     actions.serieComplete(el, cur, { reps: repsV, charge: chargeV, rpe: rpeV })
     setBrouillon(null); setChoisie(null)
     if (bloc.format === 'superset') {
@@ -443,7 +459,8 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
         <>
           <p className="ec-s2-un__serie">Série {cur + 1} sur {ls.length}</p>
           <div className="ec-s2-reglages">
-            <Reglage id={`reps-${el.id}`} libelle={cle === 'duree' ? 'Durée' : 'Répétitions'} valeur={repsV} mode={cle === 'duree' ? 'text' : 'numeric'} changer={maj('reps')} />
+            <Reglage id={`reps-${el.id}`} libelle={cle === 'duree' ? 'Durée' : fourchette ? `Reps faites (${texteReps(el.reps)})` : 'Répétitions'} valeur={repsV} mode={cle === 'duree' ? 'text' : 'numeric'}
+              indice={fourchette ? texteReps(el.reps) : undefined} alerte={manque && !String(repsV).trim()} changer={(v) => { setManque(false); maj('reps')(v) }} />
             <Reglage id={`charge-${el.id}`} libelle={chargeParMain(el.materiel) ? 'Charge · kg par main' : 'Charge · kg'} valeur={chargeV} mode="decimal" changer={maj('charge')} />
           </div>
         </>
@@ -501,19 +518,21 @@ function PhotosGlissees({ el, ouvrir }) {
     if (e) setVue(Math.round(e.scrollLeft / Math.max(1, e.clientWidth)))
   }
   const aller = (i) => piste.current?.scrollTo({ left: i * piste.current.clientWidth, behavior: 'smooth' })
+  // pas de photo : pas d'encart vide (demande de Marie, 20 novembre 2026) ; s'il y a des consignes, un simple bouton pour les lire
+  if (photos.length === 0) {
+    return String(el.consignes ?? '').trim()
+      ? <button type="button" className="ec-s2-consignes-seul" onClick={ouvrir}>Voir les consignes</button>
+      : null
+  }
   return (
     <div className="ec-s2-photo">
-      {photos.length === 0
-        ? <button type="button" className="ec-s2-photo__vide" onClick={ouvrir} aria-label={`Voir les consignes : ${el.nom}`}><Image /></button>
-        : (
-          <div className="ec-s2-photo__piste" ref={piste} onScroll={suivre}>
-            {photos.map((ch, i) => (
-              <button key={ch} type="button" className="ec-s2-photo__page" onClick={ouvrir} aria-label={`Photo ${i + 1} sur ${photos.length} : ${el.nom}. Voir les consignes`}>
-                <PhotoStockee chemin={ch} alt="" classe="ec-s2-photo__img" />
-              </button>
-            ))}
-          </div>
-        )}
+      <div className="ec-s2-photo__piste" ref={piste} onScroll={suivre}>
+        {photos.map((ch, i) => (
+          <button key={ch} type="button" className="ec-s2-photo__page" onClick={ouvrir} aria-label={`Photo ${i + 1} sur ${photos.length} : ${el.nom}. Voir les consignes`}>
+            <PhotoStockee chemin={ch} alt="" classe="ec-s2-photo__img" />
+          </button>
+        ))}
+      </div>
       <button type="button" className="ec-s2-photo__consignes" onClick={ouvrir}>Voir les consignes</button>
       {photos.length > 1 && (
         <span className="ec-s2-photo__points">

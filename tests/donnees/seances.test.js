@@ -273,3 +273,25 @@ describe('contenuCorrection (corriger une séance déjà faite)', () => {
     expect(contenuCorrection({})).toEqual({})
   })
 })
+
+import { estFourchette, texteReps } from '../../src/espace/donnees/seances.js'
+describe('fourchette de répétitions (20 novembre 2026)', () => {
+  it('reconnaît « 8-10 » et « 8 à 10 », pas « 10 » ni « 45 s »', () => {
+    expect(estFourchette('8-10')).toBe(true)
+    expect(estFourchette(' 8 à 10 ')).toBe(true)
+    expect(estFourchette('10')).toBe(false)
+    expect(estFourchette('45 s')).toBe(false)
+    expect(texteReps('8-10')).toBe('8 à 10')
+    expect(texteReps('12')).toBe('12')
+  })
+  it('s\'affiche « 3 × 8 à 10 »', () => {
+    expect(lignesExercice({ series: '3', reps: '8-10', charge: '20' }).prescription).toBe('3 × 8 à 10 · 20 kg')
+  })
+  it('une série faite ne reprend pas la fourchette : le coaché dit combien il en a fait', () => {
+    const el = { reps: '8-10', charge: '20' }
+    expect(serieTerminee({}, { reps: '' }, el)).toMatchObject({ reps: '', charge: '20', fait: true })
+    expect(serieTerminee({}, { reps: '9' }, el)).toMatchObject({ reps: '9', fait: true })
+    expect(saisirSerie({ reps: '', charge: '' }, 'fait', true, el)).toMatchObject({ reps: '', charge: '20', fait: true })
+    expect(saisirSerie({ reps: '', charge: '' }, 'fait', true, { reps: '10' })).toMatchObject({ reps: '10' })
+  })
+})

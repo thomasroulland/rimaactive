@@ -217,6 +217,18 @@ export function deplacerBloc(programme, { s, se }, de, vers) {
   return p
 }
 
+// Déplace un exercice dans son bloc (20 novembre 2026) : l'exercice `de` prend la place `vers` ; les codes A1, A2… suivent l'ordre
+export function deplacerElement(programme, { s, se }, bi, de, vers) {
+  const bloc = programme.semaines[s]?.seances[se]?.blocs?.[bi]
+  const els = bloc?.elements ?? []
+  if (de === vers || de < 0 || vers < 0 || de >= els.length || vers >= els.length) return programme
+  const p = structuredClone(programme)
+  const liste = p.semaines[s].seances[se].blocs[bi].elements
+  const [e] = liste.splice(de, 1)
+  liste.splice(vers, 0, e)
+  return p
+}
+
 // Retire un élément ; le bloc qui devient vide à cause de ce retrait disparaît et les blocs restants sont renommés A, B, C…
 // (un bloc créé vide par le coach, lui, reste en place)
 export function retirerElement(programme, { s, se }, elementId) {

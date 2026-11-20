@@ -6,7 +6,7 @@ import {
   ecouterModele, ecouterModelesSeance, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
-  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, deplacerBloc, supprimerBloc, sansBlocsVides, retirerElement,
+  nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, deplacerBloc, deplacerElement, supprimerBloc, sansBlocsVides, retirerElement,
   garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, reglerNbSemaines, semaineEnCours,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
@@ -584,6 +584,7 @@ export default function EditeurProgramme() {
                 supprimerBloc={(blocId, nom) => { changer((p) => supprimerBloc(p, { s: semIdx, se: seIdx }, blocId)); setMessage(`${nom} supprimé.`) }}
                 ajouterBloc={() => changer((p) => ajouterBlocVide(p, { s: semIdx, se: seIdx }))}
                 deplacerBloc={(de, vers) => changer((p) => deplacerBloc(p, { s: semIdx, se: seIdx }, de, vers))}
+                deplacerElement={(bi, de, vers) => changer((p) => deplacerElement(p, { s: semIdx, se: seIdx }, bi, de, vers))}
                 ajouter={(lettre, exo) => { changer((p) => ajouterAuBloc(p, { s: semIdx, se: seIdx }, lettre, exo)); setMessage(`« ${exo.nom} » ajouté au bloc ${lettre}.`) }} />
                   )
               })()}

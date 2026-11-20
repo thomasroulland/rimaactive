@@ -1496,3 +1496,17 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-installer__etapes small { color: var(--ec-gris); }
 .ec-installer__num { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: #161514; color: #f4f3ef; font: 800 12px/1 var(--font-sans); }
 .ec-installer__picto { display: inline-block; vertical-align: -4px; margin: 0 2px; color: #0a7aff; }
+
+/* Séance du coaché (20 novembre 2026) : pas de photo = pas d'encart vide */
+.ec-s5-photo.ec-s5-photo--sans { height: 48px !important; min-height: 0 !important; aspect-ratio: auto; background: transparent; }
+@media (min-width: 1100px) {
+  .ec-s5-grille--1 .ec-s5-carte:has(.ec-s5-photo--sans), .ec-s5-grille--2 .ec-s5-carte:has(.ec-s5-photo--sans) { grid-template-columns: minmax(0, 1fr); }
+}
+.ec-s5-carte:has(.ec-s5-photo--sans) .ec-s5-corps { padding-top: 4px; }
+.ec-s2-carte__tete.sans-vignette { grid-template-columns: minmax(0, 1fr) auto; }
+.ec-s2-consignes-seul { align-self: flex-start; margin: 4px 0 0; padding: 8px 14px; border: 0; border-radius: 999px; background: rgba(22, 21, 20, .07); color: #161514; font: 700 13px/1 var(--font-sans); cursor: pointer; }
+/* fourchette de répétitions : la case vide est à remplir avant « Série faite » */
+.ec-s2-reglage input::placeholder { color: #c4beb3; }
+.ec-s2-reglage.est-a-remplir { box-shadow: 0 0 0 2px var(--ec-vermillon, #ff4a1c); }
+.ec-s2-reglage.est-a-remplir .ec-s2-reglage__lib { color: #c2370f; }
+.ec-s5-resume.est-alerte { color: #c2370f; font-weight: 800; }
