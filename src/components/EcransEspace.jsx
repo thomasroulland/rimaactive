@@ -65,7 +65,7 @@ export default function EcransEspace() {
       <div className="ecrans__panneau">
         <div className="ecrans__tete">
           <p className="ecrans__surtitre">Votre espace</p>
-          <p className="ecrans__titre">Un suivi complet de votre programme et de vos entraînements sur ordinateur et mobile</p>
+          <p className="ecrans__titre">Un suivi complet de votre programme et de vos entraînements</p>
         </div>
 
         <div className="ecrans__corps">

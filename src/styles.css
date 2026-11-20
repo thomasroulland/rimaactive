@@ -2263,3 +2263,14 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .offres-page__corps--photo.offres-page__corps--inverse > .offres { grid-column: 1; }
   .offres-page__corps--photo > .offres-page__avantages { grid-row: 2; }
 }
+
+/* M'écrire, téléphone (20 novembre 2026) : retour à la ligne après « dans le 78, » ; bloc du titre resserré et plus près de l'encart */
+.saut-tel { display: none; }
+@media (max-width: 599px) {
+  .saut-tel { display: inline; }
+  .page-contact .page-contact__droite { padding-top: 22px !important; gap: 14px !important; }
+  .page-contact .presentation-contact .surtitre { margin-bottom: 4px !important; }
+  .page-contact .presentation-contact .titre { margin-bottom: 0 !important; }
+  .page-contact .presentation-contact .presentation-contact__lieu--court { margin-top: 6px !important; align-items: flex-start; }
+  .page-contact .presentation-contact .presentation-contact__lieu--court .picto { margin-top: 3px; }
+}

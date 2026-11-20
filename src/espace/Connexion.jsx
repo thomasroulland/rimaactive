@@ -55,17 +55,18 @@ export default function Connexion() {
       <div className="conteneur">
         <div className="espace-carte espace-connexion__carte connexion__carte">
           <div className="connexion__visuel">
-            <img src={photo} alt="" className="connexion__photo" />
+            <img src={photo} alt="" className="connexion__photo" />{/* photo moins zoomée pour voir Marie en entier, fondu noir en bas (20 novembre 2026) */}
             <div className="connexion__legende">
               <img src={symbole} alt="" className="connexion__symbole" width="36" height="36" />
-              <p className="connexion__phrase">Votre programme, vos séances et vos progrès, au même endroit.</p>
+              <p className="connexion__phrase">Vos objectifs. Votre progression.</p>
               <p className="connexion__signature">Marie Sillas, coach sportive à Houdan</p>
             </div>
           </div>
 
           <div className="connexion__corps">
-            <h1 className="titre titre--tuile connexion__titre">Mon espace</h1>
-            <p className="espace-texte connexion__intro">Connectez-vous pour retrouver votre programme.</p>
+            <p className="surtitre connexion__surtitre">Espace privé · Rimaactive</p>
+            <h1 className="titre titre--tuile connexion__titre">Bienvenue dans votre espace.</h1>
+            <p className="espace-texte connexion__intro">Retrouvez ici votre programme personnalisé.</p>
             <form className="espace-formulaire connexion__form" onSubmit={seConnecter} noValidate>
               <div className="champ-groupe">
                 <label htmlFor="espace-email">Adresse e-mail</label>
@@ -94,9 +95,9 @@ export default function Connexion() {
                 {envoi ? 'Connexion…' : 'Se connecter'}
               </button>
             </form>
-            <p className="connexion__aide">
-              Pas encore de compte ? Marie ouvre votre espace quand vous commencez un accompagnement.{' '}
-              <Link to="/contact" className="connexion__contact">Lui écrire</Link>
+            <p className="espace-texte connexion__aide">
+              Vous souhaitez commencer un accompagnement ?{' '}
+              <Link to="/contact" className="connexion__contact">Contacter Marie</Link>
             </p>
           </div>
         </div>
