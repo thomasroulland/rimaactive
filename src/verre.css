@@ -354,3 +354,32 @@ body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur
   .heros4 .ecrans__adresse { font-size: 10px; }
 }
 @media (max-width: 420px) { .heros4__boutons > * { flex: 0 0 auto; } }
+
+/* ===================== « Mes services » de l'accueil (maquette de Thomas, 20 novembre 2026, textes inchangés) =====================
+   Cartes blanches en hauteur : photo arrondie en haut, surtitre vermillon, titre, phrase, puis un trait et « Découvrir ↗ ».
+   4 par ligne sur ordinateur, 2 sur écran moyen, 1 sur téléphone. */
+.services4 { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.services4 > li { display: flex; }
+.services4__carte { position: relative; flex: 1; display: flex; flex-direction: column; padding: 10px; border-radius: 22px; background: #fff;
+  box-shadow: 0 10px 30px rgba(22, 21, 20, .08); transition: transform .35s cubic-bezier(.3, .7, .2, 1), box-shadow .35s ease; }
+.services4 .photo.services4__photo { aspect-ratio: 4 / 3; height: auto; border-radius: 14px; overflow: hidden; background: var(--craie-fonce); }
+.services4 .photo.services4__photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.3, .7, .2, 1); }
+.services4__corps { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 14px 8px 4px; }
+.services4__surtitre { margin: 0; color: var(--vermillon) !important; }
+.services4__titre { margin: 0; font: 800 clamp(20px, 1.6vw, 24px)/1.15 var(--font-sans); letter-spacing: -.02em; }
+.services4__lien { color: inherit; text-decoration: none; }
+.services4__lien::after { content: ""; position: absolute; inset: 0; border-radius: 22px; }
+.services4__texte { margin: 0; font: 400 15px/1.45 var(--font-sans); color: var(--gris-chaud); }
+.services4__bas { margin-top: auto; padding-top: 12px; border-top: 1px solid #ece8e0; display: flex; align-items: center; justify-content: space-between; font: 800 15px/1 var(--font-sans); color: var(--encre); }
+.services4__corps .services4__texte { margin-bottom: 12px; }
+.services4__bas svg { transition: transform .3s cubic-bezier(.3, .7, .2, 1); }
+.services4__carte:has(.services4__lien:focus-visible) { outline: 2px solid var(--encre); outline-offset: 3px; }
+@media (hover: hover) {
+  .services4__carte:hover { transform: translateY(-6px); box-shadow: 0 22px 44px rgba(22, 21, 20, .14); }
+  .services4__carte:hover .photo.services4__photo img { transform: scale(1.04); }
+  .services4__carte:hover .services4__bas { color: var(--vermillon); }
+  .services4__carte:hover .services4__bas svg { transform: rotate(45deg); }
+}
+@media (prefers-reduced-motion: reduce) { .services4__carte, .services4__carte:hover { transition: none; transform: none; } }
+@media (max-width: 1100px) { .services4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .services4 .photo.services4__photo { aspect-ratio: 16 / 9; } }
+@media (max-width: 640px) { .services4 { grid-template-columns: minmax(0, 1fr); gap: 14px; } .services4 .photo.services4__photo { aspect-ratio: 16 / 10; } }

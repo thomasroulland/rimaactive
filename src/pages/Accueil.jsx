@@ -82,29 +82,26 @@ export default function Accueil() {
               <h2 id="services-titre" className="titre titre--section">Quatre façons de s’<span className="mot-avant">entraîner</span> avec moi</h2>
             </div>
           </div>
-          {/* Toute la carte est un lien : la photo, le titre, les lieux, la phrase, puis le prix « à partir de »
-              (fiche tarifs) et une flèche ronde, qui passe en jaune au survol.
-              Sur téléphone et tablette, les cartes sont compactes : petite photo à gauche, sans la phrase. */}
-          <ul className="services__liste">
+          {/* Cartes en hauteur (maquette de Thomas, 20 novembre 2026, textes inchangés) : la photo en haut, le surtitre, le titre,
+              la phrase, puis un trait et « Découvrir » avec sa flèche. 4 par ligne sur ordinateur, 2 sur écran moyen, 1 sur téléphone.
+              Toute la carte mène à l'offre (lien du titre étendu à la carte). */}
+          <ul className="services4">
             {SERVICES.map((service) => (
               <li key={service.to}>
-                {/* Toute la carte mène à la page de l'offre (lien du titre étendu à la carte) ;
-                    « Voir les offres » mène aussi à la page de l'offre, en haut. Plus de prix sur l'accueil. */}
-                <div className="service">
-                  <Photo label={service.photo} src={service.image} className={`service__photo service__photo--${service.to.split('#')[1]}`} />
-                  <div className="service__corps">
-                    {/* surtitre vermillon au-dessus du titre (Marie, 16 novembre 2026) */}
-                    <p className="surtitre service__lieux">{service.pourQui}</p>
-                    <h3 className="titre titre--tuile">
-                      <Link to={service.to} className="service__lien" aria-label={`${service.titre} : voir les formules`}>{service.titre}</Link>
+                <article className="services4__carte">
+                  <Photo label={service.photo} src={service.image} className={`services4__photo service__photo--${service.to.split('#')[1]}`} />
+                  <div className="services4__corps">
+                    <p className="surtitre services4__surtitre">{service.pourQui}</p>
+                    <h3 className="services4__titre">
+                      <Link to={service.to} className="services4__lien" aria-label={`${service.titre} : voir les formules`}>{service.titre}</Link>
                     </h3>
-                    <p className="texte">{service.texte}</p>
-                    <Link to={service.to} className="service__bas" aria-label={`${service.titre} : découvrir les offres`}>
-                      <span className="service__contact">Découvrir</span>
-                      <span className="service__fleche" aria-hidden="true"><FlecheDiagonale /></span>
-                    </Link>
+                    <p className="services4__texte">{service.texte}</p>
+                    <span className="services4__bas" aria-hidden="true">
+                      <span>Découvrir</span>
+                      <svg viewBox="0 0 256 256" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="22" strokeLinecap="round" strokeLinejoin="round"><path d="M72 184 184 72M88 72h96v96" /></svg>
+                    </span>
                   </div>
-                </div>
+                </article>
               </li>
             ))}
           </ul>
