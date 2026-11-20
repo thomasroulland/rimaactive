@@ -58,8 +58,8 @@ export default function Connexion() {
             <img src={photo} alt="" className="connexion__photo" />{/* photo moins zoomée pour voir Marie en entier, fondu noir en bas (20 novembre 2026) */}
             <div className="connexion__legende">
               <img src={symbole} alt="" className="connexion__symbole" width="36" height="36" />
-              <p className="connexion__phrase">Vos objectifs. Votre progression.</p>
-              <p className="connexion__signature">Marie Sillas, coach sportive à Houdan</p>
+              <p className="connexion__phrase">Vos objectifs.<br className="connexion__saut" /> Votre progression.</p>
+              <p className="connexion__signature">Marie Sillas, coach sportive diplômée</p>
             </div>
           </div>
 
