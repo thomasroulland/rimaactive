@@ -1511,14 +1511,15 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .connexion .champ:autofill { background-color: #fff !important; }
 /* Photo (20 novembre 2026, Thomas) : moins zoomée, calée en haut ; en bas, derrière les textes, la même photo floutée et assombrie
    (on la devine encore) ; la photo nette s'y fond progressivement. Plus de bande noire en haut. */
-.connexion__visuel::before { content: ''; position: absolute; inset: -24px; z-index: 0; background: var(--photo) 40% 100% / cover no-repeat; filter: blur(18px) brightness(.6); }
+.connexion__visuel::before { content: ''; position: absolute; inset: -24px; z-index: 0; background: var(--photo) 40% 100% / cover no-repeat; filter: blur(18px) brightness(.6);
+  -webkit-mask-image: linear-gradient(180deg, transparent 50%, #000 75%); mask-image: linear-gradient(180deg, transparent 50%, #000 75%); } /* le flou seulement en bas, derrière les textes */
 .connexion__photo { z-index: 1; }
 .connexion__visuel::after { z-index: 2; }
 .connexion__legende { z-index: 3; }
 @media (min-width: 821px) {
   .connexion__visuel { overflow: hidden; }
   .connexion__photo { left: 50%; right: auto; top: 8%; bottom: auto; width: auto; height: 84%; max-width: none; object-fit: unset; transform: translateX(-46%);
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 9%, #000 68%, transparent 96%); mask-image: linear-gradient(180deg, transparent 0, #000 9%, #000 68%, transparent 96%); }
+    -webkit-mask-image: linear-gradient(180deg, #000 68%, transparent 96%); mask-image: linear-gradient(180deg, #000 68%, transparent 96%); }
   @keyframes connexion-photo { from { opacity: 0; } }
 }
 /* fondu sombre seulement en bas, derrière les textes, en gardant de la transparence */
@@ -1534,5 +1535,5 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .connexion__visuel { height: 260px; }
   /* la photo entière, calée à gauche du bandeau, descendue pour ne pas couper la tête ; le bas se fond dans le flou sombre */
   .connexion__photo { top: 4%; bottom: auto; left: -8%; width: 140%; height: auto; max-width: none; object-fit: unset; transform: none;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 40%, transparent 70%); mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 52%, transparent 80%); }
+    -webkit-mask-image: linear-gradient(180deg, #000 52%, transparent 80%); mask-image: linear-gradient(180deg, #000 52%, transparent 80%); }
 }
