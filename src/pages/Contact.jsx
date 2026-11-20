@@ -60,7 +60,7 @@ export default function Contact() {
           <form className="formulaire" onSubmit={envoyer}>
             <fieldset className="champ-groupe pleine">
               {/* quatre tuiles avec pictogramme (Thomas, 17 novembre 2026) ; déjà cochée quand on vient d'une carte de Mes offres */}
-              <legend>Quelle offre vous intéresse ?</legend>
+              <legend>Quelle formule vous intéresse ?</legend>
               <div className="choix-offre">
                 {OFFRES.map((o) => (
                   <label key={o.nom} className="choix-offre__tuile">
@@ -77,7 +77,7 @@ export default function Contact() {
               </label>
               <select id="formule" name="formule" className="champ" value={formule} disabled={!offre}
                 onChange={(e) => setFormule(e.target.value)}>
-                <option value="">{offre ? 'Je ne sais pas encore' : 'Choisissez une offre'}</option>
+                <option value="">{offre ? 'Je ne sais pas encore' : 'Choisissez une formule'}</option>
                 {formulesOffre.map((f) => <option key={f} value={f}>{f.replace(` · ${offre}`, '')}</option>)}
               </select>
             </div>
