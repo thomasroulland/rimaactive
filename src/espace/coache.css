@@ -1529,7 +1529,7 @@ select.ec-champ { appearance: auto; min-width: 0; }
 /* Connexion (20 novembre 2026) : la photo et son flou restent dans leur cadre (jamais sur l'encart blanc) ;
    sur téléphone, le même fond sombre et flou derrière le texte, et « Votre progression. » à la ligne */
 .connexion__visuel { overflow: hidden; }
-.connexion__saut { display: none; }
+.connexion__saut { display: inline; } /* « Votre progression. » à la ligne partout (ordinateur aussi, 20 novembre 2026) */
 @media (max-width: 820px) {
   .connexion__saut { display: inline; }
   .connexion__visuel { height: 260px; }
@@ -1544,8 +1544,8 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .connexion__visuel::before { display: none; }
 .connexion__visuel .connexion__photo { -webkit-mask-image: none !important; mask-image: none !important; object-fit: unset !important; max-width: none !important; }
 @media (min-width: 821px) {
-  .connexion__visuel .connexion__photo { top: -106.7% !important; bottom: auto !important; left: 50% !important; height: 261% !important; width: auto !important; transform: translateX(-46.1%) !important; }
+  .connexion__visuel .connexion__photo { top: -99% !important; bottom: auto !important; left: 50% !important; height: 261% !important; width: auto !important; transform: translateX(-46.1%) !important; }
 }
 @media (max-width: 820px) {
-  .connexion__visuel .connexion__photo { top: calc(10px - 107.5cqw) !important; left: -7cqw !important; width: 137.5cqw !important; height: auto !important; transform: none !important; }
+  .connexion__visuel .connexion__photo { top: calc(34px - 107.5cqw) !important; left: -7cqw !important; width: 137.5cqw !important; height: auto !important; transform: none !important; }
 }
