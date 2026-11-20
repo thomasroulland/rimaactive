@@ -54,7 +54,7 @@ export default function Connexion() {
     <section className={`section espace-connexion connexion${sansEntree ? ' connexion--sans-entree' : ''}`}>
       <div className="conteneur">
         <div className="espace-carte espace-connexion__carte connexion__carte">
-          <div className="connexion__visuel">
+          <div className="connexion__visuel" style={{ '--photo': `url(${photo})` }}>
             <img src={photo} alt="" className="connexion__photo" />{/* photo moins zoomée pour voir Marie en entier, fondu noir en bas (20 novembre 2026) */}
             <div className="connexion__legende">
               <img src={symbole} alt="" className="connexion__symbole" width="36" height="36" />
