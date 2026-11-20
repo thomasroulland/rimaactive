@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import photo from '../assets/heros-squat-nb.jpg'
+import photo from '../assets/connexion-squat-entier.jpg' // photo en pied envoyée par Marie (20 novembre 2026)
 import symbole from '../assets/rimaactive-symbole-vermillon.svg'
 import { messageErreur } from './erreurs.js'
 import './espace.css'

@@ -1537,3 +1537,15 @@ select.ec-champ { appearance: auto; min-width: 0; }
   .connexion__photo { top: 4%; bottom: auto; left: -8%; width: 140%; height: auto; max-width: none; object-fit: unset; transform: none;
     -webkit-mask-image: linear-gradient(180deg, #000 52%, transparent 80%); mask-image: linear-gradient(180deg, #000 52%, transparent 80%); }
 }
+
+/* Connexion, photo en pied envoyée par Marie (20 novembre 2026) : même taille et même cadrage que la version validée
+   (calée sur la barre et les disques), mais la photo continue au-dessus de la tête : plus de bandeau noir. */
+.connexion__visuel { container-type: inline-size; }
+.connexion__visuel::before { display: none; }
+.connexion__visuel .connexion__photo { -webkit-mask-image: none !important; mask-image: none !important; object-fit: unset !important; max-width: none !important; }
+@media (min-width: 821px) {
+  .connexion__visuel .connexion__photo { top: -106.7% !important; bottom: auto !important; left: 50% !important; height: 261% !important; width: auto !important; transform: translateX(-46.1%) !important; }
+}
+@media (max-width: 820px) {
+  .connexion__visuel .connexion__photo { top: calc(10px - 107.5cqw) !important; left: -7cqw !important; width: 137.5cqw !important; height: auto !important; transform: none !important; }
+}
