@@ -64,7 +64,7 @@ export default function Connexion() {
           </div>
 
           <div className="connexion__corps">
-            <p className="surtitre connexion__surtitre">Espace privé · Rimaactive</p>
+            <p className="surtitre connexion__surtitre">Espace coaching · Rimaactive</p>
             <h1 className="titre titre--tuile connexion__titre">Bienvenue dans votre espace.</h1>
             <p className="espace-texte connexion__intro">Retrouvez ici votre programme personnalisé.</p>
             <form className="espace-formulaire connexion__form" onSubmit={seConnecter} noValidate>
