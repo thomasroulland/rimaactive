@@ -52,25 +52,24 @@ export default function Accueil() {
   useTitre('Accueil')
   return (
     <>
-      {/* Haut de page : « Coach Marie » sur craie à gauche, la photo de Marie bras croisés à droite,
-          avec trois repères en bulles blanches posés en bas de la photo (sous la photo sur téléphone) */}
-      <section className="heros heros--v3" aria-labelledby="heros-titre">
-        {/* Haut de page (choix de Marie, 12 novembre 2026) : « Marie Sillas » sur une ligne, « M'écrire » (flèche en pastille)
-            et « Qui suis-je » (contour craie) côte à côte */}
-        <div className="heros__cadre">
-          <img className="heros__photo" src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
-          <div className="heros__texte">
-            <p className="surtitre heros__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
-            <h1 id="heros-titre" className="titre heros__titre heros__titre--ligne">Marie Sillas</h1>
-            <p className="accroche heros__ligne">Un corps fort et mobile grâce à une<br />pratique fonctionnelle.</p>
-            <div className="heros__boutons">
-              <Link to="/contact" className="heros__ecrire">M’écrire <FlecheDiagonale /></Link>
-              <a href="#approche" className="heros__second">Qui suis-je</a>
+      {/* Haut de page (maquette de Thomas, 20 novembre 2026 ; textes inchangés) : deux cartes arrondies côte à côte,
+          la photo de Marie avec le texte posé en bas, et l'aperçu de l'espace client ; sur téléphone, l'une sous l'autre */}
+      <section className="heros4" data-heros aria-labelledby="heros-titre">
+        <div className="heros4__grille">
+          <div className="heros4__photo">
+            <img src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
+            <div className="heros4__texte">
+              <p className="heros4__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
+              <h1 id="heros-titre" className="heros4__titre">Marie Sillas</h1>
+              <p className="heros4__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
+              <div className="heros4__boutons">
+                <Link to="/contact" className="heros__ecrire">M’écrire <FlecheDiagonale /></Link>
+                <a href="#approche" className="heros__second">Qui suis-je</a>
+              </div>
             </div>
           </div>
+          <EcransEspace />
         </div>
-        {/* Les vrais écrans de l’espace coaché, qui défilent (15 novembre 2026) ; sous 1100 px, ils passent sous la photo (17 novembre) */}
-        <EcransEspace />
       </section>
 
       <Methode />

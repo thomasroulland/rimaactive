@@ -124,7 +124,7 @@ function useEcrireVisible(accueil) {
     if (!accueil) { setVisible(true); return }
     const suivre = () => {
       // visible dès qu'on a quitté le haut de page (qui a déjà son bouton « M'écrire »)
-      const heros = document.querySelector('.heros')
+      const heros = document.querySelector('[data-heros], .heros')
       setVisible(!!heros && heros.getBoundingClientRect().bottom < window.innerHeight * 0.5)
     }
     suivre()

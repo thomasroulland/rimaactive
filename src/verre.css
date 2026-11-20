@@ -306,3 +306,51 @@ body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur
   body::before { animation: none !important; will-change: auto !important; }
   .espace-grille .espace-carte, .espace-exo { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: rgba(255, 255, 255, .94) !important; animation: none !important; }
 }
+
+/* ===================== Haut de l'accueil (maquette de Thomas, 20 novembre 2026, textes inchangés) =====================
+   Deux cartes arrondies côte à côte, posées sur le fond : la photo de Marie (texte en bas, sur un dégradé sombre)
+   et l'aperçu de l'espace client (carte claire, points sous l'aperçu). Sur téléphone, l'une sous l'autre. */
+.heros4 { padding: 20px var(--gouttiere, 20px) 28px; }
+.heros4__grille { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1fr); gap: 18px;
+  height: clamp(560px, calc(100svh - var(--hauteur-entete, 64px) - 48px), 860px); }
+.heros4__photo { position: relative; overflow: hidden; border-radius: 28px; background: #161514; isolation: isolate; box-shadow: 0 24px 60px rgba(22, 21, 20, .18); }
+.heros4__photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 26%; z-index: -2; }
+.heros4__photo::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(22, 21, 20, .92) 0%, rgba(22, 21, 20, .62) 34%, rgba(22, 21, 20, 0) 58%); }
+.heros4__texte { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(22px, 2.4vw, 36px); display: grid; justify-items: start; gap: 12px; }
+.heros4__surtitre { margin: 0; font: 800 12px/1.35 var(--font-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--jaune); }
+.heros4__titre { margin: 0; font: 900 clamp(42px, 4.2vw, 66px)/.95 var(--font-sans); letter-spacing: -.045em; color: var(--craie); }
+.heros4__ligne { margin: 0; max-width: 30ch; font: 500 clamp(15px, 1.15vw, 18px)/1.45 var(--font-sans); color: rgba(244, 243, 239, .86); }
+.heros4__boutons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+/* carte de l'espace : claire, arrondie, toute la hauteur ; points à la place des vignettes */
+.heros4 .ecrans--carte { display: flex; min-width: 0; }
+.heros4 .ecrans__panneau { flex: 1; justify-content: center; border-radius: 28px; padding: clamp(24px, 3vw, 44px); box-shadow: 0 24px 60px rgba(22, 21, 20, .1) !important; }
+.heros4 .ecrans__surtitre { color: var(--vermillon); }
+.heros4 .ecrans__titre { font-size: clamp(22px, 2vw, 32px); max-width: 34ch; }
+.heros4 .ecrans__corps { grid-template-columns: minmax(0, 1fr); }
+.heros4 .ecrans__scene { max-width: 760px; }
+.ecrans__points { display: flex; justify-content: center; gap: 10px; }
+.ecrans__point { position: relative; width: 10px; height: 10px; padding: 0; border: 0; border-radius: 999px; background: #d8d3c9; overflow: hidden; cursor: pointer; transition: width .3s ease, background-color .2s ease; }
+.ecrans__point[aria-pressed="true"] { width: 34px; background: #e7e2d9; }
+.ecrans__point:hover { background: #bdb6a9; }
+.ecrans__point:focus-visible { outline: 2px solid var(--encre); outline-offset: 3px; }
+.ecrans__point .ecrans__temps { inset: 0; height: auto; border-radius: inherit; }
+.ecrans__point[aria-pressed="true"]:not(:has(.ecrans__temps)) { background: var(--vermillon); }
+/* tablette et téléphone : les deux cartes l'une sous l'autre ; la photo prend l'écran, la carte de l'espace suit */
+@media (max-width: 960px) {
+  .heros4 { padding: 12px var(--gouttiere, 16px) 20px; }
+  .heros4__grille { grid-template-columns: minmax(0, 1fr); height: auto; gap: 16px; }
+  .heros4__photo { height: clamp(480px, calc(100svh - var(--hauteur-entete, 56px) - 28px), 760px); border-radius: 24px; }
+  .heros4__texte { padding: 24px 20px; }
+  .heros4__titre { font-size: clamp(40px, 11vw, 56px); }
+  .heros4 .ecrans__panneau { border-radius: 24px; padding: 24px 18px 20px; gap: 18px; }
+  .heros4 .ecrans__titre { font-size: clamp(22px, 6vw, 28px); }
+  .heros4 .ecrans__scene { padding: 0 9% 12% 0; }
+  .heros4 .ecrans__tel { width: 27%; border-width: 4px; border-radius: 18px; }
+  .heros4 .ecrans__etiquette { left: 0; padding: 8px 12px 8px 8px; gap: 8px; max-width: 74%; }
+  .heros4 .ecrans__numero { width: 30px; height: 30px; border-radius: 9px; font-size: 14px; }
+  .heros4 .ecrans__textes strong { font-size: 14px; }
+  .heros4 .ecrans__textes span { font-size: 12px; }
+  .heros4 .ecrans__barre { height: 22px; }
+  .heros4 .ecrans__adresse { font-size: 10px; }
+}
+@media (max-width: 420px) { .heros4__boutons > * { flex: 0 0 auto; } }

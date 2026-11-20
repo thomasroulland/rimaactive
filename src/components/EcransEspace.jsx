@@ -59,7 +59,7 @@ export default function EcransEspace() {
 
   const e = ECRANS[idx]
   return (
-    <div className="heros__outil ecrans" ref={racine} aria-label="Aperçu de votre espace client"
+    <div className="ecrans ecrans--carte" ref={racine} aria-label="Aperçu de votre espace client"
       onMouseEnter={() => setEnPause(true)} onMouseLeave={() => setEnPause(false)}
       onFocus={() => setEnPause(true)} onBlur={() => setEnPause(false)}>
       <div className="ecrans__panneau">
@@ -93,17 +93,14 @@ export default function EcransEspace() {
             </div>
           </div>
 
-          <ul className="ecrans__vignettes" aria-label="Les pages de l'espace">
-            {ECRANS.map((ecran, i) => (
-              <li key={ecran.titre}>
-                <button type="button" className="ecrans__vignette" aria-pressed={i === idx} onClick={() => setIdx(i)}>
-                  <span className="ecrans__mini"><img src={ecran.pc} alt="" width="1200" height="650" loading="lazy" decoding="async" /></span>
-                  <span className="ecrans__nom">{ecran.titre}</span>
-                  {i === idx && !calme && <span key={`temps-${idx}-${tour}`} className={`ecrans__temps${enPause ? ' est-pause' : ''}`} style={{ animationDuration: `${DUREE}ms` }} aria-hidden="true" />}
-                </button>
-              </li>
-            ))}
-          </ul>
+        </div>
+        {/* des points sous l'aperçu (maquette du 20 novembre 2026) à la place des vignettes ; celui en cours se remplit */}
+        <div className="ecrans__points" role="group" aria-label="Les pages de l'espace">
+          {ECRANS.map((ecran, i) => (
+            <button key={ecran.titre} type="button" className="ecrans__point" aria-pressed={i === idx} aria-label={ecran.titre} onClick={() => setIdx(i)}>
+              {i === idx && !calme && <span key={`temps-${idx}-${tour}`} className={`ecrans__temps${enPause ? ' est-pause' : ''}`} style={{ animationDuration: `${DUREE}ms` }} aria-hidden="true" />}
+            </button>
+          ))}
         </div>
       </div>
     </div>
