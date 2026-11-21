@@ -399,3 +399,8 @@ body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur
 /* 21 novembre 2026 : « Houdan (78) & alentours » sous les boutons ; titre de l'aperçu de l'espace sur une seule ligne (ordinateur) */
 .heros4__lieu { margin: 4px 0 0; }
 @media (min-width: 961px) { .heros4 .ecrans__titre { white-space: nowrap; max-width: none; font-size: clamp(18px, 1.75vw, 30px); } }
+/* « M'écrire » de « Qui suis-je » : flèche diagonale dans une petite bulle blanche, dans le bouton jaune */
+.approche__bouton--fleche { display: inline-flex; align-items: center; gap: 10px; padding-right: 6px !important; }
+.approche__fleche { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #fff; color: var(--encre); }
+.approche__fleche svg { width: 11px; height: 11px; transition: transform .45s cubic-bezier(.3, .7, .2, 1); }
+.approche__bouton--fleche:hover .approche__fleche svg { transform: rotate(45deg); }

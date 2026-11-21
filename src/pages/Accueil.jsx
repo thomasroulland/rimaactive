@@ -140,7 +140,8 @@ export default function Accueil() {
               en force et en mobilité tout en retrouvant le plaisir de vous dépasser.
             </p>
             {/* « M'écrire » vers le formulaire de contact (Marie, 21 novembre 2026) */}
-            <Link to="/contact" className="bouton bouton--principal approche__bouton">M’écrire</Link>
+            {/* la même flèche que le bouton du haut de page, dans une petite bulle blanche (Marie, 21 novembre 2026) */}
+            <Link to="/contact" className="bouton bouton--principal approche__bouton approche__bouton--fleche">M’écrire <span className="approche__fleche" aria-hidden="true"><FlecheDiagonale /></span></Link>
           </div>
         </div>
       </section>
