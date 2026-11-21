@@ -419,16 +419,16 @@ body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur
   .titre--section:not(.approche__cadre .titre--section), .offres-page__entete .titre--section { font-size: 36px !important; line-height: 1.06 !important; }
 }
 .titre--page, .page-contact .presentation-contact .titre { font-size: clamp(40px, 3.8vw, 56px) !important; line-height: 1 !important; }
-.services4__titre { font-size: 22px; }
-@media (max-width: 640px) { .services4__titre { font-size: 20px; } }
-.methode__titre { font-size: min(22px, 7.9cqi) !important; }
-@media (max-width: 640px) { .methode__titre { font-size: min(20px, 6.6cqi) !important; } }
 .services4__texte { font-size: 16px; }
 /* mentions légales, petit téléphone : le tableau tient dans la largeur */
 @media (max-width: 380px) { .page-legale table, main table { font-size: 13px; } main table th, main table td { padding-inline: 6px; word-break: break-word; } }
-.methode__titre { white-space: normal !important; font-size: 22px !important; }
-@media (max-width: 640px) { .methode__titre { font-size: 20px !important; } }
 .heros4__titre { font-size: clamp(48px, 4.2vw, 66px); }
 @media (max-width: 960px) { .heros4__titre { font-size: clamp(40px, 11vw, 48px); } }
-/* titres de la méthode sur deux lignes possibles : les textes restent alignés d'une carte à l'autre */
-@media (min-width: 900px) and (max-width: 1500px) { .methode__titre { min-height: calc(2 * 1.18em); line-height: 1.18 !important; } }
+
+/* Titres de cartes toujours sur une seule ligne (Thomas, 21 novembre 2026) : 22 px au plus (20 px sur téléphone),
+   un peu plus petits seulement si la carte est trop étroite pour le titre le plus long de la rangée */
+.methode__titre { white-space: nowrap !important; font-size: min(22px, 7.6cqi) !important; line-height: 1.2 !important; }
+@media (max-width: 640px) { .methode__titre { font-size: min(20px, 6.6cqi) !important; } }
+.services4__corps { container-type: inline-size; }
+.services4__titre { white-space: nowrap; font-size: min(22px, calc(100cqi / 11.2)); }
+@media (max-width: 640px) { .services4__titre { font-size: min(20px, calc(100cqi / 11.2)); } }
