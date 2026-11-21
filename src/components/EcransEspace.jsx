@@ -15,10 +15,11 @@ import pcProgression from '../assets/ecrans/pc-progression.webp'
 // Captures faites avec une coachée fictive.
 // Dans l'ordre du parcours (accueil, programme, séance, progression ; « Messages » retiré par Marie le 16 novembre 2026), avec les titres des pages de l'espace.
 const ECRANS = [
-  { pc: pcAccueil, tel: telAccueil, titre: 'Tableau de bord', sous: 'La prochaine séance, prête à ouvrir' },
-  { pc: pcProgramme, tel: telProgramme, titre: 'Mon programme', sous: 'Semaine par semaine, préparé pour vous' },
-  { pc: pcSeance, tel: telSeance, titre: 'Séance', sous: 'Charges, répétitions et consignes en photo' },
-  { pc: pcProgression, tel: telProgression, titre: 'Ma progression', sous: 'Records, poids et régularité' },
+  // titres et phrases de Marie (21 novembre 2026)
+  { pc: pcAccueil, tel: telAccueil, titre: 'Tableau de bord', sous: 'Votre prochaine séance, prête à démarrer.' },
+  { pc: pcProgramme, tel: telProgramme, titre: 'Mon programme', sous: 'Votre programme sur mesure, adapté à vos objectifs.' },
+  { pc: pcSeance, tel: telSeance, titre: 'Ma séance', sous: 'Vos exercices, charges et consignes au même endroit.' },
+  { pc: pcProgression, tel: telProgression, titre: 'Ma progression', sous: 'Visualisez vos progrès, séance après séance.' },
 ]
 const DUREE = 5000
 const N = ECRANS.length
@@ -65,7 +66,7 @@ export default function EcransEspace() {
       <div className="ecrans__panneau">
         <div className="ecrans__tete">
           <p className="ecrans__surtitre">Votre espace</p>
-          <p className="ecrans__titre">Un suivi complet de votre programme et de vos entraînements</p>
+          <p className="ecrans__titre">Suivez votre programme et mesurez vos progrès</p>
         </div>
 
         <div className="ecrans__corps">

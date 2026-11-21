@@ -15,9 +15,10 @@ export default function Entete({ liens = PAGES_MENU, ecrire = true, compte, accu
   // pages qui commencent par une photo plein cadre : les trois pages de formules
   const surPhoto = useSurPhoto(false)
   const [ouvert, setOuvert] = useState(false)
-  // Sur l'accueil, « M'écrire » est déjà dans le haut de page : celui de la barre n'apparaît qu'en arrivant sur « Mon approche »
+  // (jusqu'au 21 novembre 2026, « M'écrire » n'apparaissait dans la barre de l'accueil qu'en quittant le haut de page)
   // Sur la page M'écrire elle-même, il reste dans la barre, allumé comme page en cours (Thomas, 18 novembre 2026)
-  const ecrirePossible = useEcrireVisible(pathname === '/') // le hook est toujours appelé (règle de React)
+  // 21 novembre 2026 : le bouton de la photo de l'accueil est devenu « Découvrir mes offres » : « M'écrire » reste toujours dans la barre
+  const ecrirePossible = useEcrireVisible(false) // le hook est toujours appelé (règle de React)
   const ecrireCible = ecrire && ecrirePossible
   // Passage d'une barre à l'autre (connexion ↔ site) : la nouvelle barre part de l'état de la précédente,
   // pour que « M'écrire » se plie ou se déplie en glissant au lieu d'apparaître ou de disparaître d'un coup

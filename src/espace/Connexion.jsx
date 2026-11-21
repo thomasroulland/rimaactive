@@ -59,7 +59,7 @@ export default function Connexion() {
             <div className="connexion__legende">
               <img src={symbole} alt="" className="connexion__symbole" width="36" height="36" />
               <p className="connexion__phrase">Vos objectifs.<br className="connexion__saut" /> Votre progression.</p>
-              <p className="connexion__signature">Marie Sillas, coach sportive diplômée</p>
+              <p className="connexion__signature">Marie Sillas, coach sportive diplômée d’État</p>
             </div>
           </div>
 

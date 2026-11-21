@@ -10,13 +10,14 @@ import useTitre from '../components/useTitre.js'
 import { basculerDetails } from '../components/basculerDetails.js'
 import { CONTACT } from '../components/liens.js'
 import EcransEspace from '../components/EcransEspace.jsx'
+import Picto from '../components/Picto.jsx'
 
 // Ordre, surtitres et textes de Marie (16 novembre 2026) : Individuel, En ligne, Groupes, Entreprises
 const SERVICES = [
   {
     to: '/offres#individuel',
-    titre: 'Individuel',
-    pourQui: '1:1 • À domicile ou en salle',
+    titre: 'Coaching individuel',
+    pourQui: 'À domicile ou en salle',
     photo: 'Barre olympique chargée et kettlebell posées sur un sol de salle',
     image: photoEnLigne,
     texte: 'Des séances adaptées à votre niveau et vos objectifs chez vous ou en extérieur.',
@@ -24,24 +25,24 @@ const SERVICES = [
   // tuile ajoutée le 9 novembre 2026, photo envoyée par Marie
   {
     to: '/offres#en-ligne',
-    titre: 'En ligne',
-    pourQui: 'Suivi mensuel • À distance',
+    titre: 'Coaching en ligne',
+    pourQui: '100\u00a0% à distance',
     photo: 'Barre chargée et pieds d’une sportive sur un sol de salle',
     image: photoIndividuel,
     texte: 'Votre programme sur mesure et un bilan chaque semaine pour progresser où que vous soyez.',
   },
   {
     to: '/offres#groupes',
-    titre: 'Groupes',
-    pourQui: '2 à 8 personnes • En extérieur',
+    titre: 'Coaching en groupe',
+    pourQui: '2 à 8 personnes',
     photo: 'Kettlebells et barres sur un sol de salle',
     image: photoGroupes,
     texte: 'Entraînez-vous en petit comité près de chez vous pour progresser dans une bonne ambiance.',
   },
   {
     to: '/offres#entreprises',
-    titre: 'Entreprises',
-    pourQui: 'Jusqu’à 16 personnes • Sur site',
+    titre: 'Coaching en entreprise',
+    pourQui: 'Jusqu’à 16 personnes',
     photo: 'Rangée de kettlebells sur le sol d’une salle',
     image: photoEntreprises,
     texte: 'Des séances de mobilité et de renforcement pour vos équipes dans vos locaux ou en plein air.',
@@ -59,11 +60,13 @@ export default function Accueil() {
           <div className="heros4__photo">
             <img src={photoHeros} alt="Marie Sillas, coach sportive, bras croisés" />
             <div className="heros4__texte">
-              <p className="heros4__surtitre">Coach sportive diplômée · Houdan (78) &amp; alentours</p>
+              {/* textes de Marie du 21 novembre 2026 (PDF « Modifs à faire ») */}
+              <p className="heros4__surtitre">Coach sportive diplômée d’État</p>
               <h1 id="heros-titre" className="heros4__titre">Marie Sillas</h1>
               <p className="heros4__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
+              <p className="heros4__lieu"><Picto nom="map-pin" taille={18} />Houdan (78) &amp; alentours</p>
               <div className="heros4__boutons">
-                <Link to="/contact" className="heros__ecrire">M’écrire <FlecheDiagonale /></Link>
+                <a href="#accompagnement" className="heros__ecrire">Découvrir mes offres <FlecheDiagonale /></a>
                 <a href="#approche" className="heros__second">Qui suis-je</a>
               </div>
             </div>
@@ -97,7 +100,7 @@ export default function Accueil() {
                     </h3>
                     <p className="services4__texte">{service.texte}</p>
                     <span className="services4__bas" aria-hidden="true">
-                      <span>Découvrir</span>
+                      <span>Découvrir la formule</span>
                       <svg viewBox="0 0 256 256" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="22" strokeLinecap="round" strokeLinejoin="round"><path d="M72 184 184 72M88 72h96v96" /></svg>
                     </span>
                   </div>
@@ -160,7 +163,18 @@ const PRINCIPES = [
 ]
 
 // Les objectifs que Marie accompagne (donnés par Marie, novembre 2026)
-const OBJECTIFS = ['Transformation & Silhouette', 'Performance & Force', 'Condition physique & Endurance', 'Mental & Discipline']
+const OBJECTIFS = [['Transformation & Silhouette', 'courbe'], ['Performance & Force', 'haltere'], ['Condition physique & Endurance', 'coeur'], ['Mental & Discipline', 'cerveau']]
+
+// Pictogrammes des objectifs, au trait fin comme Phosphor Light (grille 256, épaisseur 14), en vermillon
+function PictoObjectif({ nom }) {
+  const traits = {
+    courbe: <><path d="M32 200h192" /><path d="M40 168l52-56 40 32 84-88" /><path d="M176 56h40v40" /></>,
+    haltere: <><path d="M96 128h64" /><rect x="56" y="72" width="40" height="112" rx="10" /><rect x="160" y="72" width="40" height="112" rx="10" /><path d="M28 104v48M228 104v48" /></>,
+    coeur: <><path d="M128 216S28 160 28 94a50 50 0 0 1 100-10 50 50 0 0 1 100 10c0 66-100 122-100 122Z" /><path d="M60 128h40l14-26 26 52 14-26h42" /></>,
+    cerveau: <><path d="M128 48v160" /><path d="M128 72a36 36 0 0 0-68-12 32 32 0 0 0-20 52 34 34 0 0 0 16 56 36 36 0 0 0 72 4" /><path d="M128 72a36 36 0 0 1 68-12 32 32 0 0 1 20 52 34 34 0 0 1-16 56 36 36 0 0 1-72 4" /></>,
+  }
+  return <svg className="objectifs4__picto" viewBox="0 0 256 256" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{traits[nom]}</svg>
+}
 
 // « Ma méthode » (novembre 2026) : titre centré, quatre principes, objectifs ; fond blanc, « fonctionne » en vermillon
 function Methode() {
@@ -181,9 +195,10 @@ function Methode() {
           ))}
         </ol>
         <div className="methode__objectifs">
-          <p className="methode__objectifs-titre">Vos objectifs</p>
-          <ul>
-            {OBJECTIFS.map((o) => <li key={o}>{o}</li>)}
+          <p className="methode__objectifs-titre">Une méthode, plusieurs objectifs</p>
+          {/* bulles blanches avec un pictogramme vermillon, sur une ligne (Marie, 21 novembre 2026) */}
+          <ul className="objectifs4">
+            {OBJECTIFS.map(([o, picto]) => <li key={o}><PictoObjectif nom={picto} />{o}</li>)}
           </ul>
         </div>
       </div>
