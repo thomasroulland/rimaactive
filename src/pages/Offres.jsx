@@ -25,7 +25,7 @@ const RUBRIQUES = [
 // et sur un écran coupé en deux »). Les textes `liste` restent dans les fichiers des pages, sans être affichés ici.
 
 export default function Offres() {
-  useTitre('Mes offres')
+  useTitre('Mes formules')
   const { hash } = useLocation()
   // rubrique affichée (soulignée dans les onglets) : celle qui est sous la barre des onglets
   const [courante, setCourante] = useState(RUBRIQUES[0].id)
@@ -67,7 +67,7 @@ export default function Offres() {
       {/* en haut, toujours visibles : le titre et les bulles des rubriques, sur une seule ligne */}
       <nav className="offres-page__bulles" aria-labelledby="offres-titre">
         <div className="conteneur">
-          <h1 id="offres-titre" className="titre offres-page__titre">Mes offres</h1>
+          <h1 id="offres-titre" className="titre offres-page__titre">Mes formules</h1>
           <div className="offres-page__liens">
             {RUBRIQUES.map((r) => <a key={r.id} href={`#${r.id}`} aria-current={r.id === courante ? 'location' : undefined} onClick={() => { choisie.current = r.id; setCourante(r.id) }}>{r.page.titre}</a>)}
           </div>
