@@ -64,11 +64,12 @@ export default function Accueil() {
               <p className="heros4__surtitre">Coach sportive diplômée d’État</p>
               <h1 id="heros-titre" className="heros4__titre">Marie Sillas</h1>
               <p className="heros4__ligne">Un corps fort et mobile grâce à une pratique fonctionnelle.</p>
-              <p className="heros4__lieu"><Picto nom="map-pin" taille={18} />Houdan (78) &amp; alentours</p>
               <div className="heros4__boutons">
                 <a href="#accompagnement" className="heros__ecrire">Découvrir mes offres <FlecheDiagonale /></a>
                 <a href="#approche" className="heros__second">Qui suis-je</a>
               </div>
+              {/* sous les deux boutons (Marie, 21 novembre 2026) */}
+              <p className="heros4__lieu"><Picto nom="map-pin" taille={18} />Houdan (78) &amp; alentours</p>
             </div>
           </div>
           <EcransEspace />
@@ -138,7 +139,8 @@ export default function Accueil() {
               Je construis avec vous des séances efficaces et ciblées sur vos besoins. Mon objectif&nbsp;: vous faire gagner
               en force et en mobilité tout en retrouvant le plaisir de vous dépasser.
             </p>
-            <a href="#accompagnement" className="bouton bouton--principal approche__bouton">Mes services</a>
+            {/* « M'écrire » vers le formulaire de contact (Marie, 21 novembre 2026) */}
+            <Link to="/contact" className="bouton bouton--principal approche__bouton">M’écrire</Link>
           </div>
         </div>
       </section>

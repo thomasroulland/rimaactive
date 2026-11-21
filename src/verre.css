@@ -396,3 +396,6 @@ body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur
 /* M'écrire (21 novembre 2026) : espaces équilibrés entre « Échangeons ensemble », « Contactez-moi » et « Basée à Houdan… » */
 .page-contact .presentation-contact .surtitre { margin: 0 0 8px !important; }
 .page-contact .presentation-contact__lieu { margin-top: 10px !important; }
+/* 21 novembre 2026 : « Houdan (78) & alentours » sous les boutons ; titre de l'aperçu de l'espace sur une seule ligne (ordinateur) */
+.heros4__lieu { margin: 4px 0 0; }
+@media (min-width: 961px) { .heros4 .ecrans__titre { white-space: nowrap; max-width: none; font-size: clamp(18px, 1.75vw, 30px); } }
