@@ -432,3 +432,11 @@ body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur
 .services4__corps { container-type: inline-size; }
 .services4__titre { white-space: nowrap; font-size: min(22px, calc(100cqi / 11.2)); }
 @media (max-width: 640px) { .services4__titre { font-size: min(20px, calc(100cqi / 11.2)); } }
+/* Cartes des services (21 novembre 2026) : « Découvrir la formule » juste sous la phrase, même écart dans toutes les cartes
+   (avant, il restait collé en bas et laissait un grand blanc dans les cartes à phrase courte) */
+.services4__bas { margin-top: 0; }
+.services4__corps .services4__texte { margin-bottom: 14px; }
+.services4 { align-items: start; }
+.services4 > li { display: block; }
+/* 1101–1400 px : un peu plus de largeur pour la phrase, pour qu'elle tienne en 3 lignes dans les 4 cartes (cartes de même hauteur) */
+@media (min-width: 1101px) and (max-width: 1400px) { .services4 { gap: 12px; } .services4__carte { padding: 8px; } .services4__corps { padding: 12px 6px 4px; } }
