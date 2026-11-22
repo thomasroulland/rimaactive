@@ -454,7 +454,7 @@ function Quitter({ vers, enCours, remettre }) {
           <div className="ec-tuto__corps">
             <span className="ec-tuto__poignee" aria-hidden="true" />
             <h2 id="quitter-titre" className="ec-tuto__titre">Quitter la séance&nbsp;?</h2>
-            <p className="ec-tuto__phrase">Ce que vous avez noté est gardé.</p>
+            <p className="ec-tuto__phrase">Ce que vous avez noté est sauvegardé.</p>
             <button type="button" className="ec-bouton ec-tuto__ok" onClick={() => { fermer(); naviguer(vers) }}>Quitter la séance</button>
             <button type="button" className="ec-tuto__garder ec-tuto__rouge" onClick={() => setEtape('zero')}>Remettre à zéro</button>
             <button type="button" className="ec-tuto__simple" onClick={fermer}>Continuer ma séance</button>
