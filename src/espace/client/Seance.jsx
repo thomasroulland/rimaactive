@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
+import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso, pasCommence, jourCourt } from '../donnees/calculs.js'
 import { avancement } from '../donnees/progression.js'
 import { nomBloc } from '../donnees/programme.js'
 import { allureVitesse, estEnSeries, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
 import { nouveauxRecords } from '../donnees/records.js'
 import { corrigerSeance, effacerMaSeance, noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
+import { Cadenas } from './Statut.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
 import Consignes from './Consignes.jsx'
 import FinDeSeance from './FinDeSeance.jsx'
@@ -79,7 +80,9 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const item = liste.find((x) => x.seance.id === seanceId)
   const fait = seances.find((s) => s.id === `${programmeId}_${seanceId}`)
   const dejaFaite = fait?.statut === 'terminée'
-  const verrou = dejaFaite && !edition
+  // avant la date de début : séance visible, mais on ne peut pas la commencer (Marie, 22 novembre 2026)
+  const avantDebut = pasCommence(programme, aujourdhuiIso()) && !fait
+  const verrou = (dejaFaite && !edition) || avantDebut
 
   const erreurEnvoi = (e) => {
     // refus tardif d'une écriture partie avant ou pendant l'enregistrement : la séance est bien enregistrée
@@ -119,7 +122,9 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     : <Link className="ec-retour" to="/espace"><Fleche />Tableau de bord</Link>
   const finirCorrection = () => { envoyer(); setEdition(false) }
   // séance déjà faite : on peut la rouvrir pour corriger ce qui a été noté
-  const barreCorrection = dejaFaite && (
+  const barreCorrection = avantDebut
+    ? <div className="ec-correction ec-avant-debut"><span className="ec-avant-debut__picto" aria-hidden="true"><Cadenas taille={18} /></span><span><b>Votre programme commence {jourCourt(programme.debut).replace(/\.$/, '')}.</b> Vous pourrez commencer cette séance ce jour-là.</span></div>
+    : dejaFaite && (
     edition
       ? <div className="ec-correction est-active"><span><b>Vous corrigez cette séance.</b> Chaque changement est enregistré.</span><button type="button" className="ec-correction__bouton" onClick={finirCorrection}>J’ai fini</button></div>
       : <div className="ec-correction"><span>Séance faite. Une erreur dans ce que vous avez noté ?</span><button type="button" className="ec-correction__bouton" onClick={() => { setEdition(true); setEtape(0) }}>Modifier ma séance</button></div>
@@ -279,7 +284,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                   </section>
                 )}
                 {/* clé stable pendant la saisie : la première écriture (statut « en cours ») ne doit pas effacer effort, ressenti, commentaire */}
-                {edition
+                {avantDebut ? null : edition
                   ? <div className="ec-correction-fin"><h2 className="ec-h2">Correction terminée ?</h2><p className="ec-texte">Vos changements sont déjà enregistrés. Marie voit la séance corrigée.</p><button type="button" className="ec-s2-gros" onClick={finirCorrection}>J’ai fini ✓</button></div>
                   : <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={false} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
                       suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />}
@@ -388,7 +393,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
         </div>
 
         {/* clé stable pendant la saisie : la première écriture (statut « en cours ») ne doit pas effacer effort, ressenti, commentaire */}
-{edition
+{avantDebut ? null : edition
           ? <div className="ec-correction-fin"><h2 className="ec-h2">Correction terminée ?</h2><p className="ec-texte">Vos changements sont déjà enregistrés. Marie voit la séance corrigée.</p><button type="button" className="ec-s2-gros" onClick={finirCorrection}>J’ai fini ✓</button></div>
           :         <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
           suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />}
@@ -426,7 +431,7 @@ function Recommencer({ remettre }) {
   const ref = useRef(null)
   return (
     <>
-      <button type="button" className="ec-recommencer" onClick={() => ref.current?.showModal()}>Séance commencée par erreur ? Recommencer à zéro</button>
+      <button type="button" className="ec-recommencer" onClick={() => ref.current?.showModal()}>Recommencer la séance à zéro</button>
       <dialog ref={ref} className="ec-tuto" aria-labelledby="rz-titre" onClick={(e) => { if (e.target === e.currentTarget) ref.current.close() }}>
         <div className="ec-tuto__corps">
           <span className="ec-tuto__poignee" aria-hidden="true" />

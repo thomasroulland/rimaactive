@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ajoutJours, aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement, blocsDuClient, dateSeance, seancesDeLaSemaine } from '../donnees/progression.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
+import ApercuSeance from './ApercuSeance.jsx'
 
 const ETATS = { 'en cours': 'encours', passé: 'passe', 'à venir': 'avenir' }
 const ETIQUETTES = { 'en cours': 'En cours', passé: 'Terminé', 'à venir': 'À venir' }
@@ -90,6 +91,8 @@ function Semaines({ bloc, nb, faites, seances }) {
   const [vue, setVue] = useState(() => (courante || (bloc.etat === 'passé' ? nb : 1)))
   const [sens, setSens] = useState(0)
   const aller = (n) => { if (n < 1 || n > nb || n === vue) return; setSens(n > vue ? 1 : -1); setVue(n) }
+  const avant = aujourdhuiIso() < bloc.programme.debut // programme pas commencé : aperçu au lieu d'ouvrir la séance
+  const [apercu, setApercu] = useState(null)
   return (
     <section className="ec-semgrille" aria-label="Mes semaines">
       {Array.from({ length: nb }, (_, k) => k + 1).map((n) => {
@@ -134,6 +137,8 @@ function Semaines({ bloc, nb, faites, seances }) {
                       <li key={x.seance.id}>
                         <Link className={`ec-pcarte ec-ps est-${{ Faite: 'faite', 'En cours': 'encours' }[statut] ?? 'afaire'}`}
                           to={`/espace/seance/${bloc.programme.id}/${x.seance.id}`} state={{ depuis: 'programme' }}
+                          onClick={avant && statut === 'À faire' ? (e) => { e.preventDefault(); setApercu(x) } : undefined}
+                          aria-haspopup={avant && statut === 'À faire' ? 'dialog' : undefined}
                           aria-label={`Séance ${x.numero}, ${x.seance.titre || 'sans titre'}, ${statut === 'En cours' ? 'à reprendre' : statut}`}>
                           <span className="ec-ps__rond" aria-hidden="true">
                             {statut === 'Faite'
@@ -154,6 +159,7 @@ function Semaines({ bloc, nb, faites, seances }) {
           </article>
         )
       })}
+      {apercu && <ApercuSeance seance={apercu.seance} numero={apercu.numero} debut={bloc.programme.debut} fermer={() => setApercu(null)} />}
     </section>
   )
 }

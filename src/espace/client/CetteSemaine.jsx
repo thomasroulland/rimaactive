@@ -4,6 +4,7 @@ import { ajoutJours } from '../donnees/calculs.js'
 import { seancesDeLaSemaine } from '../donnees/progression.js'
 import { statutSeance } from '../donnees/seances.js'
 import { Chevron, Statut } from './Statut.jsx'
+import ApercuSeance from './ApercuSeance.jsx'
 
 const MOIS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
 const jourMois = (iso) => { const [, m, j] = iso.split('-').map(Number); return { j, m: MOIS[m - 1] } }
@@ -21,6 +22,7 @@ export default function CetteSemaine({ programme, semaine, faites, seances, comm
   const total = (programme.semaines ?? []).length || 1
   const [vue, setVue] = useState(semaine)
   const [sens, setSens] = useState(0)
+  const [apercu, setApercu] = useState(null) // programme pas commencé : aperçu de la séance au lieu de l'ouvrir
   useEffect(() => { setVue(semaine) }, [semaine])
   const aller = (n) => { if (n < 1 || n > total || n === vue) return; setSens(n > vue ? 1 : -1); setVue(n) }
   const lignes = seancesDeLaSemaine(programme, vue, faites)
@@ -63,7 +65,8 @@ export default function CetteSemaine({ programme, semaine, faites, seances, comm
                 const classe = statut === 'Faite' ? 'cochee' : statut === 'En cours' ? 'encours' : ''
                 return (
                   <li key={x.seance.id}>
-                    <Link className="ec-ligne" to={`/espace/seance/${programme.id}/${x.seance.id}`}>
+                    <Link className="ec-ligne" to={`/espace/seance/${programme.id}/${x.seance.id}`}
+                      onClick={commence ? undefined : (e) => { e.preventDefault(); setApercu(x) }} aria-haspopup={commence ? undefined : 'dialog'}>
                       <span className={`ec-case-regul ${classe}`.trim()} aria-hidden="true" />
                       <span className="ec-ligne__corps">
                         <span className="ec-ligne__titre">Séance {x.numero}</span>
@@ -79,6 +82,7 @@ export default function CetteSemaine({ programme, semaine, faites, seances, comm
             </ul>
           )}
       </div>
+      {apercu && <ApercuSeance seance={apercu.seance} numero={apercu.numero} debut={programme.debut} fermer={() => setApercu(null)} />}
     </section>
   )
 }

@@ -22,3 +22,8 @@ export function Chevron() {
     </svg>
   )
 }
+
+// Séance pas encore ouverte (programme pas commencé)
+export function Cadenas({ taille = 22 }) {
+  return <svg viewBox="0 0 256 256" width={taille} height={taille} fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="40" y="88" width="176" height="128" rx="12" /><path d="M88 88V56a40 40 0 0 1 80 0v32" /></svg>
+}

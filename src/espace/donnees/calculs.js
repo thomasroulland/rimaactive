@@ -41,6 +41,17 @@ export function listeSeances(programme) {
   return out
 }
 
+// Programme pas encore commencé : ses séances ne s'ouvrent qu'à la date de début (Marie, 22 novembre 2026)
+export const pasCommence = (programme, aujourdhui) => Boolean(programme?.debut) && aujourdhui < programme.debut
+
+// « lundi 23 nov. »
+export function jourCourt(iso) {
+  const d = new Date(`${iso}T12:00:00`)
+  const jour = d.toLocaleDateString('fr-FR', { weekday: 'long' })
+  const mois = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'][d.getMonth()]
+  return `${jour} ${d.getDate()} ${mois}`
+}
+
 export function etatAccueil(programme, faites, aujourdhui) {
   if (!programme) return { type: 'aucun' }
   if (aujourdhui < programme.debut) return { type: 'bientot', debut: programme.debut }

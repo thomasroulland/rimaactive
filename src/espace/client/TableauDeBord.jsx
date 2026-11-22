@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
-import { etatAccueil, aujourdhuiIso } from '../donnees/calculs.js'
+import { etatAccueil, aujourdhuiIso, jourCourt } from '../donnees/calculs.js'
 import { semaineDe, phraseDuJour, numeroDansSemaine } from '../donnees/progression.js'
 import { statutSeance } from '../donnees/seances.js'
 import Avatar from './Avatar.jsx'
@@ -80,14 +80,6 @@ function CarteNoire({ etat, programme, semaine, statut }) {
         : <Link className="ec-noire2__rond" to={lien} aria-label="Voir la prochaine séance"><Fleche /></Link>)}
     </article>
   )
-}
-
-// « lundi 23 nov. »
-function jourCourt(iso) {
-  const d = new Date(`${iso}T12:00:00`)
-  const jour = d.toLocaleDateString('fr-FR', { weekday: 'long' })
-  const mois = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'][d.getMonth()]
-  return `${jour} ${d.getDate()} ${mois}`
 }
 
 function Fleche() {

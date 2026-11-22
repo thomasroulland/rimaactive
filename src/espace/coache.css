@@ -1633,3 +1633,22 @@ select.ec-champ { appearance: auto; min-width: 0; }
 .ec-noire2__bouton { padding: 0 6px 0 18px !important; gap: 10px; }
 .ec-noire2__bouton .ec-bouton__fleche { width: 30px; height: 30px; margin: 0; }
 .ec-s2-planliste .ec-s2-planliste__rz .ec-recommencer { width: auto; min-height: 0; margin: 4px 12px 2px; padding: 6px 0; background: none !important; font: 600 13px/1.3 var(--font-sans); color: var(--ec-gris); text-align: left; display: inline; }
+
+/* Programme pas encore commencé : séance visible, pas encore possible de la commencer (22 novembre 2026) */
+.ec-correction.ec-avant-debut { justify-content: flex-start; flex-wrap: nowrap; gap: 12px; background: rgba(242, 194, 48, .22); border-color: rgba(242, 194, 48, .7); }
+.ec-avant-debut__picto { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 50%; background: #fff; }
+
+/* Aperçu d'une séance avant le début du programme (22 novembre 2026) */
+.ec-apercu .ec-tuto__corps { max-height: 86dvh; overflow-y: auto; }
+.ec-apercu__surtitre { margin: 0; font: 800 12px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ec-gris, #6b665f); }
+.ec-apercu__blocs { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 14px; }
+.ec-apercu__nombloc { margin: 0 0 6px; font: 800 15px/1.3 var(--font-sans); color: var(--ec-encre, #161514); }
+.ec-apercu__nombloc span { font-weight: 600; color: var(--ec-gris, #6b665f); }
+.ec-apercu__exos { list-style: none; margin: 0; padding: 0; border-radius: 16px; background: #f4f3ef; }
+.ec-apercu__exos li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 11px 14px; font-size: 15px; }
+.ec-apercu__exos li + li { border-top: 1px solid rgba(22, 21, 20, .08); }
+.ec-apercu__code { display: grid; place-items: center; min-width: 30px; height: 24px; padding: 0 6px; border-radius: 999px; background: var(--ec-encre, #161514); color: #fff; font: 800 11px/1 var(--font-sans); }
+.ec-apercu__nom { font-weight: 700; overflow-wrap: anywhere; }
+.ec-apercu__dose { font-weight: 700; color: var(--ec-gris, #6b665f); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ec-apercu__course { margin: 12px 0 0; color: var(--ec-gris, #6b665f); }
+.ec-apercu__quand { margin: 16px 0 0; font-size: 14px; color: var(--ec-gris, #6b665f); }
