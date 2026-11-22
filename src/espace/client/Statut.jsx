@@ -1,5 +1,5 @@
 // Petite pilule d'état d'une séance (« Faite » avec une coche, « En cours », « À faire ») et flèche des lignes cliquables.
-const CLASSES = { Faite: 'faite', 'En cours': 'encours', 'À faire': 'afaire' }
+const CLASSES = { Faite: 'faite', 'En cours': 'encours', 'À reprendre': 'encours', 'À faire': 'afaire' }
 
 export function Statut({ statut }) {
   return (

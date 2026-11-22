@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ajouterBilan, ajouterNoteCoach, ecouterBilans, ecouterMesMesures, ecouterMesPhotos, ecouterNotesCoach,
-  majProfilSportif, supprimerBilan, supprimerNoteCoach, urlPdf, ecouterExercices, commenterSeance,
+  majProfilSportif, supprimerBilan, supprimerNoteCoach, urlPdf, ecouterExercices, commenterSeance, effacerSeanceEnCours,
 } from '../depots.js'
 import SeanceFaiteCoach from './SeanceFaiteCoach.jsx'
 import { ajoutJours, aujourdhuiIso, listeSeances, lundiDe, regularite, tonnage, tonnages } from '../donnees/calculs.js'
@@ -69,6 +69,7 @@ export function Ensemble() {
             ? <><p className="ens-gros ens-gros--texte">{prochaine.seance.titre || 'Séance sans titre'}</p><p className="espace-aide">Semaine {prochaine.semaine}</p></>
             : <p className="espace-aide">{progEnCours ? 'Toutes les séances sont faites.' : 'Pas de programme en cours.'}</p>}
         </Carte>
+        <SeancesEnCours prenom={client.prenom} programmes={programmes} seances={seances} />
         <Carte titre="Objectif et 1RM" id="t-profil">
           <ProfilSportif client={client} uid={uid} />
         </Carte>
@@ -80,6 +81,43 @@ export function Ensemble() {
       )}
       {suppression && <DialogueSuppression client={client} uid={uid} fermer={() => setSuppression(false)} fini={() => navigate('/espace/coach', { replace: true })} />}
     </div>
+  )
+}
+
+// Séances commencées mais pas terminées : le coach peut les remettre à zéro (Marie, 22 novembre 2026)
+function SeancesEnCours({ prenom, programmes, seances }) {
+  const [confirme, setConfirme] = useState(null)
+  const [erreur, setErreur] = useState('')
+  const enCours = (seances ?? []).filter((x) => x.statut === 'en cours')
+  if (!enCours.length) return null
+  const titreDe = (sf) => {
+    const p = (programmes ?? []).find((x) => x.id === sf.programme)
+    const l = listeSeances(p)
+    const x = l.find((y) => y.seance.id === sf.seance)
+    if (!x) return 'Séance retirée du programme'
+    const n = l.filter((y) => y.semaine === x.semaine).indexOf(x) + 1
+    return `Séance ${n} · ${x.seance.titre || 'sans titre'}`
+  }
+  const nbSeries = (sf) => Object.values(sf.series ?? {}).flat().filter((l) => l?.fait).length
+  return (
+    <Carte titre="Séances en cours" id="t-encours">
+      <p className="espace-aide">Commencées mais pas terminées</p>
+      <ul className="ens-encours">
+        {enCours.map((sf) => (
+          <li key={sf.id}>
+            <span><b>{titreDe(sf)}</b><small>Commencée le {dateSeance(sf.date)} · {nbSeries(sf)} série{nbSeries(sf) > 1 ? 's' : ''} notée{nbSeries(sf) > 1 ? 's' : ''}</small></span>
+            {confirme === sf.id
+              ? <span className="ens-encours__confirme" role="group" aria-label="Confirmer">
+                <button type="button" className="ens-encours__oui" onClick={() => { setConfirme(null); effacerSeanceEnCours(sf.id).catch(() => setErreur('La séance n’a pas pu être remise à zéro. Réessayez.')) }}>Remettre à zéro</button>
+                <button type="button" className="lien-souligne" onClick={() => setConfirme(null)}>Annuler</button>
+              </span>
+              : <button type="button" className="ens-encours__bouton" onClick={() => setConfirme(sf.id)}>Remettre à zéro</button>}
+          </li>
+        ))}
+      </ul>
+      {confirme && <p className="espace-aide">Les séries notées par {prenom} sur cette séance seront effacées ; elle pourra la recommencer.</p>}
+      {erreur && <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>}
+    </Carte>
   )
 }
 

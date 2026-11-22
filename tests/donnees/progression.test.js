@@ -174,3 +174,13 @@ describe('dateSeance, allure, bilanSeance', () => {
     expect(bilanSeance('force', {})).toBe('Effort séance non noté')
   })
 })
+
+import { phraseDuJour, PHRASES_ACCUEIL } from '../../src/espace/donnees/progression.js'
+describe('phraseDuJour', () => {
+  it('la même toute la journée, une autre le lendemain, jamais genrée', () => {
+    const a = phraseDuJour(new Date(2026, 10, 22, 8)), b = phraseDuJour(new Date(2026, 10, 22, 22)), c = phraseDuJour(new Date(2026, 10, 23, 8))
+    expect(a).toBe(b)
+    expect(c).not.toBe(a)
+    for (const p of PHRASES_ACCUEIL) expect(p).not.toMatch(/prête?\b|prêt\b/)
+  })
+})

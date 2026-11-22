@@ -177,7 +177,10 @@ service cloud.firestore {
         || (estCoach()
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentaireCoach', 'majLe']));
 
-      allow delete: if false;
+      // Remettre à zéro une séance commencée par erreur (22 novembre 2026) : le coaché (la sienne) ou le coach ;
+      // jamais une séance terminée.
+      allow delete: if resource.data.statut == 'en cours'
+        && (estCoach() || (estClient() && resource.data.client == request.auth.uid));
     }
   }
 }

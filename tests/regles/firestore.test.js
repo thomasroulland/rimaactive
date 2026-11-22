@@ -175,8 +175,8 @@ describe('seancesFaites', () => {
     await assertSucceeds(updateDoc(doc(coach, 'seancesFaites/P1_S1'), { commentaireCoach: 'Bien', majLe: serverTimestamp() }))
     await assertFails(updateDoc(doc(coach, 'seancesFaites/P1_S1'), { series: { x: [{ charge: 1 }] } }))
   })
-  it('personne ne supprime une séance faite', async () => {
-    await assertFails(deleteDoc(doc(A, 'seancesFaites/P1_S1')))
+  it('personne ne supprime une séance terminée ni celle d’un autre', async () => {
+    await assertFails(deleteDoc(doc(B, 'seancesFaites/P1_S1')))
     await assertFails(deleteDoc(doc(A, 'seancesFaites/P1_S2')))
     await assertFails(deleteDoc(doc(coach, 'seancesFaites/P1_S2')))
   })
@@ -392,5 +392,21 @@ describe('téléphones pour les notifications (19 novembre 2026)', () => {
     await assertFails(getDoc(doc(coach, 'utilisateurs/A/appareils/tokA')))
     await assertFails(deleteDoc(doc(B, 'utilisateurs/A/appareils/tokA')))
     await assertSucceeds(deleteDoc(doc(A, 'utilisateurs/A/appareils/tokA')))
+  })
+})
+
+describe('remettre une séance à zéro (22 novembre 2026)', () => {
+  const mettre = (id, data) => env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), `seancesFaites/${id}`), data))
+  it('séance en cours : le coaché (la sienne) ou le coach peut l’effacer', async () => {
+    await mettre('P1_S1', seance())
+    await assertFails(deleteDoc(doc(B, 'seancesFaites/P1_S1')))
+    await assertSucceeds(deleteDoc(doc(A, 'seancesFaites/P1_S1')))
+    await mettre('P1_S2', seance({ seance: 'S2' }))
+    await assertSucceeds(deleteDoc(doc(coach, 'seancesFaites/P1_S2')))
+  })
+  it('séance terminée : personne ne l’efface', async () => {
+    await mettre('P1_S3', seance({ seance: 'S3', statut: 'terminée' }))
+    await assertFails(deleteDoc(doc(A, 'seancesFaites/P1_S3')))
+    await assertFails(deleteDoc(doc(coach, 'seancesFaites/P1_S3')))
   })
 })

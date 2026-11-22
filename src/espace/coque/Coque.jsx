@@ -1,3 +1,4 @@
+import { installee } from '../../components/installation.js'
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import Entete from '../../components/Entete.jsx'
@@ -35,7 +36,9 @@ function BarreEspace({ liens, site, compte, avatar, libelleCompte }) {
       liens={pages}
       ecrire={site}
       accueil={site ? '/' : '/espace'}
-      rangee={!site}
+      // barre des pages en bas seulement dans l'application installée ; dans le navigateur, elle gênait la barre de Safari :
+      // les pages passent dans le menu ☰ en haut (Marie, 22 novembre 2026)
+      rangee={!site && installee()}
       compte={compte ? <MenuCompte avatar={avatar} libelle={libelleCompte} /> : undefined}
     />
   )

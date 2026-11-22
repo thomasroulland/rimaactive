@@ -61,6 +61,22 @@ export function numeroDansSemaine(programme, seanceId) {
   return x ? liste.filter((y) => y.semaine === x.semaine).indexOf(x) + 1 : 0
 }
 
+// Petite phrase sous « Bonjour Marie, » (Marie, 22 novembre 2026) : neutre (ni « prête » ni « prêt »), sans numéro de séance,
+// une par jour (la même toute la journée, une autre le lendemain)
+export const PHRASES_ACCUEIL = [
+  'en forme aujourd’hui\u00a0?',
+  'on bouge aujourd’hui\u00a0?',
+  'on se dépense aujourd’hui\u00a0?',
+  'belle journée pour s’entraîner\u00a0!',
+  'une séance, et c’est parti\u00a0?',
+  'chaque séance compte\u00a0!',
+  'on garde le rythme\u00a0?',
+]
+export function phraseDuJour(date) {
+  const jour = Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000)
+  return PHRASES_ACCUEIL[jour % PHRASES_ACCUEIL.length]
+}
+
 export function bonjour(prenom, date) {
   return `Bonjour ${prenom}, nous sommes ${JOURS_FR[date.getDay()]} ${date.getDate()} ${MOIS_FR[date.getMonth()]}.`
 }

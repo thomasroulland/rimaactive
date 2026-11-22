@@ -359,7 +359,7 @@ function Reglage({ libelle, valeur, changer, mode, id, indice, alerte }) {
 // Retour en arrière d'un bloc à l'autre : le bloc précédent s'ouvre sur son dernier exercice
 const versLaFin = { actif: false }
 
-export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, voirConsignes, aller, finir, retour }) {
+export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, voirConsignes, aller, finir, retour, recommencer }) {
   const els = bloc.elements ?? []
   const [exo, setExo] = useState(() => {
     // en revenant en arrière depuis le bloc suivant, on arrive sur le dernier exercice de ce bloc
@@ -446,6 +446,8 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
                 <span>{nomBloc(b)}</span><span>{prog.blocs[i]?.faites ?? 0}/{prog.blocs[i]?.total ?? 0}</span></button></li>
             ))}
             <li><button type="button" onClick={finir}><span>Fin de séance</span></button></li>
+            {/* séance commencée par erreur : dans le plan, pour ne pas allonger l'écran (22 novembre 2026) */}
+            {recommencer && <li className="ec-s2-planliste__rz">{recommencer}</li>}
           </ul>
         )}
       </div>

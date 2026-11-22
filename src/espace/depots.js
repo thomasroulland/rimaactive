@@ -385,6 +385,12 @@ export function terminerSeance(programmeId, seanceId, fin) {
   return setDoc(refSeance(programmeId, seanceId), contenuFin(baseSeance(programmeId, seanceId), fin), { merge: true })
 }
 
+// Remet à zéro une séance commencée (pas terminée) : le coaché depuis sa séance, le coach depuis la fiche (22 novembre 2026)
+export function effacerSeanceEnCours(id) {
+  return deleteDoc(doc(db, 'seancesFaites', id))
+}
+export const effacerMaSeance = (programmeId, seanceId) => deleteDoc(refSeance(programmeId, seanceId))
+
 // ---------- Fiche client côté coach (tâche 10) ----------
 
 // Écoute toutes les séances faites d'un client, de la plus récente à la plus ancienne.

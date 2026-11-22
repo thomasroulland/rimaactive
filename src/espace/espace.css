@@ -2255,3 +2255,15 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .es2-opt__ordre { display: flex; gap: 8px; }
 .es2-opt__ordre button { height: 36px; padding: 0 14px; border: 1px solid var(--filet); border-radius: 999px; background: #fff; font: 700 13px/1 var(--font-sans); color: var(--encre); cursor: pointer; }
 .es2-opt__ordre button:disabled { opacity: .4; cursor: default; }
+
+/* Fiche du coaché : séances en cours, à remettre à zéro (22 novembre 2026) */
+.ens-encours { list-style: none; margin: 8px 0 0; padding: 0; display: grid; }
+.ens-encours li { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 0; border-top: 1px solid #f0ece5; }
+.ens-encours li:first-child { border-top: 0; }
+.ens-encours b { display: block; font-size: 15px; }
+.ens-encours small { display: block; font-size: 13px; color: var(--gris-chaud); }
+.ens-encours__bouton, .ens-encours__oui { min-height: 36px; padding: 0 14px; border-radius: 999px; font: 800 13px/1 var(--font-sans); cursor: pointer; }
+.ens-encours__bouton { border: 1px solid #ffcfc2; background: #fff4ef; color: #c2370f; }
+.ens-encours__bouton:hover { background: #ffe6dd; }
+.ens-encours__oui { border: 0; background: var(--vermillon); color: #fff; }
+.ens-encours__confirme { display: inline-flex; align-items: center; gap: 10px; }

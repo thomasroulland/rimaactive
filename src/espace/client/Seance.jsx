@@ -5,7 +5,7 @@ import { avancement } from '../donnees/progression.js'
 import { nomBloc } from '../donnees/programme.js'
 import { allureVitesse, estEnSeries, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
 import { nouveauxRecords } from '../donnees/records.js'
-import { corrigerSeance, noterSeance, terminerSeance } from '../depots.js'
+import { corrigerSeance, effacerMaSeance, noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
 import Consignes from './Consignes.jsx'
@@ -126,6 +126,16 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   )
   const retour = <>{lienRetour}{barreCorrection}</>
 
+  // séance commencée par erreur : la remettre à zéro (Marie, 22 novembre 2026) ; jamais une séance déjà faite
+  const recommencer = fait?.statut === 'en cours' && (
+    <Recommencer remettre={() => {
+      clearTimeout(minuterie.current)
+      enAttente.current = carteVide()
+      setEtape(0)
+      effacerMaSeance(programmeId, seanceId).catch(() => setRefus('La séance n’a pas pu être remise à zéro. Vérifiez votre connexion et réessayez.'))
+    }} />
+  )
+
   // téléphone, un exercice à la fois : le retour tient dans la ligne du haut, sous forme d'une simple flèche
   const retourPetit = (
     <Link className="ec-s2-retour ec-s2-quitter" to={depuisProgramme ? '/espace/programme' : '/espace'} aria-label="Quitter la séance (tout est enregistré)" title="Quitter la séance">
@@ -240,7 +250,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
             {bloc ? (
               unExercice ? (
                 <UnExercice key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} actions={actions}
-                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} />
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} recommencer={recommencer} />
               ) : (
                 <>
                   {!galerie && <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />}
@@ -280,6 +290,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
             )}
           </div>
         </div>
+        {!unExercice && recommencer}
         <Consignes element={fiche} fermer={() => setFiche(null)} />
       </section>
     )
@@ -408,4 +419,23 @@ function recordsDe(fait, programmes, seances) {
   if (fait?.statut !== 'terminée') return []
   const { exoIdParElement, noms } = exercicesDe(programmes ?? [])
   return nouveauxRecords(fait, seances, exoIdParElement, noms)
+}
+
+// « Recommencer à zéro » en bas de la séance, avec une confirmation
+function Recommencer({ remettre }) {
+  const ref = useRef(null)
+  return (
+    <>
+      <button type="button" className="ec-recommencer" onClick={() => ref.current?.showModal()}>Séance commencée par erreur ? Recommencer à zéro</button>
+      <dialog ref={ref} className="ec-tuto" aria-labelledby="rz-titre" onClick={(e) => { if (e.target === e.currentTarget) ref.current.close() }}>
+        <div className="ec-tuto__corps">
+          <span className="ec-tuto__poignee" aria-hidden="true" />
+          <h2 id="rz-titre" className="ec-tuto__titre">Recommencer la séance à zéro&nbsp;?</h2>
+          <p className="ec-tuto__phrase">Ce que vous avez noté sur cette séance sera effacé, comme si vous ne l’aviez pas ouverte.</p>
+          <button type="button" className="ec-bouton ec-tuto__ok ec-bouton--danger" onClick={() => { ref.current.close(); remettre() }}>Recommencer à zéro</button>
+          <button type="button" className="ec-tuto__garder" onClick={() => ref.current.close()}>Garder ma séance</button>
+        </div>
+      </dialog>
+    </>
+  )
 }

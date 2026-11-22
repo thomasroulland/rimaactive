@@ -440,3 +440,14 @@ body { min-height: 100vh; min-height: 100dvh; isolation: isolate; } /* dvh : sur
 .services4 > li { display: block; }
 /* 1101–1400 px : un peu plus de largeur pour la phrase, pour qu'elle tienne en 3 lignes dans les 4 cartes (cartes de même hauteur) */
 @media (min-width: 1101px) and (max-width: 1400px) { .services4 { gap: 12px; } .services4__carte { padding: 8px; } .services4__corps { padding: 12px 6px 4px; } }
+
+/* Barre des pages en bas (application installée, Marie 22 novembre 2026) : blanche et nette, la page en cours en noir ;
+   elle ne se mélange plus au pied de page noir */
+@media (max-width: 960px) {
+  .entete--rangee .nav { background: #fff !important; border: 1px solid #e4e0d7 !important; border-radius: 26px !important;
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important; box-shadow: 0 14px 34px rgba(22, 21, 20, .22) !important; }
+  .entete--rangee .nav__lien { border-radius: 20px !important; color: #6b655c !important; }
+  .entete--rangee .nav__lien:not([aria-current="page"]):hover { color: #161514 !important; }
+  .entete--rangee .nav__lien[aria-current="page"], .entete--rangee .nav__lien[aria-current="page"]:hover,
+  .entete--rangee .nav__lien[aria-current="page"]:focus, .entete--rangee .nav__lien[aria-current="page"]:active { background: #161514 !important; color: #f4f3ef !important; }
+}
