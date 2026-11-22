@@ -55,13 +55,8 @@ export default function MonProgramme({ programmes, programme, seances }) {
   return (
     <div className="ec-page ec-prog ec-prog2">
       <div className="ec-prog2__tete">
+        {/* juste le titre : les blocs et les semaines disent le reste (Marie, 22 novembre 2026) */}
         <h1 className="ec-h1">Mon programme</h1>
-        {bloc && (
-          <p className="ec-prog__resume">
-            {bloc.programme.nom && <strong>{bloc.programme.nom}</strong>}{bloc.programme.nom && ' · '}
-            {bloc.etat === 'en cours' ? `semaine ${bloc.semaine} sur ${nbSemaines}` : bloc.etat === 'passé' ? 'bloc terminé' : 'bloc à venir'}
-          </p>
-        )}
       </div>
 
       {/* les blocs en haut, sur ordinateur et téléphone (demande de Thomas, 19 novembre 2026) */}
