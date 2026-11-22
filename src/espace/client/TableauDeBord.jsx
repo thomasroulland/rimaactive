@@ -38,13 +38,15 @@ export default function TableauDeBord({ uid, profil, programme, programmes, fait
 
       <CarteNoire etat={etat} programme={programme} semaine={semaine} statut={etat.type === 'prochaine' ? statutSeance(seances, programme.id, etat.seance.id) : null} />
 
-      <CarteInstallation />
       <CarteNotifications uid={uid} />
 
       <Duo>
         {programme && etat.type !== 'aucun' && <CetteSemaine programme={programme} semaine={semaine} faites={faites} seances={seances} commence={etat.type !== 'bientot'} />}
         <Nouveautes uid={uid} programmes={programmes} seances={seances} />
       </Duo>
+
+      {/* « Installer l'application » toujours en dernier (Marie, 22 novembre 2026) */}
+      <CarteInstallation />
     </div>
   )
 }

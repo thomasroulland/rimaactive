@@ -1,25 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
-import { installee, installer, invitationPrete, suivreInvitation, surAndroid, surIphone } from '../../components/installation.js'
-
-const CLE = 'rima-carte-installer'
-const lire = () => { try { return localStorage.getItem(CLE) } catch { return null } }
-const ecrire = (v) => { try { localStorage.setItem(CLE, v) } catch { /* rien */ } }
+import { installee, installer, invitationPrete, suivreInvitation, surIphone } from '../../components/installation.js'
 
 // « Installer l'application » (maquette validée par Marie, 22 novembre 2026) : une petite bulle, le titre souligné ;
 // la toucher ouvre le navigateur d'installation (Android, ordinateur) ou un panneau avec les étapes (iPhone, ou Android
-// quand le navigateur ne propose rien). La croix la ferme pour de bon. Cachée dans l'application installée.
+// quand le navigateur ne propose rien). Toujours là, en dernier sur le tableau de bord (Marie, 22 novembre 2026) ;
+// cachée seulement dans l'application installée.
 export default function CarteInstallation() {
   const [, rafraichir] = useState(0)
-  const [fermee, setFermee] = useState(() => lire() === 'fermee' || installee())
+  const [installe, setInstalle] = useState(() => installee())
   const [tuto, setTuto] = useState(false)
   useEffect(() => suivreInvitation(() => rafraichir((n) => n + 1)), [])
-  if (fermee) return null
+  if (installe) return null
   const iphone = surIphone()
   const bouton = invitationPrete()
-  if (!iphone && !bouton && !surAndroid()) return null // ordinateur sans proposition du navigateur : rien à expliquer
-  const fermer = () => { ecrire('fermee'); setFermee(true) }
   const ouvrir = async () => {
-    if (bouton) { if (await installer()) fermer(); return }
+    if (bouton) { if (await installer()) setInstalle(true); return }
     setTuto(true)
   }
   return (
@@ -29,9 +24,6 @@ export default function CarteInstallation() {
           <svg viewBox="0 0 256 256" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round"><rect x="64" y="24" width="128" height="208" rx="20" /><path d="M128 72v72M100 116l28 28 28-28M108 196h40" /></svg>
         </span>
         <button type="button" className="ec-installer2__lien" onClick={ouvrir} aria-haspopup={bouton ? undefined : 'dialog'}>Installer l’application</button>
-        <button type="button" className="ec-installer2__fermer" onClick={fermer} aria-label="Ne plus afficher">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-        </button>
       </section>
       {tuto && <Tuto iphone={iphone} fermer={() => setTuto(false)} />}
     </>
