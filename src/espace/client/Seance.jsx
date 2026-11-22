@@ -200,6 +200,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     note: (id, v) => noter('notes', id, v),
     chargeSeule: (id, v) => noter('series', id, [{ charge: v, reps: '', rpe: '', fait: v.trim() !== '' }]),
     bloc: (id, cle, v) => noter('blocs', id, { resultat: '', reps: '', rpe: '', fait: false, note: '', ...blocs[id], [cle]: v }),
+    // effort d'un exercice, noté une fois à la fin de ses séries : recopié sur chaque série (téléphone, 22 novembre 2026)
+    rpeExercice: (el, v) => noter('series', el.id, lignes(el).map((l) => ({ ...l, rpe: v }))),
     // plusieurs champs d'un coup (effort et note de la bulle du bas, téléphone)
     blocValeurs: (id, valeurs) => noter('blocs', id, { resultat: '', reps: '', rpe: '', fait: false, note: '', ...blocs[id], ...valeurs }),
   }

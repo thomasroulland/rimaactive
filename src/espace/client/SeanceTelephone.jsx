@@ -92,14 +92,16 @@ function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
     if (!enDuree(el) && estFourchette(el.reps) && vide(l.reps)) { setAlerte(`${el.id}-${i}`); document.getElementById(`st-${el.id}-${i}`)?.focus(); return }
     setAlerte('')
     actions.serie(el, i, 'fait', true)
-    ouvrir({ type: 'serie', id: el.id, i })
+    // l'effort se note une fois, à la fin des séries de l'exercice (Marie, 22 novembre 2026)
+    if (lignes(el).every((x, k) => k === i || x.fait)) ouvrir({ type: 'exo', id: el.id })
   }
   return els.map((el, e) => {
     const ls = lignes(el)
     const duree = enDuree(el)
     const cle = duree ? 'duree' : 'reps'
     const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
-    const faites = ls.map((l, i) => ({ l, i })).filter((x) => x.l.fait)
+    const toutFait = ls.length > 0 && ls.every((l) => l.fait)
+    const rpe = ls.map((l) => l.rpe).find((v) => !vide(v))
     const note = notes[el.id] ?? ''
     return (
       <section key={el.id} className="ec-st-carte" aria-labelledby={`st-nom-${el.id}`}>
@@ -122,12 +124,10 @@ function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
           )
         })}
         {alerte.startsWith(el.id) && <p className="ec-st-alerte" role="alert">Notez d’abord vos répétitions faites</p>}
-        {(faites.length > 0 || note) && (
+        {(toutFait || note) && (
           <div className="ec-st-pastilles">
-            {faites.filter((x) => !vide(x.l.rpe)).map((x) => (
-              <button key={x.i} type="button" className="est-rempli" onClick={() => ouvrir({ type: 'serie', id: el.id, i: x.i, correction: true })}>S{x.i + 1} · RPE {texteRpe(x.l.rpe)}</button>
-            ))}
-            <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'note', id: el.id })}>{note ? '✎ Note' : '＋ Note'}</button>
+            <button type="button" className={rpe ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'exo', id: el.id, correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : '＋ Effort (RPE)'}</button>
+            <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'exo', id: el.id, correction: true })}>{note ? '✎ Note' : '＋ Note'}</button>
           </div>
         )}
       </section>
@@ -157,23 +157,60 @@ function Tete({ el, code, actif, prevu, voirConsignes }) {
   )
 }
 
-// ---------- Biset, triset : rangé par tour, un ✓ par tour ----------
+// ---------- Biset, triset : une série (un passage sur chaque exercice) à la fois ----------
+// Avant / après validé par Marie (22 novembre 2026) : les photos en haut, la série en cours ouverte avec un grand bouton
+// « Série 2 faite », les séries faites résumées sur une ligne, celles à venir regroupées. L'effort se note à la fin du bloc.
 
 function Tours({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
   const els = bloc.elements ?? []
   const [alerte, setAlerte] = useState('')
-  const nbTours = Math.max(0, ...els.map((e) => lignes(e).length))
-  const tourFait = (t) => els.every((e) => !lignes(e)[t] || lignes(e)[t].fait)
-  const actuel = Array.from({ length: nbTours }, (_, t) => t).find((t) => !tourFait(t)) ?? -1
+  const [ouverte, setOuverte] = useState(-1) // série faite rouverte pour la corriger
+  const nb = Math.max(0, ...els.map((e) => lignes(e).length))
+  const serieFaite = (t) => els.every((e) => !lignes(e)[t] || lignes(e)[t].fait)
+  const actuelle = Array.from({ length: nb }, (_, t) => t).find((t) => !serieFaite(t)) ?? -1
+  const toutFait = nb > 0 && actuelle < 0
+  const rpe = els.flatMap((e) => lignes(e).map((l) => l.rpe)).find((v) => !vide(v))
   const note = notes[bloc.id] ?? ''
-  const cocher = (t) => {
-    if (tourFait(t)) { els.forEach((e) => { if (lignes(e)[t]) actions.serie(e, t, 'fait', false) }); return }
+  const valider = (t) => {
     const manque = els.find((e) => lignes(e)[t] && !enDuree(e) && estFourchette(e.reps) && vide(lignes(e)[t].reps))
     if (manque) { setAlerte(`${manque.id}-${t}`); document.getElementById(`st-${manque.id}-${t}`)?.focus(); return }
     setAlerte('')
     els.forEach((e) => { if (lignes(e)[t] && !lignes(e)[t].fait) actions.serie(e, t, 'fait', true) })
-    ouvrir({ type: 'tour', t })
+    // dernière série du bloc : l'effort et la note, une seule fois pour tout le bloc
+    if (Array.from({ length: nb }, (_, k) => k).every((k) => k === t || serieFaite(k))) ouvrir({ type: 'superset' })
   }
+  const decocher = (t) => { els.forEach((e) => { if (lignes(e)[t]?.fait) actions.serie(e, t, 'fait', false) }); setOuverte(-1) }
+  const resume = (t) => els.filter((e) => lignes(e)[t]).map((e) => {
+    const l = lignes(e)[t]
+    const v = enDuree(e) ? (l.duree || l.reps) : l.reps
+    return [v, vide(l.charge) ? '' : fr(l.charge)].filter((x) => !vide(x)).join('×')
+  }).join(' · ')
+  const lignesSerie = (t, enCours) => els.map((el, k) => {
+    const l = lignes(el)[t]
+    if (!l) return null
+    const duree = enDuree(el)
+    const cle = duree ? 'duree' : 'reps'
+    return (
+      <div key={el.id} className="ec-st-tl" role="group" aria-label={`Série ${t + 1}, ${el.nom}`}>
+        <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{bloc.lettre}{k + 1}</span>
+        <span className="ec-st-tl__nom">{el.nom}</span>
+        <span className="ec-st-unite">
+          <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
+            aria-label={`${el.nom}, série ${t + 1}, ${duree ? 'durée' : 'répétitions'}`} value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)}
+            onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
+          <small>{duree ? 's' : 'reps'}</small>
+        </span>
+        {duree ? <span className="ec-st-champ est-neutre" aria-hidden="true">–</span> : (
+          <span className="ec-st-unite">
+            <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${t + 1}, kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
+              value={l.charge ?? ''} placeholder={fr(el.charge ?? '') || '–'} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.valeur(el, t, 'charge', ev.target.value)} />
+            <small>kg</small>
+          </span>
+        )}
+      </div>
+    )
+  })
+  const aVenir = Array.from({ length: nb }, (_, t) => t).filter((t) => t > actuelle && actuelle >= 0)
   return (
     <>
       <div className={`ec-st-photos ec-st-photos--${Math.min(els.length, 3)}`}>
@@ -182,66 +219,44 @@ function Tours({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
           const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
           return (
             <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
-              {photo && <span className="ec-st-photo__img"><PhotoStockee chemin={photo} alt="" /></span>}
-              <span className={`ec-st-code${photo ? ' sur-photo' : ''}`}>{bloc.lettre}{k + 1}</span>
-              <span className="ec-st-photo__nom">{el.nom}<small>{[el.materiel && el.materiel !== 'À préciser' && el.materiel !== 'Poids du corps' ? el.materiel : '', prevu].filter(Boolean).join(' · ')}</small></span>
+              <span className="ec-st-photo__img">{photo && <PhotoStockee chemin={photo} alt="" />}</span>
+              <span className="ec-st-code sur-photo">{bloc.lettre}{k + 1}</span>
+              <span className="ec-st-photo__nom">{el.nom}<small>{prevu}</small></span>
             </button>
           )
         })}
       </div>
-      <section className="ec-st-carte ec-st-tours" aria-label={`${nomSuperset(bloc)} : ${nbTours} tours`}>
-        {Array.from({ length: nbTours }, (_, t) => {
-          const fait = tourFait(t)
-          const enCours = t === actuel
-          const rpe = els.map((e) => lignes(e)[t]?.rpe).find((v) => !vide(v))
-          return (
-            <div key={t} className={`ec-st-tour${fait ? ' est-fait' : ''}${enCours ? ' est-en-cours' : ''}${!fait && !enCours ? ' est-a-venir' : ''}`}>
-              <p className="ec-st-tour__tete">
-                <span>{enCours ? `Tour ${t + 1} sur ${nbTours}` : `Tour ${t + 1}`}</span>
-                {fait
-                  ? <button type="button" onClick={() => ouvrir({ type: 'tour', t, correction: true })}>{rpe ? `RPE ${texteRpe(rpe)} · ` : ''}fait</button>
-                  : enCours ? <span>en cours</span> : null}
-              </p>
-              <div className="ec-st-tour__corps">
-                <div className="ec-st-tour__lignes">
-                  {els.map((el, k) => {
-                    const l = lignes(el)[t]
-                    if (!l) return null
-                    const duree = enDuree(el)
-                    const cle = duree ? 'duree' : 'reps'
-                    return (
-                      <div key={el.id} className="ec-st-tl" role="group" aria-label={`Tour ${t + 1}, ${el.nom}`}>
-                        <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{bloc.lettre}{k + 1}</span>
-                        <span className="ec-st-tl__nom">{el.nom}</span>
-                        <span className="ec-st-unite">
-                          <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
-                            aria-label={`${el.nom}, tour ${t + 1}, ${duree ? 'durée' : 'répétitions'}`} value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)}
-                            onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
-                          {duree && <small>s</small>}
-                        </span>
-                        {duree ? <span className="ec-st-champ est-neutre" aria-hidden="true">–</span> : (
-                          <span className="ec-st-unite">
-                            <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, tour ${t + 1}, kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
-                              value={l.charge ?? ''} placeholder={fr(el.charge ?? '') || '–'} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.valeur(el, t, 'charge', ev.target.value)} />
-                            <small>kg</small>
-                          </span>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-                <button type="button" className="ec-st-ok ec-st-ok--tour" aria-pressed={fait} aria-label={`Tour ${t + 1} ${fait ? 'fait (toucher pour décocher)' : 'fait ?'}`} onClick={() => cocher(t)}><Coche taille={24} /></button>
-              </div>
-              {alerte.endsWith(`-${t}`) && <p className="ec-st-alerte" role="alert">Notez d’abord vos répétitions faites</p>}
-            </div>
-          )
-        })}
-        {(note || actuel !== 0) && (
-          <div className="ec-st-pastilles">
-            <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'note', id: bloc.id })}>{note ? '✎ Note' : '＋ Note'}</button>
-          </div>
-        )}
-      </section>
+      {Array.from({ length: nb }, (_, t) => t).filter((t) => serieFaite(t)).map((t) => (
+        ouverte === t ? (
+          <section key={t} className="ec-st-carte ec-st-serie" aria-label={`Série ${t + 1}, faite`}>
+            <p className="ec-st-serie__tete est-faite"><span>Série {t + 1} · faite</span><button type="button" onClick={() => setOuverte(-1)}>Fermer</button></p>
+            {lignesSerie(t, false)}
+            <button type="button" className="ec-st-lien ec-st-serie__decocher" onClick={() => decocher(t)}>Décocher cette série</button>
+          </section>
+        ) : (
+          <button key={t} type="button" className="ec-st-faite" onClick={() => setOuverte(t)} aria-label={`Série ${t + 1} faite : ${resume(t)}. Toucher pour corriger`}>
+            <span className="ec-st-faite__ok" aria-hidden="true"><Coche taille={13} /></span>
+            <b>Série {t + 1}</b>
+          </button>
+        )
+      ))}
+      {actuelle >= 0 && (
+        <section className="ec-st-carte ec-st-serie" aria-label={`Série ${actuelle + 1} sur ${nb}, en cours`}>
+          <p className="ec-st-serie__tete"><span>Série {actuelle + 1} sur {nb}</span></p>
+          {lignesSerie(actuelle, true)}
+          {alerte && <p className="ec-st-alerte" role="alert">Notez d’abord vos répétitions faites</p>}
+          <button type="button" className="ec-st__gros ec-st-serie__ok" onClick={() => valider(actuelle)}>Terminé <Coche taille={18} /></button>
+        </section>
+      )}
+      {aVenir.length > 0 && (
+        <p className="ec-st-avenir">{aVenir.length === 1 ? `Série ${aVenir[0] + 1} à venir` : `Séries ${aVenir.map((t) => t + 1).join(' · ')} à venir`}</p>
+      )}
+      {toutFait && (
+        <div className="ec-st-pastilles">
+          <button type="button" className={rpe ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'superset', correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : '＋ Effort (RPE)'}</button>
+          <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'superset', correction: true })}>{note ? '✎ Note' : '＋ Note'}</button>
+        </div>
+      )}
     </>
   )
 }
@@ -293,17 +308,22 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
 
 // ---------- Bulle du bas : effort ressenti et note ----------
 
+// Échelle de l'effort ressenti, donnée par Marie (22 novembre 2026)
+const ECHELLE = [
+  ['0', 'Aucun effort'], ['1', 'Très très facile'], ['2', 'Très facile'], ['3', 'Facile'], ['4', 'Effort modéré'], ['5', 'Moyen'],
+  ['6', 'Un peu dur'], ['7', 'Dur'], ['8', 'Très dur'], ['9', 'Très très dur'], ['10', 'Maximal'],
+]
+
 function FeuilleEffort({ feuille, bloc, lignes, notes, resultat, actions, libSuivant, fermer, blocSuivant }) {
   const ref = useRef(null)
   const els = bloc.elements ?? []
   const el = els.find((e) => e.id === feuille.id)
-  // valeurs de départ : ce qui est déjà noté
-  const depart = (() => {
-    if (feuille.type === 'serie') return { rpe: lignes(el)[feuille.i]?.rpe ?? '', note: notes[el.id] ?? '' }
-    if (feuille.type === 'tour') return { rpe: els.map((e) => lignes(e)[feuille.t]?.rpe).find((v) => !vide(v)) ?? '', note: notes[bloc.id] ?? '' }
-    if (feuille.type === 'bloc') return { rpe: resultat?.rpe ?? '', note: resultat?.note ?? '' }
-    return { rpe: '', note: notes[feuille.id] ?? '' }
-  })()
+  // valeurs de départ : ce qui est déjà noté. Un exercice (séries) ou tout le bloc (biset, EMOM…) : un seul effort, une seule note.
+  const premierRpe = (liste) => liste.flatMap((e) => lignes(e).map((l) => l.rpe)).find((v) => !vide(v)) ?? ''
+  const depart = feuille.type === 'exo' ? { rpe: premierRpe([el]), note: notes[el.id] ?? '' }
+    : feuille.type === 'superset' ? { rpe: premierRpe(els), note: notes[bloc.id] ?? '' }
+      : feuille.type === 'bloc' ? { rpe: resultat?.rpe ?? '', note: resultat?.note ?? '' }
+        : { rpe: '', note: notes[feuille.id] ?? '' }
   const [rpe, setRpe] = useState(String(depart.rpe ?? ''))
   const [note, setNote] = useState(String(depart.note ?? ''))
   useEffect(() => {
@@ -312,23 +332,17 @@ function FeuilleEffort({ feuille, bloc, lignes, notes, resultat, actions, libSui
     return () => { if (d?.open) d.close() }
   }, [])
 
-  // reste-t-il quelque chose à faire dans ce bloc ? (pour le libellé du bouton jaune)
-  const resteSerie = (() => {
-    if (feuille.type === 'serie') return els.some((e) => lignes(e).some((l, i) => !l.fait && !(e.id === feuille.id && i === feuille.i)))
-    if (feuille.type === 'tour') return els.some((e) => lignes(e).some((l, i) => !l.fait && i !== feuille.t))
-    return false
-  })()
-  const correction = feuille.correction || feuille.type === 'note'
-  const bouton = correction ? 'Enregistrer' : feuille.type === 'serie' ? (resteSerie ? 'Série suivante ›' : `${libSuivant} ›`)
-    : feuille.type === 'tour' ? (resteSerie ? 'Tour suivant ›' : `${libSuivant} ›`) : `${libSuivant} ›`
+  const blocFini = els.every((e) => lignes(e).every((l) => l.fait))
+  const correction = !!feuille.correction
+  const bouton = correction ? 'Enregistrer' : feuille.type === 'exo' && !blocFini ? 'Enregistrer' : `${libSuivant} ›`
   const avecRpe = feuille.type !== 'note'
 
   const enregistrer = () => {
-    if (feuille.type === 'serie') {
-      if (String(rpe) !== String(depart.rpe ?? '')) actions.valeur(el, feuille.i, 'rpe', rpe)
+    if (feuille.type === 'exo') {
+      if (String(rpe) !== String(depart.rpe ?? '')) actions.rpeExercice(el, rpe)
       if (note !== String(depart.note ?? '')) actions.note(el.id, note)
-    } else if (feuille.type === 'tour') {
-      if (String(rpe) !== String(depart.rpe ?? '')) els.forEach((e) => { if (lignes(e)[feuille.t]) actions.valeur(e, feuille.t, 'rpe', rpe) })
+    } else if (feuille.type === 'superset') {
+      if (String(rpe) !== String(depart.rpe ?? '')) els.forEach((e) => actions.rpeExercice(e, rpe))
       if (note !== String(depart.note ?? '')) actions.note(bloc.id, note)
     } else if (feuille.type === 'bloc') {
       actions.blocValeurs(bloc.id, { rpe, note })
@@ -339,8 +353,8 @@ function FeuilleEffort({ feuille, bloc, lignes, notes, resultat, actions, libSui
   const valider = () => {
     enregistrer()
     fermer()
-    // dernière série, dernier tour ou bloc EMOM… : on passe au bloc suivant
-    if (!correction && (feuille.type === 'bloc' || !resteSerie)) blocSuivant()
+    // bloc terminé : on passe au bloc suivant
+    if (!correction && (feuille.type !== 'exo' || blocFini)) blocSuivant()
   }
 
   return (
@@ -351,12 +365,17 @@ function FeuilleEffort({ feuille, bloc, lignes, notes, resultat, actions, libSui
         {avecRpe && (
           <>
             <p className="ec-st-feuille__lab" id="st-rpe">Effort ressenti (RPE)</p>
+            <p className="ec-st-legende" aria-hidden="true"><span>Facile</span><span>Maximal</span></p>
+            {/* l'échelle de Marie (22 novembre 2026) : 0 aucun effort … 10 maximal, chaque chiffre avec sa couleur */}
             <div className="ec-st-rpe" role="radiogroup" aria-labelledby="st-rpe">
-              {Array.from({ length: 10 }, (_, k) => String(k + 1)).map((v) => (
-                <button key={v} type="button" role="radio" aria-checked={String(rpe) === v} onClick={() => setRpe(String(rpe) === v ? '' : v)}>{v}</button>
+              {ECHELLE.map(([v, texte]) => (
+                <button key={v} type="button" role="radio" className={`rpe-${v}`} aria-checked={String(rpe) === v} aria-label={`${v} : ${texte}`}
+                  onClick={() => setRpe(String(rpe) === v ? '' : v)}>{v}</button>
               ))}
             </div>
-            <p className="ec-st-legende" aria-hidden="true"><span>Facile</span><span>Maximal</span></p>
+            <p className={`ec-st-rpe__texte${rpe !== '' ? ` rpe-${rpe}` : ''}`} aria-live="polite">
+              {ECHELLE.find(([v]) => v === String(rpe))?.[1] ?? ''}
+            </p>
           </>
         )}
         <label className="ec-st-feuille__lab" htmlFor="st-note">Note</label>

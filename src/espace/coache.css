@@ -1834,3 +1834,42 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
   .ec-coque--client > .pied { display: none; }
   .ec-coque--client .ec-main { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
 }
+
+/* Biset, triset : une série à la fois (avant / après validé par Marie, 22 novembre 2026) */
+.ec-st-photos { gap: 8px; }
+.ec-st-photo__img { height: 120px; }
+.ec-st-photos--3 .ec-st-photo__img { height: 104px; }
+.ec-st-photo > .ec-st-code.sur-photo { position: absolute; left: 8px; top: 8px; margin: 0; }
+.ec-st-photo__nom { padding: 8px 10px 10px; font-size: 13px; }
+.ec-st-photo__nom small { font-size: 11px; margin-top: 3px; }
+.ec-st-serie { gap: 6px; padding: 12px 10px 10px; }
+.ec-st-serie__tete { display: flex; justify-content: space-between; align-items: center; margin: 0; padding: 0 4px 4px; font: 800 11px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ec-vermillon, #ff4a1c); }
+.ec-st-serie__tete.est-faite { color: #2e9e5b; }
+.ec-st-serie__tete button { min-height: 32px; padding: 0 4px; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--ec-gris, #6b665f); cursor: pointer; }
+.ec-st-serie .ec-st-tl { grid-template-columns: auto minmax(0, 1fr) 50px 60px; }
+.ec-st-serie__ok { margin-top: 6px; }
+.ec-st-serie__decocher { justify-self: start; margin: 4px 4px 0; }
+.ec-st-faite { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 46px; padding: 8px 12px; border: 0; border-radius: 14px; background: #fff; text-align: left; font: 700 12px/1.2 var(--font-sans); color: var(--ec-gris, #6b665f); cursor: pointer; }
+.ec-st-faite b { flex: none; font-size: 13px; color: var(--ec-encre); }
+.ec-st-faite__ok { flex: none; width: 24px; height: 24px; border-radius: 50%; background: #e3f3e9; color: #2e9e5b; display: grid; place-items: center; }
+.ec-st-faite__res { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ec-st-avenir { margin: 0; padding: 12px; border: 1.5px dashed #d6d1c6; border-radius: 14px; font: 800 11px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: #9d978d; }
+
+/* Séance téléphone (Marie, 22 novembre 2026) : « reps » dans la case, série faite sur une ligne, échelle d'effort en couleur */
+.ec-st-tl .ec-st-unite .ec-st-champ { padding-right: 24px; }
+.ec-st-faite { min-height: 42px; }
+.ec-st-legende { margin: 0; }
+.ec-st-rpe { grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 3px; }
+.ec-st-rpe button { height: 40px; font-size: 14px; border: 2px solid transparent; }
+.ec-st-rpe button[aria-checked="true"] { border-color: var(--ec-encre); box-shadow: 0 0 0 2px #fff inset; color: var(--ec-encre); transform: translateY(-2px); }
+.rpe-0 { background: #cfe0ef !important; } .rpe-1 { background: #a9bfd1 !important; } .rpe-2 { background: #8fc98a !important; }
+.rpe-3 { background: #b5d98c !important; } .rpe-4 { background: #ece978 !important; } .rpe-5 { background: #f3e15f !important; }
+.rpe-6 { background: #f4c66a !important; } .rpe-7 { background: #f2b15a !important; } .rpe-8 { background: #ee9a4e !important; }
+.rpe-9 { background: #e8665c !important; } .rpe-10 { background: #c9473f !important; color: #fff !important; }
+.ec-st-rpe__texte { margin: 0; min-height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 10px; background: #f4f3ef; font: 700 13px/1.2 var(--font-sans); color: var(--ec-gris, #6b665f); }
+.ec-st-rpe__texte b { font-size: 16px; color: var(--ec-encre); }
+.ec-st-rpe__texte[class*="rpe-"] { color: var(--ec-encre); }
+.ec-st-serie .ec-st-tl { grid-template-columns: auto minmax(0, 1fr) 60px 58px; }
+.ec-st-rpe__texte { font-size: 14px; }
+.ec-st-rpe__texte:not([class*="rpe-"]) { background: transparent; }
+.ec-st-rpe button[aria-checked="true"] { transform: none; box-shadow: none; }
