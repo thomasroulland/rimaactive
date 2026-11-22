@@ -137,23 +137,20 @@ function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
 
 // En-tête d'un exercice : vignette (ouvre les photos et consignes), code, nom, matériel et prévu
 function Tete({ el, code, actif, prevu, voirConsignes }) {
+  // une photo pour chaque exercice, comme dans les supersets (Marie, 23 novembre 2026) : la case reste là même sans photo
   const photo = (el.photos ?? []).filter(Boolean)
   return (
-    <div className="ec-st-tete">
-      {photo.length > 0
-        ? (
-          <button type="button" className="ec-st-vignette" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
-            <PhotoStockee chemin={photo[0]} alt="" classe="ec-st-vignette__img" />
-            {photo.length > 1 && <em>1/{photo.length}</em>}
-          </button>
-        )
-        : <span className={`ec-st-code${actif ? ' est-actif' : ''}`}>{code}</span>}
-      <div className="ec-st-tete__txt">
-        <h3 id={`st-nom-${el.id}`} className="ec-st-nom">{photo.length > 0 && <span className={`ec-st-code ec-st-code--petit${actif ? ' est-actif' : ''}`}>{code}</span>}{el.nom}</h3>
-        {prevu && <p className="ec-st-prevu">{prevu}</p>}
-        {photo.length === 0 && String(el.consignes ?? '').trim() && <button type="button" className="ec-st-lien" onClick={() => voirConsignes(el)}>Voir les consignes</button>}
-      </div>
-    </div>
+    <button type="button" className="ec-st-tete2" onClick={() => voirConsignes(el)} aria-label={`${el.nom} : voir les photos et consignes`}>
+      <span className="ec-st-tete2__img">
+        {photo.length > 0 && <PhotoStockee chemin={photo[0]} alt="" />}
+        <span className={`ec-st-code sur-photo${actif ? ' est-actif' : ''}`}>{code}</span>
+        {photo.length > 1 && <em>1/{photo.length}</em>}
+      </span>
+      <span className="ec-st-tete2__txt">
+        <span id={`st-nom-${el.id}`} className="ec-st-nom">{el.nom}</span>
+        {prevu && <span className="ec-st-prevu">{prevu}</span>}
+      </span>
+    </button>
   )
 }
 
