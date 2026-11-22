@@ -57,18 +57,20 @@ function CarteNoire({ etat, programme, semaine, statut }) {
   if (etat.type === 'prochaine') {
     const { seance } = etat
     const numero = numeroDansSemaine(programme, seance.id)
+    const nom = seance.titre || `Séance ${numero}`
     lien = `/espace/seance/${programme.id}/${seance.id}`
-    titre = seance.titre || `Séance ${numero}`
-    sous = [seance.lieu, seance.objectif].filter(Boolean).join(' · ')
-    if (statut === 'En cours') { surtitre = 'Séance en cours'; bouton = 'Reprendre'; sous = sous || 'Reprenez là où vous en étiez' }
-    else if (etat.semaine > semaine) { surtitre = 'Semaine terminée 🎉'; titre = 'Prochaine séance'; sous = `Semaine ${etat.semaine} · ${seance.titre || `Séance ${numero}`}`; bouton = '' }
-    else { surtitre = `Séance ${numero} · semaine ${etat.semaine}`; bouton = 'Ouvrir' }
+    titre = nom
+    sous = seance.lieu || '' // seulement le lieu (Marie, 22 novembre 2026)
+    if (statut === 'En cours') { surtitre = 'Séance en cours'; bouton = 'Reprendre' }
+    // semaine finie : on annonce la suivante, sans flèche (il n'y a rien à ouvrir pour l'instant)
+    else if (etat.semaine > semaine) { surtitre = 'Semaine terminée 🎉'; titre = 'Prochaine séance'; sous = `Séance ${numero} · ${nom}`; lien = null }
+    else { surtitre = `Semaine ${etat.semaine} · séance ${numero}`; bouton = 'Ouvrir' }
   } else if (etat.type === 'bientot') {
     surtitre = 'Votre programme'; titre = `Commence ${jourCourt(etat.debut)}`; sous = 'Hâte de commencer\u00a0?'
   } else if (etat.type === 'termine') {
-    surtitre = 'Programme terminé · bravo\u00a0!'; titre = 'Marie prépare la suite'
+    surtitre = 'Programme terminé 👏🏼'; titre = 'Félicitations\u00a0!'; sous = 'Marie prépare la suite'
   } else {
-    surtitre = 'Votre programme'; titre = 'Arrive bientôt'; sous = 'Marie le prépare pour vous'
+    surtitre = 'Votre programme'; titre = 'Arrive bientôt'; sous = 'Marie le prépare pour toi'
   }
   return (
     <article className="ec-noire ec-noire2" aria-labelledby="titre-prochaine">
