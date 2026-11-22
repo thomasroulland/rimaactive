@@ -8,6 +8,7 @@ import TableauDeBord from './TableauDeBord.jsx'
 import MonProgramme from './MonProgramme.jsx'
 import PageProgression from './PageProgression.jsx'
 import Seance from './Seance.jsx'
+import Echauffement from './Echauffement.jsx'
 import Squelette from './Squelette.jsx'
 
 // Données du client en direct : programme affiché (en cours, sinon à venir, sinon le dernier), tous ses programmes publiés, ses séances faites.
@@ -61,6 +62,7 @@ export default function EspaceClient({ uid, profil }) {
             <Route path="progression" element={<PageProgression uid={uid} profil={profil} {...donnees} />} />
             <Route path="messages" element={<Navigate to="/espace" replace />} />
             <Route path="seance/:programmeId/:seanceId" element={<Seance {...donnees} />} />
+            <Route path="echauffement" element={<Echauffement {...donnees} />} />
             <Route path="*" element={<Navigate to="/espace" replace />} />
           </Routes>
         )}

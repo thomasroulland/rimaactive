@@ -184,3 +184,19 @@ describe('phraseDuJour', () => {
     for (const p of PHRASES_ACCUEIL) expect(p).not.toMatch(/prête?\b|prêt\b/)
   })
 })
+
+import { echauffementDe, listeSeances, seancesComptees } from '../../src/espace/donnees/calculs.js'
+describe('échauffement (22 novembre 2026)', () => {
+  const programme = {
+    debut: '2026-11-23',
+    semaines: [{ seances: [{ id: 'e', type: 'echauffement', titre: 'Échauffement Julie' }, { id: 's1', type: 'force' }, { id: 's2' }] }, { seances: [{ id: 's3' }] }],
+  }
+  it('ne compte pas l’échauffement dans les séances', () => {
+    expect(seancesComptees(programme.semaines[0]).map((s) => s.id)).toEqual(['s1', 's2'])
+    expect(listeSeances(programme).map((x) => x.seance.id)).toEqual(['s1', 's2', 's3'])
+  })
+  it('trouve l’échauffement du programme', () => {
+    expect(echauffementDe(programme).id).toBe('e')
+    expect(echauffementDe({ semaines: [{ seances: [{ id: 'x' }] }] })).toBe(null)
+  })
+})

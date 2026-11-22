@@ -20,7 +20,7 @@ import { completerReglages, nomType } from '../../src/espace/donnees/reglages.js
 describe('réglages', () => {
   it('donne toujours la liste fixe des types de séance, et des listes par défaut', () => {
     const r = completerReglages({ types: [{ id: 'mob', nom: 'Mobilité' }] })
-    const attendu = ['Renforcement', 'Contraste', 'Endurance fondamentale', 'HIIT', 'LIIT', 'Série', 'Superset']
+    const attendu = ['Renforcement', 'Contraste', 'Endurance fondamentale', 'HIIT', 'LIIT', 'Série', 'Superset', 'Échauffement']
     expect(r.types.map((t) => t.nom)).toEqual(attendu)
     expect(r.categories.length).toBeGreaterThan(0)
     expect(completerReglages(null).types.map((t) => t.nom)).toEqual(attendu)

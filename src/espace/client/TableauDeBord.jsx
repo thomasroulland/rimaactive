@@ -8,6 +8,7 @@ import CetteSemaine from './CetteSemaine.jsx'
 import Nouveautes from './Nouveautes.jsx'
 import CarteNotifications from './CarteNotifications.jsx'
 import CarteInstallation from './CarteInstallation.jsx'
+import { CarteEchauffement } from './Echauffement.jsx'
 
 
 // Tableau de bord du coaché : avatar, bonjour, avancement, carte noire, puis « Cette semaine ».
@@ -38,6 +39,7 @@ export default function TableauDeBord({ uid, profil, programme, programmes, fait
 
       <CarteNoire etat={etat} programme={programme} semaine={semaine} statut={etat.type === 'prochaine' ? statutSeance(seances, programme.id, etat.seance.id) : null} />
 
+      <CarteEchauffement programme={programme} />
       <CarteNotifications uid={uid} />
 
       <Duo>

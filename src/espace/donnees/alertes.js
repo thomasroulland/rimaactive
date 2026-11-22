@@ -1,6 +1,6 @@
 // Suivi des coachés côté coach (maquette PDF de Marie, 13 novembre 2026) : semaine en cours, avancement,
 // état de chaque semaine, dernière visio et points à regarder. Calculs purs ; dates 'AAAA-MM-JJ'.
-import { ecartJours, listeSeances, semaineCourante } from './calculs.js'
+import { ecartJours, listeSeances, seancesComptees, semaineCourante } from './calculs.js'
 
 export const SEUIL_SANS_SEANCE = 10 // jours sans séance avant une alerte
 export const SEUIL_VISIO = 14 // jours depuis la dernière visio avant une alerte
@@ -20,7 +20,7 @@ export function suiviCoache({ programme, seances, visio, aujourdhui, actif = fal
     const liste = listeSeances(programme)
     const faites = new Set(terminees.filter((s) => s.programme === programme.id).map((s) => s.seance))
     const semaines = (programme.semaines ?? []).map((sem, i) => {
-      const ids = (sem.seances ?? []).map((s) => s.id)
+      const ids = seancesComptees(sem).map((s) => s.id)
       const complete = ids.length > 0 && ids.every((id) => faites.has(id))
       return complete ? 'faite' : i + 1 <= semaine ? 'passee' : 'avenir'
     })
@@ -30,7 +30,7 @@ export function suiviCoache({ programme, seances, visio, aujourdhui, actif = fal
     for (let i = Math.min(semaine, nb) - 1; i >= 0; i--) {
       const vise = nombre(programme.semaines[i].rpe)
       if (Number.isNaN(vise)) continue
-      const ids = new Set((programme.semaines[i].seances ?? []).map((s) => s.id))
+      const ids = new Set(seancesComptees(programme.semaines[i]).map((s) => s.id))
       const efforts = terminees.filter((s) => s.programme === programme.id && ids.has(s.seance) && Number.isInteger(s.effort)).map((s) => s.effort)
       if (!efforts.length) continue
       const moyenne = efforts.reduce((t, e) => t + e, 0) / efforts.length
@@ -70,7 +70,7 @@ export function chiffresCoache({ programme, seances, aujourdhui }) {
 export function effortParSemaine(programme, seances) {
   const terminees = (seances ?? []).filter((s) => s.statut === 'terminée' && programme && s.programme === programme.id)
   return (programme?.semaines ?? []).map((sem, i) => {
-    const ids = new Set((sem.seances ?? []).map((s) => s.id))
+    const ids = new Set(seancesComptees(sem).map((s) => s.id))
     const efforts = terminees.filter((s) => ids.has(s.seance) && Number.isInteger(s.effort)).map((s) => s.effort)
     const vise = nombre(sem.rpe)
     const ressenti = efforts.length ? Math.round((efforts.reduce((t, e) => t + e, 0) / efforts.length) * 10) / 10 : null

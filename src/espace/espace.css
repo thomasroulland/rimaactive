@@ -2267,3 +2267,6 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .ens-encours__bouton:hover { background: #ffe6dd; }
 .ens-encours__oui { border: 0; background: var(--vermillon); color: #fff; }
 .ens-encours__confirme { display: inline-flex; align-items: center; gap: 10px; }
+
+/* Éditeur de séance : colonne « Repos » revenue pour les séries et les supersets (22 novembre 2026) */
+.es2-bloc[data-format="series"] { --es2-cols: 40px minmax(120px, 1fr) 56px 56px 72px 52px 70px 56px 38px; }

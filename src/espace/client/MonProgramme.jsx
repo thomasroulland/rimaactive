@@ -4,6 +4,7 @@ import { ajoutJours, aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement, blocsDuClient, dateSeance, seancesDeLaSemaine } from '../donnees/progression.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
 import ApercuSeance from './ApercuSeance.jsx'
+import { CarteEchauffement } from './Echauffement.jsx'
 
 const ETATS = { 'en cours': 'encours', passé: 'passe', 'à venir': 'avenir' }
 const ETIQUETTES = { 'en cours': 'En cours', passé: 'Terminé', 'à venir': 'À venir' }
@@ -76,6 +77,7 @@ export default function MonProgramme({ programmes, programme, seances }) {
 
       {bloc?.etat === 'passé' && <Bilan bloc={bloc} numero={index + 1} faites={faites} />}
 
+      {bloc && <CarteEchauffement programme={bloc.programme} />}
       {bloc && nbSemaines > 0 && <Semaines key={bloc.programme.id} bloc={bloc} nb={nbSemaines} faites={faites} seances={seances} />}
     </div>
   )

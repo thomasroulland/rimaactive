@@ -196,6 +196,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                       <span>Charge</span>
                       {estEnSeries(b.format) && <span>RPE</span>}
                       {estEnSeries(b.format) && <span>Tempo</span>}
+                      {estEnSeries(b.format) && <span>Repos</span>}
                       <span />
                     </div>
                   )}
@@ -286,7 +287,7 @@ function EnteteBloc({ bloc, verrou, renommer, idTitre }) {
 }
 
 // Un exercice sur une ligne : séries, reps, charge, RPE et tempo visibles (18 novembre 2026), le commentaire juste en dessous ;
-// « ⋯ » garde « se mesure en », le % du 1RM et « Retirer ». Plus de repos par exercice, plus de RPE de la semaine en exemple
+// « ⋯ » garde « se mesure en », le % du 1RM et « Retirer ». Repos par exercice revenu le 22 novembre 2026 ; plus de RPE de la semaine en exemple
 // (il se juge sur le ressenti global de fin de séance). Haltères : la charge est celle d'un haltère, « par main ».
 function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, parMain, materiel, nbDansBloc, monter, descendre, tenu, depot, prendre, lacher, onDragOver, onDrop }) {
   const [plus, setPlus] = useState(false)
@@ -320,6 +321,8 @@ function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, 
         </span>
         {series && cellule('rpe', 'RPE', 'decimal')}
         {series && cellule('tempo', 'tempo (ex. 3-1-1)', 'text')}
+        {/* repos après la série, de retour (Marie, 22 novembre 2026) : séries classiques et supersets */}
+        {series && cellule('repos', 'repos en secondes (ex. 90)', 'text', 's')}
         <button type="button" className="es2-plus" aria-expanded={plus} aria-label={`Plus de réglages pour ${el.nom}`} onClick={() => setPlus((p) => !p)}><IconePoints /></button>
       </div>
       <div className="es2-ligne__note">

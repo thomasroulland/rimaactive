@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { meilleuresCharges, regularite } from '../donnees/calculs.js'
+import { meilleuresCharges, regularite, seancesComptees } from '../donnees/calculs.js'
 import { bilanSeance, dateSeance } from '../donnees/progression.js'
 import { exercicesDe } from '../donnees/seances.js'
 import { Link } from 'react-router-dom'
@@ -57,7 +57,7 @@ function Regularite({ programme, faites }) {
     <ul className="ec-regul">
       {(programme.semaines ?? []).map((sem, i) => {
         const { prevues, faites: nf } = comptes[i]
-        const seancesSem = sem.seances ?? []
+        const seancesSem = seancesComptees(sem)
         return (
           <li key={sem.id ?? i} className="ec-regul__ligne">
             <span className="ec-regul__semaine">Semaine {i + 1}</span>
@@ -102,8 +102,9 @@ function Historique({ programmes, seances }) {
       const programme = programmes.find((x) => x.id === s.programme)
       let trouve = null
       ;(programme?.semaines ?? []).forEach((sem, i) => {
-        const k = (sem.seances ?? []).findIndex((x) => x.id === s.seance)
-        if (k !== -1) trouve = { seance: sem.seances[k], semaine: i + 1, numero: k + 1 } // numéro dans la semaine, comme la maquette
+        const liste = seancesComptees(sem)
+        const k = liste.findIndex((x) => x.id === s.seance)
+        if (k !== -1) trouve = { seance: liste[k], semaine: i + 1, numero: k + 1 } // numéro dans la semaine, comme la maquette
       })
       return { s, programme, trouve }
     })

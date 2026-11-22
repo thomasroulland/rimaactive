@@ -359,6 +359,12 @@ export function premierBlocAFaire(progression) {
 }
 
 // Temps de repos saisi par Marie, en secondes : « 90 », « 90 s », « 1:30 », « 1 min 30 », « 2 min » ; sinon null
+// « 90 » → « 90 s » ; « 1:30 » ou « 2 min » restent comme Marie les a écrits ; vide → ''
+export function texteRepos(repos) {
+  const t = String(repos ?? '').trim()
+  return /^\d+$/.test(t) ? `${t} s` : t
+}
+
 export function secondesRepos(repos) {
   const t = String(repos ?? '').trim().toLowerCase().replace(',', '.')
   if (!t) return null

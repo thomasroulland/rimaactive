@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteReps } from '../donnees/seances.js'
+import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMain } from '../donnees/banque.js'
 import { nomSuperset } from './SeanceGuidee.jsx'
 
@@ -105,7 +105,7 @@ function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
     const note = notes[el.id] ?? ''
     return (
       <section key={el.id} className="ec-st-carte" aria-labelledby={`st-nom-${el.id}`}>
-        <Tete el={el} code={`${bloc.lettre}${e + 1}`} actif={actuelle?.id === el.id} prevu={[el.materiel && el.materiel !== 'À préciser' ? el.materiel : '', prevu ? `prévu ${prevu}` : ''].filter(Boolean).join(' · ')} voirConsignes={voirConsignes} />
+        <Tete el={el} code={`${bloc.lettre}${e + 1}`} actif={actuelle?.id === el.id} prevu={[el.materiel && el.materiel !== 'À préciser' ? el.materiel : '', prevu, texteRepos(el.repos) ? `repos ${texteRepos(el.repos)}` : ''].filter(Boolean).join(' · ')} voirConsignes={voirConsignes} />
         <div className={`ec-st-cols${duree ? ' est-duree' : ''}`} aria-hidden="true"><span /><span>{duree ? 'Secondes' : 'Reps'}</span>{!duree && <span>{chargeParMain(el.materiel) ? 'Kg / main' : 'Kg'}</span>}<span /></div>
         {ls.map((l, i) => {
           const enCours = actuelle?.id === el.id && actuelle.i === i
@@ -193,7 +193,7 @@ function Tours({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
     return (
       <div key={el.id} className="ec-st-tl" role="group" aria-label={`Série ${t + 1}, ${el.nom}`}>
         <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{bloc.lettre}{k + 1}</span>
-        <span className="ec-st-tl__nom">{el.nom}</span>
+        <span className="ec-st-tl__nom">{el.nom}{texteRepos(el.repos) && <small>repos {texteRepos(el.repos)}</small>}</span>
         <span className="ec-st-unite">
           <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
             aria-label={`${el.nom}, série ${t + 1}, ${duree ? 'durée' : 'répétitions'}`} value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)}

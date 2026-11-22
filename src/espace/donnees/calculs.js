@@ -30,10 +30,22 @@ export function semaineCourante(debut, aujourdhui, nbSemaines) {
   return Math.min(Math.floor(ecart / 7) + 1, nbSemaines)
 }
 
+// Séances d'une semaine qui comptent : pas l'échauffement, qui est à part (22 novembre 2026)
+export const seancesComptees = (sem) => (sem?.seances ?? []).filter((s) => s?.type !== 'echauffement')
+
+// L'échauffement du programme : la première séance de type « Échauffement », visible tout le programme
+export function echauffementDe(programme) {
+  for (const sem of programme?.semaines ?? []) {
+    const s = (sem.seances ?? []).find((x) => x?.type === 'echauffement')
+    if (s) return s
+  }
+  return null
+}
+
 export function listeSeances(programme) {
   const out = []
   ;(programme?.semaines ?? []).forEach((sem, i) => {
-    for (const seance of sem.seances ?? []) {
+    for (const seance of seancesComptees(sem)) {
       // plus de jour : la séance est datée du début de sa semaine (le lundi), `fin` = dernier jour de la semaine
       out.push({ semaine: i + 1, seance, date: ajoutJours(programme.debut, i * 7), fin: ajoutJours(programme.debut, i * 7 + 6) })
     }
@@ -117,8 +129,8 @@ export function meilleuresCharges(seancesFaites, exoIdParElement, exoId) {
 export function regularite(programme, faites) {
   return (programme?.semaines ?? []).map((sem, i) => ({
     semaine: i + 1,
-    prevues: (sem.seances ?? []).length,
-    faites: (sem.seances ?? []).filter((s) => faites.has(s.id)).length,
+    prevues: seancesComptees(sem).length,
+    faites: seancesComptees(sem).filter((s) => faites.has(s.id)).length,
   }))
 }
 

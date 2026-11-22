@@ -58,6 +58,13 @@ export default function Consignes({ element, fermer }) {
             )}
           </div>
 
+          {/* commentaire de Marie sur l'exercice : visible ici seulement, en cas de besoin (22 novembre 2026) */}
+          {String(element.commentaire ?? '').trim() && (
+            <div className="ec-fenetre__part">
+              <h3 className="ec-fenetre__intertitre">Le mot de Marie</h3>
+              <p className="ec-texte ec-fenetre__consignes">{element.commentaire}</p>
+            </div>
+          )}
           {element.muscles?.length > 0 && (
             <div className="ec-fenetre__part">
               <h3 className="ec-fenetre__intertitre">Muscles principaux</h3>

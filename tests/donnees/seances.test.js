@@ -295,3 +295,13 @@ describe('fourchette de répétitions (20 novembre 2026)', () => {
     expect(saisirSerie({ reps: '', charge: '' }, 'fait', true, { reps: '10' })).toMatchObject({ reps: '10' })
   })
 })
+
+import { texteRepos } from '../../src/espace/donnees/seances.js'
+describe('texteRepos (22 novembre 2026)', () => {
+  it('ajoute « s » à un nombre seul, garde le reste tel quel', () => {
+    expect(texteRepos('90')).toBe('90 s')
+    expect(texteRepos('1:30')).toBe('1:30')
+    expect(texteRepos('')).toBe('')
+    expect(texteRepos(undefined)).toBe('')
+  })
+})

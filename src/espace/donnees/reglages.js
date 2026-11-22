@@ -13,6 +13,8 @@ export const TYPES_DE_BASE = [
   { id: 'liit', nom: 'LIIT' },
   { id: 'serie', nom: 'Série' },
   { id: 'superset', nom: 'Superset' },
+  // l'échauffement du coaché (22 novembre 2026) : à part, toujours visible, hors des séances comptées
+  { id: 'echauffement', nom: 'Échauffement' },
 ]
 
 // Parties de la banque (15 novembre 2026) : chaque catégorie est rangée dans une partie (« Échauffement », « Séance »…).
@@ -43,6 +45,7 @@ export function nomType(id, types) {
 }
 
 export const estCourse = (seance) => seance?.type === 'course'
+export const estEchauffement = (seance) => seance?.type === 'echauffement'
 
 const simple = (t) => (t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 

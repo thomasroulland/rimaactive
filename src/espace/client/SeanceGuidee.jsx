@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { enDuree, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteReps } from '../donnees/seances.js'
+import { enDuree, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { ChoixRpe } from './BlocResultat.jsx'
 import { chargeParMain } from '../donnees/banque.js'
 
@@ -84,7 +84,7 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, 
         )}
         <div>
           <h3 id={`${base}-nom`} className="ec-s2-carte__nom"><span className="ec-s2-code" aria-hidden="true">{code}</span> {el.nom}</h3>
-          {prevu && <p className="ec-s2-carte__prevu">Prévu : {prevu}</p>}
+          {prevu && <p className="ec-s2-carte__prevu">{prevu}</p>}
           {grand && el.consignes && <p className="ec-s2-carte__consignes">{el.consignes}</p>}
         </div>
         {!lecture && <button type="button" className="ec-s2-plus" aria-expanded={detail} onClick={() => setDetail((d) => !d)}>{detail ? '− Masquer' : '＋ Note ou effort'}</button>}
@@ -314,7 +314,7 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
       </div>
       <div className="ec-s5-corps">
         <h3 id={`${base}-nom`} className="ec-s5-nom">{el.nom}</h3>
-        {prevu && <p className="ec-s5-prevu">Prévu {prevu}</p>}
+        {prevu && <p className="ec-s5-prevu">{prevu}{texteRepos(el.repos) ? ` · repos ${texteRepos(el.repos)}` : ''}</p>}
         {el.consignes && <p className="ec-s5-consignes">{el.consignes}</p>}
         <div className={`ec-s5-ligne ec-s5-entete${avecCharge ? '' : ' sans-charge'}`} aria-hidden="true"><span /><span>{duree ? 'Durée' : 'Répétitions'}</span>{avecCharge && <span>{chargeParMain(el.materiel) ? 'Charge par main' : 'Charge'}</span>}</div>
         {ls.map((l, i) => (
@@ -455,7 +455,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
       {bloc.format === 'superset' && <SupersetInfo bloc={bloc} tour={cur >= 0 ? cur + 1 : null} compact actuel={exo} choisir={allerExo} />}
       <PhotosGlissees key={el.id} el={el} ouvrir={() => voirConsignes(el)} />
       <h2 className="ec-s2-un__nom">{el.nom}</h2>
-      {prevu && <p className="ec-s2-un__prevu">Prévu : {prevu}</p>}
+      {prevu && <p className="ec-s2-un__prevu">{prevu}</p>}
 
       {cur >= 0 ? (
         <>
