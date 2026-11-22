@@ -75,7 +75,7 @@ export default function MonProgramme({ programmes, programme, seances }) {
               <span className="ec-blocs__etat">{ETIQUETTES[b.etat]}</span>
             </button>
           ))}
-          {!blocs.some((b) => b.etat === 'à venir') && <span className="ec-blocs__pastille est-prochain" aria-label="Le prochain bloc apparaîtra ici"><span className="ec-blocs__textes"><span>Bloc {blocs.length + 1}</span><small>Dates à venir</small></span><span className="ec-blocs__etat">Bientôt</span></span>}
+          {!blocs.some((b) => b.etat === 'à venir') && <span className="ec-blocs__pastille est-prochain" aria-label="Le prochain bloc apparaîtra ici"><span className="ec-blocs__textes"><span>Bloc {blocs.length + 1}</span></span><span className="ec-blocs__etat">À venir</span></span>}
         </div>
       )}
 
