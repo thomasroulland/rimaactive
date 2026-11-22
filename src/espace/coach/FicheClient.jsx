@@ -6,6 +6,7 @@ import {
 import { aujourdhuiIso, meilleuresCharges, regularite } from '../donnees/calculs.js'
 import { dateCourte, dateLongue, evolutionCharges, exercicesDe, fr } from '../donnees/seances.js'
 import { messageErreur } from '../erreurs.js'
+import { nomBloc } from '../donnees/programme.js'
 import { noterVisio } from '../depots.js'
 import { dateSeance } from '../donnees/progression.js'
 import { avancement } from '../donnees/progression.js'
@@ -192,8 +193,12 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle, ouvrirSiEcart = fals
   const alerte = cmp.aRegarder > 0 || !!douleur
   const [ouvert, setOuvert] = useState(ouvrirSiEcart && alerte)
   // Notes écrites par le client sous chaque exercice pendant la séance (champ « notes », une par exercice)
-  const nomsElements = new Map((seance?.blocs ?? []).flatMap((bl) => (bl.elements ?? []).map((e) => [e.id, e.nom])))
-  const notesExos = Object.entries(sf.notes ?? {})
+  // téléphone (22 novembre 2026) : une note par bloc pour un biset ou un triset, et une note de bloc pour un EMOM, AMRAP…
+  const nomsElements = new Map((seance?.blocs ?? []).flatMap((bl) => [[bl.id, nomBloc(bl)], ...(bl.elements ?? []).map((e) => [e.id, e.nom])]))
+  const notesExos = [
+    ...Object.entries(sf.notes ?? {}),
+    ...Object.entries(sf.blocs ?? {}).map(([id, b]) => [id, b?.note]),
+  ]
     .filter(([, t]) => String(t ?? '').trim())
     .map(([id, t]) => ({ id, nom: nomsElements.get(id) ?? 'Exercice retiré du programme', texte: String(t).trim() }))
   const terminee = sf.statut === 'terminée'
@@ -236,7 +241,7 @@ export function SeanceFaite({ sf, seance, prenom, nouvelle, ouvrirSiEcart = fals
         <div className="fiche-notes">
           <p className="fiche-notes__titre">Notes du client sur les exercices</p>
           <ul className="fiche-notes__liste">
-            {notesExos.map((n) => <li key={n.id}><strong>{n.nom}</strong> : {n.texte}</li>)}
+            {notesExos.map((n, i) => <li key={`${n.id}-${i}`}><strong>{n.nom}</strong> : {n.texte}</li>)}
           </ul>
         </div>
       )}

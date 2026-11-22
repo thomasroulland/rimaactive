@@ -11,7 +11,8 @@ import { Cadenas } from './Statut.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
 import Consignes from './Consignes.jsx'
 import FinDeSeance from './FinDeSeance.jsx'
-import { BandeauBloc, BlocOrdinateur, BoutonBloc, EnteteOrdi, UnExercice, useMobile } from './SeanceGuidee.jsx'
+import { BandeauBloc, BlocOrdinateur, BoutonBloc, EnteteOrdi, useMobile } from './SeanceGuidee.jsx'
+import BlocTelephone from './SeanceTelephone.jsx'
 
 const DELAI = 600 // ms entre la dernière frappe et l'enregistrement
 
@@ -199,6 +200,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     note: (id, v) => noter('notes', id, v),
     chargeSeule: (id, v) => noter('series', id, [{ charge: v, reps: '', rpe: '', fait: v.trim() !== '' }]),
     bloc: (id, cle, v) => noter('blocs', id, { resultat: '', reps: '', rpe: '', fait: false, note: '', ...blocs[id], [cle]: v }),
+    // plusieurs champs d'un coup (effort et note de la bulle du bas, téléphone)
+    blocValeurs: (id, valeurs) => noter('blocs', id, { resultat: '', reps: '', rpe: '', fait: false, note: '', ...blocs[id], ...valeurs }),
   }
   const saisirSortie = (cle, v) => {
     setRefus('')
@@ -245,7 +248,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const aller = (i) => setEtape(Math.max(0, Math.min(nb, i)))
     const bloc = listeBlocs[ici]
     const enSeries = bloc && estEnSeries(bloc.format)
-    const unExercice = Boolean(bloc) && mobile && !verrou && enSeries
+    // téléphone : tous les blocs avec l'écran de la maquette B (22 novembre 2026)
+    const unExercice = Boolean(bloc) && mobile && !verrou
     const galerie = !mobile // ordinateur : en-tête de la maquette pour tous les blocs et la fin (pas de bandeau ni de surtitre)
     return (
       <section className={`ec-page ec-seance ec-seance--v2${!mobile ? ' ec-seance--large' : ''}`}>
@@ -261,7 +265,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
           <div className="ec-s2-principal">
             {bloc ? (
               unExercice ? (
-                <UnExercice key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} actions={actions}
+                <BlocTelephone key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} resultats={blocs} actions={actions}
                   voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} />
               ) : (
                 <>
