@@ -430,8 +430,8 @@ function Recommencer({ remettre }) {
       <dialog ref={ref} className="ec-tuto" aria-labelledby="rz-titre" onClick={(e) => { if (e.target === e.currentTarget) ref.current.close() }}>
         <div className="ec-tuto__corps">
           <span className="ec-tuto__poignee" aria-hidden="true" />
-          <h2 id="rz-titre" className="ec-tuto__titre">Recommencer la séance à zéro&nbsp;?</h2>
-          <p className="ec-tuto__phrase">Ce que vous avez noté sur cette séance sera effacé, comme si vous ne l’aviez pas ouverte.</p>
+          <h2 id="rz-titre" className="ec-tuto__titre">Remettre la séance à zéro</h2>
+          <p className="ec-tuto__phrase">Ce que vous avez noté sur cette séance sera effacé.</p>
           <button type="button" className="ec-bouton ec-tuto__ok ec-bouton--danger" onClick={() => { ref.current.close(); remettre() }}>Recommencer à zéro</button>
           <button type="button" className="ec-tuto__garder" onClick={() => ref.current.close()}>Garder ma séance</button>
         </div>

@@ -49,22 +49,21 @@ function Tuto({ iphone, fermer }) {
   }, [])
   const etapes = onglet === 'iphone'
     ? [
-      <>Touchez les <b>3 barres</b> <Ic>☰</Ic> en bas, à côté de l’adresse</>,
-      <>Touchez <b>Partager</b> <Ic><Partager /></Ic></>,
-      <>Touchez <b>En voir plus</b> <Ic>⌄</Ic></>,
+      <>Appuyez sur les <b>3 barres</b> <Ic>☰</Ic> en bas à gauche</>,
+      <>Appuyez sur <b>Partager</b> <Ic><Partager /></Ic></>,
+      <>Appuyez sur <b>En voir plus</b> <Ic>⌄</Ic></>,
       <>Choisissez <b>Sur l’écran d’accueil</b> <Ic>＋</Ic></>,
     ]
     : [
       <>Ouvrez le menu <b>⋮</b> du navigateur, en haut à droite</>,
       <>Choisissez <b>Installer l’application</b> ou <b>Ajouter à l’écran d’accueil</b></>,
-      <>Touchez <b>Installer</b></>,
+      <>Appuyez sur <b>Installer</b></>,
     ]
   return (
     <dialog ref={ref} className="ec-tuto" aria-labelledby="tuto-titre" onClose={fermer} onClick={(e) => { if (e.target === e.currentTarget) fermer() }}>
       <div className="ec-tuto__corps">
         <span className="ec-tuto__poignee" aria-hidden="true" />
         <h2 id="tuto-titre" className="ec-tuto__titre">Installer l’application</h2>
-        <p className="ec-tuto__phrase">Une icône sur votre écran d’accueil, en {etapes.length} gestes.</p>
         <div className="ec-tuto__onglets" role="group" aria-label="Votre téléphone">
           <button type="button" aria-pressed={onglet === 'iphone'} onClick={() => setOnglet('iphone')}>iPhone</button>
           <button type="button" aria-pressed={onglet === 'android'} onClick={() => setOnglet('android')}>Android</button>
