@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso, pasCommence, jourCourt } from '../donnees/calculs.js'
 import { avancement } from '../donnees/progression.js'
 import { nomBloc } from '../donnees/programme.js'
@@ -57,6 +57,7 @@ export default function Seance(props) {
 function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const enLigne = useEnLigne()
   const depuisProgramme = useLocation().state?.depuis === 'programme'
+  const naviguer = useNavigate()
   const [modifs, setModifs] = useState({ ...carteVide(), course: {} })
   const [edition, setEdition] = useState(false) // séance déjà faite rouverte pour la corriger (16 novembre 2026)
   const [refus, setRefus] = useState('')
@@ -132,21 +133,27 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const retour = <>{lienRetour}{barreCorrection}</>
 
   // séance commencée par erreur : la remettre à zéro (Marie, 22 novembre 2026) ; jamais une séance déjà faite
-  const recommencer = fait?.statut === 'en cours' && (
-    <Recommencer remettre={() => {
-      clearTimeout(minuterie.current)
-      enAttente.current = carteVide()
-      setEtape(0)
-      effacerMaSeance(programmeId, seanceId).catch(() => setRefus('La séance n’a pas pu être remise à zéro. Vérifiez votre connexion et réessayez.'))
-    }} />
-  )
+  const enCours = fait?.statut === 'en cours'
+  // puis on sort de la séance (Marie, 22 novembre 2026) ; sans réseau, on n'attend pas plus de 4 secondes
+  const remettre = async () => {
+    clearTimeout(minuterie.current)
+    enAttente.current = carteVide()
+    setRefus('')
+    const effacement = effacerMaSeance(programmeId, seanceId)
+    effacement.catch(() => {})
+    try {
+      await Promise.race([effacement, new Promise((ok) => setTimeout(ok, 4000))])
+      naviguer(depuisProgramme ? '/espace/programme' : '/espace')
+    } catch (e) {
+      setRefus(e?.code === 'permission-denied'
+        ? 'La séance n’a pas pu être remise à zéro. Prévenez Marie.'
+        : 'La séance n’a pas pu être remise à zéro. Vérifiez votre connexion et réessayez.')
+    }
+  }
+  const recommencer = enCours && <Recommencer remettre={remettre} />
 
-  // téléphone, un exercice à la fois : le retour tient dans la ligne du haut, sous forme d'une simple flèche
-  const retourPetit = (
-    <Link className="ec-s2-retour ec-s2-quitter" to={depuisProgramme ? '/espace/programme' : '/espace'} aria-label="Quitter la séance (tout est enregistré)" title="Quitter la séance">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-    </Link>
-  )
+  // téléphone, un exercice à la fois : la croix en haut ; séance commencée, elle propose aussi de recommencer à zéro (22 novembre 2026)
+  const retourPetit = <Quitter vers={depuisProgramme ? '/espace/programme' : '/espace'} enCours={enCours} remettre={remettre} />
 
   if (!item) {
     return (
@@ -255,7 +262,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
             {bloc ? (
               unExercice ? (
                 <UnExercice key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} actions={actions}
-                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} recommencer={recommencer} />
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} />
               ) : (
                 <>
                   {!galerie && <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />}
@@ -426,18 +433,58 @@ function recordsDe(fait, programmes, seances) {
   return nouveauxRecords(fait, seances, exoIdParElement, noms)
 }
 
-// « Recommencer à zéro » en bas de la séance, avec une confirmation
+const Croix = () => <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+
+// La croix de la séance (téléphone). Séance commencée : « Quitter la séance ? » avec « Remettre à zéro » en dessous,
+// qui demande une seconde confirmation dans la même bulle (Marie, 22 novembre 2026).
+function Quitter({ vers, enCours, remettre }) {
+  const ref = useRef(null)
+  const naviguer = useNavigate()
+  const [etape, setEtape] = useState('quitter')
+  if (!enCours) {
+    return <Link className="ec-s2-retour ec-s2-quitter" to={vers} aria-label="Quitter la séance" title="Quitter la séance"><Croix /></Link>
+  }
+  const ouvrir = () => { setEtape('quitter'); ref.current?.showModal() }
+  const fermer = () => ref.current?.close()
+  return (
+    <>
+      <button type="button" className="ec-s2-retour ec-s2-quitter" onClick={ouvrir} aria-haspopup="dialog" aria-label="Quitter la séance" title="Quitter la séance"><Croix /></button>
+      <dialog ref={ref} className="ec-tuto" aria-labelledby="quitter-titre" onClick={(e) => { if (e.target === e.currentTarget) fermer() }}>
+        {etape === 'quitter' ? (
+          <div className="ec-tuto__corps">
+            <span className="ec-tuto__poignee" aria-hidden="true" />
+            <h2 id="quitter-titre" className="ec-tuto__titre">Quitter la séance&nbsp;?</h2>
+            <p className="ec-tuto__phrase">Ce que vous avez noté est gardé.</p>
+            <button type="button" className="ec-bouton ec-tuto__ok" onClick={() => { fermer(); naviguer(vers) }}>Quitter la séance</button>
+            <button type="button" className="ec-tuto__garder ec-tuto__rouge" onClick={() => setEtape('zero')}>Remettre à zéro</button>
+            <button type="button" className="ec-tuto__simple" onClick={fermer}>Continuer ma séance</button>
+          </div>
+        ) : (
+          <div className="ec-tuto__corps">
+            <span className="ec-tuto__poignee" aria-hidden="true" />
+            <h2 id="quitter-titre" className="ec-tuto__titre">Remettre la séance à zéro&nbsp;?</h2>
+            <p className="ec-tuto__phrase">Ce que vous avez noté sur cette séance sera effacé.</p>
+            <button type="button" className="ec-bouton ec-tuto__ok ec-bouton--danger" onClick={() => { fermer(); remettre() }}>Remettre à zéro</button>
+            <button type="button" className="ec-tuto__garder" onClick={() => setEtape('quitter')}>Annuler</button>
+          </div>
+        )}
+      </dialog>
+    </>
+  )
+}
+
+// « Remettre à zéro » en bas de la séance, avec une confirmation
 function Recommencer({ remettre }) {
   const ref = useRef(null)
   return (
     <>
-      <button type="button" className="ec-recommencer" onClick={() => ref.current?.showModal()}>Recommencer la séance à zéro</button>
+      <button type="button" className="ec-recommencer" onClick={() => ref.current?.showModal()}>Remettre à zéro</button>
       <dialog ref={ref} className="ec-tuto" aria-labelledby="rz-titre" onClick={(e) => { if (e.target === e.currentTarget) ref.current.close() }}>
         <div className="ec-tuto__corps">
           <span className="ec-tuto__poignee" aria-hidden="true" />
-          <h2 id="rz-titre" className="ec-tuto__titre">Remettre la séance à zéro</h2>
+          <h2 id="rz-titre" className="ec-tuto__titre">Remettre la séance à zéro&nbsp;?</h2>
           <p className="ec-tuto__phrase">Ce que vous avez noté sur cette séance sera effacé.</p>
-          <button type="button" className="ec-bouton ec-tuto__ok ec-bouton--danger" onClick={() => { ref.current.close(); remettre() }}>Recommencer à zéro</button>
+          <button type="button" className="ec-bouton ec-tuto__ok ec-bouton--danger" onClick={() => { ref.current.close(); remettre() }}>Remettre à zéro</button>
           <button type="button" className="ec-tuto__garder" onClick={() => ref.current.close()}>Garder ma séance</button>
         </div>
       </dialog>
