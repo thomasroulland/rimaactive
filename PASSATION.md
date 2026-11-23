@@ -640,3 +640,13 @@ doit mener directement dans l'espace. Le lien Firebase « Réinitialisation du m
 - **Maquettes de l'accueil** (deux cartes en haut, Mes services) : sur la branche locale `maquettes-accueil`, pas encore validées.
 - **Resend** : domaine rimaactive.fr vérifié le 23 novembre 2026 (DNS chez OVH : DKIM `resend._domainkey`, CNAME `send` et `rsend`).
   `RESEND_API_KEY` (secrète) et `SITE_URL` posées par Thomas dans Vercel. DMARC (`_dmarc`) à ajouter chez OVH s'il manque.
+
+## Formulaire de contact envoyé par Resend (23 novembre 2026, pas encore en ligne)
+
+- `api/contact.js` : le formulaire « M'écrire » envoie un e-mail à Marie (`marie.sillas.coaching@outlook.com`) depuis
+  `contact@rimaactive.fr`, avec la formule, le nom, l'e-mail, le téléphone, l'entreprise et le message. « Répondre » écrit
+  directement à la personne. Même clé que les invitations (`RESEND_API_KEY`, domaine rimaactive.fr vérifié).
+- Réglages facultatifs dans Vercel : `CONTACT_DESTINATAIRE` (autre adresse de réception), `CONTACT_EXPEDITEUR`.
+- Champ piège invisible contre les robots ; si l'envoi échoue, la page propose d'écrire directement à l'adresse de Marie.
+- Confirmation : « Votre demande est bien arrivée, je vous réponds très vite. » (texte de Claude, à relire par Marie).
+- Resend ajouté aux prestataires de la politique de confidentialité. Tests : `tests/api/contact.test.js`.

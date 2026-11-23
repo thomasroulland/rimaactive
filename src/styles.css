@@ -2274,3 +2274,9 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .page-contact .presentation-contact .presentation-contact__lieu--court { margin-top: 6px !important; align-items: flex-start; }
   .page-contact .presentation-contact .presentation-contact__lieu--court .picto { margin-top: 3px; }
 }
+
+/* Formulaire de contact (23 novembre 2026) : champ piège caché aux personnes, message si l'envoi échoue */
+.champ-piege { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.formulaire__erreur { margin: 0; padding-left: 12px; border-left: 3px solid var(--vermillon); color: var(--encre); font-weight: 600; }
+.formulaire__erreur a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.formulaire__envoyer:disabled { opacity: .6; cursor: default; }

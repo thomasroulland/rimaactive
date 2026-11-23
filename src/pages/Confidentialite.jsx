@@ -99,7 +99,8 @@ export const SECTIONS_CONFIDENTIALITE = [
             programmes, séances notées et photos d'exercices, hébergés dans l'Union européenne (région
             europe-west). Les comptes de connexion (adresse e-mail) sont gérés par Firebase Authentication, un service
             de Google qui peut les traiter hors de l'Union européenne, avec les garanties citées ci-dessous ;</li>
-          {/* pas de service d'envoi du formulaire pour l'instant (le formulaire ne transmet rien) : l'ajouter ici dès qu'il est branché */}
+          {/* formulaire de contact et invitations branchés sur Resend (23 novembre 2026) */}
+          <li><strong>Resend</strong> (Resend Inc.), aux États-Unis : envoi des e-mails du site (formulaire de contact et invitations à l'espace client) ;</li>
           <li><strong>Microsoft Outlook</strong> (Microsoft Corporation), messagerie e-mail.</li>
         </ul>
         <p>
