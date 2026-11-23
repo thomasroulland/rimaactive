@@ -2271,5 +2271,14 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 /* Éditeur de séance : colonne « Repos » revenue pour les séries et les supersets (22 novembre 2026) */
 .es2-bloc[data-format="series"] { --es2-cols: 40px minmax(120px, 1fr) 56px 56px 72px 52px 70px 56px 38px; }
 
-/* « Relancer l'invitation » sur la carte d'un coaché invité (23 novembre 2026) : au-dessus du lien d'étirement de la carte */
-.carte-coache__relance { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+/* « Relancer l'invitation » (23 novembre 2026) : petit bouton rond à côté de « Invité », infobulle au survol et au clavier,
+   au-dessus du lien qui étend toute la carte */
+.relance { position: relative; z-index: 2; flex: none; display: inline-grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--filet); border-radius: 50%; background: var(--blanc); color: var(--encre); cursor: pointer; transition: background-color .15s ease, border-color .15s ease; }
+.relance::before { content: ''; position: absolute; inset: -6px; } /* zone de toucher de 44 px */
+.relance:hover { background: var(--jaune); border-color: var(--jaune); }
+.relance:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.relance:disabled { opacity: .55; cursor: default; }
+.relance__bulle { position: absolute; top: calc(100% + 8px); right: -4px; padding: 6px 10px; border-radius: 8px; background: var(--encre); color: var(--craie); font: 600 12px/16px var(--font-sans); white-space: nowrap; pointer-events: none; opacity: 0; transform: translateY(-4px); transition: opacity .15s ease, transform .15s ease; }
+.relance__bulle::after { content: ''; position: absolute; bottom: 100%; right: 14px; border: 5px solid transparent; border-bottom-color: var(--encre); }
+.relance:hover .relance__bulle, .relance:focus-visible .relance__bulle, .relance:disabled .relance__bulle { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .relance, .relance__bulle { transition: none; } }

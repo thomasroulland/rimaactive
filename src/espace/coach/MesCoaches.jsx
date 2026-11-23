@@ -116,6 +116,7 @@ export default function MesCoaches() {
                     <h2 className="carte-coache__nom"><Link to={`/espace/coach/clients/${c.uid}`} className="carte-coache__lien">{c.prenom} {c.nom}</Link></h2>
                     {r ? <span className="carte-coache__semaine">{r.semaine === 0 ? 'Commence bientôt' : `Semaine ${r.semaine} sur ${r.nbSemaines}`}</span>
                       : <span className={`espace-statut espace-statut--${c.statut === 'actif' ? 'actif' : 'autre'}`}>{STATUTS[c.statut] ?? c.statut}</span>}
+                    {c.statut === 'invité' && <BoutonRelancer client={c} fait={setMessage} />}
                   </div>
                   <p className="carte-coache__programme">{p ? `${p.nom || 'Programme sans nom'} · ${r.nbSemaines} semaine${r.nbSemaines > 1 ? 's' : ''}` : 'Pas de programme en cours'}</p>
                   {r && (
@@ -136,7 +137,6 @@ export default function MesCoaches() {
                   {c.alertes.length
                     ? <ul className="alertes">{c.alertes.map((a) => <li key={a}>{a}</li>)}</ul>
                     : <p className="carte-coache__calme">{p ? 'Aucune alerte' : c.statut === 'invité' ? `${c.prenom} n’a pas encore activé son compte.` : 'Pensez à lui créer un programme.'}</p>}
-                  {c.statut === 'invité' && <BoutonRelancer client={c} fait={setMessage} />}
                   {!p && <Link to={`/espace/coach/clients/${c.uid}/programme`} className="lien-souligne carte-coache__action">Créer un programme<span className="sr-only"> pour {c.prenom} {c.nom}</span></Link>}
                 </li>
               )
@@ -228,23 +228,23 @@ function DialogueInvitation({ fermer, invite }) {
 // nouvel e-mail avec un nouveau lien de 7 jours ; l'ancien lien ne marche plus.
 function BoutonRelancer({ client, fait }) {
   const [envoi, setEnvoi] = useState(false)
-  const [erreur, setErreur] = useState('')
   async function relancer() {
-    setEnvoi(true); setErreur('')
+    setEnvoi(true)
     try {
       await renvoyerInvitation(client.uid, client.email ?? '')
       fait(`Invitation relancée : ${client.prenom} a reçu un nouveau lien, valable 7 jours.`)
     } catch (e) {
-      setErreur(messageErreur(e.code))
+      fait(messageErreur(e.code))
     }
     setEnvoi(false)
   }
+  // petit bouton rond avec une enveloppe et une flèche ; l'infobulle « Relancer l'invitation » s'affiche au survol et au clavier
   return (
-    <div className="carte-coache__relance">
-      <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={relancer} disabled={envoi}>
-        {envoi ? 'Envoi…' : 'Relancer l’invitation'}<span className="sr-only"> de {client.prenom} {client.nom}</span>
-      </button>
-      {erreur && <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>}
-    </div>
+    <button type="button" className="relance" onClick={relancer} disabled={envoi} aria-label={`Relancer l’invitation de ${client.prenom} ${client.nom}`}>
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M21 12.5V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8" /><path d="m3.5 6.5 8.5 6 8.5-6" /><path d="M16 19h6m-2.5-2.5L22 19l-2.5 2.5" />
+      </svg>
+      <span className="relance__bulle" aria-hidden="true">{envoi ? 'Envoi…' : 'Relancer l’invitation'}</span>
+    </button>
   )
 }
