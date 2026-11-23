@@ -5,7 +5,6 @@ import { RESSENTIS } from '../donnees/seances.js'
 
 const EFFORTS = [5, 6, 7, 8, 9, 10]
 const NOMS = { 5: 'Modéré', 6: 'Moyennement difficile', 7: 'Difficile', 8: 'Très difficile', 9: 'Extrêmement difficile', 10: 'Effort maximal' }
-const AIDE = 'Touchez une note : 5 modéré, 10 effort maximal.'
 
 // Panneau « Fin de séance » (maquette) : effort global 5 à 10, ressenti, commentaire (« Mes sensations » en course),
 // « Enregistrer ma séance ». Séance terminée (`fait.statut === 'terminée'`) : même panneau en lecture seule.
@@ -48,7 +47,8 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
             ))}
           </div>
           <p className={`ec-st-rpe__texte${v.effort ? ` rpe-${v.effort}` : ''}`} aria-live="polite">
-            {v.effort ? (NOMS[v.effort] ?? `${v.effort} sur 10`) : (terminee ? '' : AIDE)}
+            {/* comme pour les exercices : le nom de la note s'affiche seulement quand on en touche une (Marie, 23 novembre 2026) */}
+            {v.effort ? (NOMS[v.effort] ?? `${v.effort} sur 10`) : ''}
           </p>
         </fieldset>
         <fieldset className="ec-st-carte ec-fin__groupe">

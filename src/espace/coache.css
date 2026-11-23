@@ -1972,3 +1972,4 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 }
 /* « ← Revenir : … » sous la fin de séance : un simple lien, sans bulle */
 .ec-fin--st + .ec-lien { justify-self: center; align-self: center; width: auto; min-height: 44px; padding: 0 8px; border: 0; background: none; box-shadow: none; font: 700 14px/1 var(--font-sans); color: var(--ec-gris, #6b665f); text-decoration: underline; text-underline-offset: 3px; }
+.ec-fin--st .ec-st-rpe__texte:empty { display: none; }
