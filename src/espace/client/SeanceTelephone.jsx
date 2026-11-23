@@ -145,7 +145,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
           return (
             <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
-              <span className="ec-st-photo__img">{photo && <PhotoStockee chemin={photo} alt="" />}</span>
+              <span className="ec-st-photo__img">{photo ? <PhotoStockee chemin={photo} alt="" /> : <span className="ec-st-photo__vide">Photos à venir</span>}</span>
               <span className="ec-st-code sur-photo">{code}</span>
               <span className="ec-st-photo__nom">{el.nom}<small>{[materielDe(el), prevu].filter(Boolean).join(' · ')}</small></span>
             </button>
