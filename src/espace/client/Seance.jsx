@@ -263,8 +263,9 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const bloc = listeBlocs[ici]
     const enSeries = bloc && estEnSeries(bloc.format)
     // téléphone : tous les blocs avec l'écran de la maquette B (22 novembre 2026)
-    const unExercice = Boolean(bloc) && mobile && !verrou
-    const galerie = !mobile // ordinateur : en-tête de la maquette pour tous les blocs et la fin (pas de bandeau ni de surtitre)
+    // ordinateur et tablette aussi (Marie, 23 novembre 2026) : le même écran que sur téléphone, plus large
+    const unExercice = Boolean(bloc) && !verrou
+    const galerie = !mobile && !unExercice // ordinateur : en-tête de la maquette pour la fin et la séance terminée
     return (
       <section className={`ec-page ec-seance ec-seance--v2${!mobile ? ' ec-seance--large' : ''}`}>
         {unExercice ? barreCorrection : galerie ? null : retour}
