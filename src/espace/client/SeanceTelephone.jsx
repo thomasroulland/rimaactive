@@ -57,15 +57,11 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
             ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />
             : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />}
 
-      {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton ; sinon on passe d'un bloc à l'autre */}
-      {!enSeries && !resultats[bloc.id]?.fait && els.length > 0
-        ? <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
-        : (
-          <div className="ec-st__nav" role="group" aria-label="Changer de bloc">
-            <button type="button" className="ec-st__pas" onClick={() => aller(etape - 1)} disabled={etape === 0}><span aria-hidden="true">‹</span> Bloc précédent</button>
-            <button type="button" className="ec-st__pas" onClick={suivant}>{libSuivant} <span aria-hidden="true">›</span></button>
-          </div>
-        )}
+      {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
+          on change de bloc avec « Plan » ou les traits du haut, et la fenêtre de l'effort propose le bloc suivant */}
+      {!enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
+        <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
+      )}
 
       {feuille && (
         <FeuilleEffort key={JSON.stringify(feuille)} feuille={feuille} bloc={bloc} lignes={lignes} notes={notes} resultat={resultats[bloc.id]} actions={actions}
@@ -141,7 +137,6 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
       <span /><span /><span>{groupe.some(({ el }) => !enDuree(el)) ? 'Reps' : 'Durée'}</span>{!sansCharge && <span>{parMain ? 'Kg / main' : 'Kg'}</span>}
     </div>
   )
-  const aVenir = Array.from({ length: nb }, (_, t) => t).filter((t) => (actif ? t > actuelle && actuelle >= 0 : !serieFaite(t)))
   return (
     <div className="ec-st-groupe">
       <div className={`ec-st-photos ec-st-photos--${Math.min(groupe.length, 3)}`}>
@@ -181,9 +176,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           <button type="button" className="ec-st__gros ec-st-serie__ok" onClick={() => valider(actuelle)}>Terminé <Coche taille={18} /></button>
         </section>
       )}
-      {aVenir.length > 0 && (
-        <p className="ec-st-avenir">{aVenir.length === 1 ? `Série ${aVenir[0] + 1} à venir` : `Séries ${aVenir.map((t) => t + 1).join(' · ')} à venir`}</p>
-      )}
+      {/* plus de « Séries 2 · 3 à venir » (Marie, 23 novembre 2026) : le plan suffit */}
       {toutFait && (
         <div className="ec-st-pastilles">
           {/* une seule bulle « RPE » : elle ouvre l'effort et la note (Marie, 23 novembre 2026) */}
