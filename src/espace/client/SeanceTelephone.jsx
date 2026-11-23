@@ -186,8 +186,8 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
       )}
       {toutFait && (
         <div className="ec-st-pastilles">
-          <button type="button" className={rpe ? 'est-rempli' : ''} onClick={() => ouvrir(fin === 'exo' ? { type: 'exo', id: noteId, correction: true } : { type: 'superset', correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : '＋ Effort (RPE)'}</button>
-          <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir(fin === 'exo' ? { type: 'exo', id: noteId, correction: true } : { type: 'superset', correction: true })}>{note ? '✎ Note' : '＋ Note'}</button>
+          {/* une seule bulle « RPE » : elle ouvre l'effort et la note (Marie, 23 novembre 2026) */}
+          <button type="button" className={rpe || note ? 'est-rempli' : ''} onClick={() => ouvrir(fin === 'exo' ? { type: 'exo', id: noteId, correction: true } : { type: 'superset', correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : 'RPE'}</button>
         </div>
       )}
     </div>
@@ -231,8 +231,7 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
       </div>
       {r.fait && (
         <div className="ec-st-pastilles">
-          <button type="button" className={vide(r.rpe) ? '' : 'est-rempli'} onClick={() => ouvrir({ type: 'bloc', correction: true })}>{vide(r.rpe) ? '＋ Effort (RPE)' : `RPE ${texteRpe(r.rpe)}`}</button>
-          <button type="button" className={vide(r.note) ? '' : 'est-rempli'} onClick={() => ouvrir({ type: 'bloc', correction: true })}>{vide(r.note) ? '＋ Note' : '✎ Note'}</button>
+          <button type="button" className={vide(r.rpe) && vide(r.note) ? '' : 'est-rempli'} onClick={() => ouvrir({ type: 'bloc', correction: true })}>{vide(r.rpe) ? 'RPE' : `RPE ${texteRpe(r.rpe)}`}</button>
         </div>
       )}
     </section>
