@@ -623,7 +623,7 @@ Thomas : « ça rend moche sur téléphone et sur un écran coupé en deux ». L
   (`.connexion__legende::before`). Champs remplis par le navigateur : fond blanc au lieu de bleu (non vérifiable ici).
 - **Choix de Marie, à ne pas refaire** : aucun flou sur la photo, pas de fondu en haut, ne plus toucher au cadrage sans demande.
 
-## Invitation : lien de 7 jours et bouton « Relancer l'invitation » (23 novembre 2026, branche refonte-2026, pas encore en ligne)
+## Invitation : lien de 7 jours et bouton « Relancer l’invitation » (23 novembre 2026, en ligne, accord écrit : « ok c’est bon »)
 Demande de Marie : le lien envoyé par e-mail doit durer au moins 24 heures, se relancer avec un bouton, et la création du mot de passe
 doit mener directement dans l'espace. Le lien Firebase « Réinitialisation du mot de passe » ne dure qu'environ une heure (non réglable).
 - **Serveur** : `api/_invitation.js` (jeton aléatoire, seule son empreinte est gardée dans `invitations/{empreinte}`, 7 jours ;
@@ -638,3 +638,5 @@ doit mener directement dans l'espace. Le lien Firebase « Réinitialisation du m
 - **Vérifié** : `npm test`, `npm run test:regles` (113, dont 6 sur l'invitation), `npm run build` ; parcours rejoué dans un navigateur
   avec les émulateurs (lien → mot de passe → espace ; lien réutilisé refusé ; relance depuis Mes coachés).
 - **Maquettes de l'accueil** (deux cartes en haut, Mes services) : sur la branche locale `maquettes-accueil`, pas encore validées.
+- **Resend** : domaine rimaactive.fr vérifié le 23 novembre 2026 (DNS chez OVH : DKIM `resend._domainkey`, CNAME `send` et `rsend`).
+  `RESEND_API_KEY` (secrète) et `SITE_URL` posées par Thomas dans Vercel. DMARC (`_dmarc`) à ajouter chez OVH s'il manque.
