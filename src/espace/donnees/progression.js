@@ -66,11 +66,9 @@ export function numeroDansSemaine(programme, seanceId) {
 export const PHRASES_ACCUEIL = [
   'En forme aujourd’hui\u00a0?',
   'On bouge aujourd’hui\u00a0?',
-  'On se dépense aujourd’hui\u00a0?',
-  'Belle journée pour s’entraîner\u00a0!',
-  'Une séance, et c’est parti\u00a0?',
-  'Chaque séance compte\u00a0!',
   'On garde le rythme\u00a0?',
+  'Belle journée pour s’entraîner\u00a0!',
+  'Chaque séance compte\u00a0!',
 ]
 export function phraseDuJour(date) {
   const jour = Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000)
