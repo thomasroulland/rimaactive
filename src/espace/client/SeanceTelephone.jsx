@@ -3,7 +3,6 @@ import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
 import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMain } from '../donnees/banque.js'
-import { nomSuperset } from './SeanceGuidee.jsx'
 
 // Séance sur téléphone (maquette « B » validée par Marie, 22 novembre 2026) :
 // - séries classiques : une carte par exercice, une ligne par série (répétitions, kilos, ✓) ;
@@ -25,9 +24,7 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
   const suivant = () => (dernier ? finir() : aller(etape + 1))
   const libSuivant = dernier ? 'Fin de séance' : 'Bloc suivant'
   const els = bloc.elements ?? []
-  const superset = bloc.format === 'superset'
   const enSeries = estEnSeries(bloc.format)
-  const format = superset ? nomSuperset(bloc) : enSeries ? 'Séries' : String(bloc.format ?? '').toUpperCase()
 
   return (
     <div className="ec-st">
@@ -45,18 +42,18 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
         <ul className="ec-s2-planliste">
           {blocs.map((b, i) => (
             <li key={b.id}><button type="button" className={i === etape ? 'est-actif' : ''} onClick={() => { setPlan(false); aller(i) }}>
-              <span>{nomBloc(b)}</span><span>{prog.blocs[i]?.faites ?? 0}/{prog.blocs[i]?.total ?? 0}</span></button></li>
+              {/* le plan : les blocs et leur nombre d'exercices, sans le détail (23 novembre 2026) */}
+              <span>{prog.blocs[i]?.complet ? '✓ ' : ''}{nomBloc(b)}</span><span>{(b.elements ?? []).length} exercice{(b.elements ?? []).length > 1 ? 's' : ''}</span></button></li>
           ))}
           <li><button type="button" onClick={finir}><span>Fin de séance</span></button></li>
         </ul>
       )}
-      <p className="ec-st__sur">{nomBloc(bloc)} · {format}</p>
+      {/* seulement le nom du bloc de Marie, sans « Biset », « Séries »… (23 novembre 2026) */}
+      <p className="ec-st__sur">{nomBloc(bloc)}</p>
 
       {els.length === 0
         ? <p className="ec-texte">Ce bloc n’a pas encore d’exercice.</p>
-        : superset
-          ? <Tours bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />
-          : enSeries
+        : enSeries
             ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />
             : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />}
 
@@ -78,147 +75,84 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
   )
 }
 
-// ---------- Séries classiques : une carte par exercice ----------
+// ---------- Séries et supersets : le même écran (Marie, 23 novembre 2026) ----------
+// Les photos en haut (nom, matériel, séries × reps), puis une seule série ouverte avec « Terminé ». Les séries faites
+// tiennent sur une ligne avec ce qui a été fait ; les suivantes sont regroupées. Rien n'est rempli à la place du coaché :
+// ce qu'il note pour une série est seulement proposé dans la suivante. L'effort se note une fois, à la fin.
+// Séries classiques : un exercice après l'autre ; superset : les exercices du bloc enchaînés dans chaque série.
+
+const materielDe = (el) => (el.materiel && el.materiel !== 'À préciser' ? el.materiel : '')
 
 function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
   const els = bloc.elements ?? []
-  const [alerte, setAlerte] = useState('')
-  // la série à faire : la première pas faite, dans l'ordre des exercices
-  let actuelle = null
-  for (const el of els) { const i = lignes(el).findIndex((l) => !l.fait); if (i >= 0) { actuelle = { id: el.id, i }; break } }
-  const cocher = (el, i, l) => {
-    if (l.fait) { actions.serie(el, i, 'fait', false); return }
-    // fourchette (« 8 à 10 ») : le coaché écrit d'abord combien il en a fait
-    if (!enDuree(el) && estFourchette(el.reps) && vide(l.reps)) { setAlerte(`${el.id}-${i}`); document.getElementById(`st-${el.id}-${i}`)?.focus(); return }
-    setAlerte('')
-    actions.serie(el, i, 'fait', true)
-    // l'effort se note une fois, à la fin des séries de l'exercice (Marie, 22 novembre 2026)
-    if (lignes(el).every((x, k) => k === i || x.fait)) ouvrir({ type: 'exo', id: el.id })
+  if (bloc.format === 'superset') {
+    return <Enchainement bloc={bloc} groupe={els.map((el, k) => ({ el, code: `${bloc.lettre}${k + 1}` }))} lignes={lignes} notes={notes} noteId={bloc.id} fin="superset" actions={actions} voirConsignes={voirConsignes} ouvrir={ouvrir} actif />
   }
-  return els.map((el, e) => {
-    const ls = lignes(el)
-    const duree = enDuree(el)
-    const cle = duree ? 'duree' : 'reps'
-    const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
-    const toutFait = ls.length > 0 && ls.every((l) => l.fait)
-    const rpe = ls.map((l) => l.rpe).find((v) => !vide(v))
-    const note = notes[el.id] ?? ''
-    return (
-      <section key={el.id} className="ec-st-carte" aria-labelledby={`st-nom-${el.id}`}>
-        <Tete el={el} code={`${bloc.lettre}${e + 1}`} actif={actuelle?.id === el.id} prevu={[el.materiel && el.materiel !== 'À préciser' ? el.materiel : '', prevu, texteRepos(el.repos) ? `repos ${texteRepos(el.repos)}` : ''].filter(Boolean).join(' · ')} voirConsignes={voirConsignes} />
-        <div className={`ec-st-cols${duree ? ' est-duree' : ''}`} aria-hidden="true"><span /><span>{duree ? 'Secondes' : 'Reps'}</span>{!duree && <span>{chargeParMain(el.materiel) ? 'Kg / main' : 'Kg'}</span>}<span /></div>
-        {ls.map((l, i) => {
-          const enCours = actuelle?.id === el.id && actuelle.i === i
-          return (
-            <div key={i} className={`ec-st-ligne${duree ? ' est-duree' : ''}${l.fait ? ' est-faite' : ''}${enCours ? ' est-en-cours' : ''}`} role="group" aria-label={`${el.nom}, série ${i + 1}`}>
-              <span className="ec-st-num" aria-hidden="true">{l.fait ? <Coche taille={14} /> : i + 1}</span>
-              <input id={`st-${el.id}-${i}`} className={`ec-st-champ${alerte === `${el.id}-${i}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
-                aria-label={`Série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`} value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)}
-                onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, i, cle, ev.target.value) }} />
-              {!duree && (
-                <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`Série ${i + 1}, kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
-                  value={l.charge ?? ''} placeholder={fr(el.charge ?? '') || '–'} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.valeur(el, i, 'charge', ev.target.value)} />
-              )}
-              <button type="button" className="ec-st-ok" aria-pressed={!!l.fait} aria-label={`Série ${i + 1} ${l.fait ? 'faite (toucher pour décocher)' : 'faite ?'}`} onClick={() => cocher(el, i, l)}><Coche /></button>
-            </div>
-          )
-        })}
-        {alerte.startsWith(el.id) && <p className="ec-st-alerte" role="alert">Notez d’abord vos répétitions faites</p>}
-        {(toutFait || note) && (
-          <div className="ec-st-pastilles">
-            <button type="button" className={rpe ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'exo', id: el.id, correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : '＋ Effort (RPE)'}</button>
-            <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'exo', id: el.id, correction: true })}>{note ? '✎ Note' : '＋ Note'}</button>
-          </div>
-        )}
-      </section>
-    )
-  })
+  // séries classiques : l'exercice en cours est le premier qui n'est pas fini
+  const enCours = els.findIndex((el) => lignes(el).some((l) => !l.fait))
+  return els.map((el, k) => (
+    <Enchainement key={el.id} bloc={bloc} groupe={[{ el, code: `${bloc.lettre}${k + 1}` }]} lignes={lignes} notes={notes} noteId={el.id} fin="exo" actions={actions}
+      voirConsignes={voirConsignes} ouvrir={ouvrir} actif={k === enCours} />
+  ))
 }
 
-// En-tête d'un exercice : vignette (ouvre les photos et consignes), code, nom, matériel et prévu
-function Tete({ el, code, actif, prevu, voirConsignes }) {
-  // une photo pour chaque exercice, comme dans les supersets (Marie, 23 novembre 2026) : la case reste là même sans photo
-  const photo = (el.photos ?? []).filter(Boolean)
-  return (
-    <button type="button" className="ec-st-tete2" onClick={() => voirConsignes(el)} aria-label={`${el.nom} : voir les photos et consignes`}>
-      <span className="ec-st-tete2__img">
-        {photo.length > 0 && <PhotoStockee chemin={photo[0]} alt="" />}
-        <span className={`ec-st-code sur-photo${actif ? ' est-actif' : ''}`}>{code}</span>
-        {photo.length > 1 && <em>1/{photo.length}</em>}
-      </span>
-      <span className="ec-st-tete2__txt">
-        <span id={`st-nom-${el.id}`} className="ec-st-nom">{el.nom}</span>
-        {prevu && <span className="ec-st-prevu">{prevu}</span>}
-      </span>
-    </button>
-  )
-}
-
-// ---------- Biset, triset : une série (un passage sur chaque exercice) à la fois ----------
-// Avant / après validé par Marie (22 novembre 2026) : les photos en haut, la série en cours ouverte avec un grand bouton
-// « Série 2 faite », les séries faites résumées sur une ligne, celles à venir regroupées. L'effort se note à la fin du bloc.
-
-function Tours({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
-  const els = bloc.elements ?? []
+function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsignes, ouvrir, actif }) {
   const [alerte, setAlerte] = useState('')
   const [ouverte, setOuverte] = useState(-1) // série faite rouverte pour la corriger
-  const nb = Math.max(0, ...els.map((e) => lignes(e).length))
-  const serieFaite = (t) => els.every((e) => !lignes(e)[t] || lignes(e)[t].fait)
+  const nb = Math.max(0, ...groupe.map(({ el }) => lignes(el).length))
+  const serieFaite = (t) => groupe.every(({ el }) => !lignes(el)[t] || lignes(el)[t].fait)
   const actuelle = Array.from({ length: nb }, (_, t) => t).find((t) => !serieFaite(t)) ?? -1
   const toutFait = nb > 0 && actuelle < 0
-  const rpe = els.flatMap((e) => lignes(e).map((l) => l.rpe)).find((v) => !vide(v))
-  const note = notes[bloc.id] ?? ''
+  const rpe = groupe.flatMap(({ el }) => lignes(el).map((l) => l.rpe)).find((v) => !vide(v))
+  const note = notes[noteId] ?? ''
+  const parMain = groupe.length === 1 && chargeParMain(groupe[0].el.materiel)
+  const sansCharge = groupe.every(({ el }) => enDuree(el))
   const valider = (t) => {
-    const manque = els.find((e) => lignes(e)[t] && !enDuree(e) && estFourchette(e.reps) && vide(lignes(e)[t].reps))
-    if (manque) { setAlerte(`${manque.id}-${t}`); document.getElementById(`st-${manque.id}-${t}`)?.focus(); return }
+    // le coaché écrit ce qu'il a fait : répétitions (ou durée) obligatoires, la charge peut rester vide (poids du corps)
+    const manque = groupe.find(({ el }) => { const l = lignes(el)[t]; return l && vide(enDuree(el) ? (l.duree || l.reps) : l.reps) })
+    if (manque) { setAlerte(`${manque.el.id}-${t}`); document.getElementById(`st-${manque.el.id}-${t}`)?.focus(); return }
     setAlerte('')
-    els.forEach((e) => { if (lignes(e)[t] && !lignes(e)[t].fait) actions.serie(e, t, 'fait', true) })
-    // dernière série du bloc : l'effort et la note, une seule fois pour tout le bloc
-    if (Array.from({ length: nb }, (_, k) => k).every((k) => k === t || serieFaite(k))) ouvrir({ type: 'superset' })
+    groupe.forEach(({ el }) => { if (lignes(el)[t] && !lignes(el)[t].fait) actions.terminerSerie(el, t) })
+    if (Array.from({ length: nb }, (_, k) => k).every((k) => k === t || serieFaite(k))) ouvrir(fin === 'exo' ? { type: 'exo', id: noteId } : { type: 'superset' })
   }
-  const decocher = (t) => { els.forEach((e) => { if (lignes(e)[t]?.fait) actions.serie(e, t, 'fait', false) }); setOuverte(-1) }
-  const resume = (t) => els.filter((e) => lignes(e)[t]).map((e) => {
-    const l = lignes(e)[t]
-    const v = enDuree(e) ? (l.duree || l.reps) : l.reps
-    return [v, vide(l.charge) ? '' : fr(l.charge)].filter((x) => !vide(x)).join('×')
-  }).join(' · ')
-  const lignesSerie = (t, enCours) => els.map((el, k) => {
+  const decocher = (t) => { groupe.forEach(({ el }) => { if (lignes(el)[t]?.fait) actions.decocherSerie(el, t) }); setOuverte(-1) }
+  const lignesSerie = (t, enCours) => groupe.map(({ el, code }, k) => {
     const l = lignes(el)[t]
     if (!l) return null
     const duree = enDuree(el)
     const cle = duree ? 'duree' : 'reps'
+    const precedente = t > 0 ? lignes(el)[t - 1] : null
     return (
-      <div key={el.id} className="ec-st-tl" role="group" aria-label={`Série ${t + 1}, ${el.nom}`}>
-        <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{bloc.lettre}{k + 1}</span>
+      <div key={el.id} className={`ec-st-tl${sansCharge ? ' sans-charge' : ''}`} role="group" aria-label={`Série ${t + 1}, ${el.nom}`}>
+        <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{code}</span>
         <span className="ec-st-tl__nom">{el.nom}{texteRepos(el.repos) && <small>repos {texteRepos(el.repos)}</small>}</span>
-        <span className="ec-st-unite">
-          <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
-            aria-label={`${el.nom}, série ${t + 1}, ${duree ? 'durée' : 'répétitions'}`} value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)}
-            onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
-          <small>{duree ? 's' : 'reps'}</small>
-        </span>
-        {duree ? <span className="ec-st-champ est-neutre" aria-hidden="true">–</span> : (
-          <span className="ec-st-unite">
-            <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${t + 1}, kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
-              value={l.charge ?? ''} placeholder={fr(el.charge ?? '') || '–'} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.valeur(el, t, 'charge', ev.target.value)} />
-            <small>kg</small>
-          </span>
-        )}
+        <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
+          aria-label={`${el.nom}, série ${t + 1}, ${duree ? 'durée' : 'répétitions faites'}`} value={l[cle] ?? ''} placeholder={precedente?.[cle] || ''}
+          onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
+        {!sansCharge && (duree ? <span className="ec-st-champ est-neutre" aria-hidden="true">–</span> : (
+          <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${t + 1}, kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
+            value={l.charge ?? ''} placeholder={precedente?.charge || ''} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.valeur(el, t, 'charge', ev.target.value)} />
+        ))}
       </div>
     )
   })
-  const aVenir = Array.from({ length: nb }, (_, t) => t).filter((t) => t > actuelle && actuelle >= 0)
+  const entete = (
+    <div className={`ec-st-tl ec-st-tl--tete${sansCharge ? ' sans-charge' : ''}`} aria-hidden="true">
+      <span /><span /><span>{groupe.some(({ el }) => !enDuree(el)) ? 'Reps' : 'Durée'}</span>{!sansCharge && <span>{parMain ? 'Kg / main' : 'Kg'}</span>}
+    </div>
+  )
+  const aVenir = Array.from({ length: nb }, (_, t) => t).filter((t) => (actif ? t > actuelle && actuelle >= 0 : !serieFaite(t)))
   return (
-    <>
-      <div className={`ec-st-photos ec-st-photos--${Math.min(els.length, 3)}`}>
-        {els.map((el, k) => {
+    <div className="ec-st-groupe">
+      <div className={`ec-st-photos ec-st-photos--${Math.min(groupe.length, 3)}`}>
+        {groupe.map(({ el, code }) => {
           const photo = (el.photos ?? []).filter(Boolean)[0]
           const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
           return (
             <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
               <span className="ec-st-photo__img">{photo && <PhotoStockee chemin={photo} alt="" />}</span>
-              <span className="ec-st-code sur-photo">{bloc.lettre}{k + 1}</span>
-              <span className="ec-st-photo__nom">{el.nom}<small>{prevu}</small></span>
+              <span className="ec-st-code sur-photo">{code}</span>
+              <span className="ec-st-photo__nom">{el.nom}<small>{[materielDe(el), prevu].filter(Boolean).join(' · ')}</small></span>
             </button>
           )
         })}
@@ -227,21 +161,23 @@ function Tours({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
         ouverte === t ? (
           <section key={t} className="ec-st-carte ec-st-serie" aria-label={`Série ${t + 1}, faite`}>
             <p className="ec-st-serie__tete est-faite"><span>Série {t + 1} · faite</span><button type="button" onClick={() => setOuverte(-1)}>Fermer</button></p>
+            {entete}
             {lignesSerie(t, false)}
             <button type="button" className="ec-st-lien ec-st-serie__decocher" onClick={() => decocher(t)}>Décocher cette série</button>
           </section>
         ) : (
-          <button key={t} type="button" className="ec-st-faite" onClick={() => setOuverte(t)} aria-label={`Série ${t + 1} faite : ${resume(t)}. Toucher pour corriger`}>
+          <button key={t} type="button" className="ec-st-faite" onClick={() => setOuverte(t)} aria-label={`Série ${t + 1} faite. Toucher pour corriger`}>
             <span className="ec-st-faite__ok" aria-hidden="true"><Coche taille={13} /></span>
             <b>Série {t + 1}</b>
           </button>
         )
       ))}
-      {actuelle >= 0 && (
-        <section className="ec-st-carte ec-st-serie" aria-label={`Série ${actuelle + 1} sur ${nb}, en cours`}>
+      {actif && actuelle >= 0 && (
+        <section className="ec-st-carte ec-st-serie" aria-label={`Série ${actuelle + 1} sur ${nb}`}>
           <p className="ec-st-serie__tete"><span>Série {actuelle + 1} sur {nb}</span></p>
+          {entete}
           {lignesSerie(actuelle, true)}
-          {alerte && <p className="ec-st-alerte" role="alert">Notez d’abord vos répétitions faites</p>}
+          {alerte && <p className="ec-st-alerte" role="alert">Notez le nombre de répétitions faites.</p>}
           <button type="button" className="ec-st__gros ec-st-serie__ok" onClick={() => valider(actuelle)}>Terminé <Coche taille={18} /></button>
         </section>
       )}
@@ -250,11 +186,11 @@ function Tours({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
       )}
       {toutFait && (
         <div className="ec-st-pastilles">
-          <button type="button" className={rpe ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'superset', correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : '＋ Effort (RPE)'}</button>
-          <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir({ type: 'superset', correction: true })}>{note ? '✎ Note' : '＋ Note'}</button>
+          <button type="button" className={rpe ? 'est-rempli' : ''} onClick={() => ouvrir(fin === 'exo' ? { type: 'exo', id: noteId, correction: true } : { type: 'superset', correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : '＋ Effort (RPE)'}</button>
+          <button type="button" className={note ? 'est-rempli' : ''} onClick={() => ouvrir(fin === 'exo' ? { type: 'exo', id: noteId, correction: true } : { type: 'superset', correction: true })}>{note ? '✎ Note' : '＋ Note'}</button>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

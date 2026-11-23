@@ -196,6 +196,18 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     // ordinateur : taper une valeur ne coche pas la série (on coche avec « Série faite » ou le rond)
     valeur: (el, i, cle, v) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? { ...l, [cle]: v } : l))),
     // téléphone : « Série faite » prend d'un coup répétitions, charge et RPE saisis
+    // téléphone (23 novembre 2026) : la série est cochée telle quelle (rien n'est rempli à la place du coaché) ;
+    // ce qu'il a noté est proposé dans la série suivante si elle est encore vide
+    terminerSerie: (el, i) => noter('series', el.id, lignes(el).map((l, j) => {
+      if (j === i) return { ...l, fait: true }
+      if (j === i + 1 && !l.fait) {
+        const cur = lignes(el)[i] ?? {}
+        const cle = el.mesure === 'duree' ? 'duree' : 'reps'
+        return { ...l, [cle]: String(l[cle] ?? '').trim() ? l[cle] : (cur[cle] ?? ''), charge: String(l.charge ?? '').trim() ? l.charge : (cur.charge ?? '') }
+      }
+      return l
+    })),
+    decocherSerie: (el, i) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? { ...l, fait: false } : l))),
     serieComplete: (el, i, valeurs) => noter('series', el.id, lignes(el).map((l, j) => (j === i ? serieTerminee(l, valeurs, el) : l))),
     note: (id, v) => noter('notes', id, v),
     chargeSeule: (id, v) => noter('series', id, [{ charge: v, reps: '', rpe: '', fait: v.trim() !== '' }]),
