@@ -46,6 +46,21 @@ export function resumeFormat(bloc) {
     const cycle = [bloc.tours && effort ? `${bloc.tours} × ${effort}` : effort, bloc.repos && `${bloc.repos} s`].filter(Boolean).join(' / ')
     return `${f.toUpperCase()}${cycle ? ` ${cycle}` : ''}`
   }
+  // Continu et Intervalles classiques (23 novembre 2026) : « Continu 30 min · 5 km · allure 6:00 /km · Zone 2 »,
+  // « Intervalles 6 × 3 min · récup 1 min 30 · allure 4:45 /km · Zone 4 »
+  if (f === 'continu' || f === 'intervalles') {
+    const t = (v) => String(v ?? '').trim()
+    const zone = t(bloc.zone) && (/^\d$/.test(t(bloc.zone)) ? `Zone ${t(bloc.zone)}` : t(bloc.zone))
+    const allure = t(bloc.allure) && `allure ${t(bloc.allure)}`
+    if (f === 'continu') {
+      const parties = [t(bloc.duree) && `${t(bloc.duree)} min`, t(bloc.distance) && `${fr(t(bloc.distance))} km`, allure, zone].filter(Boolean)
+      return ['Continu', parties.join(' · ')].filter(Boolean).join(' ')
+    }
+    const effort = t(bloc.effort)
+    const fois = t(bloc.repetitions) && effort ? `${t(bloc.repetitions)} × ${effort}` : t(bloc.repetitions) ? `${t(bloc.repetitions)} répétitions` : effort
+    const parties = [fois, t(bloc.recup) && `récup ${t(bloc.recup)}`, allure, zone].filter(Boolean)
+    return ['Intervalles', parties.join(' · ')].filter(Boolean).join(' ')
+  }
   return 'Séries classiques'
 }
 
@@ -273,6 +288,15 @@ export function champsResultat(bloc) {
   if (f === 'amrap') return [{ cle: 'resultat', label: 'Tours complets', aide: '' }, { cle: 'reps', label: 'Reps en plus', aide: '' }]
   if (f === 'tabata' || f === 'hiit') {
     return [{ cle: 'resultat', label: 'Tours faits', aide: rempli(bloc.tours) ? `sur ${String(bloc.tours).trim()}` : '' }]
+  }
+  // Continu et Intervalles (Marie, 23 novembre 2026) : le coaché note le bloc entier, une seule fois
+  if (f === 'continu' || f === 'intervalles') {
+    return [
+      { cle: 'temps', label: 'Temps', aide: 'h:mm:ss', mode: 'text' },
+      { cle: 'distance', label: 'Distance (km)', aide: '', mode: 'decimal' },
+      { cle: 'allure', label: 'Allure (/km)', aide: 'min:s', mode: 'text' },
+      { cle: 'fc', label: 'FC moyenne', aide: 'bpm', mode: 'numeric' },
+    ]
   }
   return []
 }

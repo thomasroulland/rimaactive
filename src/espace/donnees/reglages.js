@@ -2,20 +2,37 @@
 // Elles sont rangées dans le document Firestore `reglages/coach` ; sans ce document, on prend ces valeurs.
 import { CATEGORIES, MATERIELS, MUSCLES } from './banque.js'
 
-// Types de séance : liste fixe choisie par Marie (18 novembre 2026), plus réglable.
-// « force » (Renforcement) et « course » (Endurance fondamentale) gardent leurs identifiants d'origine :
-// les séances déjà faites restent lisibles, et « course » garde son fonctionnement (distance, temps, consigne).
+// Types de séance : liste fixe choisie par Marie (23 novembre 2026, son document « Page outil coaching »).
+// « force » (Renforcement) garde son identifiant d'origine. Les anciens types (Contraste, Endurance fondamentale, Série,
+// Superset) ne sont plus proposés mais les séances déjà créées avec eux restent lisibles (voir ANCIENS_TYPES).
 export const TYPES_DE_BASE = [
-  { id: 'force', nom: 'Renforcement' },
-  { id: 'contraste', nom: 'Contraste' },
-  { id: 'course', nom: 'Endurance fondamentale' },
-  { id: 'hiit', nom: 'HIIT' },
-  { id: 'liit', nom: 'LIIT' },
-  { id: 'serie', nom: 'Série' },
-  { id: 'superset', nom: 'Superset' },
   // l'échauffement du coaché (22 novembre 2026) : à part, toujours visible, hors des séances comptées
   { id: 'echauffement', nom: 'Échauffement' },
+  { id: 'force', nom: 'Renforcement' },
+  { id: 'circuit', nom: 'Circuit' },
+  { id: 'liit', nom: 'LIIT (Zone 1-2)' },
+  { id: 'liss', nom: 'LISS (Zone 2)' },
+  { id: 'tempo', nom: 'Tempo (Zone 3)' },
+  { id: 'seuil', nom: 'Seuil (Zone 4)' },
+  { id: 'hiit', nom: 'HIIT (Zone 5)' },
+  { id: 'sit', nom: 'SIT (Effort maximal)' },
 ]
+const ANCIENS_TYPES = { contraste: 'Contraste', course: 'Endurance fondamentale', serie: 'Série', superset: 'Superset' }
+
+// Formats de bloc proposés selon le type de séance (Marie, 23 novembre 2026). Un ancien type garde tous les formats.
+export const FORMATS_PAR_TYPE = {
+  force: ['series', 'superset', 'emom'],
+  circuit: ['amrap', 'emom', 'tabata'],
+  liss: ['continu'],
+  tempo: ['continu'],
+  echauffement: ['series', 'superset'],
+  hiit: ['tabata', 'intervalles', 'emom'],
+  sit: ['tabata', 'intervalles', 'emom'],
+  seuil: ['intervalles'],
+  liit: ['intervalles'],
+}
+export const TOUS_LES_FORMATS = ['series', 'superset', 'emom', 'amrap', 'tabata', 'hiit', 'continu', 'intervalles']
+export const formatsDuType = (type) => FORMATS_PAR_TYPE[type] ?? TOUS_LES_FORMATS
 
 // Parties de la banque (15 novembre 2026) : chaque catégorie est rangée dans une partie (« Échauffement », « Séance »…).
 // `rangement` : [{ categorie, partie }] ; une catégorie non rangée va dans sa partie par défaut (voir partieDe).
@@ -39,7 +56,7 @@ export function completerReglages(d) {
 export function nomType(id, types) {
   const t = (types ?? TYPES_DE_BASE).find((x) => x.id === id)
   if (t) return t.nom
-  if (id === 'course') return 'Endurance fondamentale'
+  if (ANCIENS_TYPES[id]) return ANCIENS_TYPES[id]
   if (id === 'force' || !id) return 'Renforcement'
   return 'Séance'
 }

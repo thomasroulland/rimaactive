@@ -1,3 +1,4 @@
+import { formatsDuType } from './reglages.js'
 import { ajoutJours } from './calculs.js'
 // Modifications pures d'un programme : chaque fonction renvoie un nouvel objet.
 
@@ -179,7 +180,7 @@ export function ajouterAuBloc(programme, { s, se }, lettre, exercice) {
   seance.blocs = seance.blocs ?? []
   let b = seance.blocs.findIndex((x) => x.lettre === lettre)
   if (b < 0) {
-    seance.blocs.push({ id: nouvelId(), lettre, format: 'series', duree: '', repos: '', elements: [] })
+    seance.blocs.push({ id: nouvelId(), lettre, format: formatsDuType(seance.type)[0], duree: '', repos: '', elements: [] })
     seance.blocs.sort((x, y) => x.lettre.localeCompare(y.lettre))
     b = seance.blocs.findIndex((x) => x.lettre === lettre)
   }
@@ -193,7 +194,7 @@ export function ajouterBlocVide(programme, { s, se }) {
   seance.blocs = seance.blocs ?? []
   const lettre = LETTRES[seance.blocs.length]
   if (!lettre) return programme
-  seance.blocs.push({ id: nouvelId(), lettre, format: 'series', duree: '', repos: '', elements: [] })
+  seance.blocs.push({ id: nouvelId(), lettre, format: formatsDuType(seance.type)[0], duree: '', repos: '', elements: [] })
   return p
 }
 

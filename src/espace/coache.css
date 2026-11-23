@@ -2024,3 +2024,16 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 @media (min-width: 900px) { .ec-seance--large .ec-st-photo__note { top: 12px; right: 12px; width: 36px; height: 36px; } }
 .ec-st-reperes { gap: 4px; margin-top: 7px; }
 .ec-st-reperes > span { padding: 3px 8px; font-size: 11.5px; }
+/* Blocs EMOM, AMRAP, TABATA, Continu, Intervalles sur ordinateur et tablette : même échelle que les séries (23 novembre 2026) */
+@media (min-width: 900px) {
+  .ec-seance--large .ec-st-carte:not(.ec-st-serie) { padding: 18px 18px 16px; gap: 12px; border-radius: 22px; }
+  .ec-seance--large .ec-st-noir { padding: 16px 18px; border-radius: 16px; }
+  .ec-seance--large .ec-st-noir span { font-size: 14px; }
+  .ec-seance--large .ec-st-noir p { font-size: 15px; }
+  .ec-seance--large .ec-st-exos button { min-height: 52px; gap: 12px; }
+  .ec-seance--large .ec-st-exos b { font-size: 16px; }
+  .ec-seance--large .ec-st-exos em { font-size: 14px; }
+  .ec-seance--large .ec-st-resultat { gap: 12px; }
+  .ec-seance--large .ec-st-resultat label > span { font-size: 11px; }
+  .ec-seance--large .ec-st-resultat .ec-st-champ { height: 50px; font-size: 19px; }
+}

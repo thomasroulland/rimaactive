@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
+import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMain } from '../donnees/banque.js'
 
 // Séance sur téléphone (maquette « B » validée par Marie, 22 novembre 2026) :
@@ -60,7 +60,7 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
       {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
           on change de bloc avec « Plan » ou les traits du haut, et la fenêtre de l'effort propose le bloc suivant */}
       {!enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
-        <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
+        <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true, ...allureCalculee(bloc, resultats[bloc.id]) }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
       )}
 
       {feuille && (
@@ -199,7 +199,14 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
   )
 }
 
-// ---------- EMOM, AMRAP, TABATA, HIIT ----------
+// Continu, Intervalles : sans allure notée, on garde celle calculée avec le temps et la distance (23 novembre 2026)
+function allureCalculee(bloc, r) {
+  if ((bloc.format !== 'continu' && bloc.format !== 'intervalles') || !vide(r?.allure)) return {}
+  const a = allureVitesse(r?.distance, r?.temps).allure
+  return a === '–' ? {} : { allure: a.replace(' /km', '') }
+}
+
+// ---------- EMOM, AMRAP, TABATA, HIIT, Continu, Intervalles ----------
 
 const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours de :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
 
@@ -207,7 +214,7 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
   const els = bloc.elements ?? []
   const r = resultat ?? {}
   return (
-    <section className="ec-st-carte" aria-label={resumeFormat(bloc)}>
+    <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
       <div className="ec-st-noir">
         <span>{resumeFormat(bloc)}</span>
         {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
@@ -229,7 +236,8 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
         {champsResultat(bloc).map((c) => (
           <label key={c.cle}>
             <span>{c.label}</span>
-            <input className="ec-st-champ" type="text" inputMode="numeric" autoComplete="off" value={r[c.cle] ?? ''} placeholder={c.aide}
+            <input className="ec-st-champ" type="text" inputMode={c.mode ?? 'numeric'} autoComplete="off" value={r[c.cle] ?? ''}
+              placeholder={c.cle === 'allure' && allureVitesse(r.distance, r.temps).allure !== '–' ? allureVitesse(r.distance, r.temps).allure.replace(' /km', '') : c.aide}
               onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.blocValeurs(bloc.id, { [c.cle]: ev.target.value })} />
           </label>
         ))}

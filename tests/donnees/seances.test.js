@@ -305,3 +305,14 @@ describe('texteRepos (22 novembre 2026)', () => {
     expect(texteRepos(undefined)).toBe('')
   })
 })
+
+describe('blocs Continu et Intervalles (23 novembre 2026)', () => {
+  it('résume le bloc et donne les champs que note le coaché', async () => {
+    const { resumeFormat: r, champsResultat: c } = await import('../../src/espace/donnees/seances.js')
+    expect(r({ format: 'continu', duree: '30', distance: '5', allure: '6:00', zone: '2' })).toBe('Continu 30 min · 5 km · allure 6:00 · Zone 2')
+    expect(r({ format: 'continu' })).toBe('Continu')
+    expect(r({ format: 'intervalles', repetitions: '6', effort: '3 min', recup: '1 min 30', zone: '4' })).toBe('Intervalles 6 × 3 min · récup 1 min 30 · Zone 4')
+    expect(c({ format: 'intervalles' }).map((x) => x.cle)).toEqual(['temps', 'distance', 'allure', 'fc'])
+    expect(c({ format: 'continu' }).map((x) => x.cle)).toEqual(['temps', 'distance', 'allure', 'fc'])
+  })
+})
