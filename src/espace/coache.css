@@ -2037,3 +2037,9 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
   .ec-seance--large .ec-st-resultat label > span { font-size: 11px; }
   .ec-seance--large .ec-st-resultat .ec-st-champ { height: 50px; font-size: 19px; }
 }
+/* Matériel, séries et charge un peu plus gros que les pastilles Repos / Tempo / RPE (Marie, 23 novembre 2026) */
+.ec-st-photo__nom small { font-size: 13.5px; font-weight: 700; color: var(--ec-encre); opacity: .8; }
+@media (min-width: 900px) {
+  .ec-seance--large .ec-st-photo__nom small { font-size: 16px; }
+  .ec-seance--large .ec-st-reperes > span { font-size: 12.5px; padding: 4px 10px; }
+}
