@@ -62,7 +62,7 @@ function Ligne({ n, programmes, vue }) {
   // plus de « Jetez un œil… » pour une mise à jour (Marie, 22 novembre 2026)
   const detail = n.genre === 'modif'
     ? ''
-    : p.debut > aujourdhuiIso() ? `${nb} semaine${nb > 1 ? 's' : ''}, à partir du ${dateLongue(p.debut)}.` : `${nb} semaine${nb > 1 ? 's' : ''}, c’est parti !`
+    : p.debut > aujourdhuiIso() ? `${nb} semaine${nb > 1 ? 's' : ''}, à partir du ${dateLongue(p.debut)}.` : '' // plus de « 4 semaines, c’est parti ! » (Marie, 23 novembre 2026)
   return (
     <li className="ec-nouveaute ec-nouveaute--coche">
       <div className="ec-nouveaute__corps">

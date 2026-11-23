@@ -121,8 +121,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
               </select>
             </div>
             <Champ id={ids('lieu')} label="Lieu" valeur={seance.lieu} changer={(v) => majSeance('lieu', v)} />
-            {/* plus de durée de séance (18 novembre 2026) : l'objectif prend la place */}
-            <Champ id={ids('objectif')} label="Objectif" large valeur={seance.objectif} changer={(v) => majSeance('objectif', v)} />
+            {/* plus de durée (18 novembre 2026) ni d'objectif (23 novembre 2026, Marie ne l'écrivait pas) */}
             {seance.type !== 'course' && (
               <p className="es2__resume" aria-live="polite">
                 {nbExos} exercice{nbExos > 1 ? 's' : ''} · {nbSeries} série{nbSeries > 1 ? 's' : ''}{blocs.length > 0 && <> · {blocs.length} bloc{blocs.length > 1 ? 's' : ''}</>}
