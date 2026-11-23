@@ -23,7 +23,7 @@ export function lireDemande(corps) {
   return manque ? null : d
 }
 
-export function contenuEmail(d) {
+export function contenuEmail(d, maintenant = new Date()) {
   const lignes = [
     ['Formule', d.formule ? `${d.offre} · ${d.formule.replace(` · ${d.offre}`, '')}` : `${d.offre} (formule pas encore choisie)`],
     ['Nom', d.nom],
@@ -41,15 +41,56 @@ export function contenuEmail(d) {
     '',
     'Répondez simplement à cet e-mail pour écrire à cette personne.',
   ].join('\n')
-  const body = `<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f4efe6;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;color:#191817">
-<div style="max-width:560px;margin:0 auto;background:#fff;border-radius:16px;padding:24px">
-<p style="margin:0 0 4px;font-size:12px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;color:#ff4a1c">Formulaire de contact</p>
-<h1 style="margin:0 0 18px;font-size:22px">Nouvelle demande de ${html(d.nom)}</h1>
-<table style="border-collapse:collapse;width:100%;font-size:15px">${lignes.map(([k, v]) => `<tr><td style="padding:6px 12px 6px 0;color:#6b665f;white-space:nowrap;vertical-align:top">${k}</td><td style="padding:6px 0">${html(v)}</td></tr>`).join('')}</table>
-<p style="margin:18px 0 6px;color:#6b665f;font-size:15px">Message</p>
-<p style="margin:0;padding:12px 14px;background:#f4f3ef;border-radius:10px;font-size:15px;line-height:1.5;white-space:pre-wrap">${d.message ? html(d.message) : '(pas de message)'}</p>
-<p style="margin:18px 0 0;color:#6b665f;font-size:13px">Répondez simplement à cet e-mail pour écrire à ${html(d.nom)}.</p>
-</div></body></html>`
+  const tel = d.telephone.replace(/[^\d+]/g, '')
+  const quand = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'full', timeStyle: 'short', timeZone: 'Europe/Paris' }).format(maintenant)
+  const police = "font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;"
+  const ligne = ([k, v, lien]) => `<tr><td style="padding:14px 0 0 0;border-top:1px solid #ECE9E3;${police}">
+      <p style="margin:0 0 3px 0;font-size:11px;line-height:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#57534E;">${k}</p>
+      <p style="margin:0 0 14px 0;font-size:16px;line-height:22px;font-weight:700;color:#161514;">${lien ? `<a href="${html(lien)}" style="color:#161514;text-decoration:underline;">${html(v)}</a>` : html(v)}</p></td></tr>`
+  // Même charte que l'e-mail d'invitation : bandeau encre et logo, trait vermillon, carte blanche, boutons arrondis (23 novembre 2026)
+  const body = `<div style="margin:0;padding:0;background:#F4F3EF;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#F4F3EF;">${html(d.offre)}${d.formule ? ' · ' + html(d.formule.replace(` · ${d.offre}`, '')) : ''} — ${html(d.message ? d.message.slice(0, 90) : 'pas de message')}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F4F3EF;">
+    <tr><td align="center" style="padding:32px 12px 40px 12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;">
+        <tr><td style="background:#161514;border-radius:20px 20px 0 0;padding:28px 36px 26px 36px;">
+          <img src="https://rimaactive.fr/email/rimaactive-logo-blanc.png" width="140" height="28" alt="Rimaactive" style="display:block;border:0;width:140px;height:28px;">
+        </td></tr>
+        <tr><td style="height:4px;background:#FF4A1C;font-size:0;line-height:0;">&nbsp;</td></tr>
+        <tr><td style="background:#FFFFFF;border-radius:0 0 20px 20px;padding:36px 36px 34px 36px;${police}">
+          <p style="margin:0 0 10px 0;font-size:12px;line-height:16px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#FF4A1C;">Nouvelle demande</p>
+          <h1 style="margin:0 0 14px 0;font-size:34px;line-height:38px;font-weight:900;letter-spacing:-1.4px;color:#161514;">${html(d.nom)}</h1>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 26px 0;"><tr>
+            <td style="background:#FCEFC4;border-radius:999px;padding:7px 14px;font-size:14px;line-height:18px;font-weight:700;color:#161514;${police}">${html(d.offre)}${d.formule ? ' · ' + html(d.formule.replace(` · ${d.offre}`, '')) : ' · formule pas encore choisie'}</td>
+          </tr></table>
+
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 30px 0;"><tr>
+            <td align="center" bgcolor="#F2C230" style="border-radius:999px;">
+              <a href="mailto:${html(d.email)}" style="display:inline-block;padding:14px 26px;${police}font-size:15px;line-height:20px;font-weight:700;color:#161514;text-decoration:none;border-radius:999px;white-space:nowrap;">Répondre</a>
+            </td>
+            <td style="width:10px;font-size:0;">&nbsp;</td>
+            <td align="center" style="border-radius:999px;border:1.5px solid #161514;">
+              <a href="tel:${html(tel)}" style="display:inline-block;padding:12.5px 24px;${police}font-size:15px;line-height:20px;font-weight:700;color:#161514;text-decoration:none;border-radius:999px;white-space:nowrap;">Appeler</a>
+            </td>
+          </tr></table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 10px 0;">
+            ${[['E-mail', d.email, `mailto:${d.email}`], ['Téléphone', d.telephone, `tel:${tel}`], d.entreprise && ['Entreprise', d.entreprise]].filter(Boolean).map(ligne).join('')}
+          </table>
+
+          <p style="margin:6px 0 8px 0;font-size:11px;line-height:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#57534E;">Message</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td style="background:#F4F3EF;border-left:3px solid #FF4A1C;border-radius:4px 14px 14px 4px;padding:16px 18px;font-size:16px;line-height:25px;color:#161514;white-space:pre-wrap;${police}">${d.message ? html(d.message) : '<span style="color:#57534E;">Pas de message.</span>'}</td>
+          </tr></table>
+        </td></tr>
+        <tr><td align="center" style="padding:24px 20px 0 20px;${police}font-size:12px;line-height:19px;color:#57534E;">
+          Reçu depuis le formulaire de contact de rimaactive.fr, ${html(quand)}.<br>
+          « Répondre » dans votre messagerie écrit directement à ${html(d.nom)}.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</div>`
   return { subject: `Demande de contact · ${d.offre} · ${d.nom}`.slice(0, 180), text, html: body }
 }
 
