@@ -1911,3 +1911,6 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-echauf-bloc__tete { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 6px 0 0; font: 800 15px/1.2 var(--font-sans); color: var(--ec-encre); }
 .ec-echauf-bloc__tete > span:last-child:not(.ec-st-code) { font: 800 11px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ec-gris, #6b665f); }
 .ec-echauf-exo__code { margin-right: 6px; color: var(--ec-vermillon, #ff4a1c); }
+.ec-echauf-page__tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ec-echauf-page__tete .ec-echauf-page__titre { margin: 0; }
+.ec-echauf-page__tete .ec-s2-quitter { flex: none; }

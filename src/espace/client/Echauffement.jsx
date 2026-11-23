@@ -49,10 +49,13 @@ export default function Echauffement({ programme }) {
   const exos = exercicesDe(seance)
   return (
     <section className="ec-page ec-echauf-page" aria-labelledby="titre-echauf">
-      <button type="button" className="ec-s2-retour ec-s2-quitter" onClick={revenir} aria-label="Fermer l’échauffement" title="Fermer">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-      </button>
-      <h1 id="titre-echauf" className="ec-echauf-page__titre">Mon échauffement</h1>
+      {/* titre et croix sur la même ligne, la croix à droite (Marie, 23 novembre 2026) */}
+      <div className="ec-echauf-page__tete">
+        <h1 id="titre-echauf" className="ec-echauf-page__titre">Mon échauffement</h1>
+        <button type="button" className="ec-s2-retour ec-s2-quitter" onClick={revenir} aria-label="Fermer l’échauffement" title="Fermer">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </div>
       <p className="ec-echauf-page__intro">À faire avant chaque séance</p>
       {exos.length === 0
         ? <p className="ec-texte">Marie n’a pas encore ajouté d’exercice.</p>
