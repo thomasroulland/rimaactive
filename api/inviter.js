@@ -1,4 +1,5 @@
 import { admin, verifierCoach, repondreErreur } from './_admin.js'
+import { envoyerInvitation, nouvelleInvitation } from './_invitation.js'
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -47,7 +48,16 @@ export default async function handler(req, res) {
       await Promise.resolve().then(() => a.db.doc(`utilisateurs/${u.uid}`).delete()).catch(() => {})
       throw e
     }
-    return res.status(201).json({ uid: u.uid })
+    // E-mail du site avec un lien de 7 jours. S'il ne part pas (envoi pas encore configuré, panne), le compte reste créé
+    // et le navigateur du coach envoie l'e-mail Firebase à la place (`envoye: false`).
+    let envoye = false
+    try {
+      const lien = await nouvelleInvitation(a, { uid: u.uid, email })
+      envoye = await envoyerInvitation({ email, prenom, lien })
+    } catch (e) {
+      console.error("Lien d'invitation non créé :", e?.message)
+    }
+    return res.status(201).json({ uid: u.uid, envoye })
   } catch (e) {
     return repondreErreur(res, e)
   }

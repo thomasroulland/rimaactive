@@ -6,6 +6,7 @@ const MESSAGES = {
   'auth/invalid-email': 'Cette adresse e-mail n’est pas valide.',
   'auth/too-many-requests': 'Trop d’essais. Réessayez dans quelques minutes.',
   'auth/network-request-failed': 'Pas de connexion internet. Vérifiez votre réseau.',
+  'api/deja-actif': 'Ce client a déjà activé son compte.',
   'auth/expired-action-code': 'Ce lien a expiré. Demandez à Marie de vous renvoyer l’invitation.',
   'api/champs': 'Vérifiez le prénom, le nom et l’adresse e-mail.',
   'api/401': 'Votre session a expiré. Reconnectez-vous.',

@@ -1,9 +1,10 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Coque from './coque/Coque.jsx'
 import useSession from './useSession.js'
 import useTitre from '../components/useTitre.js'
 import Connexion from './Connexion.jsx'
 import Accord from './Accord.jsx'
+import Invitation from './Invitation.jsx'
 import EspaceCoach, { useLiensCoach } from './coach/EspaceCoach.jsx'
 import EspaceClient from './client/EspaceClient.jsx'
 import Squelette from './client/Squelette.jsx'
@@ -14,6 +15,10 @@ import { lireIndice } from './indiceSession.js'
 export default function EspaceApp() {
   useTitre('Mon espace')
   const { utilisateur, profil, role, chargement } = useSession()
+  const { pathname } = useLocation()
+
+  // lien de l'e-mail d'invitation : la page de création du mot de passe, quelle que soit la session sur cet appareil
+  if (pathname.replace(/\/+$/, '') === '/espace/invitation') return <Coque compte={false} site client><Invitation /></Coque>
 
   if (chargement && !utilisateur && !lireIndice()) return <Coque compte={false} site client><Connexion /></Coque>
   if (chargement) return <Coque compte={false}><Squelette /></Coque>

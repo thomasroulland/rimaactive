@@ -68,12 +68,18 @@ export async function inviterClient({ prenom, nom, email }) {
   if (statut === 409) return { dejaInvite: true, uid: donnees?.uid }
   if (statut === 400) { const e = new Error('champs'); e.code = 'api/champs'; throw e }
   if (statut !== 201) { const e = new Error('api'); e.code = `api/${statut}`; throw e }
-  await sendPasswordResetEmail(auth, email.trim().toLowerCase())
+  // l'e-mail du site (lien de 7 jours) est parti ; sinon (envoi pas encore configuré) l'e-mail Firebase, lien d'une heure
+  if (!donnees?.envoye) await sendPasswordResetEmail(auth, email.trim().toLowerCase())
   return { uid: donnees.uid }
 }
 
-export async function renvoyerInvitation(email) {
-  await sendPasswordResetEmail(auth, email.trim().toLowerCase())
+// Relance (bouton « Relancer l'invitation ») : nouvel e-mail avec un nouveau lien de 7 jours ; l'ancien lien ne marche plus.
+export async function renvoyerInvitation(uid, email) {
+  const { statut, donnees } = await appelerApi('/api/relancer-invitation', { uid })
+  if (statut === 409) { const e = new Error('deja-actif'); e.code = 'api/deja-actif'; throw e }
+  if (statut !== 200) { const e = new Error('api'); e.code = `api/${statut}`; throw e }
+  if (!donnees?.envoye) await sendPasswordResetEmail(auth, (donnees?.email ?? email).trim().toLowerCase())
+  return { email: donnees?.email ?? email }
 }
 
 // Le client accepte l'accord : les règles n'autorisent que ces deux champs, une seule fois.

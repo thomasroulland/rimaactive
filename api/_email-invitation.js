@@ -1,0 +1,106 @@
+// E-mail « Créez votre mot de passe » envoyé par le site (modèle docs/email-invitation.html, charte Rimaactive).
+// Mise en page en tableaux et styles en ligne : c'est ce que lisent correctement Gmail, Outlook et les applications.
+const echapper = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+export function htmlInvitation({ prenom = '', lien }) {
+  const lienHtml = echapper(lien)
+  return `<div style="margin:0;padding:0;background:#F4F3EF;">
+  <!-- texte d'aperçu (affiché sous l'objet dans la boîte de réception) -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#F4F3EF;">Choisissez votre mot de passe : votre programme vous attend.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F4F3EF;">
+    <tr>
+      <td align="center" style="padding:32px 12px 40px 12px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;">
+
+          <!-- bandeau encre + logo -->
+          <tr>
+            <td style="background:#161514;border-radius:20px 20px 0 0;padding:28px 36px 26px 36px;">
+              <img src="https://rimaactive.fr/email/rimaactive-logo-blanc.png" width="140" height="28" alt="Rimaactive" style="display:block;border:0;width:140px;height:28px;">
+            </td>
+          </tr>
+          <tr><td style="height:4px;background:#FF4A1C;font-size:0;line-height:0;">&nbsp;</td></tr>
+
+          <!-- carte -->
+          <tr>
+            <td style="background:#FFFFFF;border-radius:0 0 20px 20px;padding:40px 36px 36px 36px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;">
+              <p style="margin:0 0 10px 0;font-size:12px;line-height:16px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#57534E;">Votre espace client</p>
+              <h1 style="margin:0 0 18px 0;font-size:34px;line-height:36px;font-weight:900;letter-spacing:-1.4px;color:#161514;">Bienvenue chez Rimaactive&nbsp;!</h1>
+              <p style="margin:0 0 26px 0;font-size:16px;line-height:26px;color:#57534E;">Bonjour${prenom ? ' ' + echapper(prenom) : ''},<br>je vous ai ouvert votre espace personnel. Il ne reste qu’une étape&nbsp;: choisir votre mot de passe.</p>
+
+              <!-- bouton -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 34px 0;">
+                <tr>
+                  <td align="center" bgcolor="#F2C230" style="border-radius:999px;">
+                    <a href="${lienHtml}" style="display:inline-block;padding:16px 32px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;font-size:16px;line-height:20px;font-weight:700;color:#161514;text-decoration:none;border-radius:999px;">Créer mon mot de passe&nbsp;&nbsp;→</a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- ce qui l'attend -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 30px 0;border-top:1px solid #ECE9E3;">
+                <tr>
+                  <td width="52" valign="top" style="padding:18px 0 0 0;font-size:24px;line-height:26px;font-weight:900;letter-spacing:-1px;color:#FF4A1C;">01</td>
+                  <td valign="top" style="padding:18px 0 0 0;font-size:15px;line-height:22px;color:#57534E;"><strong style="color:#161514;">Votre programme</strong><br>semaine par semaine, préparé pour vous.</td>
+                </tr>
+                <tr>
+                  <td width="52" valign="top" style="padding:16px 0 0 0;font-size:24px;line-height:26px;font-weight:900;letter-spacing:-1px;color:#FF4A1C;">02</td>
+                  <td valign="top" style="padding:16px 0 0 0;font-size:15px;line-height:22px;color:#57534E;"><strong style="color:#161514;">Vos séances</strong><br>chaque exercice expliqué, vos charges et vos ressentis notés.</td>
+                </tr>
+                <tr>
+                  <td width="52" valign="top" style="padding:16px 0 0 0;font-size:24px;line-height:26px;font-weight:900;letter-spacing:-1px;color:#FF4A1C;">03</td>
+                  <td valign="top" style="padding:16px 0 0 0;font-size:15px;line-height:22px;color:#57534E;"><strong style="color:#161514;">Votre progression</strong><br>vos courbes, vos mesures et vos photos, au même endroit.</td>
+                </tr>
+              </table>
+
+              <!-- encadré pratique -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 30px 0;">
+                <tr>
+                  <td style="background:#F4F3EF;border-radius:14px;padding:16px 18px;font-size:13px;line-height:20px;color:#57534E;">
+                    Ce lien est valable 7&nbsp;jours. S’il a expiré, demandez-moi simplement de vous renvoyer l’invitation.<br><br>
+                    Le bouton ne marche pas&nbsp;? Copiez ce lien dans votre navigateur&nbsp;:<br>
+                    <a href="${lienHtml}" style="color:#161514;text-decoration:underline;word-break:break-all;">${lienHtml}</a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- signature -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="border-left:3px solid #FF4A1C;padding:2px 0 2px 14px;font-size:15px;line-height:22px;color:#161514;">
+                    À très vite,<br><strong>Marie Sillas</strong><br><span style="color:#57534E;">Coach sportive · Houdan (78)</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- pied -->
+          <tr>
+            <td align="center" style="padding:26px 20px 0 20px;font-family:'Hanken Grotesk',Helvetica,Arial,sans-serif;font-size:12px;line-height:19px;color:#57534E;">
+              <img src="https://rimaactive.fr/email/rimaactive-logo.png" width="90" height="18" alt="Rimaactive" style="display:block;margin:0 auto 12px auto;border:0;width:90px;height:18px;opacity:0.6;">
+              Vous recevez cet e-mail parce que Marie Sillas vous a invité(e) dans votre espace de coaching.<br>
+              Vous n’attendiez pas ce message&nbsp;? Ignorez-le simplement&nbsp;: rien ne sera fait.<br>
+              <a href="mailto:marie.sillas.coaching@outlook.com" style="color:#161514;text-decoration:underline;">marie.sillas.coaching@outlook.com</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>`
+}
+
+export function texteInvitation({ prenom = '', lien }) {
+  return [
+    `Bonjour${prenom ? ` ${prenom}` : ''},`,
+    '',
+    'Je vous ai ouvert votre espace personnel Rimaactive. Il ne reste qu’une étape : choisir votre mot de passe.',
+    '',
+    `Créer mon mot de passe : ${lien}`,
+    '',
+    'Ce lien est valable 7 jours. S’il a expiré, demandez-moi simplement de vous renvoyer l’invitation.',
+    '',
+    'À très vite,',
+    'Marie Sillas, coach sportive · Houdan (78)',
+  ].join('\n')
+}

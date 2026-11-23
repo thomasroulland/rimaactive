@@ -136,6 +136,7 @@ export default function MesCoaches() {
                   {c.alertes.length
                     ? <ul className="alertes">{c.alertes.map((a) => <li key={a}>{a}</li>)}</ul>
                     : <p className="carte-coache__calme">{p ? 'Aucune alerte' : c.statut === 'invité' ? `${c.prenom} n’a pas encore activé son compte.` : 'Pensez à lui créer un programme.'}</p>}
+                  {c.statut === 'invité' && <BoutonRelancer client={c} fait={setMessage} />}
                   {!p && <Link to={`/espace/coach/clients/${c.uid}/programme`} className="lien-souligne carte-coache__action">Créer un programme<span className="sr-only"> pour {c.prenom} {c.nom}</span></Link>}
                 </li>
               )
@@ -173,7 +174,7 @@ function DialogueInvitation({ fermer, invite }) {
     setEnvoi(true); setErreur(''); setDejaInvite(false)
     try {
       const r = await inviterClient(champs)
-      if (r.dejaInvite) { setDejaInvite(true); setErreur('Ce client est déjà invité.') }
+      if (r.dejaInvite) { setDejaInvite(r.uid ?? true); setErreur('Ce client est déjà invité.') }
       else invite(`Invitation envoyée à ${champs.prenom.trim()} ${champs.nom.trim()}.`)
     } catch (e) {
       setErreur(messageErreur(e.code))
@@ -184,8 +185,8 @@ function DialogueInvitation({ fermer, invite }) {
   async function renvoyer() {
     setEnvoi(true); setErreur('')
     try {
-      await renvoyerInvitation(champs.email)
-      invite(`Invitation renvoyée à ${champs.email.trim()}.`)
+      await renvoyerInvitation(dejaInvite, champs.email)
+      invite(`Invitation renvoyée à ${champs.email.trim()}, avec un nouveau lien valable 7 jours.`)
     } catch (e) {
       setErreur(messageErreur(e.code))
     }
@@ -197,7 +198,7 @@ function DialogueInvitation({ fermer, invite }) {
       onClick={(e) => { if (e.target === ref.current) ref.current.close() }}>
       <form className="espace-formulaire" onSubmit={envoyer} noValidate>
         <h2 id="espace-inviter-titre" className="titre titre--tuile">Inviter un client</h2>
-        <p className="espace-texte">Votre client reçoit un e-mail pour choisir son mot de passe.</p>
+        <p className="espace-texte">Votre client reçoit un e-mail pour choisir son mot de passe. Le lien est valable 7 jours.</p>
         <div className="champ-groupe">
           <label htmlFor="inv-prenom">Prénom</label>
           <input id="inv-prenom" className="champ" autoComplete="off" required value={champs.prenom} onChange={maj('prenom')} />
@@ -220,5 +221,30 @@ function DialogueInvitation({ fermer, invite }) {
         </div>
       </form>
     </dialog>
+  )
+}
+
+// « Relancer l'invitation » sur la carte d'un coaché qui n'a pas encore activé son compte (23 novembre 2026) :
+// nouvel e-mail avec un nouveau lien de 7 jours ; l'ancien lien ne marche plus.
+function BoutonRelancer({ client, fait }) {
+  const [envoi, setEnvoi] = useState(false)
+  const [erreur, setErreur] = useState('')
+  async function relancer() {
+    setEnvoi(true); setErreur('')
+    try {
+      await renvoyerInvitation(client.uid, client.email ?? '')
+      fait(`Invitation relancée : ${client.prenom} a reçu un nouveau lien, valable 7 jours.`)
+    } catch (e) {
+      setErreur(messageErreur(e.code))
+    }
+    setEnvoi(false)
+  }
+  return (
+    <div className="carte-coache__relance">
+      <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={relancer} disabled={envoi}>
+        {envoi ? 'Envoi…' : 'Relancer l’invitation'}<span className="sr-only"> de {client.prenom} {client.nom}</span>
+      </button>
+      {erreur && <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>}
+    </div>
   )
 }
