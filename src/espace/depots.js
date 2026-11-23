@@ -624,7 +624,8 @@ export function supprimerModele(id) { return deleteDoc(doc(db, 'modeles', id)) }
 export function ecouterModelesSeance(rappel, erreur) {
   return ecouterModeles((liste) => rappel(liste.filter((m) => m.genre === 'seance')), erreur)
 }
-export function ecouterAnciensModeles(rappel, erreur) {
+// Modèles de programme (23 novembre 2026, de retour à côté des modèles de séance) : genre « programme », ou sans genre (anciens)
+export function ecouterModelesProgramme(rappel, erreur) {
   return ecouterModeles((liste) => rappel(liste.filter((m) => m.genre !== 'seance')), erreur)
 }
 

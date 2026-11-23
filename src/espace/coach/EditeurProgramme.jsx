@@ -1,13 +1,14 @@
+import MenuFlottant from './MenuFlottant.jsx'
 import { insererSeance, seanceDepuisModele, versModeleSeance } from '../donnees/modelesSeance.js'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
   ecouterProgrammes, ecouterExercices, enregistrerProgramme, publierProgramme, notifierModification, ecouterVerrous,
-  ecouterModele, ecouterModelesSeance, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
+  ecouterModele, ecouterModelesSeance, ecouterModelesProgramme, enregistrerModele, nouvelIdModele, nouvelIdProgramme, ecouterSeancesClient, commenterSeance,
 } from '../depots.js'
 import {
   nouveauProgramme, dupliquerSemaine, semaineVide, nouvelleSemaine, nouvelleSeance, ajouterAuBloc, ajouterBlocVide, deplacerBloc, deplacerElement, supprimerBloc, sansBlocsVides, retirerElement,
-  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, reglerNbSemaines, semaineEnCours,
+  garderSeancesFaites, ordreProgrammes, rafraichirExercices, dupliquerSeance, deplacerSeance, reglerNbSemaines, semaineEnCours, appliquerModele, versModele,
 } from '../donnees/programme.js'
 import { ajoutJours, aujourdhuiIso, dateLongue, lundiDe } from '../donnees/calculs.js'
 import { nomType } from '../donnees/reglages.js'
@@ -51,6 +52,7 @@ export default function EditeurProgramme() {
   const [message, setMessage] = useState('')
   const [seancesFaites, setSeancesFaites] = useState([]) // ce que le coaché a fait : affiché sur une séance faite
   const [modeles, setModeles] = useState([]) // modèles de séance (panneau de la grille)
+  const [modelesProg, setModelesProg] = useState([]) // modèles de programme (« Partir d'un modèle », 23 novembre 2026)
   const [annulable, setAnnulable] = useState(null) // dernier déplacement ou duplication de séance : { texte, avant }
   const [banqueMaj, setBanqueMaj] = useState(false) // photos et consignes repris de la banque : à enregistrer pour que le coaché les voie
   useEffect(() => { if (!modifie) setBanqueMaj(false) }, [modifie])
@@ -83,6 +85,7 @@ export default function EditeurProgramme() {
     : ecouterProgrammes(uid, setProgrammes, () => setErreur('Impossible de charger les programmes. Vérifiez votre connexion.'))), [uid, modele, modeleId])
   useEffect(() => ecouterExercices(setExercices, () => setExercices([])), [])
   useEffect(() => (modele ? undefined : ecouterModelesSeance(setModeles, () => setModeles([]))), [modele])
+  useEffect(() => (modele ? undefined : ecouterModelesProgramme(setModelesProg, () => setModelesProg([]))), [modele])
   useEffect(() => (modele ? undefined : ecouterSeancesClient(uid, setSeancesFaites, () => setSeancesFaites([]))), [uid, modele])
 
   // Ouvre d'abord le programme en cours, sinon le prochain, sinon le plus récent (14 novembre 2026)
@@ -320,6 +323,21 @@ export default function EditeurProgramme() {
     if (n < nbSem && retirees > 0) demander({ titre: `Retirer ${nbSem - n} semaine${nbSem - n > 1 ? 's' : ''} ?`, texte: 'Les séances de ces dernières semaines seront supprimées.', libelle: 'Retirer', action: faire })
     else faire()
   }
+  // Modèles de programme (de retour le 23 novembre 2026) : partir d'un modèle, ou enregistrer ce programme comme modèle
+  function partirDunModele(m) {
+    if (verrous === null || prog.semaines.some((w) => w.seances.some((x) => verrous.has(x.id)))) { setErreur('Ce programme contient déjà des séances faites : le modèle ne peut pas le remplacer.'); return }
+    const faire = () => { setErreur(''); avecAnnulation(`Modèle « ${m.nom || 'sans nom'} » appliqué.`, (p) => appliquerModele(p, m)) }
+    if (prog.semaines.every(semaineVide)) faire()
+    else demander({ titre: `Partir du modèle « ${m.nom || 'sans nom'} » ?`, texte: 'Les semaines et séances actuelles seront remplacées par celles du modèle. Vous pourrez annuler juste après.', libelle: 'Remplacer', action: faire })
+  }
+  async function enregistrerCommeModele() {
+    const nom = window.prompt('Nom du modèle de programme', prog.nom || 'Nouveau modèle')
+    if (!nom || !nom.trim()) return
+    try {
+      await enregistrerModele({ id: nouvelIdModele(), ...versModele(sansBlocsVides(prog), nom.trim()) }, { creation: true })
+      setMessage(`Modèle de programme « ${nom.trim()} » enregistré. Retrouvez-le dans Modèles.`)
+    } catch (e) { setErreur(messageErreur(e.code)) }
+  }
   // Modèles de séance : un modèle glissé (ou ajouté) dans une semaine y devient une séance neuve ; une séance peut devenir un modèle
   function ajouterDepuisModele(vers, modeleId, index) {
     const m = modeles.find((x) => x.id === modeleId)
@@ -414,7 +432,7 @@ export default function EditeurProgramme() {
           <span className={`espace-statut espace-statut--${publie && !modele ? 'actif' : 'autre'}`}>{modele ? 'Modèle' : publie ? 'Publié' : 'Brouillon'}</span>
           {modifie
             ? <><span className="espace-barre__modifie">Modifications non enregistrées</span>{banqueMaj && <span className="espace-barre__banque">Banque mise à jour : photos et consignes à enregistrer</span>}</>
-            : <span>{modele ? 'Aucun coaché ne le voit : affectez-le depuis Programmes.' : publie ? 'Votre coaché voit ce programme.' : 'Votre coaché ne le voit pas encore.'}</span>}
+            : <span>{modele ? 'Aucun coaché ne le voit : dans le programme d’un coaché, choisissez « Modèles ▾ » puis ce modèle.' : publie ? 'Votre coaché voit ce programme.' : 'Votre coaché ne le voit pas encore.'}</span>}
         </p>
         <div className="espace-actions">
           {modele ? (
@@ -470,6 +488,11 @@ export default function EditeurProgramme() {
                   onChange={(e) => { const v = e.target.value; muter((p) => { p.nom = v }) }} />
                 <svg className="modele-tete__crayon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" /></svg>
               </h1>
+              <div className="prog-pas modele-tete__semaines" role="group" aria-label="Nombre de semaines">
+                <button type="button" aria-label="Une semaine de moins" disabled={nbSem <= 1} onClick={() => changerNbSemaines(nbSem - 1)}>−</button>
+                <span>{nbSem} semaine{nbSem > 1 ? 's' : ''}</span>
+                <button type="button" aria-label="Une semaine de plus" disabled={nbSem >= MAX_SEMAINES} onClick={() => changerNbSemaines(nbSem + 1)}>＋</button>
+              </div>
             </header>
           )}
           {!modele && !seance && (
@@ -516,6 +539,16 @@ export default function EditeurProgramme() {
                   <span>{nbSem} semaine{nbSem > 1 ? 's' : ''}</span>
                   <button type="button" aria-label="Une semaine de plus" disabled={nbSem >= MAX_SEMAINES} onClick={() => changerNbSemaines(nbSem + 1)}>＋</button>
                 </div>
+                <MenuFlottant classe="prog-modele" classeBouton="prog-modele__bouton" libelle="Modèles de programme" bouton="Modèles ▾" aGauche largeur={300} aria="Modèles de programme">
+                  {(fermer) => (
+                    <>
+                      <p className="gp-menu__titre">Partir d’un modèle</p>
+                      {modelesProg.length === 0 && <p className="gp-menu__vide">Aucun modèle de programme pour l’instant.</p>}
+                      {modelesProg.map((m) => <button key={m.id} type="button" onClick={() => { fermer(); partirDunModele(m) }}>{m.nom || 'Modèle sans nom'} <small>{m.semaines?.length ?? 0} sem.</small></button>)}
+                      <button type="button" className="gp-menu__separe" onClick={() => { fermer(); enregistrerCommeModele() }}>Enregistrer ce programme comme modèle</button>
+                    </>
+                  )}
+                </MenuFlottant>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setGestion(true)}>Gérer le programme</button>
                 <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => {
                   const go = () => aller({ nouveau: true })

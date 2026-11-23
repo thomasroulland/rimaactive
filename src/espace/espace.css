@@ -2282,3 +2282,8 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .relance__bulle::after { content: ''; position: absolute; bottom: 100%; right: 14px; border: 5px solid transparent; border-bottom-color: var(--encre); }
 .relance:hover .relance__bulle, .relance:focus-visible .relance__bulle, .relance:disabled .relance__bulle { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .relance, .relance__bulle { transition: none; } }
+
+/* Modèles de programme (de retour le 23 novembre 2026) */
+.gp-menu__vide { margin: 4px 12px 6px; font-size: 13px; color: var(--gris-chaud); }
+.gp-menu__separe { border-top: 1px solid var(--filet) !important; margin-top: 4px !important; }
+.modele-tete__semaines { margin-top: 10px; }

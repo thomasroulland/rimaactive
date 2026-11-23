@@ -125,7 +125,13 @@ export function appliquerModele(programme, modele) {
 // « Enregistrer comme modèle » : le programme sans coaché, sans date et sans statut, avec de nouveaux identifiants
 export function versModele(programme, nom) {
   const { id, majLe, client, statut, debut, ...reste } = structuredClone(programme) // eslint-disable-line no-unused-vars
-  return { ...reste, nom, debut: '', semaines: (reste.semaines ?? []).map(copierSemaine) }
+  return { ...reste, genre: 'programme', nom, debut: '', semaines: (reste.semaines ?? []).map(copierSemaine) }
+}
+
+// Nouveau modèle de programme vide (23 novembre 2026) : 4 semaines de 3 séances, à remplir dans l'éditeur
+export function nouveauModeleProgramme(nom = '') {
+  const { client, debut, statut, ...reste } = nouveauProgramme({ client: '', nom, debut: '', semaines: 4, parSemaine: 3 }) // eslint-disable-line no-unused-vars
+  return { ...reste, genre: 'programme', debut: '' }
 }
 
 // Nombre de semaines : en ajoute (vides, à la fin) ou en retire (les dernières) ; `faites` = séances déjà faites, jamais retirées

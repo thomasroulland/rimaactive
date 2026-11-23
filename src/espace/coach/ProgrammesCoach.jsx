@@ -2,9 +2,9 @@ import PhotoCoache from './PhotoCoache.jsx'
 import RangeeDefilante from './RangeeDefilante.jsx'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ecouterAnciensModeles, ecouterModelesSeance, enregistrerModele, nouvelIdModele, supprimerModele } from '../depots.js'
+import { ecouterModelesProgramme, ecouterModelesSeance, enregistrerModele, nouvelIdModele, supprimerModele } from '../depots.js'
 import { ajoutJours, aujourdhuiIso } from '../donnees/calculs.js'
-import { nomBloc } from '../donnees/programme.js'
+import { nomBloc, nouveauModeleProgramme, versModele } from '../donnees/programme.js'
 import { nouveauModeleSeance, resumeModele, versModeleSeance } from '../donnees/modelesSeance.js'
 import { nomType } from '../donnees/reglages.js'
 import { messageErreur } from '../erreurs.js'
@@ -19,6 +19,7 @@ export default function ProgrammesCoach() {
   return (
     <section className="section">
       <div className="conteneur espace-coach progs">
+        <ModelesProgramme />
         <Modeles />
         <ProgrammesDesCoaches />
       </div>
@@ -33,16 +34,13 @@ function Modeles() {
   const navigate = useNavigate()
   const { types } = useReglages()
   const [modeles, setModeles] = useState(null)
-  const [anciens, setAnciens] = useState([])
   const [recherche, setRecherche] = useState('')
   const [filtre, setFiltre] = useState('tous')
   const [aSupprimer, setASupprimer] = useState(null)
-  const [nettoyer, setNettoyer] = useState(false)
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
   const [envoi, setEnvoi] = useState(false)
   useEffect(() => ecouterModelesSeance(setModeles, () => setErreur('Impossible de charger les modèles. Vérifiez votre connexion.')), [])
-  useEffect(() => ecouterAnciensModeles(setAnciens, () => setAnciens([])), [])
   const tenter = async (fn) => {
     setErreur(''); setMessage(''); setEnvoi(true)
     try { await fn() } catch (e) { setErreur(messageErreur(e.code)) } finally { setEnvoi(false) }
@@ -68,7 +66,7 @@ function Modeles() {
       <section aria-labelledby="t-modeles" className="progs__partie ms">
         <header className="ms-barre">
           <div className="ms-barre__titre">
-            <h1 id="t-modeles" className="ms-h1">Modèles</h1>
+            <h2 id="t-modeles" className="ms-h1">Modèles de séances</h2>
             {modeles && <span className="progs__compte">{modeles.length}</span>}
           </div>
           <p className="ms-barre__aide">Vos séances types, à glisser dans les programmes.</p>
@@ -81,12 +79,6 @@ function Modeles() {
         </header>
         <p className="espace-message" role="status">{message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
-        {anciens.length > 0 && (
-          <p className="ms-anciens">
-            {anciens.length} ancien{anciens.length > 1 ? 's' : ''} modèle{anciens.length > 1 ? 's' : ''} de programme ne {anciens.length > 1 ? 'sont' : 'est'} plus utilisé{anciens.length > 1 ? 's' : ''}.
-            <button type="button" className="lien-souligne" onClick={() => setNettoyer(true)}>{anciens.length > 1 ? 'Les supprimer' : 'Le supprimer'}</button>
-          </p>
-        )}
         {typesPresents.length > 1 && (
           <RangeeDefilante className="filtres-coaches ms-filtres filtres-ligne" role="group" aria-label="Type de séance">
             {['tous', ...typesPresents].map((t) => (
@@ -139,13 +131,82 @@ function Modeles() {
           libelle="Supprimer le modèle" fermer={() => setASupprimer(null)}
           action={() => tenter(async () => { await supprimerModele(modeleASupprimer.id); setMessage('Modèle supprimé.') })} />
       )}
-      {nettoyer && (
-        <Confirmation titre={`Supprimer ${anciens.length > 1 ? `les ${anciens.length} anciens modèles` : 'l’ancien modèle'} de programme ?`}
-          texte={`${anciens.map((m) => `« ${m.nom || 'sans nom'} »`).join(', ')}. Les programmes déjà affectés à vos coachés ne changent pas.`}
-          libelle="Supprimer" fermer={() => setNettoyer(false)}
-          action={() => tenter(async () => { for (const m of anciens) await supprimerModele(m.id); setMessage('Anciens modèles de programme supprimés.') })} />
-      )}
     </>
+  )
+}
+
+// Modèles de PROGRAMME (de retour le 23 novembre 2026, demande de Marie) : créer, modifier, dupliquer, supprimer.
+// On les applique ensuite dans le programme d'un coaché (« Modèles ▾ » → Partir d'un modèle).
+function ModelesProgramme() {
+  const navigate = useNavigate()
+  const [modeles, setModeles] = useState(null)
+  const [aSupprimer, setASupprimer] = useState(null)
+  const [message, setMessage] = useState('')
+  const [erreur, setErreur] = useState('')
+  const [envoi, setEnvoi] = useState(false)
+  useEffect(() => ecouterModelesProgramme(setModeles, () => setErreur('Impossible de charger les modèles. Vérifiez votre connexion.')), [])
+  const tenter = async (fn) => {
+    setErreur(''); setMessage(''); setEnvoi(true)
+    try { await fn() } catch (e) { setErreur(messageErreur(e.code)) } finally { setEnvoi(false) }
+  }
+  const creer = () => tenter(async () => {
+    const id = nouvelIdModele()
+    await enregistrerModele({ id, ...nouveauModeleProgramme('') }, { creation: true })
+    navigate(`/espace/coach/modeles/programmes/${id}`)
+  })
+  const dupliquer = (m) => tenter(async () => {
+    await enregistrerModele({ id: nouvelIdModele(), ...versModele(m, `${m.nom || 'Modèle'} (copie)`) }, { creation: true })
+    setMessage(`Modèle « ${m.nom || 'sans nom'} » dupliqué.`)
+  })
+  const modeleASupprimer = (modeles ?? []).find((m) => m.id === aSupprimer)
+  return (
+    <section aria-labelledby="t-modeles-prog" className="progs__partie ms">
+      <header className="ms-barre">
+        <div className="ms-barre__titre">
+          <h1 id="t-modeles-prog" className="ms-h1">Modèles de programmes</h1>
+          {modeles && <span className="progs__compte">{modeles.length}</span>}
+        </div>
+        <p className="ms-barre__aide">Vos programmes types, à appliquer dans le programme d’un coaché.</p>
+      </header>
+      <p className="espace-message" role="status">{message}</p>
+      <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
+      {modeles === null && <p className="espace-aide" role="status">Chargement…</p>}
+      <ul className="ms-grille">
+        {modeles !== null && (
+          <li className="ms-nouveau">
+            <button type="button" disabled={envoi} onClick={creer}>
+              <span className="ms-nouveau__plus" aria-hidden="true">＋</span>
+              <span className="ms-nouveau__texte">Nouveau modèle de programme</span>
+            </button>
+          </li>
+        )}
+        {(modeles ?? []).map((m, i) => {
+          const nbSem = m.semaines?.length ?? 0
+          const nbSeances = (m.semaines ?? []).reduce((t, w) => t + (w.seances ?? []).filter((x) => x.type !== 'echauffement').length, 0)
+          const lien = `/espace/coach/modeles/programmes/${m.id}`
+          return (
+            <li key={m.id} className="espace-carte ms-carte" style={{ '--i': i }}>
+              <div className="ms-carte__tete">
+                <span className="ms-carte__type">Programme</span>
+                <span className="modele__icones">
+                  <button type="button" className="modele__suppr" onClick={() => dupliquer(m)} disabled={envoi} aria-label={`Dupliquer le modèle ${m.nom || 'sans nom'}`} title="Dupliquer"><IconeCopier /></button>
+                  <button type="button" className="modele__suppr modele__suppr--danger" onClick={() => setASupprimer(m.id)} aria-label={`Supprimer le modèle ${m.nom || 'sans nom'}`} title="Supprimer"><IconeCorbeille /></button>
+                </span>
+              </div>
+              <h3 className="ms-carte__nom"><Link to={lien}>{m.nom || 'Modèle sans nom'}</Link></h3>
+              <p className="ms-carte__meta">{pluriel(nbSem, 'semaine')} · {pluriel(nbSeances, 'séance')}{m.parSemaine ? ` · ${m.parSemaine} par semaine` : ''}</p>
+              <Link to={lien} className="bouton bouton--secondaire bouton--compact ms-carte__modifier">Modifier</Link>
+            </li>
+          )
+        })}
+      </ul>
+      {modeleASupprimer && (
+        <Confirmation titre={`Supprimer « ${modeleASupprimer.nom || 'ce modèle'} » ?`}
+          texte="Le modèle est effacé. Les programmes déjà créés à partir de lui ne changent pas."
+          libelle="Supprimer le modèle" fermer={() => setASupprimer(null)}
+          action={() => tenter(async () => { await supprimerModele(modeleASupprimer.id); setMessage('Modèle supprimé.') })} />
+      )}
+    </section>
   )
 }
 
