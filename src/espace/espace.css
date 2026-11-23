@@ -1083,7 +1083,7 @@ button.calendrier__jour:focus-visible { outline: 2px solid var(--encre); outline
 .filtre-coaches__nb { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: var(--craie); color: var(--gris-chaud); font-size: 12px; font-weight: 700; }
 .filtre-coaches[aria-pressed="true"] .filtre-coaches__nb { background: rgba(255, 255, 255, 0.2); color: inherit; }
 .carte-coache__fin { margin: 0; display: inline-flex; align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #fdf3d1; font-size: 13px; font-weight: 700; color: var(--encre); }
-@media (prefers-reduced-motion: no-preference) { .cartes-coaches > li { animation: onglet-entre .3s cubic-bezier(.3, .7, .2, 1) both; } }
+@media (prefers-reduced-motion: no-preference) { .cartes-coaches > li { animation: onglet-entre .3s cubic-bezier(.3, .7, .2, 1) backwards; } }
 /* barre du programme : nom (liste ou champ) + crayon, début, puis actions */
 .prog-outils__gauche { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; flex: 1 1 560px; min-width: 0; }
 .prog-outils__renommer { display: flex; align-items: center; gap: 6px; }
