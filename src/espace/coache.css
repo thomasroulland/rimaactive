@@ -2019,3 +2019,8 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
   .ec-seance--large .ec-st-com { font-size: 15px; }
   .ec-seance--large .ec-motsem__mot { font-size: 16px; }
 }
+/* Picto « un mot de Marie » en haut à droite de la photo : il invite à la toucher (23 novembre 2026) */
+.ec-st-photo__note { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--ec-jaune, #f2c230); color: var(--ec-encre); box-shadow: 0 2px 8px rgba(22, 21, 20, .25); }
+@media (min-width: 900px) { .ec-seance--large .ec-st-photo__note { top: 12px; right: 12px; width: 36px; height: 36px; } }
+.ec-st-reperes { gap: 4px; margin-top: 7px; }
+.ec-st-reperes > span { padding: 3px 8px; font-size: 11.5px; }

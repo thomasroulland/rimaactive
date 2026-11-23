@@ -1,4 +1,3 @@
-import MotSemaine from './MotSemaine.jsx'
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
@@ -17,7 +16,7 @@ const Coche = ({ taille = 20 }) => (
 const vide = (v) => !String(v ?? '').trim()
 const texteRpe = (v) => fr(String(v ?? '').replace('.', ','))
 
-export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes, resultats, actions, voirConsignes, aller, finir, retour, semaine }) {
+export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes, resultats, actions, voirConsignes, aller, finir, retour }) {
   const [plan, setPlan] = useState(false)
   const [feuille, setFeuille] = useState(null) // { type: 'serie' | 'tour' | 'bloc' | 'note', ... }
   const nb = blocs.length
@@ -49,8 +48,6 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
           <li><button type="button" onClick={finir}><span>Fin de séance</span></button></li>
         </ul>
       )}
-      {/* au premier bloc : le mot de Marie pour la semaine et le RPE visé (23 novembre 2026) */}
-      {etape === 0 && <MotSemaine semaine={semaine} classe="ec-motsem--seance" />}
       {/* seulement le nom du bloc de Marie, sans « Biset », « Séries »… (23 novembre 2026) */}
       <p className="ec-st__sur">{nomBloc(bloc)}</p>
 
@@ -147,16 +144,21 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           const photo = (el.photos ?? []).filter(Boolean)[0]
           const { prescription, details } = lignesExercice(el, true)
           const prevu = prescription.replace(' · charge libre', '')
-          // tempo et RPE à suivre (le repos est déjà sous le nom, dans la série) et le commentaire de Marie (23 novembre 2026)
-          const reperes = details.split(' · ').filter((d) => d && !d.startsWith('Repos'))
-          const commentaire = (el.commentaire ?? '').trim()
+          // tempo, RPE et repos à suivre, seulement s'ils sont remplis ; le commentaire de Marie se lit en touchant la photo,
+          // un petit picto en haut à droite le signale (Marie, 23 novembre 2026)
+          const reperes = details.split(' · ').filter(Boolean).map((d) => (d.startsWith('Repos') && texteRepos(el.repos) ? `Repos ${texteRepos(el.repos)}` : d))
+          const commentaire = Boolean((el.commentaire ?? '').trim())
           return (
-            <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
+            <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}${commentaire ? ' (un mot de Marie)' : ''}`}>
               <span className="ec-st-photo__img">{photo ? <PhotoStockee chemin={photo} alt="" /> : <span className="ec-st-photo__vide">Photos à venir</span>}</span>
               <span className="ec-st-code sur-photo">{code}</span>
+              {commentaire && (
+                <span className="ec-st-photo__note" title="Un mot de Marie : touchez la photo">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.5 11h7M8.5 14.5h4.5" /></svg>
+                </span>
+              )}
               <span className="ec-st-photo__nom">{el.nom}<small>{[materielDe(el), prevu].filter(Boolean).join(' · ')}</small>
                 {reperes.length > 0 && <span className="ec-st-reperes">{reperes.map((r) => <span key={r}>{r}</span>)}</span>}
-                {commentaire && <span className="ec-st-com">{commentaire}</span>}
               </span>
             </button>
           )

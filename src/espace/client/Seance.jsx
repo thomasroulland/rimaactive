@@ -281,7 +281,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
             {bloc ? (
               unExercice ? (
                 <BlocTelephone key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} resultats={blocs} actions={actions}
-                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} semaine={programme.semaines?.[semaine - 1]} />
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} />
               ) : (
                 <>
                   {!galerie && <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />}
