@@ -1,3 +1,4 @@
+import MotSemaine from './MotSemaine.jsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ajoutJours, aujourdhuiIso } from '../donnees/calculs.js'
@@ -95,7 +96,6 @@ function Semaines({ bloc, nb, faites, seances }) {
       {Array.from({ length: nb }, (_, k) => k + 1).map((n) => {
         const lignes = seancesDeLaSemaine(bloc.programme, n, faites)
         const nbFaites = lignes.filter((x) => statutSeance(seances, bloc.programme.id, x.seance.id) === 'Faite').length
-        const mot = (bloc.programme.semaines[n - 1]?.mot ?? '').trim()
         return (
           <article key={n} className={`ec-semc${n === courante ? ' est-courante' : ''}${n === vue ? ' est-vue' : ''}${n === vue && sens > 0 ? ' vient-droite' : n === vue && sens < 0 ? ' vient-gauche' : ''}`}
             aria-labelledby={`semc-${n}`} aria-current={n === courante ? 'date' : undefined}>
@@ -122,7 +122,7 @@ function Semaines({ bloc, nb, faites, seances }) {
                 ))}
               </div>
             )}
-            {mot && <p className="ec-semc__mot">{mot}</p>}
+            <MotSemaine semaine={bloc.programme.semaines[n - 1]} />
             {lignes.length === 0
               ? <p className="ec-semaine__vide">Pas de séance cette semaine.</p>
               : (
