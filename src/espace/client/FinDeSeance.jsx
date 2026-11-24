@@ -5,7 +5,6 @@ import { RESSENTIS } from '../donnees/seances.js'
 
 const EFFORTS = [5, 6, 7, 8, 9, 10]
 const NOMS = { 5: 'Modéré', 6: 'Moyennement difficile', 7: 'Difficile', 8: 'Très difficile', 9: 'Extrêmement difficile', 10: 'Effort maximal' }
-const AIDE = 'Touchez une note : 5 modéré, 10 effort maximal.'
 
 // Panneau « Fin de séance » (maquette) : effort global 5 à 10, ressenti, commentaire (« Mes sensations » en course),
 // « Enregistrer ma séance ». Séance terminée (`fait.statut === 'terminée'`) : même panneau en lecture seule.
@@ -32,38 +31,43 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
     return <Bravo fait={fait} suite={suite} records={records} revoir={() => setRevoir(true)} />
   }
 
+  // Même style que la séance sur téléphone (Marie, 23 novembre 2026) : titre en petites capitales, cartes blanches,
+  // effort en couleurs comme la RPE, ressenti, commentaire, gros bouton jaune.
   return (
-    <aside className="ec-fin" aria-labelledby="titre-fin">
+    <aside className="ec-fin ec-fin--st" aria-labelledby="titre-fin">
       <form className="ec-fin__form" onSubmit={valider} noValidate>
-        <h2 id="titre-fin" className="ec-h3">Fin de séance</h2>
-        <fieldset className="ec-fin__groupe">
-          <legend className="ec-fin__legende">Effort global de la séance</legend>
-          <div className="ec-fin__efforts">
+        <h2 id="titre-fin" className="ec-st__sur ec-fin__titre">Fin de séance</h2>
+        {/* des blocs simples plutôt que fieldset / legend : sur iPhone, le titre sortait de la carte blanche (23 novembre 2026) */}
+        <div className="ec-st-carte ec-fin__groupe" role="group" aria-labelledby="fin-effort">
+          <p id="fin-effort" className="ec-st-feuille__lab ec-fin__lab">Effort global de la séance</p>
+          <p className="ec-st-legende" aria-hidden="true"><span>Modéré</span><span>Maximal</span></p>
+          <div className="ec-st-rpe ec-fin__efforts" role="radiogroup" aria-labelledby="fin-effort">
             {EFFORTS.map((n) => (
-              <button key={n} type="button" className="ec-effort" aria-pressed={v.effort === n} aria-label={`${n}, ${NOMS[n]}`}
-                disabled={terminee} onClick={() => maj('effort', n)}>{n}</button>
+              <button key={n} type="button" role="radio" className={`rpe-${n}`} aria-checked={v.effort === n} aria-label={`${n}, ${NOMS[n]}`}
+                disabled={terminee} onClick={() => maj('effort', v.effort === n ? null : n)}>{n}</button>
             ))}
           </div>
-          {(v.effort || !terminee) && (
-            <p className="ec-petit ec-fin__aide" aria-live="polite">{v.effort ? (NOMS[v.effort] ? `${v.effort} · ${NOMS[v.effort]}` : `${v.effort} sur 10`) : AIDE}</p>
-          )}
-        </fieldset>
-        <fieldset className="ec-fin__groupe">
-          <legend className="ec-fin__legende">Mon ressenti</legend>
+          <p className={`ec-st-rpe__texte${v.effort ? ` rpe-${v.effort}` : ''}`} aria-live="polite">
+            {/* comme pour les exercices : le nom de la note s'affiche seulement quand on en touche une (Marie, 23 novembre 2026) */}
+            {v.effort ? (NOMS[v.effort] ?? `${v.effort} sur 10`) : ''}
+          </p>
+        </div>
+        <div className="ec-st-carte ec-fin__groupe" role="group" aria-labelledby="fin-ressenti">
+          <p id="fin-ressenti" className="ec-st-feuille__lab ec-fin__lab">Mon ressenti</p>
           <div className="ec-fin__ressentis">
             {RESSENTIS.map((r) => (
               <button key={r} type="button" className="ec-choix" aria-pressed={v.ressenti === r} disabled={terminee}
                 onClick={() => maj('ressenti', r)}>{r}</button>
             ))}
           </div>
-        </fieldset>
-        <div className="ec-fin__commentaire">
-          <label htmlFor="fin-commentaire" className="ec-fin__legende">{course ? 'Mes sensations' : 'Mon commentaire'}</label>
-          <textarea id="fin-commentaire" className="ec-champ" rows="4" value={v.commentaire} readOnly={terminee}
+        </div>
+        <div className="ec-st-carte ec-fin__groupe">
+          <label htmlFor="fin-commentaire" className="ec-st-feuille__lab ec-fin__lab">{course ? 'Mes sensations' : 'Mon commentaire'}</label>
+          <textarea id="fin-commentaire" className="ec-st-note" rows="3" value={v.commentaire} readOnly={terminee}
             placeholder={terminee ? '' : 'Sensations, douleurs, ce qui a été facile ou difficile'}
             onChange={(e) => maj('commentaire', e.target.value)} />
         </div>
-        {!terminee && <button type="submit" className="ec-bouton" disabled={envoye}>Enregistrer ma séance</button>}
+        {!terminee && <button type="submit" className="ec-st__gros" disabled={envoye}>Enregistrer ma séance <Coche /></button>}
       </form>
       {etat && (
         <p role="status" className="ec-fin__etat">
@@ -73,6 +77,10 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
       {terminee && fait.commentaireCoach && <p className="ec-texte ec-fin__marie">Marie : {fait.commentaireCoach}</p>}
     </aside>
   )
+}
+
+function Coche() {
+  return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
 }
 
 

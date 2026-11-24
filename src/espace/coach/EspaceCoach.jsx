@@ -24,6 +24,8 @@ export default function EspaceCoach({ profil }) {
         <Route path="modeles" element={<ProgrammesCoach />} />
         <Route path="programmes" element={<Navigate to="/espace/coach/modeles" replace />} />
         <Route path="modeles/:modeleId" element={<EditeurModeleSeance />} />
+        {/* modèle de programme : le même éditeur que le programme d'un coaché, sans coaché ni date (23 novembre 2026) */}
+        <Route path="modeles/programmes/:modeleId" element={<EditeurProgramme />} />
         <Route path="messages/*" element={<Navigate to="/espace/coach" replace />} />
         <Route path="exercices" element={<Exercices />} />
         <Route path="exercices/nouveau" element={<FicheExercice />} />

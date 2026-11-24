@@ -16,15 +16,30 @@ describe('chargeIndicative', () => {
   })
 })
 
-import { completerReglages, nomType } from '../../src/espace/donnees/reglages.js'
+import { completerReglages, formatsDuType, nomType } from '../../src/espace/donnees/reglages.js'
 describe('réglages', () => {
   it('donne toujours la liste fixe des types de séance, et des listes par défaut', () => {
     const r = completerReglages({ types: [{ id: 'mob', nom: 'Mobilité' }] })
-    const attendu = ['Renforcement', 'Contraste', 'Endurance fondamentale', 'HIIT', 'LIIT', 'Série', 'Superset', 'Échauffement']
+    const attendu = ['Échauffement', 'Renforcement', 'Circuit', 'LIIT (Zone 1-2)', 'LISS (Zone 2)', 'Tempo (Zone 3)', 'Seuil (Zone 4)', 'HIIT (Zone 5)', 'SIT (Effort maximal)']
     expect(r.types.map((t) => t.nom)).toEqual(attendu)
     expect(r.categories.length).toBeGreaterThan(0)
     expect(completerReglages(null).types.map((t) => t.nom)).toEqual(attendu)
-    expect(r.types.find((t) => t.id === 'course').nom).toBe('Endurance fondamentale')
+    // les anciens types ne sont plus proposés mais gardent leur nom
+    expect(r.types.some((t) => t.id === 'course')).toBe(false)
+    expect(nomType('course', r.types)).toBe('Endurance fondamentale')
+    expect(nomType('contraste', r.types)).toBe('Contraste')
+  })
+  it('propose les formats de bloc selon le type de séance', () => {
+    expect(formatsDuType('force')).toEqual(['series', 'superset', 'emom'])
+    expect(formatsDuType('circuit')).toEqual(['amrap', 'emom', 'tabata'])
+    expect(formatsDuType('liss')).toEqual(['continu'])
+    expect(formatsDuType('tempo')).toEqual(['continu'])
+    expect(formatsDuType('echauffement')).toEqual(['series', 'superset'])
+    expect(formatsDuType('hiit')).toEqual(['tabata', 'intervalles', 'emom'])
+    expect(formatsDuType('sit')).toEqual(['tabata', 'intervalles', 'emom'])
+    expect(formatsDuType('seuil')).toEqual(['intervalles'])
+    expect(formatsDuType('liit')).toEqual(['intervalles'])
+    expect(formatsDuType('contraste')).toContain('series')
   })
   it('nomme un type, même supprimé', () => {
     expect(nomType('mob', [{ id: 'mob', nom: 'Mobilité' }])).toBe('Mobilité')

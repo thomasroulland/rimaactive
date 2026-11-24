@@ -1,3 +1,4 @@
+import MotSemaine from './MotSemaine.jsx'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ajoutJours } from '../donnees/calculs.js'
@@ -54,8 +55,9 @@ export default function CetteSemaine({ programme, semaine, faites, seances, comm
           ))}
         </div>
       )}
-      {!chezMoi && commence && <button type="button" className="ec-semaine__revenir" onClick={() => aller(semaine)}>← Revenir à ma semaine</button>}
+      {/* plus de « ← Revenir à ma semaine » (Marie, 23 novembre 2026) : la semaine en cours est déjà en rouge dans les points */}
       <div className={`ec-semaine__corps${sens > 0 ? ' vient-droite' : sens < 0 ? ' vient-gauche' : ''}`} key={vue} aria-live="polite">
+        <MotSemaine semaine={programme.semaines?.[vue - 1]} />
         {lignes.length === 0
           ? <p className="ec-semaine__vide">Pas de séance cette semaine.</p>
           : (

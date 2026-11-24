@@ -118,38 +118,27 @@ Pas d'index à créer pour l'instant. (Autre possibilité, sur un ordinateur qui
 `npx firebase login` : `npx firebase deploy --only firestore:rules,storage --project <identifiant-du-projet>`.)
 À refaire à chaque fois que Claude vous signale un changement de ces règles.
 
-## 10. Personnaliser l'e-mail d'invitation
+## 10. E-mail d'invitation envoyé par le site (lien valable 7 jours)
 
-Quand vous invitez un client, il reçoit un e-mail « Réinitialisation du mot de passe » pour **créer son mot de passe**. Par défaut il est en anglais ou mal tourné : traduisons-le.
+Depuis le 23 novembre 2026, c'est le site qui envoie l'e-mail d'invitation (service **Resend**), aux couleurs de Rimaactive,
+avec un lien **valable 7 jours**. Le client choisit son mot de passe sur une page du site, puis il arrive directement connecté
+dans son espace. Le bouton **« Relancer l'invitation »** (carte du coaché dans « Mes coachés ») renvoie un nouveau lien de 7 jours.
 
-1. Dans **Authentication**, ouvrez l'onglet des **modèles** (« Templates » / « Modèles »), puis « Réinitialisation du mot de passe ».
-2. Choisissez la langue **Français** (menu de langue du modèle).
-3. Si vous le pouvez, renseignez le nom de l'expéditeur : « Rimaactive » (et mettez votre adresse en « répondre à »). Par défaut, l'e-mail part d'une adresse Firebase (`firebaseapp.com`) et peut arriver dans les courriers indésirables : prévenez vos clients de regarder dans leurs spams.
-4. **Objet** suggéré : `Créez votre mot de passe pour votre espace Rimaactive`
-5. **Message** suggéré (vous pouvez le modifier librement ; gardez le lien `%LINK%`, Firebase le remplace par le vrai lien) :
+Tant que ces réglages ne sont pas faits, rien ne casse : le site envoie l'ancien e-mail Firebase (lien d'environ une heure).
 
-```
-Bonjour,
+1. **Resend, ajouter le domaine** : *Domains → Add domain* → `rimaactive.fr` (région Europe).
+2. **Chez l'hébergeur du nom de domaine** : ajoutez les enregistrements DNS que Resend affiche (SPF, DKIM), puis cliquez sur
+   *Verify* dans Resend. Comptez de quelques minutes à quelques heures.
+3. **Resend, créer une clé** : *API Keys → Create API key*, droit « Sending access », domaine `rimaactive.fr`. Copiez-la
+   (elle n'est affichée qu'une fois) et ne l'envoyez à personne par message.
+4. **Vercel** : *Settings → Environment Variables*, ajoutez pour « Production » :
+   - `RESEND_API_KEY` = la clé ;
+   - `SITE_URL` = `https://www.rimaactive.fr` (l'adresse du site, sans « / » à la fin) ;
+   - facultatif : `INVITATION_EXPEDITEUR` (par défaut `Marie Sillas · Rimaactive <invitation@rimaactive.fr>`)
+     et `INVITATION_REPONDRE_A` (par défaut votre adresse Outlook).
+5. Redéployez (Vercel → *Deployments* → *Redeploy*), puis invitez-vous avec une autre adresse pour vérifier.
 
-Marie Sillas vous a ouvert votre espace Rimaactive, où vous retrouverez votre programme
-et vos séances.
-
-Pour choisir votre mot de passe et vous connecter, cliquez sur ce lien :
-%LINK%
-
-Ce lien n'est valable que peu de temps. S'il a expiré, allez sur la page de connexion
-de votre espace (l'adresse du site suivie de /espace) et cliquez sur « Mot de passe oublié ? » :
-vous recevrez un nouveau lien.
-
-Si vous n'attendiez pas ce message, ignorez-le simplement : rien ne sera fait.
-
-Sportivement,
-Marie Sillas — Rimaactive
-```
-
-6. Enregistrez.
-
-*Ce texte est une proposition de Claude : à relire et valider par vous.*
+L'e-mail est dans `api/_email-invitation.js` (même dessin que `docs/email-invitation.html`).
 
 ## 11. Vous donner le rôle de coach
 

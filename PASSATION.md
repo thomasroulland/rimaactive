@@ -622,3 +622,31 @@ Thomas : « ça rend moche sur téléphone et sur un écran coupé en deux ». L
   « Marie Sillas, coach sportive diplômée ». Dégradé noir sans flou, seulement derrière les écritures, à partir du logo
   (`.connexion__legende::before`). Champs remplis par le navigateur : fond blanc au lieu de bleu (non vérifiable ici).
 - **Choix de Marie, à ne pas refaire** : aucun flou sur la photo, pas de fondu en haut, ne plus toucher au cadrage sans demande.
+
+## Invitation : lien de 7 jours et bouton « Relancer l’invitation » (23 novembre 2026, en ligne, accord écrit : « ok c’est bon »)
+Demande de Marie : le lien envoyé par e-mail doit durer au moins 24 heures, se relancer avec un bouton, et la création du mot de passe
+doit mener directement dans l'espace. Le lien Firebase « Réinitialisation du mot de passe » ne dure qu'environ une heure (non réglable).
+- **Serveur** : `api/_invitation.js` (jeton aléatoire, seule son empreinte est gardée dans `invitations/{empreinte}`, 7 jours ;
+  envoi par Resend, `RESEND_API_KEY`) ; `api/inviter.js` crée le lien et envoie l'e-mail (`envoye` dans la réponse) ;
+  `api/relancer-invitation.js` (coach, client « invité » seulement ; l'ancien lien est effacé) ; `api/activer-invitation.js`
+  (sans connexion : vérifie le lien, puis pose le mot de passe et efface le lien). E-mail : `api/_email-invitation.js`.
+- **Site** : page `/espace/invitation?t=…` (`src/espace/Invitation.jsx`, même carte que la connexion) : mot de passe (8 caractères
+  minimum) et confirmation, puis connexion automatique → accord → tableau de bord. Lien expiré ou déjà utilisé : message clair.
+  Bouton « Relancer l'invitation » sur la carte d'un coaché invité (`MesCoaches.jsx`).
+- **Sans clé Resend** (ou si l'envoi échoue) : le navigateur du coach envoie l'ancien e-mail Firebase, rien ne casse.
+- **Mise en route** : `docs/espace-mise-en-route.md` § 10 (domaine rimaactive.fr dans Resend, DNS, clé, variables Vercel).
+- **Vérifié** : `npm test`, `npm run test:regles` (113, dont 6 sur l'invitation), `npm run build` ; parcours rejoué dans un navigateur
+  avec les émulateurs (lien → mot de passe → espace ; lien réutilisé refusé ; relance depuis Mes coachés).
+- **Maquettes de l'accueil** (deux cartes en haut, Mes services) : sur la branche locale `maquettes-accueil`, pas encore validées.
+- **Resend** : domaine rimaactive.fr vérifié le 23 novembre 2026 (DNS chez OVH : DKIM `resend._domainkey`, CNAME `send` et `rsend`).
+  `RESEND_API_KEY` (secrète) et `SITE_URL` posées par Thomas dans Vercel. DMARC (`_dmarc`) à ajouter chez OVH s'il manque.
+
+## Formulaire de contact envoyé par Resend (23 novembre 2026, pas encore en ligne)
+
+- `api/contact.js` : le formulaire « M'écrire » envoie un e-mail à Marie (`marie.sillas.coaching@outlook.com`) depuis
+  `contact@rimaactive.fr`, avec la formule, le nom, l'e-mail, le téléphone, l'entreprise et le message. « Répondre » écrit
+  directement à la personne. Même clé que les invitations (`RESEND_API_KEY`, domaine rimaactive.fr vérifié).
+- Réglages facultatifs dans Vercel : `CONTACT_DESTINATAIRE` (autre adresse de réception), `CONTACT_EXPEDITEUR`.
+- Champ piège invisible contre les robots ; si l'envoi échoue, la page propose d'écrire directement à l'adresse de Marie.
+- Confirmation : « Votre demande est bien arrivée, je vous réponds très vite. » (texte de Claude, à relire par Marie).
+- Resend ajouté aux prestataires de la politique de confidentialité. Tests : `tests/api/contact.test.js`.

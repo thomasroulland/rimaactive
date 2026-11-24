@@ -1954,3 +1954,104 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-st-repos__boutons { display: flex; gap: 8px; width: 100%; }
 .ec-st-repos__boutons .ec-st-pas { flex: 1; min-height: 44px; }
 .ec-st-reparti { margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--ec-encre); color: var(--ec-jaune, #f2c230); font: 800 12px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; }
+/* Encart sous la photo un peu plus grand : nom de l'exercice et prescription (Marie, 23 novembre 2026) */
+.ec-st-photo__nom { padding: 9px 11px 11px; font-size: 14.5px; }
+.ec-st-photo__nom small { font-size: 12px; margin-top: 3px; }
+
+/* Fin de séance dans le style de la séance (Marie, 23 novembre 2026) */
+.ec-fin--st { padding: 0; background: none; border: 0; box-shadow: none; }
+.ec-fin--st .ec-fin__form { gap: 10px; }
+.ec-fin--st .ec-fin__titre { margin: 0 0 2px; }
+.ec-fin--st .ec-fin__groupe { display: grid; gap: 10px; padding: 14px 12px 12px; margin: 0; border: 0; min-width: 0; }
+.ec-fin--st .ec-fin__lab { padding: 0; margin: 0 0 2px; }
+.ec-fin--st .ec-st-legende { margin: 0; }
+.ec-fin--st .ec-fin__efforts { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
+.ec-fin--st .ec-st-rpe button { height: 44px; font-size: 16px; }
+.ec-fin--st .ec-st-rpe button:disabled { cursor: default; }
+.ec-fin--st .ec-st-rpe button:disabled:not([aria-checked="true"]) { opacity: .45; }
+.ec-fin--st .ec-choix { min-height: 40px; font-size: 14px; }
+.ec-fin--st .ec-st-note { min-height: 84px; }
+.ec-fin--st .ec-st__gros { width: 100%; margin-top: 4px; }
+.ec-fin--st .ec-st__gros:disabled { opacity: .6; cursor: default; }
+.ec-fin--st .ec-st-rpe__texte { font-size: 13px; padding: 8px 12px; }
+@media (min-width: 900px) {
+  .ec-fin--st { width: 100%; max-width: 620px; margin: 0 auto; }
+  .ec-fin--st .ec-fin__groupe { padding: 18px 16px 16px; }
+  .ec-fin--st .ec-fin__lab, .ec-fin--st .ec-fin__titre { font-size: 12px; }
+  .ec-fin--st .ec-st-legende { font-size: 11.5px; }
+  .ec-fin--st .ec-st-rpe button { height: 48px; font-size: 17px; }
+}
+/* « ← Revenir : … » sous la fin de séance : un simple lien, sans bulle */
+.ec-fin--st + .ec-lien { justify-self: center; align-self: center; width: auto; min-height: 44px; padding: 0 8px; border: 0; background: none; box-shadow: none; font: 700 14px/1 var(--font-sans); color: var(--ec-gris, #6b665f); text-decoration: underline; text-underline-offset: 3px; }
+.ec-fin--st .ec-st-rpe__texte:empty { display: none; }
+/* Encart gris sans photo : « Photos à venir » (Marie, 23 novembre 2026) */
+.ec-st-photo__img { position: relative; }
+.ec-st-photo__vide { position: absolute; inset: 0; display: grid; place-items: center; font: 700 13px/1.2 var(--font-sans); color: var(--ec-gris, #6b665f); }
+
+/* Ordinateur et tablette : le même écran de séance que sur téléphone (Marie, 23 novembre 2026), centré et plus grand */
+@media (min-width: 900px) {
+  .ec-seance--large .ec-st { width: 100%; max-width: 720px; margin: 8px auto 0; gap: 14px; }
+  .ec-seance--large .ec-st__haut { gap: 14px; }
+  .ec-seance--large .ec-st__sur { font-size: 13px; }
+  .ec-seance--large .ec-st-groupe { gap: 12px; }
+  .ec-seance--large .ec-st-photos--1 .ec-st-photo__img, .ec-seance--large .ec-st-photo__img { height: 260px; }
+  .ec-seance--large .ec-st-photo { border-radius: 22px; }
+  .ec-seance--large .ec-st-photo__nom { padding: 14px 18px 16px; font-size: 19px; }
+  .ec-seance--large .ec-st-photo__nom small { font-size: 14px; margin-top: 4px; }
+  .ec-seance--large .ec-st-photo__vide { font-size: 15px; }
+  .ec-seance--large .ec-st-code { min-width: 34px; height: 26px; font-size: 12px; }
+  .ec-seance--large .ec-st-serie { padding: 18px 18px 16px; gap: 10px; border-radius: 22px; }
+  .ec-seance--large .ec-st-serie__tete { font-size: 13px; }
+  .ec-seance--large .ec-st-serie .ec-st-tl, .ec-seance--large .ec-st-tl { grid-template-columns: auto minmax(0, 1fr) 96px 110px; gap: 10px; }
+  .ec-seance--large .ec-st-serie .ec-st-tl.sans-charge, .ec-seance--large .ec-st-tl.sans-charge { grid-template-columns: auto minmax(0, 1fr) 110px; }
+  .ec-seance--large .ec-st-tl__nom { font-size: 16px; }
+  .ec-seance--large .ec-st-tl__nom small { font-size: 13px; }
+  .ec-seance--large .ec-st-tl--tete { font-size: 11px; }
+  .ec-seance--large .ec-st-tl .ec-st-champ { height: 50px; font-size: 19px; }
+  .ec-seance--large .ec-st-serie__ok, .ec-seance--large .ec-st__gros { min-height: 56px; font-size: 17px; }
+  .ec-seance--large .ec-st-faite { min-height: 52px; padding: 10px 18px; font-size: 14px; }
+  .ec-seance--large .ec-st-faite b { font-size: 15px; }
+  .ec-seance--large .ec-st .ec-s2-planliste button { min-height: 48px; font-size: 15px; }
+}
+
+/* Mot de Marie et RPE visé de la semaine (23 novembre 2026) */
+.ec-motsem { display: grid; gap: 8px; margin: 0 0 4px; padding: 12px 14px; border-radius: 14px; background: rgba(242, 194, 48, .2); }
+.ec-motsem p { margin: 0; }
+.ec-motsem__mot { font: 600 14px/1.45 var(--font-sans); color: var(--ec-encre); }
+.ec-motsem__qui { display: block; margin-bottom: 3px; font: 800 10.5px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ec-gris, #6b665f); }
+.ec-motsem__rpe { font: 600 13px/1.3 var(--font-sans); color: var(--ec-gris, #6b665f); }
+.ec-motsem__rpe b { margin-left: 6px; padding: 3px 9px; border-radius: 999px; background: #fff; font-weight: 800; color: var(--ec-encre); white-space: nowrap; }
+.ec-motsem--seance { margin: 0; }
+/* Tempo, RPE et commentaire sous le nom de l'exercice (23 novembre 2026) */
+.ec-st-reperes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.ec-st-reperes > span { padding: 4px 10px; border-radius: 999px; background: #f4f3ef; font: 800 12.5px/1.2 var(--font-sans); color: var(--ec-encre); }
+.ec-st-com { display: block; margin-top: 8px; padding: 8px 10px; border-left: 3px solid var(--ec-jaune, #f2c230); border-radius: 4px 10px 10px 4px; background: #faf8f3; font: 600 13px/1.4 var(--font-sans); color: var(--ec-encre); }
+@media (min-width: 900px) {
+  .ec-seance--large .ec-st-reperes > span { font-size: 14px; padding: 5px 12px; }
+  .ec-seance--large .ec-st-com { font-size: 15px; }
+  .ec-seance--large .ec-motsem__mot { font-size: 16px; }
+}
+/* Picto « un mot de Marie » en haut à droite de la photo : il invite à la toucher (23 novembre 2026) */
+.ec-st-photo__note { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--ec-jaune, #f2c230); color: var(--ec-encre); box-shadow: 0 2px 8px rgba(22, 21, 20, .25); }
+@media (min-width: 900px) { .ec-seance--large .ec-st-photo__note { top: 12px; right: 12px; width: 36px; height: 36px; } }
+.ec-st-reperes { gap: 4px; margin-top: 7px; }
+.ec-st-reperes > span { padding: 3px 8px; font-size: 11.5px; }
+/* Blocs EMOM, AMRAP, TABATA, Continu, Intervalles sur ordinateur et tablette : même échelle que les séries (23 novembre 2026) */
+@media (min-width: 900px) {
+  .ec-seance--large .ec-st-carte:not(.ec-st-serie) { padding: 18px 18px 16px; gap: 12px; border-radius: 22px; }
+  .ec-seance--large .ec-st-noir { padding: 16px 18px; border-radius: 16px; }
+  .ec-seance--large .ec-st-noir span { font-size: 14px; }
+  .ec-seance--large .ec-st-noir p { font-size: 15px; }
+  .ec-seance--large .ec-st-exos button { min-height: 52px; gap: 12px; }
+  .ec-seance--large .ec-st-exos b { font-size: 16px; }
+  .ec-seance--large .ec-st-exos em { font-size: 14px; }
+  .ec-seance--large .ec-st-resultat { gap: 12px; }
+  .ec-seance--large .ec-st-resultat label > span { font-size: 11px; }
+  .ec-seance--large .ec-st-resultat .ec-st-champ { height: 50px; font-size: 19px; }
+}
+/* Matériel, séries et charge un peu plus gros que les pastilles Repos / Tempo / RPE (Marie, 23 novembre 2026) */
+.ec-st-photo__nom small { font-size: 13.5px; font-weight: 700; color: var(--ec-encre); opacity: .8; }
+@media (min-width: 900px) {
+  .ec-seance--large .ec-st-photo__nom small { font-size: 16px; }
+  .ec-seance--large .ec-st-reperes > span { font-size: 12.5px; padding: 4px 10px; }
+}

@@ -1083,7 +1083,7 @@ button.calendrier__jour:focus-visible { outline: 2px solid var(--encre); outline
 .filtre-coaches__nb { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: var(--craie); color: var(--gris-chaud); font-size: 12px; font-weight: 700; }
 .filtre-coaches[aria-pressed="true"] .filtre-coaches__nb { background: rgba(255, 255, 255, 0.2); color: inherit; }
 .carte-coache__fin { margin: 0; display: inline-flex; align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #fdf3d1; font-size: 13px; font-weight: 700; color: var(--encre); }
-@media (prefers-reduced-motion: no-preference) { .cartes-coaches > li { animation: onglet-entre .3s cubic-bezier(.3, .7, .2, 1) both; } }
+@media (prefers-reduced-motion: no-preference) { .cartes-coaches > li { animation: onglet-entre .3s cubic-bezier(.3, .7, .2, 1) backwards; } }
 /* barre du programme : nom (liste ou champ) + crayon, début, puis actions */
 .prog-outils__gauche { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; flex: 1 1 560px; min-width: 0; }
 .prog-outils__renommer { display: flex; align-items: center; gap: 6px; }
@@ -2270,3 +2270,20 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 
 /* Éditeur de séance : colonne « Repos » revenue pour les séries et les supersets (22 novembre 2026) */
 .es2-bloc[data-format="series"] { --es2-cols: 40px minmax(120px, 1fr) 56px 56px 72px 52px 70px 56px 38px; }
+
+/* « Relancer l'invitation » (23 novembre 2026) : petit bouton rond à côté de « Invité », infobulle au survol et au clavier,
+   au-dessus du lien qui étend toute la carte */
+.relance { position: relative; z-index: 2; flex: none; display: inline-grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--filet); border-radius: 50%; background: var(--blanc); color: var(--encre); cursor: pointer; transition: background-color .15s ease, border-color .15s ease; }
+.relance::before { content: ''; position: absolute; inset: -6px; } /* zone de toucher de 44 px */
+.relance:hover { background: var(--jaune); border-color: var(--jaune); }
+.relance:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.relance:disabled { opacity: .55; cursor: default; }
+.relance__bulle { position: absolute; top: calc(100% + 8px); right: -4px; padding: 6px 10px; border-radius: 8px; background: var(--encre); color: var(--craie); font: 600 12px/16px var(--font-sans); white-space: nowrap; pointer-events: none; opacity: 0; transform: translateY(-4px); transition: opacity .15s ease, transform .15s ease; }
+.relance__bulle::after { content: ''; position: absolute; bottom: 100%; right: 14px; border: 5px solid transparent; border-bottom-color: var(--encre); }
+.relance:hover .relance__bulle, .relance:focus-visible .relance__bulle, .relance:disabled .relance__bulle { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .relance, .relance__bulle { transition: none; } }
+
+/* Modèles de programme (de retour le 23 novembre 2026) */
+.gp-menu__vide { margin: 4px 12px 6px; font-size: 13px; color: var(--gris-chaud); }
+.gp-menu__separe { border-top: 1px solid var(--filet) !important; margin-top: 4px !important; }
+.modele-tete__semaines { margin-top: 10px; }

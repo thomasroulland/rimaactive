@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
+import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMain } from '../donnees/banque.js'
 import { installee } from '../../components/installation.js'
 
@@ -58,15 +58,11 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
             ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />
             : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />}
 
-      {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton ; sinon on passe d'un bloc à l'autre */}
-      {!enSeries && !resultats[bloc.id]?.fait && els.length > 0
-        ? <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
-        : (
-          <div className="ec-st__nav" role="group" aria-label="Changer de bloc">
-            <button type="button" className="ec-st__pas" onClick={() => aller(etape - 1)} disabled={etape === 0}><span aria-hidden="true">‹</span> Bloc précédent</button>
-            <button type="button" className="ec-st__pas" onClick={suivant}>{libSuivant} <span aria-hidden="true">›</span></button>
-          </div>
-        )}
+      {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
+          on change de bloc avec « Plan » ou les traits du haut, et la fenêtre de l'effort propose le bloc suivant */}
+      {!enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
+        <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true, ...allureCalculee(bloc, resultats[bloc.id]) }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
+      )}
 
       {feuille && (
         <FeuilleEffort key={JSON.stringify(feuille)} feuille={feuille} bloc={bloc} lignes={lignes} notes={notes} resultat={resultats[bloc.id]} actions={actions}
@@ -144,18 +140,29 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
       <span /><span /><span>{groupe.some(({ el }) => !enDuree(el)) ? 'Reps' : 'Durée'}</span>{!sansCharge && <span>{parMain ? 'Kg / main' : 'Kg'}</span>}
     </div>
   )
-  const aVenir = Array.from({ length: nb }, (_, t) => t).filter((t) => (actif ? t > actuelle && actuelle >= 0 : !serieFaite(t)))
   return (
     <div className="ec-st-groupe">
       <div className={`ec-st-photos ec-st-photos--${Math.min(groupe.length, 3)}`}>
         {groupe.map(({ el, code }) => {
           const photo = (el.photos ?? []).filter(Boolean)[0]
-          const prevu = lignesExercice(el, true).prescription.replace(' · charge libre', '')
+          const { prescription, details } = lignesExercice(el, true)
+          const prevu = prescription.replace(' · charge libre', '')
+          // tempo, RPE et repos à suivre, seulement s'ils sont remplis ; le commentaire de Marie se lit en touchant la photo,
+          // un petit picto en haut à droite le signale (Marie, 23 novembre 2026)
+          const reperes = details.split(' · ').filter(Boolean).map((d) => (d.startsWith('Repos') && texteRepos(el.repos) ? `Repos ${texteRepos(el.repos)}` : d))
+          const commentaire = Boolean((el.commentaire ?? '').trim())
           return (
-            <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}`}>
-              <span className="ec-st-photo__img">{photo && <PhotoStockee chemin={photo} alt="" />}</span>
+            <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}${commentaire ? ' (un mot de Marie)' : ''}`}>
+              <span className="ec-st-photo__img">{photo ? <PhotoStockee chemin={photo} alt="" /> : <span className="ec-st-photo__vide">Photos à venir</span>}</span>
               <span className="ec-st-code sur-photo">{code}</span>
-              <span className="ec-st-photo__nom">{el.nom}<small>{[materielDe(el), prevu].filter(Boolean).join(' · ')}</small></span>
+              {commentaire && (
+                <span className="ec-st-photo__note" title="Un mot de Marie : touchez la photo">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.5 11h7M8.5 14.5h4.5" /></svg>
+                </span>
+              )}
+              <span className="ec-st-photo__nom">{el.nom}<small>{[materielDe(el), prevu].filter(Boolean).join(' · ')}</small>
+                {reperes.length > 0 && <span className="ec-st-reperes">{reperes.map((r) => <span key={r}>{r}</span>)}</span>}
+              </span>
             </button>
           )
         })}
@@ -188,9 +195,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           <button type="button" className="ec-st__gros ec-st-serie__ok" onClick={() => valider(actuelle)}>Terminé <Coche taille={18} /></button>
         </section>
       )}
-      {aVenir.length > 0 && (
-        <p className="ec-st-avenir">{aVenir.length === 1 ? `Série ${aVenir[0] + 1} à venir` : `Séries ${aVenir.map((t) => t + 1).join(' · ')} à venir`}</p>
-      )}
+      {/* plus de « Séries 2 · 3 à venir » (Marie, 23 novembre 2026) : le plan suffit */}
       {toutFait && (
         <div className="ec-st-pastilles">
           {/* une seule bulle « RPE » : elle ouvre l'effort et la note (Marie, 23 novembre 2026) */}
@@ -318,7 +323,14 @@ function ChronoRepos({ avant, prevu, finir }) {
   )
 }
 
-// ---------- EMOM, AMRAP, TABATA, HIIT ----------
+// Continu, Intervalles : sans allure notée, on garde celle calculée avec le temps et la distance (23 novembre 2026)
+function allureCalculee(bloc, r) {
+  if ((bloc.format !== 'continu' && bloc.format !== 'intervalles') || !vide(r?.allure)) return {}
+  const a = allureVitesse(r?.distance, r?.temps).allure
+  return a === '–' ? {} : { allure: a.replace(' /km', '') }
+}
+
+// ---------- EMOM, AMRAP, TABATA, HIIT, Continu, Intervalles ----------
 
 const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours de :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
 
@@ -326,7 +338,7 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
   const els = bloc.elements ?? []
   const r = resultat ?? {}
   return (
-    <section className="ec-st-carte" aria-label={resumeFormat(bloc)}>
+    <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
       <div className="ec-st-noir">
         <span>{resumeFormat(bloc)}</span>
         {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
@@ -348,7 +360,8 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
         {champsResultat(bloc).map((c) => (
           <label key={c.cle}>
             <span>{c.label}</span>
-            <input className="ec-st-champ" type="text" inputMode="numeric" autoComplete="off" value={r[c.cle] ?? ''} placeholder={c.aide}
+            <input className="ec-st-champ" type="text" inputMode={c.mode ?? 'numeric'} autoComplete="off" value={r[c.cle] ?? ''}
+              placeholder={c.cle === 'allure' && allureVitesse(r.distance, r.temps).allure !== '–' ? allureVitesse(r.distance, r.temps).allure.replace(' /km', '') : c.aide}
               onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.blocValeurs(bloc.id, { [c.cle]: ev.target.value })} />
           </label>
         ))}

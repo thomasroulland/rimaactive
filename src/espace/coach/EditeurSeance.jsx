@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { estEnSeries, resumeFormat } from '../donnees/seances.js'
 import { LETTRES, NOM_BLOC_MAX, nomBloc } from '../donnees/programme.js'
 import useReglages from './useReglages.js'
+import { formatsDuType, nomType } from '../donnees/reglages.js'
 import PhotoStockee from './PhotoStockee.jsx'
 import ChoixExercice, { TYPE_GLISSE } from './ChoixExercice.jsx'
 
@@ -19,10 +20,29 @@ export const FORMATS = [
   ['amrap', 'AMRAP'],
   ['tabata', 'TABATA'],
   ['hiit', 'HIIT'],
+  ['continu', 'Continu'],
+  ['intervalles', 'Intervalles classiques'],
 ]
+// blocs « Continu » et « Intervalles » (23 novembre 2026) : l'exercice est l'activité (course, vélo, rameur…),
+// sans répétitions ni charge ; les réglages sont ceux du bloc
+const estActivite = (format) => format === 'continu' || format === 'intervalles'
+const ZONES = ['1', '2', '3', '4', '5']
 
 // réglages proposés quand on choisit TABATA ou HIIT (maquette de Marie) : travail, repos, tours
 const REGLAGES_FORMAT = { tabata: { travail: '20', repos: '10', tours: '8' }, hiit: { travail: '40', repos: '20', tours: '6' } }
+
+// Zone cardiaque visée (1 à 5) pour les blocs Continu et Intervalles
+function ChoixZone({ id, valeur, changer }) {
+  return (
+    <div className="champ-groupe espace-param">
+      <label htmlFor={id}>Zone</label>
+      <select id={id} className="champ" value={valeur ?? ''} onChange={(e) => changer(e.target.value)}>
+        <option value="">–</option>
+        {ZONES.map((z) => <option key={z} value={z}>Zone {z}</option>)}
+      </select>
+    </div>
+  )
+}
 
 function Champ({ id, label, valeur, changer, large, mode, multiligne, indice, aide }) {
   return (
@@ -117,12 +137,11 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
               <label htmlFor={ids('type')}>Type</label>
               <select id={ids('type')} className="champ" value={seance.type} onChange={(e) => majSeance('type', e.target.value)}>
                 {types.map((t) => <option key={t.id} value={t.id}>{t.nom}</option>)}
-                {!types.some((t) => t.id === seance.type) && <option value={seance.type}>Ancien type</option>}
+                {!types.some((t) => t.id === seance.type) && <option value={seance.type}>{nomType(seance.type, types)} (ancien type)</option>}
               </select>
             </div>
             <Champ id={ids('lieu')} label="Lieu" valeur={seance.lieu} changer={(v) => majSeance('lieu', v)} />
-            {/* plus de durée de séance (18 novembre 2026) : l'objectif prend la place */}
-            <Champ id={ids('objectif')} label="Objectif" large valeur={seance.objectif} changer={(v) => majSeance('objectif', v)} />
+            {/* plus de durée (18 novembre 2026) ni d'objectif (23 novembre 2026, Marie ne l'écrivait pas) */}
             {seance.type !== 'course' && (
               <p className="es2__resume" aria-live="polite">
                 {nbExos} exercice{nbExos > 1 ? 's' : ''} · {nbSeries} série{nbSeries > 1 ? 's' : ''}{blocs.length > 0 && <> · {blocs.length} bloc{blocs.length > 1 ? 's' : ''}</>}
@@ -168,11 +187,29 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                         majBloc(bi, 'format', f)
                         Object.entries(REGLAGES_FORMAT[f] ?? {}).forEach(([cle, v]) => { if (!b[cle]) majBloc(bi, cle, v) })
                       }}>
-                        {FORMATS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                        {/* seulement les formats prévus pour le type de séance (Marie, 23 novembre 2026) ; un bloc déjà créé garde le sien */}
+                        {FORMATS.filter(([v]) => formatsDuType(seance.type).includes(v) || v === b.format).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                       </select>
                     </div>
                     {!verrou && <SupprimerBloc bloc={b} supprimer={() => supprimerBloc(b.id, nomBloc(b))} />}
                   </div>
+                  {b.format === 'continu' && (
+                    <div className="espace-params espace-params--bloc es2-bloc__reglages">
+                      <Champ id={`bloc-${b.id}-duree`} label="Durée (min)" mode="numeric" valeur={b.duree} changer={(v) => majBloc(bi, 'duree', v)} />
+                      <Champ id={`bloc-${b.id}-distance`} label="Distance (km)" mode="decimal" valeur={b.distance} changer={(v) => majBloc(bi, 'distance', v)} />
+                      <Champ id={`bloc-${b.id}-allure`} label="Allure (/km)" valeur={b.allure} changer={(v) => majBloc(bi, 'allure', v)} indice="ex. 6:00" />
+                      <ChoixZone id={`bloc-${b.id}-zone`} valeur={b.zone} changer={(v) => majBloc(bi, 'zone', v)} />
+                    </div>
+                  )}
+                  {b.format === 'intervalles' && (
+                    <div className="espace-params espace-params--bloc es2-bloc__reglages">
+                      <Champ id={`bloc-${b.id}-repetitions`} label="Répétitions" mode="numeric" valeur={b.repetitions} changer={(v) => majBloc(bi, 'repetitions', v)} />
+                      <Champ id={`bloc-${b.id}-effort`} label="Effort (durée ou distance)" valeur={b.effort} changer={(v) => majBloc(bi, 'effort', v)} indice="ex. 3 min ou 400 m" />
+                      <Champ id={`bloc-${b.id}-recup`} label="Récupération" valeur={b.recup} changer={(v) => majBloc(bi, 'recup', v)} indice="ex. 1 min 30" />
+                      <Champ id={`bloc-${b.id}-allure`} label="Allure (/km)" valeur={b.allure} changer={(v) => majBloc(bi, 'allure', v)} indice="ex. 4:45" />
+                      <ChoixZone id={`bloc-${b.id}-zone`} valeur={b.zone} changer={(v) => majBloc(bi, 'zone', v)} />
+                    </div>
+                  )}
                   {(b.format === 'emom' || b.format === 'amrap' || b.format === 'tabata' || b.format === 'hiit') && (
                     <div className="espace-params espace-params--bloc es2-bloc__reglages">
                       {(b.format === 'emom' || b.format === 'amrap') && (
@@ -192,8 +229,8 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                       <span />
                       <span className="es2-colonnes__vide" />
                       {estEnSeries(b.format) && <span>Séries</span>}
-                      <span>Reps</span>
-                      <span>Charge</span>
+                      {!estActivite(b.format) && <span>Reps</span>}
+                      {!estActivite(b.format) && <span>Charge</span>}
                       {estEnSeries(b.format) && <span>RPE</span>}
                       {estEnSeries(b.format) && <span>Tempo</span>}
                       {estEnSeries(b.format) && <span>Repos</span>}
@@ -202,7 +239,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                   )}
                   <ol className="es2-lignes">
                     {(b.elements ?? []).map((el, ei) => (
-                      <LigneExo key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={estEnSeries(b.format)} verrou={verrou} rm={rm}
+                      <LigneExo key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={estEnSeries(b.format)} activite={estActivite(b.format)} verrou={verrou} rm={rm}
                         maj={(cle, v) => majElement(bi, ei, cle, v)} retirer={() => retirer(el)}
                         materiel={el.materiel || (exercices ?? []).find((x) => x.id === el.exoId)?.materiel}
                         parMain={chargeParMain(el.materiel || (exercices ?? []).find((x) => x.id === el.exoId)?.materiel)}
@@ -289,7 +326,7 @@ function EnteteBloc({ bloc, verrou, renommer, idTitre }) {
 // Un exercice sur une ligne : séries, reps, charge, RPE et tempo visibles (18 novembre 2026), le commentaire juste en dessous ;
 // « ⋯ » garde « se mesure en », le % du 1RM et « Retirer ». Repos par exercice revenu le 22 novembre 2026 ; plus de RPE de la semaine en exemple
 // (il se juge sur le ressenti global de fin de séance). Haltères : la charge est celle d'un haltère, « par main ».
-function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, parMain, materiel, nbDansBloc, monter, descendre, tenu, depot, prendre, lacher, onDragOver, onDrop }) {
+function LigneExo({ element: el, code, series, activite, verrou, rm, maj, retirer, photo, parMain, materiel, nbDansBloc, monter, descendre, tenu, depot, prendre, lacher, onDragOver, onDrop }) {
   const [plus, setPlus] = useState(false)
   const id = (cle) => `el-${el.id}-${cle}`
   const calculee = chargeIndicative(el.nom, el.pct, rm)
@@ -314,11 +351,13 @@ function LigneExo({ element: el, code, series, verrou, rm, maj, retirer, photo, 
         </p>
         {series && cellule('series', 'séries', 'numeric')}
         {/* répétitions : un nombre ou une fourchette « 8-10 » (le coaché note ce qu'il a fait) */}
-        {cellule('reps', duree ? 'durée' : 'répétitions (ex. 10 ou 8-10)', 'text', duree ? '45 s' : undefined)}
-        <span className={`es2-charge${parMain ? ' es2-charge--main' : ''}`}>
-          {cellule('charge', parMain ? 'charge d’un haltère, par main, en kilos' : 'charge en kilos', 'decimal', calculee !== null ? frNombre(calculee) : undefined)}
-          {parMain && <span className="es2-charge__main" aria-hidden="true">par main</span>}
-        </span>
+        {!activite && cellule('reps', duree ? 'durée' : 'répétitions (ex. 10 ou 8-10)', 'text', duree ? '45 s' : undefined)}
+        {!activite && (
+          <span className={`es2-charge${parMain ? ' es2-charge--main' : ''}`}>
+            {cellule('charge', parMain ? 'charge d’un haltère, par main, en kilos' : 'charge en kilos', 'decimal', calculee !== null ? frNombre(calculee) : undefined)}
+            {parMain && <span className="es2-charge__main" aria-hidden="true">par main</span>}
+          </span>
+        )}
         {series && cellule('rpe', 'RPE', 'decimal')}
         {series && cellule('tempo', 'tempo (ex. 3-1-1)', 'text')}
         {/* repos après la série, de retour (Marie, 22 novembre 2026) : séries classiques et supersets */}

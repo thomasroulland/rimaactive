@@ -116,6 +116,7 @@ export default function MesCoaches() {
                     <h2 className="carte-coache__nom"><Link to={`/espace/coach/clients/${c.uid}`} className="carte-coache__lien">{c.prenom} {c.nom}</Link></h2>
                     {r ? <span className="carte-coache__semaine">{r.semaine === 0 ? 'Commence bientôt' : `Semaine ${r.semaine} sur ${r.nbSemaines}`}</span>
                       : <span className={`espace-statut espace-statut--${c.statut === 'actif' ? 'actif' : 'autre'}`}>{STATUTS[c.statut] ?? c.statut}</span>}
+                    {c.statut === 'invité' && <BoutonRelancer client={c} fait={setMessage} />}
                   </div>
                   <p className="carte-coache__programme">{p ? `${p.nom || 'Programme sans nom'} · ${r.nbSemaines} semaine${r.nbSemaines > 1 ? 's' : ''}` : 'Pas de programme en cours'}</p>
                   {r && (
@@ -173,7 +174,7 @@ function DialogueInvitation({ fermer, invite }) {
     setEnvoi(true); setErreur(''); setDejaInvite(false)
     try {
       const r = await inviterClient(champs)
-      if (r.dejaInvite) { setDejaInvite(true); setErreur('Ce client est déjà invité.') }
+      if (r.dejaInvite) { setDejaInvite(r.uid ?? true); setErreur('Ce client est déjà invité.') }
       else invite(`Invitation envoyée à ${champs.prenom.trim()} ${champs.nom.trim()}.`)
     } catch (e) {
       setErreur(messageErreur(e.code))
@@ -184,8 +185,8 @@ function DialogueInvitation({ fermer, invite }) {
   async function renvoyer() {
     setEnvoi(true); setErreur('')
     try {
-      await renvoyerInvitation(champs.email)
-      invite(`Invitation renvoyée à ${champs.email.trim()}.`)
+      await renvoyerInvitation(dejaInvite, champs.email)
+      invite(`Invitation renvoyée à ${champs.email.trim()}, avec un nouveau lien valable 7 jours.`)
     } catch (e) {
       setErreur(messageErreur(e.code))
     }
@@ -197,7 +198,7 @@ function DialogueInvitation({ fermer, invite }) {
       onClick={(e) => { if (e.target === ref.current) ref.current.close() }}>
       <form className="espace-formulaire" onSubmit={envoyer} noValidate>
         <h2 id="espace-inviter-titre" className="titre titre--tuile">Inviter un client</h2>
-        <p className="espace-texte">Votre client reçoit un e-mail pour choisir son mot de passe.</p>
+        <p className="espace-texte">Votre client reçoit un e-mail pour choisir son mot de passe. Le lien est valable 7 jours.</p>
         <div className="champ-groupe">
           <label htmlFor="inv-prenom">Prénom</label>
           <input id="inv-prenom" className="champ" autoComplete="off" required value={champs.prenom} onChange={maj('prenom')} />
@@ -220,5 +221,30 @@ function DialogueInvitation({ fermer, invite }) {
         </div>
       </form>
     </dialog>
+  )
+}
+
+// « Relancer l'invitation » sur la carte d'un coaché qui n'a pas encore activé son compte (23 novembre 2026) :
+// nouvel e-mail avec un nouveau lien de 7 jours ; l'ancien lien ne marche plus.
+function BoutonRelancer({ client, fait }) {
+  const [envoi, setEnvoi] = useState(false)
+  async function relancer() {
+    setEnvoi(true)
+    try {
+      await renvoyerInvitation(client.uid, client.email ?? '')
+      fait(`Invitation relancée : ${client.prenom} a reçu un nouveau lien, valable 7 jours.`)
+    } catch (e) {
+      fait(messageErreur(e.code))
+    }
+    setEnvoi(false)
+  }
+  // petit bouton rond avec une enveloppe et une flèche ; l'infobulle « Relancer l'invitation » s'affiche au survol et au clavier
+  return (
+    <button type="button" className="relance" onClick={relancer} disabled={envoi} aria-label={`Relancer l’invitation de ${client.prenom} ${client.nom}`}>
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M21 12.5V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8" /><path d="m3.5 6.5 8.5 6 8.5-6" /><path d="M16 19h6m-2.5-2.5L22 19l-2.5 2.5" />
+      </svg>
+      <span className="relance__bulle" aria-hidden="true">{envoi ? 'Envoi…' : 'Relancer l’invitation'}</span>
+    </button>
   )
 }

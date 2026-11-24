@@ -72,7 +72,7 @@ function CarteNoire({ etat, programme, semaine, statut }) {
   } else if (etat.type === 'termine') {
     surtitre = 'Programme terminé 👏🏼'; titre = 'Félicitations\u00a0!'; sous = 'Marie prépare la suite'
   } else {
-    surtitre = 'Votre programme'; titre = 'Arrive bientôt'; sous = 'Marie le prépare pour toi'
+    surtitre = 'Votre programme'; titre = 'Arrive bientôt'; sous = 'Marie le prépare pour vous'
   }
   return (
     <article className="ec-noire ec-noire2" aria-labelledby="titre-prochaine">

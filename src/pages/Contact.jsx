@@ -4,6 +4,7 @@ import photoMarie from '../assets/portrait-contact.jpg'
 import PresentationContact from '../components/AppelContact.jsx'
 import useTitre from '../components/useTitre.js'
 import Picto from '../components/Picto.jsx'
+import { CONTACT } from '../components/liens.js'
 import { PAGE as INDIVIDUEL } from './Particuliers.jsx'
 import { PAGE as GROUPES } from './Groupes.jsx'
 import { PAGE as ENTREPRISES } from './Entreprises.jsx'
@@ -35,10 +36,32 @@ export default function Contact() {
   const [formule, setFormule] = useState(offreVenue ? formuleVenue : seuleFormule(offreSeule))
   const formulesOffre = OFFRES.find((o) => o.nom === offre)?.formules ?? []
 
-  // Envoi à brancher (Formspree, Resend, fonction Vercel…) : pour l'instant on affiche la confirmation
-  function envoyer(event) {
+  const [envoi, setEnvoi] = useState(false)
+  const [erreur, setErreur] = useState('')
+
+  // Envoi par le site (Resend, 23 novembre 2026) : un e-mail part chez Marie, « Répondre » écrit directement à la personne
+  async function envoyer(event) {
     event.preventDefault()
-    setEnvoye(true)
+    if (envoi) return
+    const f = new FormData(event.currentTarget)
+    const champ = (n) => String(f.get(n) ?? '')
+    setErreur('')
+    setEnvoi(true)
+    try {
+      const r = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          offre, formule, nom: champ('nom'), email: champ('email'), telephone: champ('telephone'), entreprise: champ('entreprise'),
+          message: champ('message'), accord: f.get('accord') === 'on', site: champ('site'),
+        }),
+      })
+      if (!r.ok) throw new Error(String(r.status))
+      setEnvoye(true)
+    } catch {
+      setErreur('Le message n’a pas pu partir. Réessayez dans un instant, ou écrivez-moi directement à ')
+      setEnvoi(false)
+    }
   }
 
   return (
@@ -54,10 +77,15 @@ export default function Contact() {
           <div role="status" className="confirmation">
             <p className="surtitre">Merci</p>
             <p className="titre titre--section">Message envoyé</p>
-            <p className="texte provisoire">[Message de confirmation à rédiger]</p>
+            <p className="texte">Votre demande est bien arrivée, je vous réponds très vite.</p>
           </div>
         ) : (
           <form className="formulaire" onSubmit={envoyer}>
+            {/* champ piège invisible : une personne ne le voit pas et le laisse vide, un robot le remplit */}
+            <div className="champ-piege" aria-hidden="true">
+              <label htmlFor="site">Ne pas remplir</label>
+              <input id="site" name="site" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
             <fieldset className="champ-groupe pleine">
               {/* quatre tuiles avec pictogramme (Thomas, 17 novembre 2026) ; déjà cochée quand on vient d'une carte de Mes offres */}
               <legend>Quelle formule vous intéresse ?</legend>
@@ -118,13 +146,18 @@ export default function Contact() {
                   (<Link to="/mentions-legales#confidentialite">politique de confidentialité</Link>).
                 </span>
               </label>
-              <button type="submit" className="bouton bouton--principal formulaire__envoyer">
-                Envoyer
+              <button type="submit" className="bouton bouton--principal formulaire__envoyer" disabled={envoi}>
+                {envoi ? 'Envoi…' : 'Envoyer'}
                 <svg aria-hidden="true" viewBox="0 0 256 256" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M72 184 184 72M88 72h96v96" />
                 </svg>
               </button>
             </div>
+            {erreur && (
+              <p className="formulaire__erreur pleine" role="alert">
+                {erreur}<a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
+              </p>
+            )}
           </form>
         )}
       </div>
