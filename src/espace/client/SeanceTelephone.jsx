@@ -228,6 +228,9 @@ function allureCalculee(bloc, r) {
   return a === '–' ? {} : { allure: a.replace(' /km', '') }
 }
 
+// « 90 » → « 90 s », « 2 min » reste « 2 min »
+const reposLisible = (v) => { const t = String(v ?? '').trim(); return /^\d+$/.test(t) ? `${t} s` : t }
+
 // ---------- EMOM, AMRAP, TABATA, HIIT, Continu, Intervalles ----------
 
 const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours de :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
@@ -240,6 +243,7 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture }) {
       <div className="ec-st-noir">
         <span>{resumeFormat(bloc)}</span>
         {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
+        {String(bloc.reposFin ?? '').trim() && <p className="ec-st-noir__repos">Puis repos {reposLisible(bloc.reposFin)} avant le bloc suivant</p>}
       </div>
       <ul className="ec-st-exos">
         {els.map((el, k) => (

@@ -215,6 +215,8 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                       {(b.format === 'emom' || b.format === 'amrap') && (
                         <Champ id={`bloc-${b.id}-duree`} label="Durée (min)" mode="numeric" valeur={b.duree} changer={(v) => majBloc(bi, 'duree', v)} />
                       )}
+                      {/* repos avant d'enchaîner le bloc suivant (Marie, 25 novembre 2026), comme le repos des séries en Renforcement */}
+                      <Champ id={`bloc-${b.id}-reposfin`} label="Repos après le bloc" valeur={b.reposFin} changer={(v) => majBloc(bi, 'reposFin', v)} indice="ex. 2 min" />
                       {(b.format === 'tabata' || b.format === 'hiit') && (
                         <>
                           <Champ id={`bloc-${b.id}-travail`} label="Travail (s)" mode="numeric" valeur={b.travail} changer={(v) => majBloc(bi, 'travail', v)} />

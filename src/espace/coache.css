@@ -2119,3 +2119,31 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
   .ec-prog2__courbe .courbe-zone, .ec-prog2__courbe .client-courbe__tete { max-width: none; }
 }
 @media (min-width: 900px) { .ec-prog2__courbe .courbe-zone { max-width: 520px; } }
+
+/* Ma progression, choix de Marie (25 novembre 2026) : carte noire en haut (A), charges en liste avec petites courbes (B) */
+.ec-prog-noire { display: grid; gap: 4px; padding: 20px; border-radius: 24px; background: var(--ec-encre); color: #fff; }
+.ec-prog-noire p { margin: 0; }
+.ec-prog-noire__lab { font: 800 11.5px/1.2 var(--font-sans); letter-spacing: .09em; text-transform: uppercase; color: var(--ec-jaune, #f2c230); }
+.ec-prog-noire__grand { font: 900 48px/1 var(--font-sans); letter-spacing: -2px; margin-top: 4px !important; }
+.ec-prog-noire__grand small { margin-left: 6px; font: 700 19px/1 var(--font-sans); letter-spacing: 0; color: #bdb7ad; }
+.ec-prog-noire__barre { display: block; height: 8px; margin: 12px 0 14px; border-radius: 9px; background: #3a3836; overflow: hidden; }
+.ec-prog-noire__barre span { display: block; height: 100%; border-radius: 9px; background: var(--ec-jaune, #f2c230); }
+.ec-prog-noire__duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ec-prog-noire__duo p { padding: 12px 14px; border-radius: 16px; background: #2a2826; }
+.ec-prog-noire__duo b { display: block; font: 900 21px/1.1 var(--font-sans); }
+.ec-prog-noire__duo span { display: block; margin-top: 3px; font: 600 12.5px/1.25 var(--font-sans); color: #bdb7ad; }
+.ec-ch { list-style: none; margin: 0; padding: 0; }
+.ec-ch > li + li { border-top: 1px solid #ece8e0; }
+.ec-ch__ligne { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 92px auto; gap: 12px; align-items: center; padding: 12px 0; border: 0; background: none; text-align: left; cursor: pointer; color: var(--ec-encre); }
+.ec-ch__nom b { display: block; font: 800 15px/1.25 var(--font-sans); }
+.ec-ch__nom small { display: block; margin-top: 2px; font: 600 12.5px/1.2 var(--font-sans); color: var(--ec-gris, #6b665f); }
+.ec-ch__mini { width: 92px; height: 30px; }
+.ec-ch__val { min-width: 58px; text-align: right; font: 900 16px/1.1 var(--font-sans); }
+.ec-ch__val em { display: block; margin-top: 2px; font: 800 11.5px/1 var(--font-sans); font-style: normal; color: var(--ec-gris, #6b665f); }
+.ec-ch__val em.est-plus { color: #2e9e5b; }
+.ec-ch__val em.est-moins { color: #c2370f; }
+.ec-ch__ligne:focus-visible { outline: 2px solid var(--ec-encre); outline-offset: 2px; border-radius: 8px; }
+.ec-ch > li.est-ouvert { padding-bottom: 12px; }
+.ec-ch__aide { margin: 4px 0 0; font: 600 12.5px/1.3 var(--font-sans); color: var(--ec-gris, #6b665f); }
+@media (min-width: 900px) { .ec-prog-noire { padding: 24px; } .ec-prog-noire__grand { font-size: 56px; } .ec-ch__ligne { grid-template-columns: minmax(0, 1fr) 160px auto; } .ec-ch__mini { width: 160px; } }
+.ec-st-noir__repos { color: var(--ec-jaune, #f2c230) !important; font-weight: 700 !important; }

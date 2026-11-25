@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { meilleuresCharges, regularite, seancesComptees } from '../donnees/calculs.js'
 import { bilanSeance, dateSeance } from '../donnees/progression.js'
-import { dateCourte, exercicesDe } from '../donnees/seances.js'
+import { exercicesDe } from '../donnees/seances.js'
 import { Link } from 'react-router-dom'
 import MesPhotos from './MesPhotos.jsx'
 import useReglages from '../coach/useReglages.js'
 import { nomType } from '../donnees/reglages.js'
 import MesMesures from './MesMesures.jsx'
 import { Courbe } from '../coach/FicheClient.jsx'
-import { Trophee } from './FinDeSeance.jsx'
 import { frNombre } from '../donnees/resume.js'
 
 const NB_POINTS = 8 // dernières séances montrées par exercice, comme dans les statistiques
@@ -72,44 +71,54 @@ function Regularite({ programme, faites }) {
 }
 
 // ---------- Mes charges ----------
-// Les records en pastilles, puis un seul graphique : celui de l'exercice choisi (25 novembre 2026, plus de liste de graphiques)
+// Proposition B (Marie, 25 novembre 2026) : une ligne par exercice avec son record, une petite courbe,
+// la dernière charge et le progrès depuis le début ; on touche une ligne pour voir la grande courbe.
+const num = (v) => parseFloat(String(v ?? '').replace(',', '.'))
+function Mini({ points }) {
+  const v = points.map((p) => num(p.charge)).filter((x) => !Number.isNaN(x))
+  if (v.length === 0) return <span className="ec-ch__mini" />
+  const min = Math.min(...v); const max = Math.max(...v); const plat = max === min
+  const xy = v.map((c, i) => [v.length === 1 ? 88 : 2 + (i * 86) / (v.length - 1), plat ? 15 : 26 - ((c - min) / (max - min)) * 22])
+  const [lx, ly] = xy[xy.length - 1]
+  return (
+    <svg className="ec-ch__mini" viewBox="0 0 92 30" aria-hidden="true">
+      <polyline points={xy.map((p) => p.join(',')).join(' ')} fill="none" stroke={plat ? '#bdb7ad' : '#ff4a1c'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      {(!plat || v.length === 1) && <circle cx={lx} cy={ly} r="3.2" fill={v.length === 1 ? '#bdb7ad' : '#ff4a1c'} />}
+    </svg>
+  )
+}
 function Charges({ programmes, seances, records }) {
   const { exoIdParElement, noms } = exercicesDe(programmes)
   const courbes = [...noms.entries()]
     .map(([exoId, nom]) => ({ exoId, nom, points: meilleuresCharges(seances, exoIdParElement, exoId) }))
     .filter((c) => c.points.length > 0)
     .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'))
-  const [choix, setChoix] = useState(null)
-  const courbe = courbes.find((c) => c.exoId === choix) ?? courbes[0]
+  const [ouvert, setOuvert] = useState(null)
   if (courbes.length === 0) return <p className="ec-vide">Vos charges apparaîtront ici dès votre première séance de force enregistrée.</p>
   return (
-    <>
-      {records.length > 0 && (
-        <section className="ec-prog2__bloc" aria-labelledby="titre-records">
-          <h2 id="titre-records" className="ec-prog2__lab"><Trophee />Mes records</h2>
-          <ul className="ec-prog2__records">
-            {records.map((r) => (
-              <li key={r.exoId}>
-                <span className="ec-prog2__rec-nom">{r.nom}</span>
-                <span className="ec-prog2__rec-val">{frNombre(r.charge)} kg × {frNombre(r.reps)}</span>
-                <span className="ec-prog2__rec-date">le {dateCourte(r.date)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-      <section className="ec-prog2__carte" aria-labelledby="titre-charges">
-        <h2 id="titre-charges" className="ec-prog2__lab">Mes charges</h2>
-        <div className="ec-prog2__exos" role="group" aria-label="Exercice">
-          {courbes.map((c) => (
-            <button key={c.exoId} type="button" className="ec-prog2__exo" aria-pressed={c.exoId === courbe.exoId} onClick={() => setChoix(c.exoId)}>{c.nom}</button>
-          ))}
-        </div>
-        <ul className="fiche-liste ec-charges ec-prog2__courbe">
-          <Courbe key={courbe.exoId} nom={courbe.nom} points={courbe.points.slice(-NB_POINTS)} />
-        </ul>
-      </section>
-    </>
+    <section className="ec-prog2__carte" aria-labelledby="titre-charges">
+      <h2 id="titre-charges" className="ec-prog2__lab">Mes charges</h2>
+      <ul className="ec-ch">
+        {courbes.map((c) => {
+          const pts = c.points.slice(-NB_POINTS)
+          const dernier = pts[pts.length - 1]
+          const ecart = Math.round((num(c.points[c.points.length - 1].charge) - num(c.points[0].charge)) * 10) / 10
+          const rec = records.find((r) => r.exoId === c.exoId)
+          const ouverte = ouvert === c.exoId
+          return (
+            <li key={c.exoId} className={ouverte ? 'est-ouvert' : ''}>
+              <button type="button" className="ec-ch__ligne" aria-expanded={ouverte} onClick={() => setOuvert(ouverte ? null : c.exoId)}>
+                <span className="ec-ch__nom"><b>{c.nom}</b>{rec && <small>record {frNombre(rec.charge)} kg × {frNombre(rec.reps)}</small>}</span>
+                <Mini points={pts} />
+                <span className="ec-ch__val">{frNombre(num(dernier.charge))} kg<em className={ecart > 0 ? 'est-plus' : ecart < 0 ? 'est-moins' : ''}>{ecart === 0 ? '=' : frNombre(ecart, true)}</em></span>
+              </button>
+              {ouverte && <ul className="fiche-liste ec-charges ec-prog2__courbe"><Courbe nom={c.nom} points={pts} /></ul>}
+            </li>
+          )
+        })}
+      </ul>
+      <p className="ec-ch__aide">Touchez un exercice pour voir sa courbe.</p>
+    </section>
   )
 }
 
