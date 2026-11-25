@@ -88,10 +88,7 @@ function Coche() {
 
 // Écran épuré (14 novembre 2026, demande de Thomas) : coche, titre, une phrase, le record s'il y en a un, un seul bouton.
 // La prochaine séance est sur le tableau de bord ; « Revoir ma séance » reste en petit lien.
-function Bravo({ suite, records, revoir }) {
-  const phrase = !suite || !suite.prevues ? 'Marie la verra dans votre suivi.'
-    : suite.faites === suite.prevues ? 'Programme terminé, bravo !'
-      : `${suite.faites} séance${suite.faites > 1 ? 's' : ''} sur ${suite.prevues}, bravo !`
+function Bravo({ records, revoir }) {
   return (
     <aside className="ec-fin ec-bravo" aria-labelledby="titre-bravo">
       <span className="ec-bravo__rond" aria-hidden="true">
@@ -99,7 +96,7 @@ function Bravo({ suite, records, revoir }) {
       </span>
       <h2 id="titre-bravo" className="ec-bravo__titre">Séance enregistrée</h2>
       <p role="status" className="sr-only">Séance enregistrée.</p>
-      <p className="ec-texte ec-gris">{phrase}</p>
+      {/* plus de « 5 séances sur 12, bravo ! » (Marie, 25 novembre 2026) */}
       {records.length > 0 && (
         <ul className="ec-records ec-records--court">
           {records.slice(0, 2).map((r) => (

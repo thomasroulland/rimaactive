@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { listeSeances, fusionnerNotes, preRemplir, etatAccueil, aujourdhuiIso, pasCommence, jourCourt } from '../donnees/calculs.js'
 import { avancement } from '../donnees/progression.js'
 import { nomBloc } from '../donnees/programme.js'
-import { allureVitesse, estEnSeries, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
+import { allureVitesse, dateLongue, estEnSeries, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
 import { nouveauxRecords } from '../donnees/records.js'
 import { corrigerSeance, effacerMaSeance, noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
@@ -129,7 +129,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     : dejaFaite && (
     edition
       ? <div className="ec-correction est-active"><span><b>Vous corrigez cette séance.</b> Chaque changement est enregistré.</span><button type="button" className="ec-correction__bouton" onClick={finirCorrection}>J’ai fini</button></div>
-      : <div className="ec-correction"><span><b>Séance faite.</b> Une erreur dans ce que vous avez noté ?</span><button type="button" className="ec-correction__bouton" onClick={() => { setEdition(true); setEtape(0) }} aria-label="Modifier ma séance">Modifier</button></div>
+      : <div className="ec-correction"><span>{/* phrase plus courte (Marie, 25 novembre 2026) */}<b>Séance faite{fait?.date ? ` le ${dateLongue(fait.date)}` : ''}.</b></span><button type="button" className="ec-correction__bouton" onClick={() => { setEdition(true); setEtape(0) }} aria-label="Modifier ma séance">Modifier</button></div>
   )
   const retour = <>{lienRetour}{barreCorrection}</>
 
@@ -317,7 +317,11 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                   : <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={false} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
                       suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />}
                 {nb > 0 && (
-                  <button type="button" className="ec-lien" onClick={() => aller(nb - 1)}>← Revenir : {nomBloc(listeBlocs[nb - 1])}</button>
+                  // retour au dernier bloc : un bouton pilule avec une flèche, comme « Plan » (Marie, 25 novembre 2026)
+                  <button type="button" className="ec-retour-bloc" onClick={() => aller(nb - 1)} aria-label={`Revenir au bloc ${nomBloc(listeBlocs[nb - 1])}`}>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+                    {nomBloc(listeBlocs[nb - 1])}
+                  </button>
                 )}
               </>
             )}

@@ -1,51 +1,50 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 import { meilleuresCharges, regularite, seancesComptees } from '../donnees/calculs.js'
 import { bilanSeance, dateSeance } from '../donnees/progression.js'
-import { exercicesDe } from '../donnees/seances.js'
+import { dateCourte, exercicesDe } from '../donnees/seances.js'
 import { Link } from 'react-router-dom'
-import { basculerDetails } from '../../components/basculerDetails.js'
 import MesPhotos from './MesPhotos.jsx'
 import useReglages from '../coach/useReglages.js'
 import { nomType } from '../donnees/reglages.js'
 import MesMesures from './MesMesures.jsx'
 import { Courbe } from '../coach/FicheClient.jsx'
+import { Trophee } from './FinDeSeance.jsx'
+import { frNombre } from '../donnees/resume.js'
 
 const NB_POINTS = 8 // dernières séances montrées par exercice, comme dans les statistiques
 
-// Onglet « Ma progression » : cinq rubriques repliables, ouvertes par défaut.
-export default function MaProgression({ uid, programme, programmes, faites, seances }) {
-  return (
-    <div className="ec-rubriques">
-      <Rubrique id="titre-regularite" titre="Ma régularité">
-        <Regularite programme={programme} faites={faites} />
-      </Rubrique>
-      <Rubrique id="titre-charges" titre="Mes charges">
-        <Charges programmes={programmes} seances={seances} />
-      </Rubrique>
-      <Rubrique id="titre-historique" titre="Mes séances">
-        <Historique programmes={programmes} seances={seances} />
-      </Rubrique>
-      <Rubrique id="titre-photos" titre="Mes photos">
-        <MesPhotos uid={uid} />
-      </Rubrique>
-      <Rubrique id="titre-mesures" titre="Mon poids et mes mensurations">
-        <MesMesures uid={uid} />
-      </Rubrique>
-    </div>
-  )
-}
+// Ma progression en onglets (Marie, 25 novembre 2026) : Charges, Séances (régularité et historique), Mesures, Photos.
+// Même style que Mon programme : une rangée de pastilles, puis des cartes blanches.
+const ONGLETS = [['charges', 'Charges'], ['seances', 'Séances'], ['mesures', 'Mesures'], ['photos', 'Photos']]
 
-// Rubrique repliable : <details> (clavier et lecteurs d'écran inchangés), qui s'ouvre et se ferme en glissant
-// (même animation que les questions de l'accueil, voir components/basculerDetails.js).
-function Rubrique({ id, titre, children }) {
-  const racine = useRef(null)
+export default function MaProgression({ uid, programme, programmes, faites, seances, records = [] }) {
+  const [onglet, setOnglet] = useState('charges')
   return (
-    <details className="ec-repli" open ref={racine}>
-      <summary onClick={(e) => basculerDetails(e, racine.current?.querySelector('.ec-repli__zone'))}><h2 id={id} className="ec-h2">{titre}</h2></summary>
-      <div className="ec-repli__zone">
-        <div className="ec-repli__interieur"><div className="ec-pile">{children}</div></div>
+    <div className="ec-prog2">
+      <div className="ec-prog2__onglets" role="tablist" aria-label="Ma progression">
+        {ONGLETS.map(([id, nom]) => (
+          <button key={id} type="button" role="tab" id={`onglet-${id}`} aria-selected={onglet === id} aria-controls={`panneau-${id}`}
+            className="ec-prog2__onglet" onClick={() => setOnglet(id)}>{nom}</button>
+        ))}
       </div>
-    </details>
+      <div className="ec-prog2__panneau" role="tabpanel" id={`panneau-${onglet}`} aria-labelledby={`onglet-${onglet}`}>
+        {onglet === 'charges' && <Charges programmes={programmes} seances={seances} records={records} />}
+        {onglet === 'seances' && (
+          <>
+            <section className="ec-prog2__carte" aria-labelledby="titre-regularite">
+              <h2 id="titre-regularite" className="ec-prog2__lab">Ma régularité</h2>
+              <Regularite programme={programme} faites={faites} />
+            </section>
+            <section aria-labelledby="titre-historique" className="ec-prog2__bloc">
+              <h2 id="titre-historique" className="ec-prog2__lab">Mes séances</h2>
+              <Historique programmes={programmes} seances={seances} />
+            </section>
+          </>
+        )}
+        {onglet === 'mesures' && <section className="ec-prog2__carte" aria-label="Mon poids et mes mensurations"><MesMesures uid={uid} /></section>}
+        {onglet === 'photos' && <section className="ec-prog2__carte" aria-label="Mes photos"><MesPhotos uid={uid} /></section>}
+      </div>
+    </div>
   )
 }
 
@@ -73,21 +72,43 @@ function Regularite({ programme, faites }) {
 }
 
 // ---------- Mes charges ----------
-// Les mêmes graphiques que dans les statistiques de Marie (courbe, bulle au survol, au doigt et au clavier).
-function Charges({ programmes, seances }) {
+// Les records en pastilles, puis un seul graphique : celui de l'exercice choisi (25 novembre 2026, plus de liste de graphiques)
+function Charges({ programmes, seances, records }) {
   const { exoIdParElement, noms } = exercicesDe(programmes)
   const courbes = [...noms.entries()]
     .map(([exoId, nom]) => ({ exoId, nom, points: meilleuresCharges(seances, exoIdParElement, exoId) }))
     .filter((c) => c.points.length > 0)
     .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'))
+  const [choix, setChoix] = useState(null)
+  const courbe = courbes.find((c) => c.exoId === choix) ?? courbes[0]
+  if (courbes.length === 0) return <p className="ec-vide">Vos charges apparaîtront ici dès votre première séance de force enregistrée.</p>
   return (
     <>
-      {courbes.length === 0 && <p className="ec-vide">Vos charges apparaîtront ici dès votre première séance de force enregistrée.</p>}
-      {courbes.length > 0 && (
-        <ul className="fiche-liste ec-charges">
-          {courbes.map((c) => <Courbe key={c.exoId} nom={c.nom} points={c.points.slice(-NB_POINTS)} />)}
-        </ul>
+      {records.length > 0 && (
+        <section className="ec-prog2__bloc" aria-labelledby="titre-records">
+          <h2 id="titre-records" className="ec-prog2__lab"><Trophee />Mes records</h2>
+          <ul className="ec-prog2__records">
+            {records.map((r) => (
+              <li key={r.exoId}>
+                <span className="ec-prog2__rec-nom">{r.nom}</span>
+                <span className="ec-prog2__rec-val">{frNombre(r.charge)} kg × {frNombre(r.reps)}</span>
+                <span className="ec-prog2__rec-date">le {dateCourte(r.date)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
+      <section className="ec-prog2__carte" aria-labelledby="titre-charges">
+        <h2 id="titre-charges" className="ec-prog2__lab">Mes charges</h2>
+        <div className="ec-prog2__exos" role="group" aria-label="Exercice">
+          {courbes.map((c) => (
+            <button key={c.exoId} type="button" className="ec-prog2__exo" aria-pressed={c.exoId === courbe.exoId} onClick={() => setChoix(c.exoId)}>{c.nom}</button>
+          ))}
+        </div>
+        <ul className="fiche-liste ec-charges ec-prog2__courbe">
+          <Courbe key={courbe.exoId} nom={courbe.nom} points={courbe.points.slice(-NB_POINTS)} />
+        </ul>
+      </section>
     </>
   )
 }

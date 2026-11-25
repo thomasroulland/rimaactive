@@ -154,7 +154,8 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           const prevu = prescription.replace(' · charge libre', '')
           // tempo, RPE et repos à suivre, seulement s'ils sont remplis ; le commentaire de Marie se lit en touchant la photo,
           // un petit picto en haut à droite le signale (Marie, 23 novembre 2026)
-          const reperes = details.split(' · ').filter(Boolean).map((d) => (d.startsWith('Repos') && texteRepos(el.repos) ? `Repos ${texteRepos(el.repos)}` : d))
+          // plus de pastille Repos (Marie, 25 novembre 2026) : seulement tempo et RPE
+          const reperes = details.split(' · ').filter((d) => d && !d.startsWith('Repos'))
           const commentaire = Boolean((el.commentaire ?? '').trim())
           return (
             <button key={el.id} type="button" className="ec-st-photo" onClick={() => voirConsignes(el)} aria-label={`Voir les photos et consignes : ${el.nom}${commentaire ? ' (un mot de Marie)' : ''}`}>

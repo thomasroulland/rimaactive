@@ -3,11 +3,10 @@ import { ecouterMesMesures } from '../depots.js'
 import { avancement } from '../donnees/progression.js'
 import { ecartPoids, frNombre, meilleurProgres } from '../donnees/resume.js'
 import MaProgression from './MaProgression.jsx'
-import { Trophee } from './FinDeSeance.jsx'
 import { records } from '../donnees/records.js'
-import { dateCourte, exercicesDe } from '../donnees/seances.js'
+import { exercicesDe } from '../donnees/seances.js'
 
-// Page « Ma progression » (dans la barre du haut, 13 novembre 2026) : trois chiffres clés, puis les rubriques repliables.
+// Page « Ma progression » : trois chiffres clés, puis les onglets Charges, Séances, Mesures, Photos (refaite le 25 novembre 2026).
 export default function PageProgression({ uid, profil, programme, programmes, faites, seances }) {
   const [mesures, setMesures] = useState(null)
   useEffect(() => ecouterMesMesures(uid, setMesures, () => setMesures([])), [uid])
@@ -18,9 +17,8 @@ export default function PageProgression({ uid, profil, programme, programmes, fa
   const recs = records(seances, exoIdParElement, noms)
 
   return (
-    <div className="ec-page ec-progression">
+    <div className="ec-page ec-progression ec-progression--v2">
       <header className="ec-progression__tete">
-        {profil?.prenom && <p className="ec-surtitre">{profil.prenom} {profil.nom}</p>}
         <h1 className="ec-h1">Ma progression</h1>
       </header>
       <ul className="ec-chiffres" aria-label="Chiffres clés">
@@ -40,21 +38,7 @@ export default function PageProgression({ uid, profil, programme, programmes, fa
             : <><span className="ec-chiffre__val ec-chiffre__val--vide">—</span><span className="ec-chiffre__lib">ajoutez deux pesées pour voir l’évolution</span></>}
         </li>
       </ul>
-      {recs.length > 0 && (
-        <section className="ec-records ec-records--page" aria-labelledby="titre-records">
-          <h2 id="titre-records" className="ec-surtitre ec-records__titre"><Trophee />Mes records</h2>
-          <ul className="ec-records__liste">
-            {recs.map((r) => (
-              <li key={r.exoId}>
-                <span className="ec-records__nom">{r.nom}</span>
-                <span className="ec-records__val">{frNombre(r.charge)} kg × {frNombre(r.reps)}</span>
-                <span className="ec-records__avant">le {dateCourte(r.date)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-      <MaProgression uid={uid} programme={programme} programmes={programmes} faites={faites} seances={seances} />
+      <MaProgression uid={uid} programme={programme} programmes={programmes} faites={faites} seances={seances} records={recs} />
     </div>
   )
 }
