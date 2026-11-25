@@ -1942,6 +1942,18 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-st .ec-s2-planliste button { min-height: 40px; padding: 8px 12px; font-size: 13.5px; }
 .ec-st .ec-s2-planliste button span:last-child { font-size: 12px; font-weight: 700; color: var(--ec-gris, #6b665f); }
 
+/* Chronomètre de repos (24 novembre 2026) */
+.ec-st-repos { display: grid; justify-items: center; gap: 10px; padding: 12px 12px 14px; }
+.ec-st-repos__titre { justify-self: start; margin: 0; padding-left: 2px; font: 800 10.5px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ec-gris, #6b665f); }
+.ec-st-repos__cadran { position: relative; width: 210px; height: 210px; touch-action: none; user-select: none; -webkit-user-select: none; }
+.ec-st-repos__cadran.est-reglable { cursor: grab; }
+.ec-st-repos__cadran svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ec-st-repos__temps { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
+.ec-st-repos__temps b { font: 800 42px/1 var(--font-sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--ec-encre); }
+.ec-st-repos__temps small { margin-top: 6px; font: 700 12px/1 var(--font-sans); color: var(--ec-gris, #6b665f); }
+.ec-st-repos__boutons { display: flex; gap: 8px; width: 100%; }
+.ec-st-repos__boutons .ec-st-pas { flex: 1; min-height: 44px; }
+.ec-st-reparti { margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--ec-encre); color: var(--ec-jaune, #f2c230); font: 800 12px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; }
 /* Encart sous la photo un peu plus grand : nom de l'exercice et prescription (Marie, 23 novembre 2026) */
 .ec-st-photo__nom { padding: 9px 11px 11px; font-size: 14.5px; }
 .ec-st-photo__nom small { font-size: 12px; margin-top: 3px; }

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { champsResultat, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
+import { champsResultat, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMain } from '../donnees/banque.js'
+import { installee } from '../../components/installation.js'
 
 // Séance sur téléphone (maquette « B » validée par Marie, 22 novembre 2026) :
 // - séries classiques : une carte par exercice, une ligne par série (répétitions, kilos, ✓) ;
@@ -103,6 +104,7 @@ function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir, lecture }
 function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsignes, ouvrir, actif, lecture }) {
   const [alerte, setAlerte] = useState('')
   const [ouverte, setOuverte] = useState(-1) // série faite rouverte pour la corriger
+  const [repos, setRepos] = useState(null) // chronomètre entre deux séries : { avant: n° de la série suivante } ; 'fini' quand il a sonné
   const nb = Math.max(0, ...groupe.map(({ el }) => lignes(el).length))
   const serieFaite = (t) => groupe.every(({ el }) => !lignes(el)[t] || lignes(el)[t].fait)
   const actuelle = Array.from({ length: nb }, (_, t) => t).find((t) => !serieFaite(t)) ?? -1
@@ -117,7 +119,8 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
     if (manque) { setAlerte(`${manque.el.id}-${t}`); document.getElementById(`st-${manque.el.id}-${t}`)?.focus(); return }
     setAlerte('')
     groupe.forEach(({ el }) => { if (lignes(el)[t] && !lignes(el)[t].fait) actions.terminerSerie(el, t) })
-    if (Array.from({ length: nb }, (_, k) => k).every((k) => k === t || serieFaite(k))) ouvrir(fin === 'exo' ? { type: 'exo', id: noteId } : { type: 'superset' })
+    if (Array.from({ length: nb }, (_, k) => k).every((k) => k === t || serieFaite(k))) { setRepos(null); ouvrir(fin === 'exo' ? { type: 'exo', id: noteId } : { type: 'superset' }) }
+    else setRepos({ avant: t + 2 }) // repos avant la série suivante (Marie, 24 novembre 2026)
   }
   const decocher = (t) => { groupe.forEach(({ el }) => { if (lignes(el)[t]?.fait) actions.decocherSerie(el, t) }); setOuverte(-1) }
   const lignesSerie = (t, enCours) => groupe.map(({ el, code }, k) => {
@@ -198,7 +201,11 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           </button>
         )
       ))}
-      {actif && actuelle >= 0 && (
+      {actif && actuelle >= 0 && repos && repos !== 'fini' && (
+        <ChronoRepos avant={repos.avant} prevu={[...groupe].reverse().map(({ el }) => secondesRepos(el.repos)).find((v) => v > 0) ?? null} finir={(sonne) => setRepos(sonne ? 'fini' : null)} />
+      )}
+      {actif && actuelle >= 0 && repos === 'fini' && <p className="ec-st-reparti" role="status">C’est reparti&nbsp;!</p>}
+      {actif && actuelle >= 0 && (!repos || repos === 'fini') && (
         <section className="ec-st-carte ec-st-serie" aria-label={`Série ${actuelle + 1} sur ${nb}`}>
           <p className="ec-st-serie__tete"><span>Série {actuelle + 1} sur {nb}</span></p>
           {entete}
@@ -218,6 +225,123 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
         </div>
       )}
     </div>
+  )
+}
+
+// ---------- Chronomètre de repos entre deux séries (Marie, 24 novembre 2026) ----------
+// Une horloge ronde : on glisse le rond pour régler la durée (de 15 s en 15 s, jusqu'à 10 min), puis « Lancer ».
+// Par défaut : le repos écrit par Marie sur l'exercice ; sinon 3 min la première fois, ensuite la durée choisie la fois d'avant.
+// À la fin : une vibration et un bip, dans l'application installée seulement.
+
+const CLE_REPOS = 'rima-repos-duree'
+const MAX_REPOS = 600
+const PAS_REPOS = 15
+const lireRepos = () => { try { const v = parseInt(localStorage.getItem(CLE_REPOS), 10); return v >= PAS_REPOS && v <= MAX_REPOS ? v : 180 } catch { return 180 } }
+const garderRepos = (v) => { try { localStorage.setItem(CLE_REPOS, String(v)) } catch { /* rien */ } }
+const mmss = (s) => { const n = Math.max(0, Math.ceil(s)); return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}` }
+
+// fin du repos, dans l'application installée seulement (pas dans le navigateur) : une vibration (Android) et un bip
+// (Marie, 24 novembre 2026). Le son est préparé au moment de « Lancer » : iPhone ne joue un son qu'après un toucher.
+let sonRepos = null
+function preparerSon() {
+  if (!installee()) return
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext
+    if (!Ctx) return
+    if (!sonRepos || sonRepos.state === 'closed') sonRepos = new Ctx()
+    sonRepos.resume?.()
+  } catch { /* rien */ }
+}
+function alerter() {
+  if (!installee()) return
+  try { navigator.vibrate?.([300, 120, 300]) } catch { /* rien */ }
+  try {
+    const ctx = sonRepos
+    if (!ctx) return
+    ctx.resume?.()
+    ;[0, 0.3, 0.6].forEach((t) => {
+      const o = ctx.createOscillator(), g = ctx.createGain()
+      o.type = 'sine'; o.frequency.value = 880; o.connect(g); g.connect(ctx.destination)
+      const d = ctx.currentTime + t
+      g.gain.setValueAtTime(0.0001, d)
+      g.gain.exponentialRampToValueAtTime(0.5, d + 0.02)
+      g.gain.exponentialRampToValueAtTime(0.0001, d + 0.22)
+      o.start(d); o.stop(d + 0.25)
+    })
+  } catch { /* rien */ }
+}
+
+function ChronoRepos({ avant, prevu, finir }) {
+  const [duree, setDuree] = useState(() => (prevu ? Math.min(MAX_REPOS, Math.max(PAS_REPOS, Math.round(prevu / PAS_REPOS) * PAS_REPOS)) : lireRepos()))
+  const [fin, setFin] = useState(null) // heure de fin quand le repos est lancé
+  const [, battre] = useState(0)
+  const cadran = useRef(null)
+  const glisse = useRef(false)
+  useEffect(() => {
+    if (!fin) return undefined
+    const id = setInterval(() => {
+      battre((n) => n + 1)
+      if (Date.now() >= fin) { clearInterval(id); alerter(); finir(true) }
+    }, 250)
+    return () => clearInterval(id)
+  }, [fin]) // eslint-disable-line react-hooks/exhaustive-deps
+  const reste = fin ? (fin - Date.now()) / 1000 : duree
+  const total = fin ? duree : MAX_REPOS
+  const frac = Math.max(0, Math.min(1, reste / total))
+  const regler = (ev) => {
+    const b = cadran.current?.getBoundingClientRect()
+    if (!b) return
+    const x = ev.clientX - (b.left + b.width / 2), y = ev.clientY - (b.top + b.height / 2)
+    let a = Math.atan2(x, -y) / (2 * Math.PI)
+    if (a < 0) a += 1
+    const v = Math.min(MAX_REPOS, Math.max(PAS_REPOS, Math.round((a * MAX_REPOS) / PAS_REPOS) * PAS_REPOS))
+    setDuree(v)
+  }
+  const lancer = () => { preparerSon(); garderRepos(duree); setFin(Date.now() + duree * 1000) }
+  const ajuster = (d) => setFin((f) => Math.max(Date.now() + 1000, f + d * 1000))
+  const R = 92, C = 110
+  const ang = frac * 2 * Math.PI - Math.PI / 2
+  const px = C + R * Math.cos(ang), py = C + R * Math.sin(ang)
+  const arc = frac >= 0.9999
+    ? `M${C} ${C - R} A${R} ${R} 0 1 1 ${C - 0.01} ${C - R}`
+    : `M${C} ${C - R} A${R} ${R} 0 ${frac > 0.5 ? 1 : 0} 1 ${px.toFixed(1)} ${py.toFixed(1)}`
+  return (
+    <section className="ec-st-carte ec-st-repos" aria-label={`Repos avant la série ${avant}`}>
+      <p className="ec-st-repos__titre">Repos avant la série {avant}</p>
+      <div ref={cadran} className={`ec-st-repos__cadran${fin ? '' : ' est-reglable'}`}
+        onPointerDown={(ev) => { if (fin) return; glisse.current = true; ev.currentTarget.setPointerCapture?.(ev.pointerId); regler(ev) }}
+        onPointerMove={(ev) => { if (glisse.current) regler(ev) }}
+        onPointerUp={() => { glisse.current = false }} onPointerCancel={() => { glisse.current = false }}>
+        <svg viewBox="0 0 220 220" aria-hidden="true">
+          {Array.from({ length: 60 }, (_, i) => {
+            const a = (i / 60) * 2 * Math.PI - Math.PI / 2, r2 = i % 5 ? 101 : 97
+            return <line key={i} x1={C + 105 * Math.cos(a)} y1={C + 105 * Math.sin(a)} x2={C + r2 * Math.cos(a)} y2={C + r2 * Math.sin(a)} stroke="#cfc9be" strokeWidth={i % 5 ? 1 : 2} />
+          })}
+          <circle cx={C} cy={C} r={R} fill="none" stroke="#efebe4" strokeWidth="14" />
+          {frac > 0 && <path d={arc} fill="none" stroke={fin ? 'var(--ec-vermillon, #ff4a1c)' : 'var(--ec-jaune, #f2c230)'} strokeWidth="14" strokeLinecap="round" />}
+          {!fin && <circle cx={px} cy={py} r="13" fill="#fff" stroke="#161514" strokeWidth="3" />}
+        </svg>
+        <div className="ec-st-repos__temps" aria-live={fin ? 'off' : 'polite'}>
+          <b>{mmss(reste)}</b>
+          <small>{fin ? `sur ${mmss(duree)}` : 'glissez pour régler'}</small>
+        </div>
+        {!fin && (
+          <input className="sr-only" type="range" min={PAS_REPOS} max={MAX_REPOS} step={PAS_REPOS} value={duree} aria-label="Durée du repos en secondes" onChange={(e) => setDuree(Number(e.target.value))} />
+        )}
+      </div>
+      {fin ? (
+        <div className="ec-st-repos__boutons">
+          <button type="button" className="ec-st-pas" onClick={() => ajuster(-15)}>− 15 s</button>
+          <button type="button" className="ec-st-pas" onClick={() => ajuster(15)}>+ 15 s</button>
+          <button type="button" className="ec-st-pas" onClick={() => finir(false)}>Passer</button>
+        </div>
+      ) : (
+        <div className="ec-st-repos__boutons">
+          <button type="button" className="ec-st-pas" onClick={() => finir(false)}>Passer</button>
+          <button type="button" className="ec-st-pas est-jaune" onClick={lancer}>Lancer ▶</button>
+        </div>
+      )}
+    </section>
   )
 }
 
