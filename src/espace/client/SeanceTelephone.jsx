@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { champsResultat, enDuree, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
+import { champsResultat, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMain } from '../donnees/banque.js'
 
 // Séance sur téléphone (maquette « B » validée par Marie, 22 novembre 2026) :
@@ -80,7 +80,7 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
 // « 10 × 12 kg », « 45 s », « 10 » : ce que le coaché a noté pour une série
 function texteFait(el, l) {
   if (!l) return ''
-  const mesure = enDuree(el) ? texteDuree(l.duree || l.reps) : String(l.reps ?? '').trim()
+  const mesure = enDuree(el) ? texteDuree(l.duree || l.reps, el) : String(l.reps ?? '').trim()
   const charge = String(l.charge ?? '').trim()
   return [mesure, charge && `${fr(charge)} kg`].filter(Boolean).join(' × ')
 }
@@ -131,7 +131,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
         <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{code}</span>
         <span className="ec-st-tl__nom">{el.nom}{texteRepos(el.repos) && <small>repos {texteRepos(el.repos)}</small>}</span>
         <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
-          aria-label={`${el.nom}, série ${t + 1}, ${duree ? 'durée' : 'répétitions faites'}`} value={l[cle] ?? ''} placeholder={precedente?.[cle] || ''}
+          aria-label={`${el.nom}, série ${t + 1}, ${duree ? nomMesure(el).toLowerCase() : 'répétitions faites'}`} value={l[cle] ?? ''} placeholder={precedente?.[cle] || (duree ? (nomMesure(el) === 'Distance' ? 'm' : 's') : '')}
           onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
         {!sansCharge && (duree ? <span className="ec-st-champ est-neutre" aria-hidden="true">–</span> : (
           <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${t + 1}, kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
@@ -142,7 +142,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
   })
   const entete = (
     <div className={`ec-st-tl ec-st-tl--tete${sansCharge ? ' sans-charge' : ''}`} aria-hidden="true">
-      <span /><span /><span>{groupe.some(({ el }) => !enDuree(el)) ? 'Reps' : 'Durée'}</span>{!sansCharge && <span>{parMain ? 'Kg / main' : 'Kg'}</span>}
+      <span /><span /><span>{groupe.some(({ el }) => !enDuree(el)) ? 'Reps' : nomMesure(groupe[0].el)}</span>{!sansCharge && <span>{parMain ? 'Kg / main' : 'Kg'}</span>}
     </div>
   )
   return (

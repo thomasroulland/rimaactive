@@ -68,7 +68,7 @@ export function resumeFormat(bloc) {
 export function prescription(element, enSeries = true) {
   const e = element ?? {}
   const parties = []
-  const mesure = enDuree(e) ? texteDuree(e.reps) : e.reps
+  const mesure = enDuree(e) ? texteDuree(e.reps, e) : e.reps
   if (enSeries && e.series && e.reps) parties.push(`${e.series} × ${mesure}`)
   else if (enSeries && e.series) parties.push(`${e.series} séries`)
   else if (e.reps) parties.push(fr(mesure))
@@ -207,12 +207,16 @@ export function exercicesDe(programmes) {
 }
 
 // Durée saisie (« 45 » → « 45 s », « 1:30 » ou « 2 min » restent tels quels) ; vide si rien
-export function texteDuree(v) {
+// `element` (facultatif) : un exercice qui se mesure en distance affiche des mètres au lieu de secondes
+export function texteDuree(v, element) {
   const t = String(v ?? '').trim()
-  return /^\d+([.,]\d+)?$/.test(t) ? `${t} s` : t
+  return /^\d+([.,]\d+)?$/.test(t) ? `${t} ${enDistance(element) ? 'm' : 's'}` : t
 }
-// Un exercice se mesure en durée (gainage…) ou en répétitions (par défaut)
-export const enDuree = (element) => element?.mesure === 'duree'
+// Un exercice se mesure en répétitions (par défaut), en durée (gainage…) ou en distance (25 novembre 2026).
+// La distance suit le même chemin que la durée (valeur notée dans `duree`), seule l'unité change.
+export const enDistance = (element) => element?.mesure === 'distance'
+export const enDuree = (element) => element?.mesure === 'duree' || enDistance(element)
+export const nomMesure = (element) => (enDistance(element) ? 'Distance' : element?.mesure === 'duree' ? 'Durée' : 'Reps')
 
 // « 60 kg × 5 @8 » ; une série non cochée « Fait » par le client : « non faite »
 export function texteSerie(l) {
@@ -266,11 +270,11 @@ export function lignesExercice(element, enSeries = true) {
       : rempli(e.pct) ? `${fr(String(e.pct).trim())} % de 1RM` : ''
   if (!enSeries) {
     const reps = String(e.reps ?? '').trim()
-    const r = enDuree(e) ? texteDuree(reps) : /^\d+$/.test(reps) || estFourchette(reps) ? `${texteReps(reps)} reps` : reps
+    const r = enDuree(e) ? texteDuree(reps, e) : /^\d+$/.test(reps) || estFourchette(reps) ? `${texteReps(reps)} reps` : reps
     return { prescription: [r, charge].filter(Boolean).join(' · '), details: '' }
   }
   const n = String(e.series ?? '').trim()
-  const reps = enDuree(e) ? texteDuree(e.reps) : texteReps(e.reps)
+  const reps = enDuree(e) ? texteDuree(e.reps, e) : texteReps(e.reps)
   const volume = n && reps ? `${n} × ${reps}` : n ? `${n} séries` : reps ? (enDuree(e) ? reps : `${reps} reps`) : ''
   const details = [
     rempli(e.repos) && `Repos ${String(e.repos).trim()}`,

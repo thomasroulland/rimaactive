@@ -83,9 +83,9 @@ function Exercice({ element, code, bloc, enSeries, lignes, note, lecture, action
 
 // Tableau Série / Reps / Charge (kg) / RPE / Fait, puis ce qui suit (la note)
 export function TableauSeries({ base, nom, element, lignes, lecture, changer, enCours = -1, children }) {
-  const duree = element?.mesure === 'duree' // gainage… : on note une durée, pas des répétitions
+  const duree = element?.mesure === 'duree' || element?.mesure === 'distance' // gainage, course… : une durée ou une distance, pas des répétitions
   const cleMesure = duree ? 'duree' : 'reps'
-  const prevu = { reps: duree ? texteDuree(element?.reps) : String(element?.reps ?? ''), charge: fr(element?.charge ?? '') }
+  const prevu = { reps: duree ? texteDuree(element?.reps, element) : String(element?.reps ?? ''), charge: fr(element?.charge ?? '') }
   return (
     <div className="ec-series">
       <div className="ec-serie ec-serie--entete" aria-hidden="true">

@@ -122,7 +122,7 @@ export function casesExercice(el, lignes) {
   const duree = enDuree(el)
   const faites = (lignes ?? []).filter((l) => l && l.fait !== false)
   const cleMesure = duree ? 'duree' : 'reps'
-  const prevuMesure = duree ? texteDuree(el?.reps) : String(el?.reps ?? '').trim()
+  const prevuMesure = duree ? texteDuree(el?.reps, el) : String(el?.reps ?? '').trim()
   const faitMesure = valeurFaite(faites.map((l) => l[cleMesure]))
   const faitCharge = valeurFaite(faites.map((l) => l.charge))
   const prevuSeries = String(el?.series ?? '').trim()
@@ -140,12 +140,12 @@ export function casesExercice(el, lignes) {
 export function detailSeries(el, lignes) {
   const duree = enDuree(el)
   const total = Math.max(parseInt(String(el?.series ?? '').trim(), 10) || 0, (lignes ?? []).length)
-  const prevu = [duree ? texteDuree(el?.reps) : String(el?.reps ?? '').trim(), rempli(el?.charge) ? `${fr(String(el.charge).trim())} kg` : ''].filter(Boolean)
+  const prevu = [duree ? texteDuree(el?.reps, el) : String(el?.reps ?? '').trim(), rempli(el?.charge) ? `${fr(String(el.charge).trim())} kg` : ''].filter(Boolean)
   const prevuTexte = duree ? prevu.join(' · ') : (prevu.length === 2 ? `${prevu[0]} × ${prevu[1]}` : prevu[0] ?? '')
   return Array.from({ length: total }, (_, i) => {
     const l = lignes?.[i]
     if (!l || l.fait === false) return { n: i + 1, prevu: prevuTexte, fait: '', etat: 'non-faite' }
-    const m = duree ? texteDuree(l.duree) : String(l.reps ?? '').trim()
+    const m = duree ? texteDuree(l.duree, el) : String(l.reps ?? '').trim()
     const c = String(l.charge ?? '').trim()
     const fait = duree ? [m, c && `${fr(c)} kg`].filter(Boolean).join(' · ') : (m && c ? `${m} × ${fr(c)} kg` : c ? `${fr(c)} kg` : m ? `${m} rép.` : '')
     const e = [duree ? 'ok' : comparer(m, el?.reps), comparer(c, el?.charge)]

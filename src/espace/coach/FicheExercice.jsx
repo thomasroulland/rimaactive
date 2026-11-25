@@ -167,9 +167,10 @@ export default function FicheExercice() {
             </div>
             <div className="champ-groupe">
               <label htmlFor="exo-mesure">Se mesure en</label>
-              <select id="exo-mesure" className="champ" value={fiche.mesure === 'duree' ? 'duree' : 'reps'} onChange={(e) => setFiche((f) => ({ ...f, mesure: e.target.value }))}>
+              <select id="exo-mesure" className="champ" value={['duree', 'distance'].includes(fiche.mesure) ? fiche.mesure : 'reps'} onChange={(e) => setFiche((f) => ({ ...f, mesure: e.target.value }))}>
                 <option value="reps">Répétitions</option>
                 <option value="duree">Durée (gainage, planche…)</option>
+                <option value="distance">Distance (en mètres)</option>
               </select>
             </div>
             <div className="champ-groupe">

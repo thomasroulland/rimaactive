@@ -316,3 +316,16 @@ describe('blocs Continu et Intervalles (23 novembre 2026)', () => {
     expect(c({ format: 'continu' }).map((x) => x.cle)).toEqual(['temps', 'distance', 'allure', 'fc'])
   })
 })
+
+describe('exercice mesuré en distance (25 novembre 2026)', () => {
+  it('affiche des mètres et note la distance comme une durée', async () => {
+    const { enDuree, enDistance, nomMesure, texteDuree, lignesExercice } = await import('../../src/espace/donnees/seances.js')
+    const el = { mesure: 'distance', series: '4', reps: '400', charge: '' }
+    expect(enDistance(el)).toBe(true)
+    expect(enDuree(el)).toBe(true)
+    expect(nomMesure(el)).toBe('Distance')
+    expect(texteDuree('400', el)).toBe('400 m')
+    expect(texteDuree('45', { mesure: 'duree' })).toBe('45 s')
+    expect(lignesExercice(el, true).prescription).toContain('4 × 400 m')
+  })
+})

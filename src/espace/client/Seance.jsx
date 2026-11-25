@@ -43,7 +43,7 @@ function etatEnvoi(fait, enLigne) {
 
 // Lignes de séries : anciennes notes sans le champ « fait » comptées comme faites
 const avecFait = (lignes) => (lignes ?? []).map((l) => ({ ...l, fait: l.fait !== false }))
-const lignesVides = (element) => preRemplir(element).map(() => (element.mesure === 'duree' ? { charge: '', duree: '', rpe: '', fait: false } : { charge: '', reps: '', rpe: '', fait: false }))
+const lignesVides = (element) => preRemplir(element).map(() => (element.mesure === 'duree' || element.mesure === 'distance' ? { charge: '', duree: '', rpe: '', fait: false } : { charge: '', reps: '', rpe: '', fait: false }))
 const carteVide = () => ({ series: {}, notes: {}, blocs: {} })
 const CHAMPS_SORTIE = ['distance', 'temps', 'fc', 'zones']
 const ZONES = ['Z1', 'Z2', 'Z3', 'Z4', 'Z5']
@@ -129,7 +129,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     : dejaFaite && (
     edition
       ? <div className="ec-correction est-active"><span><b>Vous corrigez cette séance.</b> Chaque changement est enregistré.</span><button type="button" className="ec-correction__bouton" onClick={finirCorrection}>J’ai fini</button></div>
-      : <div className="ec-correction"><span><b>Séance terminée.</b> Une erreur dans ce que vous avez noté ?</span><button type="button" className="ec-correction__bouton" onClick={() => { setEdition(true); setEtape(0) }} aria-label="Modifier ma séance">Modifier</button></div>
+      : <div className="ec-correction"><span><b>Séance terminée.</b> Des changements à noter ?</span><button type="button" className="ec-correction__bouton" onClick={() => { setEdition(true); setEtape(0) }} aria-label="Modifier ma séance">Modifier</button></div>
   )
   const retour = <>{lienRetour}{barreCorrection}</>
 
@@ -202,7 +202,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
       if (j === i) return { ...l, fait: true }
       if (j === i + 1 && !l.fait) {
         const cur = lignes(el)[i] ?? {}
-        const cle = el.mesure === 'duree' ? 'duree' : 'reps'
+        const cle = el.mesure === 'duree' || el.mesure === 'distance' ? 'duree' : 'reps'
         return { ...l, [cle]: String(l[cle] ?? '').trim() ? l[cle] : (cur[cle] ?? ''), charge: String(l.charge ?? '').trim() ? l.charge : (cur.charge ?? '') }
       }
       return l

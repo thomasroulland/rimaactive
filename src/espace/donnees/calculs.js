@@ -78,7 +78,7 @@ export function preRemplir(element) {
   const n = parseInt(element.series, 10)
   const nb = n > 0 ? n : 1
   const prevu = element.reps ? String(element.reps) : ''
-  return Array.from({ length: nb }, () => (element.mesure === 'duree'
+  return Array.from({ length: nb }, () => (element.mesure === 'duree' || element.mesure === 'distance'
     ? { charge: element.charge ? String(element.charge) : '', duree: prevu, rpe: '' }
     : { charge: element.charge ? String(element.charge) : '', reps: prevu, rpe: '' }))
 }

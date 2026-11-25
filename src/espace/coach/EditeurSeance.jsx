@@ -229,7 +229,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                       <span />
                       <span className="es2-colonnes__vide" />
                       {estEnSeries(b.format) && <span>Séries</span>}
-                      {!estActivite(b.format) && <span>Reps</span>}
+                      {!estActivite(b.format) && <span>Reps / mesure</span>}
                       {!estActivite(b.format) && <span>Charge</span>}
                       {estEnSeries(b.format) && <span>RPE</span>}
                       {estEnSeries(b.format) && <span>Tempo</span>}
@@ -324,14 +324,15 @@ function EnteteBloc({ bloc, verrou, renommer, idTitre }) {
 }
 
 // Un exercice sur une ligne : séries, reps, charge, RPE et tempo visibles (18 novembre 2026), le commentaire juste en dessous ;
-// « ⋯ » garde « se mesure en », le % du 1RM et « Retirer ». Repos par exercice revenu le 22 novembre 2026 ; plus de RPE de la semaine en exemple
+// « ⋯ » garde le % du 1RM et « Retirer » (« se mesure en » est sur la ligne depuis le 25 novembre 2026). Repos par exercice revenu le 22 novembre 2026 ; plus de RPE de la semaine en exemple
 // (il se juge sur le ressenti global de fin de séance). Haltères : la charge est celle d'un haltère, « par main ».
 function LigneExo({ element: el, code, series, activite, verrou, rm, maj, retirer, photo, parMain, materiel, nbDansBloc, monter, descendre, tenu, depot, prendre, lacher, onDragOver, onDrop }) {
   const [plus, setPlus] = useState(false)
   const id = (cle) => `el-${el.id}-${cle}`
   const calculee = chargeIndicative(el.nom, el.pct, rm)
   const aideCharge = calculee !== null && String(el.charge ?? '').trim() === '' ? `≈ ${frNombre(calculee)} kg d’après le 1RM` : undefined
-  const duree = el.mesure === 'duree'
+  const duree = el.mesure === 'duree' || el.mesure === 'distance'
+  const distance = el.mesure === 'distance'
   const cellule = (cle, libelle, mode, indice) => (
     <input id={id(cle)} className="es2-cellule" autoComplete="off" inputMode={mode} aria-label={`${code} ${el.nom}, ${libelle}`} value={el[cle] ?? ''} placeholder={indice} onChange={(e) => maj(cle, e.target.value)} />
   )
@@ -351,7 +352,7 @@ function LigneExo({ element: el, code, series, activite, verrou, rm, maj, retire
         </p>
         {series && cellule('series', 'séries', 'numeric')}
         {/* répétitions : un nombre ou une fourchette « 8-10 » (le coaché note ce qu'il a fait) */}
-        {!activite && cellule('reps', duree ? 'durée' : 'répétitions (ex. 10 ou 8-10)', 'text', duree ? '45 s' : undefined)}
+        {!activite && cellule('reps', distance ? 'distance en mètres' : duree ? 'durée' : 'répétitions (ex. 10 ou 8-10)', 'text', distance ? '400 m' : duree ? '45 s' : undefined)}
         {!activite && (
           <span className={`es2-charge${parMain ? ' es2-charge--main' : ''}`}>
             {cellule('charge', parMain ? 'charge d’un haltère, par main, en kilos' : 'charge en kilos', 'decimal', calculee !== null ? frNombre(calculee) : undefined)}
@@ -365,19 +366,23 @@ function LigneExo({ element: el, code, series, activite, verrou, rm, maj, retire
         <button type="button" className="es2-plus" aria-expanded={plus} aria-label={`Plus de réglages pour ${el.nom}`} onClick={() => setPlus((p) => !p)}><IconePoints /></button>
       </div>
       <div className="es2-ligne__note">
+        {/* « Se mesure en » visible sur chaque exercice (Marie, 25 novembre 2026) */}
+        {!activite && (
+          <label className="es2-mesure" htmlFor={id('mesure')}>
+            <span>Se mesure en</span>
+            <select id={id('mesure')} value={distance ? 'distance' : duree ? 'duree' : ''} onChange={(e) => maj('mesure', e.target.value)}>
+              <option value="">Répétitions</option>
+              <option value="duree">Durée</option>
+              <option value="distance">Distance</option>
+            </select>
+          </label>
+        )}
         <label className="sr-only" htmlFor={id('commentaire')}>Commentaire pour cet exercice ({code} {el.nom})</label>
         <input id={id('commentaire')} className="es2-note" autoComplete="off" placeholder="Commentaire pour cet exercice" value={el.commentaire ?? ''} onChange={(e) => maj('commentaire', e.target.value)} />
       </div>
       {plus && (
         <div className="es2-opt">
           <div className="es2-opt__grille">
-            <div className="es2-opt__champ">
-              <span id={id('mesure')}>Se mesure en</span>
-              <div className="es2-opt__bascule" role="group" aria-labelledby={id('mesure')}>
-                <button type="button" aria-pressed={!duree} onClick={() => maj('mesure', '')}>Répétitions</button>
-                <button type="button" aria-pressed={duree} onClick={() => maj('mesure', 'duree')}>Durée</button>
-              </div>
-            </div>
             <label className="es2-opt__champ" htmlFor={id('pct')}><span>% du 1RM</span>
               <input id={id('pct')} autoComplete="off" inputMode="decimal" value={el.pct ?? ''} onChange={(e) => maj('pct', e.target.value)} /></label>
           </div>

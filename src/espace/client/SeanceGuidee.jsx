@@ -98,7 +98,7 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, 
             <span className="ec-s2-ligne__nom">Série {i + 1}</span>
             <span className="ec-s2-val">
               <input className="ec-s2-champ" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
-                value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)} readOnly={lecture} onChange={(e) => actions?.serie(el, i, cle, e.target.value)} />
+                value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps, el) : texteReps(el.reps)} readOnly={lecture} onChange={(e) => actions?.serie(el, i, cle, e.target.value)} />
               <span aria-hidden="true">×</span>
               <input className="ec-s2-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
                 value={l.charge ?? ''} placeholder={fr(el.charge ?? '')} readOnly={lecture} onChange={(e) => actions?.serie(el, i, 'charge', e.target.value)} />
@@ -322,7 +322,7 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
             <button type="button" className="ec-s5-rond" aria-pressed={!!l.fait} aria-label={`Série ${i + 1}, ${l.fait ? 'faite (toucher pour décocher)' : 'à faire (toucher pour cocher)'}`} disabled={lecture}
               onClick={() => actions?.serie(el, i, 'fait', !l.fait)}>{l.fait ? <Coche /> : i + 1}</button>
             <input className="ec-s5-champ" data-serie={`${el.id}-${i}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
-              value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps) : texteReps(el.reps)} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, cle, ev.target.value)} />
+              value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps, el) : texteReps(el.reps)} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, cle, ev.target.value)} />
             {avecCharge && (
             <span className="ec-s5-kg">
               <input className="ec-s5-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}

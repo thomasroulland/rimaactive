@@ -54,7 +54,7 @@ export default function ApercuSeance({ seance, numero, debut, fermer }) {
 // « 4 × 10 », « 3 × 8 à 10 », « 3 × 45 s », ou seulement les répétitions hors séries (EMOM…)
 function dose(el, bloc) {
   const reps = texteReps(el.reps)
-  const r = reps && (el.mesure === 'duree' ? `${reps} s` : reps)
+  const r = reps && (el.mesure === 'duree' ? `${reps} s` : el.mesure === 'distance' ? `${reps} m` : reps)
   if (!estEnSeries(bloc.format)) return r || ''
   return [el.series, r].filter(Boolean).join(' × ')
 }

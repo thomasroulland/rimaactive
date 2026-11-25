@@ -147,7 +147,7 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
       muscles: exercice.muscles ?? [],
       musclesSecondaires: exercice.musclesSecondaires ?? [],
       lateralites: exercice.lateralites ?? [],
-      mesure: exercice.mesure === 'duree' ? 'duree' : 'reps',
+      mesure: ['duree', 'distance'].includes(exercice.mesure) ? exercice.mesure : 'reps',
       photos: [...(exercice.photos ?? []), ...envoyees],
       retire: exercice.retire ?? false,
       majLe: serverTimestamp(),
