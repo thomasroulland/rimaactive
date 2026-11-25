@@ -2,7 +2,8 @@
 // « Renforcement » retiré des valeurs de départ (14 novembre 2026)
 export const CATEGORIES = ['Explosivité', 'Gainage', 'Mobilité', 'Cardio']
 export const MATERIELS = ['Barre', 'Haltère', 'Kettlebell', 'Poids du corps', 'Machine', 'À préciser']
-export const MUSCLES = ['Quadriceps', 'Ischio-jambiers', 'Fessiers', 'Mollets', 'Pectoraux', 'Dos', 'Épaules', 'Biceps', 'Triceps', 'Abdominaux', 'Lombaires']
+// du bas du corps vers le haut (Marie, 25 novembre 2026)
+export const MUSCLES = ['Mollets', 'Quadriceps', 'Ischio-jambiers', 'Adducteurs', 'Abducteurs', 'Fessiers', 'Lombaires', 'Abdominaux', 'Dos', 'Pectoraux', 'Biceps', 'Triceps', 'Épaules']
 // Façons de faire un même exercice (14 novembre 2026) : cochées sur la fiche, choisies dans la séance
 export const LATERALITES = [['bilateral', 'Bilatéral'], ['unilateral', 'Unilatéral'], ['bstance', 'B-stance']]
 export const nomLateralite = (id) => LATERALITES.find(([k]) => k === id)?.[1] ?? ''
