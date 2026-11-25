@@ -40,14 +40,20 @@ export const PARTIES = ['Échauffement', 'Séance']
 
 export const REGLAGES_PAR_DEFAUT = { types: TYPES_DE_BASE, categories: CATEGORIES, materiels: MATERIELS, muscles: MUSCLES, parties: PARTIES, rangement: [] }
 
+const rangerMuscles = (liste) => {
+  const rang = (m) => { const i = MUSCLES.indexOf(m); return i < 0 ? MUSCLES.length : i }
+  return liste.map((m, k) => [m, k]).sort((a, b) => rang(a[0]) - rang(b[0]) || a[1] - b[1]).map(([m]) => m)
+}
+
 export function completerReglages(d) {
   return {
     // la liste des types est fixe (18 novembre 2026) : celle enregistrée autrefois dans les réglages n'est plus lue
     types: TYPES_DE_BASE,
     categories: Array.isArray(d?.categories) ? d.categories : CATEGORIES,
     materiels: Array.isArray(d?.materiels) ? d.materiels : MATERIELS,
-    // Adducteurs et Abducteurs ajoutés le 25 novembre 2026 : aussi dans une liste déjà enregistrée par Marie
-    muscles: Array.isArray(d?.muscles) ? [...d.muscles, ...['Adducteurs', 'Abducteurs'].filter((m) => !d.muscles.includes(m))] : MUSCLES,
+    // Adducteurs et Abducteurs ajoutés le 25 novembre 2026, aussi dans une liste déjà enregistrée par Marie ;
+    // rangés du bas du corps vers le haut, les muscles ajoutés par Marie à la fin
+    muscles: Array.isArray(d?.muscles) ? rangerMuscles([...d.muscles, ...['Adducteurs', 'Abducteurs'].filter((m) => !d.muscles.includes(m))]) : MUSCLES,
     parties: Array.isArray(d?.parties) && d.parties.length ? d.parties : PARTIES,
     rangement: Array.isArray(d?.rangement) ? d.rangement.filter((r) => r && typeof r.categorie === 'string' && typeof r.partie === 'string') : [],
   }

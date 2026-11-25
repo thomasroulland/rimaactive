@@ -102,7 +102,7 @@ describe('muscles (25 novembre 2026)', () => {
   it('propose Adducteurs et Abducteurs, même dans une liste déjà enregistrée', async () => {
     const { completerReglages } = await import('../../src/espace/donnees/reglages.js')
     expect(completerReglages(null).muscles).toEqual(expect.arrayContaining(['Adducteurs', 'Abducteurs']))
-    expect(completerReglages({ muscles: ['Dos'] }).muscles).toEqual(['Dos', 'Adducteurs', 'Abducteurs'])
-    expect(completerReglages({ muscles: ['Abducteurs', 'Dos'] }).muscles).toEqual(['Abducteurs', 'Dos', 'Adducteurs'])
+    expect(completerReglages({ muscles: ['Dos'] }).muscles).toEqual(['Adducteurs', 'Abducteurs', 'Dos'])
+    expect(completerReglages({ muscles: ['Cou', 'Épaules', 'Mollets', 'Abducteurs'] }).muscles).toEqual(['Mollets', 'Adducteurs', 'Abducteurs', 'Épaules', 'Cou'])
   })
 })
