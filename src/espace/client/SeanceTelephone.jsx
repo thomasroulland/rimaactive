@@ -38,16 +38,6 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
     actions.blocValeurs(bloc.id, { fait: true, ...allureCalculee(bloc, resultats[bloc.id]) }); setFeuille({ type: 'bloc' })
   }
 
-  if (reposBloc) {
-    return (
-      <div className="ec-st">
-        <div className="ec-st__haut">{retour}</div>
-        <p className="ec-st__sur">{nomBloc(bloc)} · fait</p>
-        <ChronoRepos titre="Repos avant le bloc suivant" prevu={reposApres} finir={() => { setReposBloc(false); suivant() }} />
-      </div>
-    )
-  }
-
   return (
     <div className="ec-st">
       <div className="ec-st__haut">
@@ -71,9 +61,11 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
         </ul>
       )}
       {/* seulement le nom du bloc de Marie, sans « Biset », « Séries »… (23 novembre 2026) */}
-      <p className="ec-st__sur">{nomBloc(bloc)}</p>
+      <p className="ec-st__sur">{nomBloc(bloc)}{reposBloc ? ' · fait' : ''}</p>
+      {/* repos après le bloc : la barre du haut reste, le chrono part tout seul (Marie, 25 novembre 2026) */}
+      {reposBloc && <ChronoRepos titre="Repos avant le bloc suivant" prevu={reposApres} auto finir={() => { setReposBloc(false); suivant() }} />}
 
-      {els.length === 0
+      {reposBloc ? null : els.length === 0
         ? <p className="ec-texte">Ce bloc n’a pas encore d’exercice.</p>
         : enSeries
             ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture} />
@@ -82,7 +74,7 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
 
       {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
           on change de bloc avec « Plan » ou les traits du haut, et la fenêtre de l'effort propose le bloc suivant */}
-      {!lecture && !enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
+      {!reposBloc && !lecture && !enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
         <button type="button" className="ec-st__gros" onClick={blocFait}>Bloc fait <Coche taille={18} /></button>
       )}
 
@@ -293,9 +285,9 @@ function alerter() {
   } catch { /* rien */ }
 }
 
-function ChronoRepos({ avant, prevu, finir, titre }) {
+function ChronoRepos({ avant, prevu, finir, titre, auto = false }) {
   const [duree, setDuree] = useState(() => (prevu ? Math.min(MAX_REPOS, Math.max(PAS_REPOS, Math.round(prevu / PAS_REPOS) * PAS_REPOS)) : lireRepos()))
-  const [fin, setFin] = useState(null) // heure de fin quand le repos est lancé
+  const [fin, setFin] = useState(() => (auto ? Date.now() + (prevu ? Math.min(MAX_REPOS, Math.max(PAS_REPOS, Math.round(prevu / PAS_REPOS) * PAS_REPOS)) : lireRepos()) * 1000 : null)) // heure de fin quand le repos est lancé
   const [, battre] = useState(0)
   const cadran = useRef(null)
   const glisse = useRef(false)
@@ -402,9 +394,6 @@ function allureCalculee(bloc, r) {
   return a === '–' ? {} : { allure: a.replace(' /km', '') }
 }
 
-// « 90 » → « 90 s », « 2 min » reste « 2 min »
-const reposLisible = (v) => { const t = String(v ?? '').trim(); return /^\d+$/.test(t) ? `${t} s` : t }
-
 // ---------- EMOM, AMRAP, TABATA, HIIT, Continu, Intervalles ----------
 
 const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
@@ -418,7 +407,6 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
       <div className="ec-st-noir">
         <span>{resumeFormat(bloc)}</span>
         {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
-        {String(bloc.reposFin ?? '').trim() && <p className="ec-st-noir__repos">Puis repos {reposLisible(bloc.reposFin)} avant le bloc suivant</p>}
       </div>
       {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
       <ul className="ec-st-exos">

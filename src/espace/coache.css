@@ -2170,3 +2170,5 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-st-minuteur--fini { display: block; margin: 0; padding: 12px 14px; border-radius: 16px; background: rgba(242, 194, 48, .25); font: 600 14px/1.35 var(--font-sans); color: var(--ec-encre); }
 .ec-st-minuteur--fini b { font-size: 15px; letter-spacing: 0; margin-right: 4px; }
 @media (min-width: 900px) { .ec-seance--large .ec-st-minuteur b { font-size: 38px; } }
+/* « Tours complets » : une seule case, centrée avec son titre (25 novembre 2026) */
+.ec-st-resultat:has(> label:only-child) { grid-template-columns: minmax(0, 220px); justify-content: center; }
