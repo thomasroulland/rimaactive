@@ -26,6 +26,27 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
   const libSuivant = dernier ? 'Fin de séance' : 'Bloc suivant'
   const els = bloc.elements ?? []
   const enSeries = estEnSeries(bloc.format)
+  const [alerteTours, setAlerteTours] = useState(false)
+  const [reposBloc, setReposBloc] = useState(false) // chronomètre de repos après un bloc EMOM / AMRAP / TABATA (25 novembre 2026)
+  const reposApres = !enSeries ? secondesRepos(bloc.reposFin) : null
+  // après l'effort du bloc : le repos prévu par Marie, puis le bloc suivant
+  const apresBloc = () => (reposApres && !dernier ? setReposBloc(true) : suivant())
+  const blocFait = () => {
+    // AMRAP : les tours complets sont obligatoires, comme les répétitions en Renforcement (Marie, 25 novembre 2026)
+    if (bloc.format === 'amrap' && vide(resultats[bloc.id]?.resultat)) { setAlerteTours(true); document.getElementById(`res-${bloc.id}-resultat`)?.focus(); return }
+    setAlerteTours(false)
+    actions.blocValeurs(bloc.id, { fait: true, ...allureCalculee(bloc, resultats[bloc.id]) }); setFeuille({ type: 'bloc' })
+  }
+
+  if (reposBloc) {
+    return (
+      <div className="ec-st">
+        <div className="ec-st__haut">{retour}</div>
+        <p className="ec-st__sur">{nomBloc(bloc)} · fait</p>
+        <ChronoRepos titre="Repos avant le bloc suivant" prevu={reposApres} finir={() => { setReposBloc(false); suivant() }} />
+      </div>
+    )
+  }
 
   return (
     <div className="ec-st">
@@ -56,17 +77,18 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
         ? <p className="ec-texte">Ce bloc n’a pas encore d’exercice.</p>
         : enSeries
             ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture} />
-            : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture} />}
+            : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture}
+                alerte={alerteTours} effacerAlerte={() => setAlerteTours(false)} />}
 
       {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
           on change de bloc avec « Plan » ou les traits du haut, et la fenêtre de l'effort propose le bloc suivant */}
       {!lecture && !enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
-        <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true, ...allureCalculee(bloc, resultats[bloc.id]) }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
+        <button type="button" className="ec-st__gros" onClick={blocFait}>Bloc fait <Coche taille={18} /></button>
       )}
 
       {feuille && (
         <FeuilleEffort key={JSON.stringify(feuille)} feuille={feuille} bloc={bloc} lignes={lignes} notes={notes} resultat={resultats[bloc.id]} actions={actions}
-          libSuivant={libSuivant} fermer={() => setFeuille(null)} blocSuivant={suivant} />
+          libSuivant={libSuivant} fermer={() => setFeuille(null)} blocSuivant={apresBloc} />
       )}
     </div>
   )
@@ -271,7 +293,7 @@ function alerter() {
   } catch { /* rien */ }
 }
 
-function ChronoRepos({ avant, prevu, finir }) {
+function ChronoRepos({ avant, prevu, finir, titre }) {
   const [duree, setDuree] = useState(() => (prevu ? Math.min(MAX_REPOS, Math.max(PAS_REPOS, Math.round(prevu / PAS_REPOS) * PAS_REPOS)) : lireRepos()))
   const [fin, setFin] = useState(null) // heure de fin quand le repos est lancé
   const [, battre] = useState(0)
@@ -306,8 +328,8 @@ function ChronoRepos({ avant, prevu, finir }) {
     ? `M${C} ${C - R} A${R} ${R} 0 1 1 ${C - 0.01} ${C - R}`
     : `M${C} ${C - R} A${R} ${R} 0 ${frac > 0.5 ? 1 : 0} 1 ${px.toFixed(1)} ${py.toFixed(1)}`
   return (
-    <section className="ec-st-carte ec-st-repos" aria-label={`Repos avant la série ${avant}`}>
-      <p className="ec-st-repos__titre">Repos avant la série {avant}</p>
+    <section className="ec-st-carte ec-st-repos" aria-label={titre ?? `Repos avant la série ${avant}`}>
+      <p className="ec-st-repos__titre">{titre ?? `Repos avant la série ${avant}`}</p>
       <div ref={cadran} className={`ec-st-repos__cadran${fin ? '' : ' est-reglable'}`}
         onPointerDown={(ev) => { if (fin) return; glisse.current = true; ev.currentTarget.setPointerCapture?.(ev.pointerId); regler(ev) }}
         onPointerMove={(ev) => { if (glisse.current) regler(ev) }}
@@ -345,6 +367,34 @@ function ChronoRepos({ avant, prevu, finir }) {
   )
 }
 
+// Minuteur d'un AMRAP (Marie, 25 novembre 2026) : « Démarrer » lance le compte à rebours de la durée du bloc ;
+// à la fin, un message, une vibration et un bip (application installée), puis on note ses tours complets.
+function MinuteurBloc({ secondes }) {
+  const [fin, setFin] = useState(null)
+  const [fini, setFini] = useState(false)
+  const [, battre] = useState(0)
+  useEffect(() => {
+    if (!fin) return undefined
+    const id = setInterval(() => {
+      battre((n) => n + 1)
+      if (Date.now() >= fin) { clearInterval(id); alerter(); setFin(null); setFini(true) }
+    }, 250)
+    return () => clearInterval(id)
+  }, [fin])
+  const reste = fin ? (fin - Date.now()) / 1000 : secondes
+  const frac = Math.max(0, Math.min(1, reste / secondes))
+  if (fini) return <p className="ec-st-minuteur ec-st-minuteur--fini" role="status"><b>Temps écoulé !</b> Notez vos tours complets.</p>
+  return (
+    <div className={`ec-st-minuteur${fin ? ' est-lance' : ''}`}>
+      <b aria-live="off">{mmss(reste)}</b>
+      <span className="ec-st-minuteur__barre" aria-hidden="true"><span style={{ width: `${frac * 100}%` }} /></span>
+      {fin
+        ? <button type="button" className="ec-st-pas" onClick={() => { setFin(null); setFini(true) }}>Arrêter</button>
+        : <button type="button" className="ec-st-pas est-jaune" onClick={() => { preparerSon(); setFin(Date.now() + secondes * 1000) }}>Démarrer ▶</button>}
+    </div>
+  )
+}
+
 // Continu, Intervalles : sans allure notée, on garde celle calculée avec le temps et la distance (23 novembre 2026)
 function allureCalculee(bloc, r) {
   if ((bloc.format !== 'continu' && bloc.format !== 'intervalles') || !vide(r?.allure)) return {}
@@ -357,11 +407,12 @@ const reposLisible = (v) => { const t = String(v ?? '').trim(); return /^\d+$/.t
 
 // ---------- EMOM, AMRAP, TABATA, HIIT, Continu, Intervalles ----------
 
-const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours de :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
+const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
 
-function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture }) {
+function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alerte, effacerAlerte }) {
   const els = bloc.elements ?? []
   const r = resultat ?? {}
+  const minutes = parseFloat(String(bloc.duree ?? '').replace(',', '.'))
   return (
     <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
       <div className="ec-st-noir">
@@ -369,6 +420,7 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture }) {
         {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
         {String(bloc.reposFin ?? '').trim() && <p className="ec-st-noir__repos">Puis repos {reposLisible(bloc.reposFin)} avant le bloc suivant</p>}
       </div>
+      {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
       <ul className="ec-st-exos">
         {els.map((el, k) => (
           <li key={el.id}>
@@ -386,12 +438,13 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture }) {
         {champsResultat(bloc).map((c) => (
           <label key={c.cle}>
             <span>{c.label}</span>
-            <input className="ec-st-champ" type="text" inputMode={c.mode ?? 'numeric'} autoComplete="off" value={r[c.cle] ?? ''} readOnly={lecture}
+            <input id={`res-${bloc.id}-${c.cle}`} className={`ec-st-champ${alerte && c.cle === 'resultat' ? ' est-a-remplir' : ''}`} type="text" inputMode={c.mode ?? 'numeric'} autoComplete="off" value={r[c.cle] ?? ''} readOnly={lecture}
               placeholder={c.cle === 'allure' && allureVitesse(r.distance, r.temps).allure !== '–' ? allureVitesse(r.distance, r.temps).allure.replace(' /km', '') : c.aide}
-              onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.blocValeurs(bloc.id, { [c.cle]: ev.target.value })} />
+              onFocus={(ev) => ev.target.select()} onChange={(ev) => { effacerAlerte?.(); actions.blocValeurs(bloc.id, { [c.cle]: ev.target.value }) }} />
           </label>
         ))}
       </div>
+      {alerte && <p className="ec-st-alerte" role="alert">Notez le nombre de tours complets.</p>}
       {lecture && (r.rpe || r.note) && <p className="ec-st-relu">{r.rpe && <span>RPE {texteRpe(r.rpe)}</span>}{r.note && <span>{r.note}</span>}</p>}
       {!lecture && r.fait && (
         <div className="ec-st-pastilles">

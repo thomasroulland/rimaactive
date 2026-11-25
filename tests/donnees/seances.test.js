@@ -147,7 +147,7 @@ describe('écran de la séance', () => {
   it('résultat de bloc : champs, libellés et aides selon le format (maquette)', () => {
     expect(champsResultat({ format: 'emom', duree: '10' })).toEqual([{ cle: 'resultat', label: 'Minutes réussies', aide: 'sur 10' }])
     expect(champsResultat({ format: 'amrap', duree: '12' })).toEqual([
-      { cle: 'resultat', label: 'Tours complets', aide: '' }, { cle: 'reps', label: 'Reps en plus', aide: '' }])
+      { cle: 'resultat', label: 'Tours complets', aide: '' }])
     expect(champsResultat({ format: 'tabata', tours: '8' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: 'sur 8' }])
     expect(champsResultat({ format: 'hiit' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: '' }])
     expect(champsResultat({ format: 'series' })).toEqual([])

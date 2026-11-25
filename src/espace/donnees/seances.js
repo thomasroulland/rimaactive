@@ -289,7 +289,8 @@ export function lignesExercice(element, enSeries = true) {
 export function champsResultat(bloc) {
   const f = bloc?.format
   if (f === 'emom') return [{ cle: 'resultat', label: 'Minutes réussies', aide: rempli(bloc.duree) ? `sur ${String(bloc.duree).trim()}` : '' }]
-  if (f === 'amrap') return [{ cle: 'resultat', label: 'Tours complets', aide: '' }, { cle: 'reps', label: 'Reps en plus', aide: '' }]
+  // AMRAP : seulement les tours complets, obligatoires (Marie, 25 novembre 2026 : plus de « reps en plus »)
+  if (f === 'amrap') return [{ cle: 'resultat', label: 'Tours complets', aide: '' }]
   if (f === 'tabata' || f === 'hiit') {
     return [{ cle: 'resultat', label: 'Tours faits', aide: rempli(bloc.tours) ? `sur ${String(bloc.tours).trim()}` : '' }]
   }

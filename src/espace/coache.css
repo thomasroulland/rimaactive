@@ -2159,3 +2159,14 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-ch__aide { margin: 4px 0 0; font: 600 12.5px/1.3 var(--font-sans); color: var(--ec-gris, #6b665f); }
 @media (min-width: 900px) { .ec-prog-noire { padding: 24px; } .ec-prog-noire__grand { font-size: 56px; } .ec-ch__ligne { grid-template-columns: minmax(0, 1fr) 160px auto; } .ec-ch__mini { width: 160px; } }
 .ec-st-noir__repos { color: var(--ec-jaune, #f2c230) !important; font-weight: 700 !important; }
+
+/* Minuteur d'un AMRAP (25 novembre 2026) */
+.ec-st-minuteur { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; background: #f4f3ef; }
+.ec-st-minuteur b { font: 900 30px/1 var(--font-sans); letter-spacing: -1px; font-variant-numeric: tabular-nums; color: var(--ec-encre); }
+.ec-st-minuteur.est-lance b { color: var(--ec-vermillon, #ff4a1c); }
+.ec-st-minuteur__barre { display: block; height: 8px; border-radius: 9px; background: #e2ddd3; overflow: hidden; }
+.ec-st-minuteur__barre span { display: block; height: 100%; border-radius: 9px; background: var(--ec-vermillon, #ff4a1c); transition: width .25s linear; }
+.ec-st-minuteur .ec-st-pas { min-height: 44px; padding: 0 16px; }
+.ec-st-minuteur--fini { display: block; margin: 0; padding: 12px 14px; border-radius: 16px; background: rgba(242, 194, 48, .25); font: 600 14px/1.35 var(--font-sans); color: var(--ec-encre); }
+.ec-st-minuteur--fini b { font-size: 15px; letter-spacing: 0; margin-right: 4px; }
+@media (min-width: 900px) { .ec-seance--large .ec-st-minuteur b { font-size: 38px; } }
