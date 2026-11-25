@@ -46,7 +46,8 @@ export function completerReglages(d) {
     types: TYPES_DE_BASE,
     categories: Array.isArray(d?.categories) ? d.categories : CATEGORIES,
     materiels: Array.isArray(d?.materiels) ? d.materiels : MATERIELS,
-    muscles: Array.isArray(d?.muscles) ? d.muscles : MUSCLES,
+    // Adducteurs et Abducteurs ajoutés le 25 novembre 2026 : aussi dans une liste déjà enregistrée par Marie
+    muscles: Array.isArray(d?.muscles) ? [...d.muscles, ...['Adducteurs', 'Abducteurs'].filter((m) => !d.muscles.includes(m))] : MUSCLES,
     parties: Array.isArray(d?.parties) && d.parties.length ? d.parties : PARTIES,
     rangement: Array.isArray(d?.rangement) ? d.rangement.filter((r) => r && typeof r.categorie === 'string' && typeof r.partie === 'string') : [],
   }
