@@ -2172,3 +2172,12 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 @media (min-width: 900px) { .ec-seance--large .ec-st-minuteur b { font-size: 38px; } }
 /* « Tours complets » : une seule case, centrée avec son titre (25 novembre 2026) */
 .ec-st-resultat:has(> label:only-child) { grid-template-columns: minmax(0, 220px); justify-content: center; }
+
+/* Plus de zoom quand on touche une case sur iPhone (Marie, 25 novembre 2026) : Safari zoome si le texte d'une case
+   fait moins de 16 px ; sur écran tactile, toutes les cases de l'espace passent à 16 px au moins. */
+@media (pointer: coarse), (max-width: 899px) {
+  .ec-page input, .ec-page select, .ec-page textarea,
+  .ec-st input, .ec-st select, .ec-st textarea,
+  .ec-tuto input, .ec-tuto textarea, .ec-fenetre input, .ec-fenetre textarea,
+  .ec-st-tl .ec-st-champ, .ec-st-serie .ec-st-tl .ec-st-champ { font-size: 16px !important; }
+}

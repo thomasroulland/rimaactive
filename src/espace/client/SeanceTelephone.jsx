@@ -404,11 +404,12 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
   const minutes = parseFloat(String(bloc.duree ?? '').replace(',', '.'))
   return (
     <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
+      {/* le minuteur au-dessus du bandeau noir (Marie, 25 novembre 2026) */}
+      {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
       <div className="ec-st-noir">
         <span>{resumeFormat(bloc)}</span>
         {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
       </div>
-      {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
       <ul className="ec-st-exos">
         {els.map((el, k) => (
           <li key={el.id}>

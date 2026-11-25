@@ -2280,3 +2280,8 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 .formulaire__erreur { margin: 0; padding-left: 12px; border-left: 3px solid var(--vermillon); color: var(--encre); font-weight: 600; }
 .formulaire__erreur a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .formulaire__envoyer:disabled { opacity: .6; cursor: default; }
+
+/* Sur écran tactile, toutes les cases du site à 16 px au moins : sinon l'iPhone zoome dès qu'on touche une case (25 novembre 2026) */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea { font-size: 16px !important; }
+}
