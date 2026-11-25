@@ -375,14 +375,37 @@ function MinuteurBloc({ secondes }) {
   }, [fin])
   const reste = fin ? (fin - Date.now()) / 1000 : secondes
   const frac = Math.max(0, Math.min(1, reste / secondes))
-  if (fini) return <p className="ec-st-minuteur ec-st-minuteur--fini" role="status"><b>Temps écoulé !</b> Notez vos tours complets.</p>
+  const R = 92, C = 110
+  const ang = frac * 2 * Math.PI - Math.PI / 2
+  const px = C + R * Math.cos(ang), py = C + R * Math.sin(ang)
+  const arc = frac >= 0.9999
+    ? `M${C} ${C - R} A${R} ${R} 0 1 1 ${C - 0.01} ${C - R}`
+    : `M${C} ${C - R} A${R} ${R} 0 ${frac > 0.5 ? 1 : 0} 1 ${px.toFixed(1)} ${py.toFixed(1)}`
   return (
-    <div className={`ec-st-minuteur${fin ? ' est-lance' : ''}`}>
-      <b aria-live="off">{mmss(reste)}</b>
-      <span className="ec-st-minuteur__barre" aria-hidden="true"><span style={{ width: `${frac * 100}%` }} /></span>
-      {fin
-        ? <button type="button" className="ec-st-pas" onClick={() => { setFin(null); setFini(true) }}>Arrêter</button>
-        : <button type="button" className="ec-st-pas est-jaune" onClick={() => { preparerSon(); setFin(Date.now() + secondes * 1000) }}>Démarrer ▶</button>}
+    <div className="ec-st-repos ec-st-minuteur">
+      <div className="ec-st-repos__cadran">
+        <svg viewBox="0 0 220 220" aria-hidden="true">
+          {Array.from({ length: 60 }, (_, i) => {
+            const a = (i / 60) * 2 * Math.PI - Math.PI / 2, r2 = i % 5 ? 101 : 97
+            return <line key={i} x1={C + 105 * Math.cos(a)} y1={C + 105 * Math.sin(a)} x2={C + r2 * Math.cos(a)} y2={C + r2 * Math.sin(a)} stroke="#cfc9be" strokeWidth={i % 5 ? 1 : 2} />
+          })}
+          <circle cx={C} cy={C} r={R} fill="none" stroke="#efebe4" strokeWidth="14" />
+          {frac > 0 && !fini && <path d={arc} fill="none" stroke={fin ? 'var(--ec-vermillon, #ff4a1c)' : 'var(--ec-jaune, #f2c230)'} strokeWidth="14" strokeLinecap="round" />}
+        </svg>
+        <div className="ec-st-repos__temps" aria-live="off">
+          <b>{fini ? '0:00' : mmss(reste)}</b>
+          <small>{fini ? 'terminé' : fin ? `sur ${mmss(secondes)}` : 'durée du bloc'}</small>
+        </div>
+      </div>
+      {fini
+        ? <p className="ec-st-minuteur__fini" role="status"><b>Temps écoulé !</b> Notez vos tours complets.</p>
+        : (
+          <div className="ec-st-repos__boutons">
+            {fin
+              ? <button type="button" className="ec-st-pas" onClick={() => { setFin(null); setFini(true) }}>Arrêter</button>
+              : <button type="button" className="ec-st-pas est-jaune" onClick={() => { preparerSon(); setFin(Date.now() + secondes * 1000) }}>Démarrer ▶</button>}
+          </div>
+        )}
     </div>
   )
 }
@@ -404,8 +427,6 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
   const minutes = parseFloat(String(bloc.duree ?? '').replace(',', '.'))
   return (
     <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
-      {/* le minuteur au-dessus du bandeau noir (Marie, 25 novembre 2026) */}
-      {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
       <div className="ec-st-noir">
         <span>{resumeFormat(bloc)}</span>
         {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
@@ -423,6 +444,8 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
           </li>
         ))}
       </ul>
+      {/* le minuteur en bas, en cercle comme le chrono de repos (Marie, 25 novembre 2026) */}
+      {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
       <div className="ec-st-resultat">
         {champsResultat(bloc).map((c) => (
           <label key={c.cle}>
