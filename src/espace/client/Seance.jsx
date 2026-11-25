@@ -129,7 +129,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     : dejaFaite && (
     edition
       ? <div className="ec-correction est-active"><span><b>Vous corrigez cette séance.</b> Chaque changement est enregistré.</span><button type="button" className="ec-correction__bouton" onClick={finirCorrection}>J’ai fini</button></div>
-      : <div className="ec-correction"><span>Séance faite. Une erreur dans ce que vous avez noté ?</span><button type="button" className="ec-correction__bouton" onClick={() => { setEdition(true); setEtape(0) }}>Modifier ma séance</button></div>
+      : <div className="ec-correction"><span><b>Séance faite.</b> Une erreur dans ce que vous avez noté ?</span><button type="button" className="ec-correction__bouton" onClick={() => { setEdition(true); setEtape(0) }} aria-label="Modifier ma séance">Modifier</button></div>
   )
   const retour = <>{lienRetour}{barreCorrection}</>
 
@@ -264,11 +264,13 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     const enSeries = bloc && estEnSeries(bloc.format)
     // téléphone : tous les blocs avec l'écran de la maquette B (22 novembre 2026)
     // ordinateur et tablette aussi (Marie, 23 novembre 2026) : le même écran que sur téléphone, plus large
-    const unExercice = Boolean(bloc) && !verrou
+    // séance faite relue (25 novembre 2026) : le même écran, en lecture seule
+    const unExercice = Boolean(bloc) && !avantDebut
     const galerie = !mobile && !unExercice // ordinateur : en-tête de la maquette pour la fin et la séance terminée
     return (
       <section className={`ec-page ec-seance ec-seance--v2${!mobile ? ' ec-seance--large' : ''}`}>
-        {unExercice ? barreCorrection : galerie ? null : retour}
+        {/* juste après « Enregistrer ma séance » : l'écran « Séance enregistrée » seul, sans le bandeau de correction (25 novembre 2026) */}
+        {unExercice ? barreCorrection : galerie ? null : (!bloc && termine.current ? lienRetour : retour)}
         {refus && <p className="ec-erreur" role="alert">{refus}</p>}
         <div className="ec-s2">
           {!galerie && <p className="ec-s2-surtitre">{surtitre} · {titre}</p>}
@@ -276,12 +278,12 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
             <EnteteOrdi titre={titre} sousTitre={surtitre} lienRetour={depuisProgramme ? '/espace/programme' : '/espace'} bloc={bloc} blocs={listeBlocs} prog={prog} etape={ici}
               aller={aller} finir={() => aller(nb)} lecture={verrou} />
           )}
-          {galerie && barreCorrection}
+          {galerie && !(!bloc && termine.current) && barreCorrection}
           <div className="ec-s2-principal">
             {bloc ? (
               unExercice ? (
                 <BlocTelephone key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} resultats={blocs} actions={actions}
-                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} />
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} lecture={verrou} />
               ) : (
                 <>
                   {!galerie && <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />}

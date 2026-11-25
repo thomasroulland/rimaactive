@@ -2043,3 +2043,24 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
   .ec-seance--large .ec-st-photo__nom small { font-size: 16px; }
   .ec-seance--large .ec-st-reperes > span { font-size: 12.5px; padding: 4px 10px; }
 }
+
+/* Séance faite, relue (25 novembre 2026) : même écran que pendant la séance, en lecture seule */
+.ec-st-faite--lecture { cursor: default; flex-wrap: wrap; }
+.ec-st-faite--lecture .ec-st-faite__res { flex: 1 1 auto; justify-content: flex-end; text-align: right; }
+.ec-st-faite--lecture .ec-st-faite__res > span { white-space: nowrap; }
+.ec-st-faite--lecture.est-sautee { background: transparent; border: 1.5px dashed #ddd8ce; color: var(--ec-gris, #6b665f); }
+.ec-st-faite--lecture.est-sautee .ec-st-faite__ok { background: #f4f3ef; color: var(--ec-gris, #6b665f); display: grid; place-items: center; font-weight: 800; }
+.ec-st-relu { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.ec-st-relu > span { padding: 6px 12px; border-radius: 999px; background: #fff; font: 700 13px/1.3 var(--font-sans); color: var(--ec-encre); }
+.ec-st-relu > span:first-child { font-weight: 800; }
+/* « Séance faite. Une erreur… » : un bandeau discret, bouton contour (25 novembre 2026) */
+.ec-seance--v2 .ec-correction:not(.est-active):not(.ec-avant-debut) { margin: 0 0 10px; padding: 10px 10px 10px 16px; border: 0; border-radius: 16px; background: #fff; font: 600 13.5px/1.35 var(--font-sans); color: var(--ec-gris, #6b665f); flex-wrap: nowrap; }
+.ec-seance--v2 .ec-correction:not(.est-active):not(.ec-avant-debut) .ec-correction__bouton { flex: none; min-height: 38px; padding: 0 14px; border: 1.5px solid var(--ec-encre); background: transparent; color: var(--ec-encre); font-size: 13px; }
+/* « ← Revenir : … » sous la fin de séance et sous « Séance enregistrée » : un simple lien */
+.ec-fin + .ec-lien { justify-self: center; align-self: center; width: auto; min-height: 44px; padding: 0 8px; border: 0; background: none; box-shadow: none; font: 700 14px/1 var(--font-sans); color: var(--ec-gris, #6b665f); text-decoration: underline; text-underline-offset: 3px; }
+/* Fin de séance relue : les notes non choisies s'effacent davantage */
+.ec-fin--st .ec-st-rpe button:disabled:not([aria-checked="true"]) { opacity: .3; }
+.ec-fin--st .ec-choix:disabled:not([aria-pressed="true"]) { display: none; }
+.ec-seance--v2 .ec-correction:not(.est-active):not(.ec-avant-debut) b { color: var(--ec-encre); }
+@media (min-width: 900px) { .ec-seance--large > .ec-correction { width: 100%; max-width: 720px; margin: 8px auto 0; box-sizing: border-box; } }
+@media (min-width: 900px) { .ec-seance--v2.ec-seance--large > .ec-correction:not(.est-active):not(.ec-avant-debut) { width: 100%; max-width: 720px; margin: 8px auto 0; box-sizing: border-box; } }

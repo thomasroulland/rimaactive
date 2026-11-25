@@ -38,7 +38,7 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
       <form className="ec-fin__form" onSubmit={valider} noValidate>
         <h2 id="titre-fin" className="ec-st__sur ec-fin__titre">Fin de séance</h2>
         {/* des blocs simples plutôt que fieldset / legend : sur iPhone, le titre sortait de la carte blanche (23 novembre 2026) */}
-        <div className="ec-st-carte ec-fin__groupe" role="group" aria-labelledby="fin-effort">
+        {(!terminee || v.effort) && <div className="ec-st-carte ec-fin__groupe" role="group" aria-labelledby="fin-effort">
           <p id="fin-effort" className="ec-st-feuille__lab ec-fin__lab">Effort global de la séance</p>
           <p className="ec-st-legende" aria-hidden="true"><span>Modéré</span><span>Maximal</span></p>
           <div className="ec-st-rpe ec-fin__efforts" role="radiogroup" aria-labelledby="fin-effort">
@@ -51,8 +51,9 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
             {/* comme pour les exercices : le nom de la note s'affiche seulement quand on en touche une (Marie, 23 novembre 2026) */}
             {v.effort ? (NOMS[v.effort] ?? `${v.effort} sur 10`) : ''}
           </p>
-        </div>
-        <div className="ec-st-carte ec-fin__groupe" role="group" aria-labelledby="fin-ressenti">
+        </div>}
+        {/* séance relue : seulement ce qui a été rempli (25 novembre 2026) */}
+        {(!terminee || v.ressenti) && <div className="ec-st-carte ec-fin__groupe" role="group" aria-labelledby="fin-ressenti">
           <p id="fin-ressenti" className="ec-st-feuille__lab ec-fin__lab">Mon ressenti</p>
           <div className="ec-fin__ressentis">
             {RESSENTIS.map((r) => (
@@ -60,16 +61,17 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
                 onClick={() => maj('ressenti', r)}>{r}</button>
             ))}
           </div>
-        </div>
-        <div className="ec-st-carte ec-fin__groupe">
+        </div>}
+        {(!terminee || v.commentaire) && <div className="ec-st-carte ec-fin__groupe">
           <label htmlFor="fin-commentaire" className="ec-st-feuille__lab ec-fin__lab">{course ? 'Mes sensations' : 'Mon commentaire'}</label>
           <textarea id="fin-commentaire" className="ec-st-note" rows="3" value={v.commentaire} readOnly={terminee}
             placeholder={terminee ? '' : 'Sensations, douleurs, ce qui a été facile ou difficile'}
             onChange={(e) => maj('commentaire', e.target.value)} />
-        </div>
+        </div>}
         {!terminee && <button type="submit" className="ec-st__gros" disabled={envoye}>Enregistrer ma séance <Coche /></button>}
       </form>
-      {etat && (
+      {/* séance relue : « Séance enregistrée » ne se répète pas (25 novembre 2026) */}
+      {etat && !(terminee && etat === 'Séance enregistrée.') && (
         <p role="status" className="ec-fin__etat">
           {etat}{etat === 'Séance enregistrée.' && <> <Link className="ec-lien" to="/espace">Voir mon tableau de bord</Link></>}
         </p>

@@ -16,7 +16,7 @@ const Coche = ({ taille = 20 }) => (
 const vide = (v) => !String(v ?? '').trim()
 const texteRpe = (v) => fr(String(v ?? '').replace('.', ','))
 
-export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes, resultats, actions, voirConsignes, aller, finir, retour }) {
+export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes, resultats, actions, voirConsignes, aller, finir, retour, lecture = false }) {
   const [plan, setPlan] = useState(false)
   const [feuille, setFeuille] = useState(null) // { type: 'serie' | 'tour' | 'bloc' | 'note', ... }
   const nb = blocs.length
@@ -54,12 +54,12 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
       {els.length === 0
         ? <p className="ec-texte">Ce bloc n’a pas encore d’exercice.</p>
         : enSeries
-            ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />
-            : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} />}
+            ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture} />
+            : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture} />}
 
       {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
           on change de bloc avec « Plan » ou les traits du haut, et la fenêtre de l'effort propose le bloc suivant */}
-      {!enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
+      {!lecture && !enSeries && !resultats[bloc.id]?.fait && els.length > 0 && (
         <button type="button" className="ec-st__gros" onClick={() => { actions.blocValeurs(bloc.id, { fait: true, ...allureCalculee(bloc, resultats[bloc.id]) }); setFeuille({ type: 'bloc' }) }}>Bloc fait <Coche taille={18} /></button>
       )}
 
@@ -77,22 +77,30 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
 // ce qu'il note pour une série est seulement proposé dans la suivante. L'effort se note une fois, à la fin.
 // Séries classiques : un exercice après l'autre ; superset : les exercices du bloc enchaînés dans chaque série.
 
+// « 10 × 12 kg », « 45 s », « 10 » : ce que le coaché a noté pour une série
+function texteFait(el, l) {
+  if (!l) return ''
+  const mesure = enDuree(el) ? texteDuree(l.duree || l.reps) : String(l.reps ?? '').trim()
+  const charge = String(l.charge ?? '').trim()
+  return [mesure, charge && `${fr(charge)} kg`].filter(Boolean).join(' × ')
+}
+
 const materielDe = (el) => (el.materiel && el.materiel !== 'À préciser' ? el.materiel : '')
 
-function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir }) {
+function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir, lecture }) {
   const els = bloc.elements ?? []
   if (bloc.format === 'superset') {
-    return <Enchainement bloc={bloc} groupe={els.map((el, k) => ({ el, code: `${bloc.lettre}${k + 1}` }))} lignes={lignes} notes={notes} noteId={bloc.id} fin="superset" actions={actions} voirConsignes={voirConsignes} ouvrir={ouvrir} actif />
+    return <Enchainement bloc={bloc} groupe={els.map((el, k) => ({ el, code: `${bloc.lettre}${k + 1}` }))} lignes={lignes} notes={notes} noteId={bloc.id} fin="superset" actions={actions} voirConsignes={voirConsignes} ouvrir={ouvrir} actif={!lecture} lecture={lecture} />
   }
   // séries classiques : l'exercice en cours est le premier qui n'est pas fini
   const enCours = els.findIndex((el) => lignes(el).some((l) => !l.fait))
   return els.map((el, k) => (
     <Enchainement key={el.id} bloc={bloc} groupe={[{ el, code: `${bloc.lettre}${k + 1}` }]} lignes={lignes} notes={notes} noteId={el.id} fin="exo" actions={actions}
-      voirConsignes={voirConsignes} ouvrir={ouvrir} actif={k === enCours} />
+      voirConsignes={voirConsignes} ouvrir={ouvrir} actif={!lecture && k === enCours} lecture={lecture} />
   ))
 }
 
-function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsignes, ouvrir, actif }) {
+function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsignes, ouvrir, actif, lecture }) {
   const [alerte, setAlerte] = useState('')
   const [ouverte, setOuverte] = useState(-1) // série faite rouverte pour la corriger
   const nb = Math.max(0, ...groupe.map(({ el }) => lignes(el).length))
@@ -164,7 +172,17 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           )
         })}
       </div>
-      {Array.from({ length: nb }, (_, t) => t).filter((t) => serieFaite(t)).map((t) => (
+      {lecture && Array.from({ length: nb }, (_, t) => t).map((t) => (
+        // séance terminée, relue (25 novembre 2026) : chaque série sur une ligne avec ce qui a été noté
+        <div key={t} className={`ec-st-faite ec-st-faite--lecture${serieFaite(t) ? '' : ' est-sautee'}`}>
+          <span className="ec-st-faite__ok" aria-hidden="true">{serieFaite(t) ? <Coche taille={13} /> : '–'}</span>
+          <b>Série {t + 1}</b>
+          <span className="ec-st-faite__res">
+            {serieFaite(t) ? groupe.map(({ el, code }) => <span key={el.id}>{groupe.length > 1 && <i>{code}</i>}{texteFait(el, lignes(el)[t])}</span>) : 'non faite'}
+          </span>
+        </div>
+      ))}
+      {!lecture && Array.from({ length: nb }, (_, t) => t).filter((t) => serieFaite(t)).map((t) => (
         ouverte === t ? (
           <section key={t} className="ec-st-carte ec-st-serie" aria-label={`Série ${t + 1}, faite`}>
             <p className="ec-st-serie__tete est-faite"><span>Série {t + 1} · faite</span><button type="button" onClick={() => setOuverte(-1)}>Fermer</button></p>
@@ -189,7 +207,10 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
         </section>
       )}
       {/* plus de « Séries 2 · 3 à venir » (Marie, 23 novembre 2026) : le plan suffit */}
-      {toutFait && (
+      {lecture && (rpe || note) && (
+        <p className="ec-st-relu">{rpe && <span>RPE {texteRpe(rpe)}</span>}{note && <span>{note}</span>}</p>
+      )}
+      {!lecture && toutFait && (
         <div className="ec-st-pastilles">
           {/* une seule bulle « RPE » : elle ouvre l'effort et la note (Marie, 23 novembre 2026) */}
           <button type="button" className={rpe || note ? 'est-rempli' : ''} onClick={() => ouvrir(fin === 'exo' ? { type: 'exo', id: noteId, correction: true } : { type: 'superset', correction: true })}>{rpe ? `RPE ${texteRpe(rpe)}` : 'RPE'}</button>
@@ -210,7 +231,7 @@ function allureCalculee(bloc, r) {
 
 const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours de :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
 
-function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
+function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture }) {
   const els = bloc.elements ?? []
   const r = resultat ?? {}
   return (
@@ -236,13 +257,14 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir }) {
         {champsResultat(bloc).map((c) => (
           <label key={c.cle}>
             <span>{c.label}</span>
-            <input className="ec-st-champ" type="text" inputMode={c.mode ?? 'numeric'} autoComplete="off" value={r[c.cle] ?? ''}
+            <input className="ec-st-champ" type="text" inputMode={c.mode ?? 'numeric'} autoComplete="off" value={r[c.cle] ?? ''} readOnly={lecture}
               placeholder={c.cle === 'allure' && allureVitesse(r.distance, r.temps).allure !== '–' ? allureVitesse(r.distance, r.temps).allure.replace(' /km', '') : c.aide}
               onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.blocValeurs(bloc.id, { [c.cle]: ev.target.value })} />
           </label>
         ))}
       </div>
-      {r.fait && (
+      {lecture && (r.rpe || r.note) && <p className="ec-st-relu">{r.rpe && <span>RPE {texteRpe(r.rpe)}</span>}{r.note && <span>{r.note}</span>}</p>}
+      {!lecture && r.fait && (
         <div className="ec-st-pastilles">
           <button type="button" className={vide(r.rpe) && vide(r.note) ? '' : 'est-rempli'} onClick={() => ouvrir({ type: 'bloc', correction: true })}>{vide(r.rpe) ? 'RPE' : `RPE ${texteRpe(r.rpe)}`}</button>
         </div>
