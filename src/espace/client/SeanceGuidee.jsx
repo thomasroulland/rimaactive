@@ -4,7 +4,7 @@ import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
 import { enDuree, estFourchette, fr, lignesExercice, resumeFormat, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { ChoixRpe } from './BlocResultat.jsx'
-import { chargeParMain } from '../donnees/banque.js'
+import { chargeParMainEl, libelleMateriel } from '../donnees/banque.js'
 
 // Séance du coaché, version simple (15 novembre 2026, choix de Thomas) :
 // - téléphone : un exercice à la fois, un seul gros bouton « Série faite » (UnExercice) ;
@@ -100,9 +100,9 @@ function CarteExo({ el, code, ls, note, actions, lecture, voirConsignes, actif, 
               <input className="ec-s2-champ" type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, ${duree ? 'durée' : 'répétitions'}`}
                 value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps, el) : texteReps(el.reps)} readOnly={lecture} onChange={(e) => actions?.serie(el, i, cle, e.target.value)} />
               <span aria-hidden="true">×</span>
-              <input className="ec-s2-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
+              <input className="ec-s2-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMainEl(el) ? ' par main' : ''}`}
                 value={l.charge ?? ''} placeholder={fr(el.charge ?? '')} readOnly={lecture} onChange={(e) => actions?.serie(el, i, 'charge', e.target.value)} />
-              <span className="ec-s2-unite">{chargeParMain(el.materiel) ? 'kg / main' : 'kg'}</span>
+              <span className="ec-s2-unite">{chargeParMainEl(el) ? 'kg / main' : 'kg'}</span>
             </span>
             {(detail || lecture) && (
               <span className="ec-s2-rpe"><ChoixRpe id={`${base}-rpe${i}`} libelle={`${el.nom}, série ${i + 1}, RPE`} valeur={l.rpe} lecture={lecture} changer={(v) => actions?.serie(el, i, 'rpe', v)} /></span>
@@ -145,7 +145,7 @@ export function SupersetInfo({ bloc, tour, compact = false, actuel = -1, choisir
   // téléphone : replié par défaut (une ligne), on l'ouvre pour voir les exercices et le matériel (17 novembre 2026)
   const [ouvert, setOuvert] = useState(() => { try { return localStorage.getItem('rima-superset-ouvert') === '1' } catch { return false } })
   const basculer = () => setOuvert((o) => { try { localStorage.setItem('rima-superset-ouvert', o ? '0' : '1') } catch { /* rien */ } return !o })
-  const materiel = (e) => [e.materiel && e.materiel !== 'Poids du corps' && e.materiel !== 'À préciser' ? e.materiel : '', String(e.charge ?? '').trim() ? `${fr(e.charge)} kg${chargeParMain(e.materiel) ? ' par main' : ''}` : ''].filter(Boolean).join(' ')
+  const materiel = (e) => [e.materiel && e.materiel !== 'Poids du corps' && e.materiel !== 'À préciser' ? libelleMateriel(e) : '', String(e.charge ?? '').trim() ? `${fr(e.charge)} kg${chargeParMainEl(e) ? ' par main' : ''}` : ''].filter(Boolean).join(' ')
   const consigne = `Enchaînez ${els.length} exercices sans pause${bloc.repos ? `, puis ${bloc.repos} s de repos` : ''}`
   const tourTxt = tours > 0 ? (tour ? `tour ${tour} sur ${tours}` : `${tours} tours`) : ''
   if (compact) {
@@ -316,7 +316,7 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
         <h3 id={`${base}-nom`} className="ec-s5-nom">{el.nom}</h3>
         {prevu && <p className="ec-s5-prevu">{prevu}{texteRepos(el.repos) ? ` · repos ${texteRepos(el.repos)}` : ''}</p>}
         {el.consignes && <p className="ec-s5-consignes">{el.consignes}</p>}
-        <div className={`ec-s5-ligne ec-s5-entete${avecCharge ? '' : ' sans-charge'}`} aria-hidden="true"><span /><span>{duree ? 'Durée' : 'Répétitions'}</span>{avecCharge && <span>{chargeParMain(el.materiel) ? 'Charge par main' : 'Charge'}</span>}</div>
+        <div className={`ec-s5-ligne ec-s5-entete${avecCharge ? '' : ' sans-charge'}`} aria-hidden="true"><span /><span>{duree ? 'Durée' : 'Répétitions'}</span>{avecCharge && <span>{chargeParMainEl(el) ? 'Charge par main' : 'Charge'}</span>}</div>
         {ls.map((l, i) => (
           <div key={i} className={`ec-s5-ligne${avecCharge ? '' : ' sans-charge'}${l.fait ? ' est-faite' : ''}${i === actuelle ? ' est-actuelle' : ''}`} role="group" aria-label={`${el.nom}, série ${i + 1}`}>
             <button type="button" className="ec-s5-rond" aria-pressed={!!l.fait} aria-label={`Série ${i + 1}, ${l.fait ? 'faite (toucher pour décocher)' : 'à faire (toucher pour cocher)'}`} disabled={lecture}
@@ -325,7 +325,7 @@ function CarteGalerie({ el, code, ls, note, actions, lecture, actuelle, voirCons
               value={l[cle] ?? ''} placeholder={duree ? texteDuree(el.reps, el) : texteReps(el.reps)} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, cle, ev.target.value)} />
             {avecCharge && (
             <span className="ec-s5-kg">
-              <input className="ec-s5-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
+              <input className="ec-s5-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${i + 1}, charge en kilos${chargeParMainEl(el) ? ' par main' : ''}`}
                 value={l.charge ?? ''} placeholder={fr(el.charge ?? '') || '–'} readOnly={lecture} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions?.valeur(el, i, 'charge', ev.target.value)} />
               <small>kg</small>
             </span>
@@ -463,7 +463,7 @@ export function UnExercice({ bloc, etape, blocs, prog, lignes, notes, actions, v
           <div className="ec-s2-reglages">
             <Reglage id={`reps-${el.id}`} libelle={cle === 'duree' ? 'Durée' : fourchette ? `Reps faites (${texteReps(el.reps)})` : 'Répétitions'} valeur={repsV} mode={cle === 'duree' ? 'text' : 'numeric'}
               indice={fourchette ? texteReps(el.reps) : undefined} alerte={manque && !String(repsV).trim()} changer={(v) => { setManque(false); maj('reps')(v) }} />
-            <Reglage id={`charge-${el.id}`} libelle={chargeParMain(el.materiel) ? 'Charge · kg par main' : 'Charge · kg'} valeur={chargeV} mode="decimal" changer={maj('charge')} />
+            <Reglage id={`charge-${el.id}`} libelle={chargeParMainEl(el) ? 'Charge · kg par main' : 'Charge · kg'} valeur={chargeV} mode="decimal" changer={maj('charge')} />
           </div>
         </>
       ) : <p className="ec-s2-un__serie est-fini">Toutes les séries sont faites</p>}

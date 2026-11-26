@@ -47,3 +47,29 @@ export function genreMateriel(materiel) {
 
 // Haltères (18 novembre 2026) : la charge notée est celle d'un seul haltère, « par main »
 export const chargeParMain = (materiel) => genreMateriel(materiel) === 'haltere'
+
+// Nombre d'haltères (Marie, 26 novembre 2026) : 1 ou 2, choisi sur la fiche de l'exercice ; sinon la liste de Marie
+// sert de valeur par défaut (d'après le nom). Les exercices qui ne sont pas aux haltères n'en ont pas (null).
+const HALTERES_PAR_DEFAUT = {
+  'front squat': 2, 'goblet squat': 1, 'goblet squat sumo': 1, 'split squat bulgare': 2, 'fentes arriere': 2, 'fentes avant': 2,
+  'fentes laterales goblet': 1, 'fentes croisees goblet': 1, 'step-up': 2, 'souleve de terre roumain': 2,
+  'souleve de terre roumain b-stance': 2, 'souleve de terre roumain unilateral': 2, 'developpe couche': 2, 'developpe incline': 2,
+  'developpe couche au sol': 2, 'developpe couche prise neutre': 2, 'developpe epaules': 2, 'developpe epaules prise neutre': 2,
+  'rowing buste penche': 2, 'rowing buste penche unilateral': 1, 'rowing incline': 2, 'curl biceps': 2, 'curl biceps marteau': 2,
+  'extensions triceps allonge': 2, 'extensions triceps au-dessus de la tete': 1, 'elevations laterales': 2, 'oiseau': 2,
+  'extensions mollets debout': 2, 'extensions mollets unilateral': 2, 'extensions mollets assis': 2,
+}
+const cleNom = (nom) => simplifie(nom).replace(/\s+/g, ' ').trim()
+export function nbHalteres(exercice) {
+  if (genreMateriel(exercice?.materiel) !== 'haltere') return null
+  const choisi = Number(exercice?.halteres)
+  if (choisi === 1 || choisi === 2) return choisi
+  return HALTERES_PAR_DEFAUT[cleNom(exercice?.nom)] ?? null
+}
+// « 1 haltère », « 2 haltères », sinon le matériel tel quel
+export function libelleMateriel(exercice) {
+  const n = nbHalteres(exercice)
+  return n ? `${n} haltère${n > 1 ? 's' : ''}` : (exercice?.materiel ?? '')
+}
+// la charge est « par main » avec deux haltères ; avec un seul, c'est le poids de cet haltère
+export const chargeParMainEl = (exercice) => chargeParMain(exercice?.materiel) && nbHalteres(exercice) !== 1

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
 import { champsResultat, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
-import { chargeParMain } from '../donnees/banque.js'
+import { chargeParMainEl, libelleMateriel } from '../donnees/banque.js'
 import { installee } from '../../components/installation.js'
 
 // Séance sur téléphone (maquette « B » validée par Marie, 22 novembre 2026) :
@@ -100,7 +100,7 @@ function texteFait(el, l) {
   return [mesure, charge && `${fr(charge)} kg`].filter(Boolean).join(' × ')
 }
 
-const materielDe = (el) => (el.materiel && el.materiel !== 'À préciser' ? el.materiel : '')
+const materielDe = (el) => (el.materiel && el.materiel !== 'À préciser' ? libelleMateriel(el) : '')
 
 function Series({ bloc, lignes, notes, actions, voirConsignes, ouvrir, lecture }) {
   const els = bloc.elements ?? []
@@ -125,7 +125,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
   const toutFait = nb > 0 && actuelle < 0
   const rpe = groupe.flatMap(({ el }) => lignes(el).map((l) => l.rpe)).find((v) => !vide(v))
   const note = notes[noteId] ?? ''
-  const parMain = groupe.length === 1 && chargeParMain(groupe[0].el.materiel)
+  const parMain = groupe.length === 1 && chargeParMainEl(groupe[0].el)
   const sansCharge = groupe.every(({ el }) => enDuree(el))
   const valider = (t) => {
     // le coaché écrit ce qu'il a fait : répétitions (ou durée) obligatoires, la charge peut rester vide (poids du corps)
@@ -151,7 +151,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
           aria-label={`${el.nom}, série ${t + 1}, ${duree ? nomMesure(el).toLowerCase() : 'répétitions faites'}`} value={l[cle] ?? ''} placeholder={precedente?.[cle] || (duree ? (nomMesure(el) === 'Distance' ? 'm' : 's') : '')}
           onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
         {!sansCharge && (duree ? <span className="ec-st-champ est-neutre" aria-hidden="true">–</span> : (
-          <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${t + 1}, kilos${chargeParMain(el.materiel) ? ' par main' : ''}`}
+          <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom}, série ${t + 1}, kilos${chargeParMainEl(el) ? ' par main' : ''}`}
             value={l.charge ?? ''} placeholder={precedente?.charge || ''} onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.valeur(el, t, 'charge', ev.target.value)} />
         ))}
       </div>

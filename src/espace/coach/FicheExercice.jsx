@@ -1,3 +1,4 @@
+import { genreMateriel, nbHalteres } from '../donnees/banque.js'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
@@ -165,6 +166,17 @@ export default function FicheExercice() {
               <ChoixAvecAjout id="exo-mat" label="Matériel" cle="materiels" liste={reglages.materiels} libelleNouveau="Nouveau matériel"
                 valeur={fiche.materiel} changer={(v) => setFiche((f) => ({ ...f, materiel: v }))} />
             </div>
+            {/* haltères : 1 ou 2 (Marie, 26 novembre 2026), affiché au coaché (« 2 haltères ») */}
+            {genreMateriel(fiche.materiel) === 'haltere' && (
+              <div className="champ-groupe">
+                <label htmlFor="exo-halteres">Nombre d’haltères</label>
+                <select id="exo-halteres" className="champ" value={String(nbHalteres(fiche) ?? '')} onChange={(e) => setFiche((f) => ({ ...f, halteres: e.target.value }))}>
+                  <option value="">À préciser</option>
+                  <option value="1">1 haltère</option>
+                  <option value="2">2 haltères</option>
+                </select>
+              </div>
+            )}
             <div className="champ-groupe">
               <label htmlFor="exo-mesure">Se mesure en</label>
               <select id="exo-mesure" className="champ" value={['duree', 'distance'].includes(fiche.mesure) ? fiche.mesure : 'reps'} onChange={(e) => setFiche((f) => ({ ...f, mesure: e.target.value }))}>

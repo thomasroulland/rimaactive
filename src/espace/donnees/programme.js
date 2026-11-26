@@ -53,6 +53,7 @@ export function ajouterElement(programme, { s, se, b }, exercice) {
     nom: exercice.nom,
     consignes: exercice.consignes ?? '',
     materiel: exercice.materiel ?? '', // pour « À préparer » d'un superset côté coaché
+    halteres: exercice.halteres ?? '', // 1 ou 2 haltères (26 novembre 2026)
     muscles: [...(exercice.muscles ?? [])],
     musclesSecondaires: [...(exercice.musclesSecondaires ?? [])],
     photos: [...(exercice.photos ?? [])],
@@ -325,6 +326,7 @@ export function rafraichirExercices(programme, banque) {
             lateralites: [...(f.lateralites ?? [])],
             // le matériel suit la fiche (haltères : charge « par main » chez le coaché)
             materiel: f.materiel ?? el.materiel ?? '',
+            ...((f.halteres ?? el.halteres) !== undefined ? { halteres: f.halteres ?? el.halteres } : {}),
             // la façon choisie reste, sauf si elle n'est plus possible sur la fiche
             lateralite: (f.lateralites ?? []).includes(el.lateralite) ? el.lateralite : (f.lateralites?.[0] ?? ''),
           }

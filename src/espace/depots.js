@@ -148,6 +148,7 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
       musclesSecondaires: exercice.musclesSecondaires ?? [],
       lateralites: exercice.lateralites ?? [],
       mesure: ['duree', 'distance'].includes(exercice.mesure) ? exercice.mesure : 'reps',
+      halteres: ['1', '2'].includes(String(exercice.halteres ?? '')) ? String(exercice.halteres) : '',
       photos: [...(exercice.photos ?? []), ...envoyees],
       retire: exercice.retire ?? false,
       majLe: serverTimestamp(),

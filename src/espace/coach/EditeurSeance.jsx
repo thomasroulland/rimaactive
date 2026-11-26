@@ -9,7 +9,7 @@ import ChoixExercice, { TYPE_GLISSE } from './ChoixExercice.jsx'
 // glisser un bloc (ou un exercice dans son bloc) pour changer l'ordre
 const TYPE_BLOC = 'application/x-rimaactive-bloc'
 const TYPE_EXO = 'application/x-rimaactive-exo-bloc'
-import { chargeIndicative, chargeParMain } from '../donnees/banque.js'
+import { chargeIndicative, chargeParMainEl } from '../donnees/banque.js'
 import { frNombre } from '../donnees/resume.js'
 import { IconeCorbeille, IconePoints } from './Icones.jsx'
 
@@ -244,7 +244,7 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                       <LigneExo key={el.id} element={el} code={`${b.lettre}${ei + 1}`} series={estEnSeries(b.format)} activite={estActivite(b.format)} verrou={verrou} rm={rm}
                         maj={(cle, v) => majElement(bi, ei, cle, v)} retirer={() => retirer(el)}
                         materiel={el.materiel || (exercices ?? []).find((x) => x.id === el.exoId)?.materiel}
-                        parMain={chargeParMain(el.materiel || (exercices ?? []).find((x) => x.id === el.exoId)?.materiel)}
+                        parMain={chargeParMainEl({ ...((exercices ?? []).find((x) => x.id === el.exoId) ?? {}), ...el, materiel: el.materiel || (exercices ?? []).find((x) => x.id === el.exoId)?.materiel })}
                         nbDansBloc={(b.elements ?? []).length} monter={ei > 0 ? () => deplacerElement?.(bi, ei, ei - 1) : null}
                         descendre={ei < (b.elements ?? []).length - 1 ? () => deplacerElement?.(bi, ei, ei + 1) : null}
                         tenu={exoTenu?.bi === bi && exoTenu.ei === ei}

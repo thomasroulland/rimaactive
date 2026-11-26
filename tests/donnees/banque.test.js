@@ -106,3 +106,18 @@ describe('muscles (25 novembre 2026)', () => {
     expect(completerReglages({ muscles: ['Cou', 'Épaules', 'Mollets', 'Abducteurs'] }).muscles).toEqual(['Mollets', 'Adducteurs', 'Abducteurs', 'Épaules', 'Cou'])
   })
 })
+
+describe('nombre d’haltères (26 novembre 2026)', () => {
+  it('choisi sur la fiche, sinon la liste de Marie, seulement pour les haltères', async () => {
+    const { nbHalteres, libelleMateriel, chargeParMainEl } = await import('../../src/espace/donnees/banque.js')
+    expect(nbHalteres({ nom: 'Goblet squat', materiel: 'Haltère' })).toBe(1)
+    expect(nbHalteres({ nom: 'Fentes latérales goblet ', materiel: 'Haltère' })).toBe(1)
+    expect(nbHalteres({ nom: 'Développé couché', materiel: 'Haltère' })).toBe(2)
+    expect(nbHalteres({ nom: 'Développé couché', materiel: 'Barre' })).toBe(null)
+    expect(nbHalteres({ nom: 'Développé couché', materiel: 'Haltère', halteres: '1' })).toBe(1)
+    expect(libelleMateriel({ nom: 'Curl biceps', materiel: 'Haltère' })).toBe('2 haltères')
+    expect(libelleMateriel({ nom: 'Rowing buste penché unilatéral', materiel: 'Haltère' })).toBe('1 haltère')
+    expect(chargeParMainEl({ nom: 'Goblet squat', materiel: 'Haltère' })).toBe(false)
+    expect(chargeParMainEl({ nom: 'Curl biceps', materiel: 'Haltère' })).toBe(true)
+  })
+})
