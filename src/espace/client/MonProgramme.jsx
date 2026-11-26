@@ -96,14 +96,14 @@ function Semaines({ bloc, nb, faites, seances }) {
     <section className="ec-semgrille" aria-label="Mes semaines">
       {Array.from({ length: nb }, (_, k) => k + 1).map((n) => {
         const lignes = seancesDeLaSemaine(bloc.programme, n, faites)
-        const nbFaites = lignes.filter((x) => statutSeance(seances, bloc.programme.id, x.seance.id) === 'Faite').length
         return (
           <article key={n} className={`ec-semc${n === courante ? ' est-courante' : ''}${n === vue ? ' est-vue' : ''}${n === vue && sens > 0 ? ' vient-droite' : n === vue && sens < 0 ? ' vient-gauche' : ''}`}
             aria-labelledby={`semc-${n}`} aria-current={n === courante ? 'date' : undefined}>
             <div className="ec-semc__tete">
               <div className="ec-semc__titres">
                 <h2 id={`semc-${n}`} className="ec-semc__titre">Semaine {n} <span>sur {nb}</span>{n === courante && <em className="ec-semc__badge">Cette semaine</em>}</h2>
-                <p className="ec-semc__infos">{[datesSemaine(bloc.debut, n), lignes.length ? (nbFaites === 0 ? `${lignes.length} séance${lignes.length > 1 ? 's' : ''}` : nbFaites === lignes.length ? 'tout est fait' : `${nbFaites} faite${nbFaites > 1 ? 's' : ''} sur ${lignes.length}`) : ''].filter(Boolean).join(' · ')}</p>
+                {/* seulement les dates (Marie, 26 novembre 2026) : plus de « 3 séances » ni « 2 faites sur 3 » */}
+                <p className="ec-semc__infos">{datesSemaine(bloc.debut, n)}</p>
               </div>
               {nb > 1 && (
                 <div className="ec-semc__nav" role="group" aria-label="Changer de semaine">
