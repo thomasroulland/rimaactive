@@ -298,9 +298,13 @@ describe('fourchette de répétitions (20 novembre 2026)', () => {
 
 import { texteRepos } from '../../src/espace/donnees/seances.js'
 describe('texteRepos (22 novembre 2026)', () => {
-  it('ajoute « s » à un nombre seul, garde le reste tel quel', () => {
-    expect(texteRepos('90')).toBe('90 s')
-    expect(texteRepos('1:30')).toBe('1:30')
+  it('écrit le repos en minutes (26 novembre 2026)', () => {
+    expect(texteRepos('90')).toBe('1 min 30') // ancien repos en secondes
+    expect(texteRepos('2')).toBe('2 min') // nouveau : minutes
+    expect(texteRepos('1,5')).toBe('1 min 30')
+    expect(texteRepos('45 s')).toBe('45 s')
+    expect(texteRepos('1:30')).toBe('1 min 30')
+    expect(texteRepos('2 min')).toBe('2 min')
     expect(texteRepos('')).toBe('')
     expect(texteRepos(undefined)).toBe('')
   })

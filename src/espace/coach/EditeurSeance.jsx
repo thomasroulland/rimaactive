@@ -364,7 +364,7 @@ function LigneExo({ element: el, code, series, activite, verrou, rm, maj, retire
         {series && cellule('rpe', 'RPE', 'decimal')}
         {series && cellule('tempo', 'tempo (ex. 3-1-1)', 'text')}
         {/* repos après la série, de retour (Marie, 22 novembre 2026) : séries classiques et supersets */}
-        {series && cellule('repos', 'repos en secondes (ex. 90)', 'text', 's')}
+        {series && cellule('repos', 'repos en minutes (ex. 1,5 ou 2)', 'decimal', 'min')}
         <button type="button" className="es2-plus" aria-expanded={plus} aria-label={`Plus de réglages pour ${el.nom}`} onClick={() => setPlus((p) => !p)}><IconePoints /></button>
       </div>
       <div className="es2-ligne__note">

@@ -277,7 +277,7 @@ export function lignesExercice(element, enSeries = true) {
   const reps = enDuree(e) ? texteDuree(e.reps, e) : texteReps(e.reps)
   const volume = n && reps ? `${n} × ${reps}` : n ? `${n} séries` : reps ? (enDuree(e) ? reps : `${reps} reps`) : ''
   const details = [
-    rempli(e.repos) && `Repos ${String(e.repos).trim()}`,
+    rempli(e.repos) && `Repos ${texteRepos(e.repos)}`,
     rempli(e.tempo) && `Tempo ${String(e.tempo).trim()}`,
     rempli(e.rpe) && `RPE ${fr(String(e.rpe).trim())}`,
   ].filter(Boolean).join(' · ')
@@ -389,9 +389,15 @@ export function premierBlocAFaire(progression) {
 
 // Temps de repos saisi par Marie, en secondes : « 90 », « 90 s », « 1:30 », « 1 min 30 », « 2 min » ; sinon null
 // « 90 » → « 90 s » ; « 1:30 » ou « 2 min » restent comme Marie les a écrits ; vide → ''
+// Repos écrit en minutes (Marie, 26 novembre 2026) : « 1 min 30 », « 2 min », « 45 s »
 export function texteRepos(repos) {
   const t = String(repos ?? '').trim()
-  return /^\d+$/.test(t) ? `${t} s` : t
+  if (!t) return ''
+  const s = secondesRepos(t)
+  if (s === null) return t
+  if (s < 60) return `${s} s`
+  const m = Math.floor(s / 60), r = s % 60
+  return r ? `${m} min ${String(r).padStart(2, '0')}` : `${m} min`
 }
 
 export function secondesRepos(repos) {
@@ -401,8 +407,11 @@ export function secondesRepos(repos) {
   if (m) return Number(m[1]) * 60 + Number(m[2])
   m = t.match(/^(\d+(?:\.\d+)?)\s*(?:min|mn|m|')\s*(\d+)?\s*(?:s|sec|")?$/)
   if (m) return Math.round(Number(m[1]) * 60) + (m[2] ? Number(m[2]) : 0)
-  m = t.match(/^(\d+)\s*(?:s|sec|secondes?|")?$/)
+  m = t.match(/^(\d+)\s*(?:s|sec|secondes?|")$/)
   if (m) return Number(m[1])
+  // un nombre seul : des minutes (« 1,5 », « 2 ») depuis le 26 novembre 2026 ; au-delà de 15, c'est un ancien repos en secondes (« 90 »)
+  m = t.match(/^(\d+(?:\.\d+)?)$/)
+  if (m) return Number(m[1]) <= 15 ? Math.round(Number(m[1]) * 60) : Math.round(Number(m[1]))
   return null
 }
 
