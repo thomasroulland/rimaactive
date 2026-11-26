@@ -65,7 +65,8 @@ const pwa = VitePWA({
     globPatterns: ['**/*.{js,css,html,svg,woff2,png,webp}'],
     maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
     navigateFallback: '/index.html',
-    navigateFallbackDenylist: [/^\/api\//],
+    // les fichiers pour les robots (sitemap, robots, llms) ne doivent jamais être remplacés par la page du site (26 novembre 2026)
+    navigateFallbackDenylist: [/^\/api\//, /\.(xml|txt)$/],
     cleanupOutdatedCaches: true,
     // notifications (nouveau programme) : affichage et ouverture de la bonne page
     importScripts: ['/notifs-sw.js'],
