@@ -2390,3 +2390,11 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .gestion-listes__actions--confirmer { flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .gestion-listes__avertir { font-size: 13px; line-height: 1.35; color: var(--encre); }
 .gestion-listes__ligne:has(.gestion-listes__actions--confirmer) { flex-wrap: wrap; padding: 10px 12px; margin: 4px 0; border-radius: 12px; background: #fdf0ec; border-bottom: 0; }
+
+/* Fiche du coaché : choix des 3 chiffres de « Ma progression » (26 novembre 2026) */
+.choix-chiffres__form { display: grid; gap: 12px; margin-top: 12px; }
+.choix-chiffres__form .champ { width: 100%; }
+.choix-chiffres__apercu { display: grid; gap: 6px; margin-top: 4px; }
+.choix-chiffres__apercu .ec-prog-noire { padding: 18px; }
+.choix-chiffres__apercu .ec-prog-noire__grand { font-size: 40px; }
+.choix-chiffres__form > .bouton { justify-self: start; }

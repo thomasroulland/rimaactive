@@ -14,6 +14,7 @@ import { records } from '../donnees/records.js'
 import { RM_SUIVIS } from '../donnees/banque.js'
 import { messageErreur } from '../erreurs.js'
 import { useCoache } from './EnteteCoache.jsx'
+import ChoixChiffres from './ChoixChiffres.jsx'
 import { Courbe, DialogueSuppression, Ecarts, SeanceFaite, trouverSeance } from './FicheClient.jsx'
 import { comparerSeance } from '../donnees/ecarts.js'
 import PhotoStockee from './PhotoStockee.jsx'
@@ -31,7 +32,7 @@ const Carte = ({ titre, id, children, classe = '' }) => (
 
 // ---------- Vue d'ensemble ----------
 export function Ensemble() {
-  const { client, uid, programmes, seances, progEnCours, erreur } = useCoache()
+  const { client, uid, programmes, seances, progEnCours, erreur, majClient } = useCoache()
   const navigate = useNavigate()
   const [suppression, setSuppression] = useState(false)
   const aujourdhui = aujourdhuiIso()
@@ -73,6 +74,8 @@ export function Ensemble() {
         <Carte titre="Objectif et 1RM" id="t-profil">
           <ProfilSportif client={client} uid={uid} />
         </Carte>
+        <ChoixChiffres uid={uid} client={client} majClient={majClient} programme={progEnCours} programmes={programmes} seances={seances}
+          faites={new Set((seances ?? []).filter((s) => s.statut === 'terminée' && s.programme === progEnCours?.id).map((s) => s.seance))} />
       </aside>
       </div>
 

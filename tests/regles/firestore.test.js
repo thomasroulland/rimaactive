@@ -75,6 +75,10 @@ describe('utilisateurs : coach et anonyme', () => {
   it('le coach met un client en pause', async () => {
     await assertSucceeds(updateDoc(doc(coach, 'utilisateurs/A'), { statut: 'en pause' }))
   })
+  it('le coach choisit les 3 chiffres de « Ma progression » ; le client ne peut pas les changer (26 novembre 2026)', async () => {
+    await assertSucceeds(updateDoc(doc(coach, 'utilisateurs/A'), { chiffresProgression: ['poids', 'seances', 'effort'] }))
+    await assertFails(updateDoc(doc(A, 'utilisateurs/A'), { chiffresProgression: ['seances', 'progres', 'poids'] }))
+  })
   it('le coach ne change pas le rôle', async () => {
     await assertFails(updateDoc(doc(coach, 'utilisateurs/A'), { role: 'coach' }))
   })
