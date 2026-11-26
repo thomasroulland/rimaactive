@@ -6,8 +6,6 @@ import useReglages from './useReglages.js'
 import GestionListes from './GestionListes.jsx'
 import MaterielPicto from './MaterielPicto.jsx'
 import Picto from '../../components/Picto.jsx'
-import OngletsParties from './OngletsParties.jsx'
-import { partieDe } from '../donnees/reglages.js'
 
 const CLE_FILTRES = 'rima-banque-filtres'
 const simple = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -23,14 +21,12 @@ export default function Exercices() {
   // filtres gardés pendant la session : on les retrouve en revenant d'un exercice (Marie, 26 novembre 2026)
   const garde = useMemo(() => { try { return JSON.parse(sessionStorage.getItem(CLE_FILTRES)) ?? {} } catch { return {} } }, [])
   const [recherche, setRecherche] = useState(garde.recherche ?? '')
-  const [retires, setRetires] = useState(garde.retires ?? false)
-  const [partie, setPartie] = useState(garde.partie ?? 'Tout')
   const [categorie, setCategorie] = useState(garde.categorie ?? 'Toutes')
   const [materiel, setMateriel] = useState(garde.materiel ?? 'Tous')
   const [tri, setTri] = useState(garde.tri ?? 'az')
   useEffect(() => {
-    try { sessionStorage.setItem(CLE_FILTRES, JSON.stringify({ recherche, retires, partie, categorie, materiel, tri })) } catch { /* rien */ }
-  }, [recherche, retires, partie, categorie, materiel, tri])
+    try { sessionStorage.setItem(CLE_FILTRES, JSON.stringify({ recherche, categorie, materiel, tri })) } catch { /* rien */ }
+  }, [recherche, categorie, materiel, tri])
   const [gerer, setGerer] = useState(null) // null | 'categories' | 'materiels' | 'autres'
   const [panneau, setPanneau] = useState(false)
   const reglages = useReglages()
@@ -38,43 +34,34 @@ export default function Exercices() {
 
   useEffect(() => ecouterExercices(setExercices, () => setErreur('Impossible de charger la banque. Vérifiez votre connexion.')), [])
 
-  const dansPartie = (e, p = partie) => (retires || !e.retire) && (p === 'Tout' || partieDe(e.categorie, reglages) === p)
+  // ni onglets de parties ni exercices archivés dans la banque (Marie, 26 novembre 2026)
+  const visible = (e) => !e.retire
   const liste = useMemo(() => {
     if (!exercices) return []
     const q = simple(recherche.trim())
-    const l = exercices.filter((e) => dansPartie(e) && (categorie === 'Toutes' || e.categorie === categorie) && (materiel === 'Tous' || e.materiel === materiel) && (
+    const l = exercices.filter((e) => visible(e) && (categorie === 'Toutes' || e.categorie === categorie) && (materiel === 'Tous' || e.materiel === materiel) && (
       !q || simple(e.nom).includes(q) || simple(e.materiel).includes(q) || simple(e.categorie).includes(q) || (e.muscles ?? []).some((m) => simple(m).includes(q))))
     return tri === 'za' ? [...l].reverse() : l
-  }, [exercices, recherche, retires, categorie, materiel, partie, reglages, tri]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [exercices, recherche, categorie, materiel, tri])
 
-  // nombre d'exercices par catégorie et par matériel, dans la partie choisie
-  const base = (exercices ?? []).filter((e) => dansPartie(e))
+  // nombre d'exercices par catégorie et par matériel
+  const base = (exercices ?? []).filter((e) => visible(e))
   const compter = (champ) => base.reduce((m, e) => m.set(e[champ], (m.get(e[champ]) ?? 0) + 1), new Map())
   const nbCat = compter('categorie')
   const nbMat = compter('materiel')
-  const categoriesVisibles = reglages.categories.filter((c) => partie === 'Tout' || partieDe(c, reglages) === partie)
 
-  const actifs = exercices?.filter((e) => !e.retire).length ?? 0
-  const resume = exercices === null ? ' ' : actifs === 0 ? 'Aucun exercice pour l’instant.' : actifs === 1 ? '1 exercice' : `${actifs} exercices`
 
   const pastilles = [
-    partie !== 'Tout' && { nom: partie, retirer: () => { setPartie('Tout'); setCategorie('Toutes') } },
     categorie !== 'Toutes' && { nom: categorie, retirer: () => setCategorie('Toutes') },
     materiel !== 'Tous' && { nom: materiel, retirer: () => setMateriel('Tous') },
-    retires && { nom: 'Archivés', retirer: () => setRetires(false) },
   ].filter(Boolean)
-  const toutEffacer = () => { setPartie('Tout'); setCategorie('Toutes'); setMateriel('Tous'); setRetires(false); setRecherche('') }
+  const toutEffacer = () => { setCategorie('Toutes'); setMateriel('Tous'); setRecherche('') }
   const nbTrouves = `${liste.length} exercice${liste.length > 1 ? 's' : ''}`
 
   const filtres = (forme) => (
     <>
-      <OngletsParties parties={reglages.parties} valeur={partie} changer={(p) => { setPartie(p); setCategorie('Toutes') }} compte={null} />
-      <ListeFiltre forme={forme} titre="Catégorie" tous="Toutes" valeur={categorie} changer={setCategorie} elements={categoriesVisibles} nombres={nbCat} total={base.length} gerer={() => setGerer('categories')} />
+      <ListeFiltre forme={forme} titre="Catégorie" tous="Toutes" valeur={categorie} changer={setCategorie} elements={reglages.categories} nombres={nbCat} total={base.length} gerer={() => setGerer('categories')} />
       <ListeFiltre forme={forme} titre="Matériel" tous="Tous" valeur={materiel} changer={setMateriel} elements={reglages.materiels} nombres={nbMat} total={base.length} gerer={() => setGerer('materiels')} />
-      <label className="espace-case banque__archives">
-        <input type="checkbox" checked={retires} onChange={(e) => setRetires(e.target.checked)} />
-        Exercices archivés
-      </label>
       <button type="button" className="banque__gerer-autres" onClick={() => setGerer('autres')}>Gérer les parties et les muscles</button>
     </>
   )
@@ -84,9 +71,7 @@ export default function Exercices() {
       <div className="conteneur espace-coach banque">
         <header className="espace-coach__entete">
           <div>
-            <p className="surtitre">Espace coach</p>
             <h1 className="titre titre--section">Banque d’exercices</h1>
-            <p className="espace-texte">{resume}</p>
           </div>
           <Link to="/espace/coach/exercices/nouveau" className="bouton bouton--principal banque__nouveau">
             <Picto nom="barbell" taille={20} /> Nouvel exercice
@@ -116,7 +101,7 @@ export default function Exercices() {
               </button>
             </div>
 
-            {exercices && (
+            {exercices && (pastilles.length > 0 || recherche) && (
               <div className="banque__actifs">
                 <span className="banque__nb" aria-live="polite">{nbTrouves}</span>
                 {pastilles.map((p) => (
@@ -125,7 +110,7 @@ export default function Exercices() {
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
                 ))}
-                {(pastilles.length > 0 || recherche) && <button type="button" className="banque__effacer" onClick={toutEffacer}>Tout effacer</button>}
+                <button type="button" className="banque__effacer" onClick={toutEffacer}>Tout effacer</button>
               </div>
             )}
 

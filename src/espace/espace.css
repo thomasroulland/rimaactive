@@ -2398,3 +2398,6 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .choix-chiffres__apercu .ec-prog-noire { padding: 18px; }
 .choix-chiffres__apercu .ec-prog-noire__grand { font-size: 40px; }
 .choix-chiffres__form > .bouton { justify-self: start; }
+/* banque : titre seul (sans « Espace coach » ni nombre), un peu d'air sous la barre ; grille collée aux outils quand aucun filtre n'est actif */
+.banque .espace-coach__entete { padding-top: 16px; align-items: center; }
+.banque__outils + .banque__grille, .banque__outils + .espace-texte { margin-top: 16px; }
