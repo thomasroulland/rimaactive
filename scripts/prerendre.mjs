@@ -14,13 +14,18 @@ globalThis.localStorage = { getItem: () => null, setItem: noop, removeItem: noop
 const racine = new URL('..', import.meta.url).pathname
 const dist = join(racine, 'dist')
 const { rendre } = await import(join(racine, '.ssr', 'entree-serveur.js'))
-const { PAGES, SITE, IDENTITE } = await import(join(racine, '.ssr', 'entree-serveur.js')).then((m) => m.seo)
+const { PAGES, SITE, IDENTITE, ESPACE } = await import(join(racine, '.ssr', 'entree-serveur.js')).then((m) => m.seo)
 
 const coquille = readFileSync(join(dist, 'index.html'), 'utf8')
-// la coquille vide reste disponible pour l'espace (et les autres adresses) : voir vercel.json
-writeFileSync(join(dist, 'app.html'), coquille)
-
 const echapper = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+// la coquille vide reste disponible pour l'espace (et les autres adresses) : voir vercel.json.
+// Elle porte le titre et la description de la connexion à l'espace, pour que Google ne la confonde pas avec l'accueil.
+writeFileSync(join(dist, 'app.html'), coquille
+  .replace(/<title>[^<]*<\/title>/, `<title>${echapper(ESPACE.titre)}</title>`)
+  .replace(/<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${echapper(ESPACE.description)}" />`)
+  .replace(/<meta property="og:title" content="[^"]*" \/>/, `<meta property="og:title" content="${echapper(ESPACE.titre)}" />`)
+  .replace(/<meta property="og:description" content="[^"]*" \/>/, `<meta property="og:description" content="${echapper(ESPACE.description)}" />`))
 for (const [chemin, { titre, description }] of Object.entries(PAGES)) {
   const url = `${SITE}${chemin === '/' ? '/' : chemin}`
   const tete = [

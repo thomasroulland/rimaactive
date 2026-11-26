@@ -29,6 +29,12 @@ export const PAGES = {
   },
 }
 
+// Page de connexion de l'espace (/espace) : titre et description vus dans Google, à la place de ceux de l'accueil
+export const ESPACE = {
+  titre: 'Connexion à mon espace | Rimaactive',
+  description: 'Espace des coachés de Marie Sillas : connectez-vous pour retrouver votre programme, vos séances et votre progression.',
+}
+
 // Fiche d'identité (schema.org) : seulement ce qui est écrit sur le site, rien d'inventé
 export const IDENTITE = {
   '@context': 'https://schema.org',

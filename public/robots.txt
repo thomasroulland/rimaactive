@@ -1,7 +1,9 @@
 # Rimaactive : moteurs de recherche et assistants IA bienvenus sur le site vitrine
 User-agent: *
 Allow: /
-Disallow: /espace
+# la page de connexion de l'espace peut être lue (pour son titre) ; le reste de l'espace, non
+Allow: /espace$
+Disallow: /espace/
 Disallow: /api/
 
 Sitemap: https://www.rimaactive.fr/sitemap.xml
