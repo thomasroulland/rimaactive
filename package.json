@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/entree-serveur.jsx --outDir .ssr --emptyOutDir && node scripts/prerendre.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:fuseaux": "TZ=Pacific/Kiritimati vitest run tests/donnees && TZ=America/Los_Angeles vitest run tests/donnees",

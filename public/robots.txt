@@ -1,0 +1,7 @@
+# Rimaactive : moteurs de recherche et assistants IA bienvenus sur le site vitrine
+User-agent: *
+Allow: /
+Disallow: /espace
+Disallow: /api/
+
+Sitemap: https://www.rimaactive.fr/sitemap.xml
