@@ -5,6 +5,7 @@ import { ajoutJours, aujourdhuiIso } from '../donnees/calculs.js'
 import { avancement, blocsDuClient, dateSeance, seancesDeLaSemaine } from '../donnees/progression.js'
 import { dateLongue, statutSeance } from '../donnees/seances.js'
 import ApercuSeance from './ApercuSeance.jsx'
+import { Chevron, Statut } from './Statut.jsx'
 import { CarteEchauffement } from './Echauffement.jsx'
 
 const ETATS = { 'en cours': 'encours', passé: 'passe', 'à venir': 'avenir' }
@@ -126,27 +127,23 @@ function Semaines({ bloc, nb, faites, seances }) {
             {lignes.length === 0
               ? <p className="ec-semaine__vide">Pas de séance cette semaine.</p>
               : (
-                <ul className="ec-semc__liste">
+                // même liste que « Ma semaine » du tableau de bord (Marie, 26 novembre 2026) : case cochée, « Séance 1 », titre, « Faite »
+                <ul className="ec-semaine__liste ec-semc__liste2">
                   {lignes.map((x) => {
                     const statut = statutSeance(seances, bloc.programme.id, x.seance.id)
-                    const meta = [x.seance.lieu, x.seance.objectif].filter(Boolean).join(' · ')
+                    const classe = statut === 'Faite' ? 'cochee' : statut === 'En cours' ? 'encours' : ''
                     return (
                       <li key={x.seance.id}>
-                        <Link className={`ec-pcarte ec-ps est-${{ Faite: 'faite', 'En cours': 'encours' }[statut] ?? 'afaire'}`}
-                          to={`/espace/seance/${bloc.programme.id}/${x.seance.id}`} state={{ depuis: 'programme' }}
+                        <Link className="ec-ligne" to={`/espace/seance/${bloc.programme.id}/${x.seance.id}`} state={{ depuis: 'programme' }}
                           onClick={avant && statut === 'À faire' ? (e) => { e.preventDefault(); setApercu(x) } : undefined}
-                          aria-haspopup={avant && statut === 'À faire' ? 'dialog' : undefined}
-                          aria-label={`Séance ${x.numero}, ${x.seance.titre || 'sans titre'}, ${statut === 'En cours' ? 'à reprendre' : statut}`}>
-                          <span className="ec-ps__rond" aria-hidden="true">
-                            {statut === 'Faite'
-                              ? <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-                              : x.numero}
+                          aria-haspopup={avant && statut === 'À faire' ? 'dialog' : undefined}>
+                          <span className={`ec-case-regul ${classe}`.trim()} aria-hidden="true" />
+                          <span className="ec-ligne__corps">
+                            <span className="ec-ligne__titre">Séance {x.numero}</span>
+                            {x.seance.titre && <span className="ec-ligne__meta">{x.seance.titre}</span>}
                           </span>
-                          <span className="ec-ps__corps">
-                            <span className="ec-ps__titre">{x.seance.titre || `Séance ${x.numero}`}</span>
-                            <span className="ec-ps__meta">{statut === 'En cours' ? 'À reprendre' : statut === 'Faite' ? 'Faite' : meta}</span>
-                          </span>
-                          <svg className="ec-ps__fleche" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+                          {statut !== 'À faire' && <Statut statut={statut === 'En cours' ? 'À reprendre' : statut} />}
+                          <Chevron />
                         </Link>
                       </li>
                     )

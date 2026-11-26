@@ -148,7 +148,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
     return (
       <div key={el.id} className={`ec-st-tl${sansCharge ? ' sans-charge' : ''}`} role="group" aria-label={`Série ${t + 1}, ${el.nom}`}>
         <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{code}</span>
-        <span className="ec-st-tl__nom">{el.nom}{texteRepos(el.repos) && <small>repos {texteRepos(el.repos)}</small>}</span>
+        <span className="ec-st-tl__nom">{el.nom}</span>
         <span className={`ec-st-kg${el.parCote ? ' est-par-main' : ''}`}>
           <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
             aria-label={`${el.nom}, série ${t + 1}, ${duree ? nomMesure(el).toLowerCase() : 'répétitions faites'}${el.parCote ? ' par côté' : ''}`} value={l[cle] ?? ''} placeholder={precedente?.[cle] || (duree ? (nomMesure(el) === 'Distance' ? 'm' : 's') : '')}
@@ -166,6 +166,7 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
       </div>
     )
   })
+  const reposSerie = texteRepos([...groupe].reverse().map(({ el }) => el.repos).find((v) => String(v ?? '').trim()))
   const entete = (
     <div className={`ec-st-tl ec-st-tl--tete${sansCharge ? ' sans-charge' : ''}`} aria-hidden="true">
       <span /><span /><span>{groupe.some(({ el }) => !enDuree(el)) ? 'Reps' : nomMesure(groupe[0].el)}</span>{!sansCharge && <span>Kg</span>}
@@ -231,6 +232,8 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
       {actif && actuelle >= 0 && (!repos || repos === 'fini') && (
         <section className="ec-st-carte ec-st-serie" aria-label={`Série ${actuelle + 1} sur ${nb}`}>
           <p className="ec-st-serie__tete"><span>Série {actuelle + 1} sur {nb}</span></p>
+          {/* le repos une seule fois, sous le titre de la série (Marie, 26 novembre 2026) */}
+          {reposSerie && <p className="ec-st-serie__repos">Repos {reposSerie} après la série</p>}
           {entete}
           {lignesSerie(actuelle, true)}
           {alerte && <p className="ec-st-alerte" role="alert">Notez le nombre de répétitions faites.</p>}
