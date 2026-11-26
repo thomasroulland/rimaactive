@@ -6,7 +6,7 @@ import { messageErreur } from '../erreurs.js'
 
 // Fenêtre « Gérer… » (14 novembre 2026) : ajouter, renommer, supprimer les éléments d'une ou plusieurs listes du coach.
 // `listes` : [{ cle: 'types' | 'categories' | 'materiels', titre }] ; `reglages` : les listes actuelles.
-export default function GestionListes({ titre, listes, reglages, fermer }) {
+export default function GestionListes({ titre, listes, reglages, fermer, exercices = null }) {
   const ref = useRef(null)
   useEffect(() => { const d = ref.current; if (d && !d.open) d.showModal() }, [])
   return (
@@ -19,7 +19,7 @@ export default function GestionListes({ titre, listes, reglages, fermer }) {
         </button>
       </div>
       <div className="gestion-listes__colonnes">
-        {listes.map((l) => <Liste key={l.cle} cle={l.cle} titre={l.titre} seule={listes.length === 1} reglages={reglages} />)}
+        {listes.map((l) => <Liste key={l.cle} cle={l.cle} titre={l.titre} seule={listes.length === 1} reglages={reglages} exercices={exercices} />)}
       </div>
     </dialog>
   )
@@ -27,7 +27,10 @@ export default function GestionListes({ titre, listes, reglages, fermer }) {
 
 const BASE = new Set(TYPES_DE_BASE.map((t) => t.id))
 
-function Liste({ cle, titre, seule, reglages }) {
+// Champ des fiches de la banque qui porte l'élément (catégorie ou matériel), pour compter les exercices concernés
+const CHAMP = { categories: 'categorie', materiels: 'materiel' }
+
+function Liste({ cle, titre, seule, reglages, exercices }) {
   const types = cle === 'types'
   // éléments communs : { id, nom } (les catégories et matériels sont de simples noms)
   const elements = types ? reglages.types : reglages[cle].map((n) => ({ id: n, nom: n }))
@@ -69,7 +72,14 @@ function Liste({ cle, titre, seule, reglages }) {
       setEdition(null)
     })
   }
-  const supprimer = (x) => lancer(async () => { await ecrire(elements.filter((y) => y.id !== x.id)); setASupprimer(null) })
+  const champ = exercices ? CHAMP[cle] : null
+  const combien = (nom) => (champ ? exercices.filter((e) => e[champ] === nom).length : null)
+  // supprimer une catégorie ou un matériel : les exercices concernés passent en « à préciser » (26 novembre 2026)
+  const supprimer = (x) => lancer(async () => {
+    await ecrire(elements.filter((y) => y.id !== x.id))
+    if (champ && combien(x.nom) > 0) await renommerDansBanque(champ, x.nom, '')
+    setASupprimer(null)
+  })
 
   return (
     <section className="gestion-listes__partie" aria-labelledby={`gl-${cle}`}>
@@ -86,7 +96,7 @@ function Liste({ cle, titre, seule, reglages }) {
               </form>
             ) : (
               <>
-                <span className="gestion-listes__nom">{x.nom}</span>
+                <span className="gestion-listes__nom">{x.nom}{champ && <span className="gestion-listes__nb">{combien(x.nom)}</span>}</span>
                 {cle === 'categories' && reglages.parties.length > 1 && aSupprimer !== x.id && (
                   <>
                     <label htmlFor={`gl-p-${x.id}`} className="sr-only">Partie de « {x.nom} »</label>
@@ -97,7 +107,8 @@ function Liste({ cle, titre, seule, reglages }) {
                   </>
                 )}
                 {aSupprimer === x.id ? (
-                  <span className="gestion-listes__actions">
+                  <span className="gestion-listes__actions gestion-listes__actions--confirmer">
+                    {champ && <span className="gestion-listes__avertir">{combien(x.nom) === 0 ? 'Aucun exercice ne l’utilise.' : `${combien(x.nom)} exercice${combien(x.nom) > 1 ? 's passeront' : ' passera'} en « à préciser ».`}</span>}
                     <button type="button" className="gestion-listes__confirmer" disabled={envoi} onClick={() => supprimer(x)}>Supprimer « {x.nom} »</button>
                     <button type="button" className="espace-lien" onClick={() => setASupprimer(null)}>Annuler</button>
                   </span>
@@ -131,7 +142,9 @@ function Liste({ cle, titre, seule, reglages }) {
             ? 'Les onglets de la banque. Choisissez la partie de chaque catégorie dans la colonne « Catégories ».'
             : cle === 'categories'
               ? 'Le menu à droite range la catégorie dans une partie. Renommer met à jour les fiches de la banque.'
-              : 'Renommer met à jour les fiches de la banque. Supprimer retire seulement le choix de la liste.'}
+              : champ
+                ? 'Renommer met à jour les fiches de la banque. Supprimer retire le choix de la liste ; les exercices concernés passent en « à préciser ».'
+                : 'Renommer met à jour les fiches de la banque. Supprimer retire seulement le choix de la liste.'}
       </p>
     </section>
   )

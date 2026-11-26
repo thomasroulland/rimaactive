@@ -2298,3 +2298,95 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .es2-cote input { width: 16px; height: 16px; accent-color: var(--encre); margin: 0; }
 /* Banque : photos en 4:5 (26 novembre 2026) */
 .espace-exo__photo, .espace-exo .espace-photo--vide { aspect-ratio: 4 / 5 !important; }
+
+/* Banque d'exercices, refonte du 26 novembre 2026 (maquette validée par Marie) :
+   ordinateur = filtres à gauche avec les nombres + grille 4:5 ; téléphone = recherche, « Filtres · N », liste à petites photos */
+.banque__corps { display: grid; gap: 24px; margin-top: 8px; }
+.banque__filtres { display: none; }
+.banque__principal { min-width: 0; }
+.banque__outils { display: flex; gap: 10px; align-items: stretch; }
+.banque__recherche { position: relative; flex: 1; min-width: 0; }
+.banque__recherche svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gris-chaud); pointer-events: none; }
+.banque__recherche .champ { width: 100%; min-height: 48px; padding-left: 42px; border-radius: 14px; }
+.banque__outils .banque__tri { display: none; flex: none; width: auto; min-height: 48px; border-radius: 14px; font-size: 15px; font-weight: 700; }
+.banque__bouton-filtres { flex: none; min-height: 48px; padding: 0 18px; border: 0; border-radius: 14px; background: var(--encre); color: #fff; font: 700 15px/1 var(--font-sans); cursor: pointer; }
+.banque__bouton-filtres:focus-visible, .banque__choix:focus-visible, .banque__pastille:focus-visible, .banque__effacer:focus-visible, .banque__gerer:focus-visible, .banque__plus:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.banque__actifs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 34px; margin: 14px 0; }
+.banque__nb { font-size: 14px; font-weight: 600; color: var(--coach-texte-doux, var(--gris-chaud)); margin-right: 4px; }
+.banque__pastille { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 12px; border: 1px solid #e2ded6; border-radius: 999px; background: #fff; color: var(--encre); font: 700 14px/1 var(--font-sans); cursor: pointer; transition: border-color .2s ease; }
+.banque__pastille:hover { border-color: var(--encre); }
+.banque__effacer { min-height: 34px; padding: 0 4px; border: 0; background: none; color: var(--vermillon); font: 700 14px/1 var(--font-sans); cursor: pointer; }
+.banque__effacer:hover { text-decoration: underline; }
+
+/* téléphone : liste */
+.banque__grille { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.banque .espace-exo { display: flex; flex-direction: row; align-items: center; gap: 14px; padding: 8px 14px 8px 8px; border-radius: 16px; }
+.banque .espace-exo__photo, .banque .espace-exo .espace-photo--vide { flex: none; width: 52px; height: 65px; border-radius: 10px; font-size: 0; }
+.banque .espace-exo > :not(.espace-exo__photo):not(.espace-photo--vide) { margin-inline: 0; }
+.banque__texte { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.banque .espace-exo__ligne .materiel-picto, .banque .espace-exo__ligne > svg { display: none; }
+.banque .espace-exo__ligne .espace-exo__nom { padding-top: 0; }
+.banque .espace-exo__nom { font-size: 16px; line-height: 21px; }
+.banque .espace-exo__muscles { font-size: 13px; line-height: 17px; }
+.banque__fleche { flex: none; color: var(--gris-chaud); }
+
+/* fenêtre « Filtres » (téléphone) */
+.banque__panneau[open] { display: flex; flex-direction: column; gap: 14px; position: fixed; inset: auto 0 0 0; width: 100%; max-width: 100%; max-height: 88svh; margin: 0; padding: 12px 20px max(20px, env(safe-area-inset-bottom)); border: 0; border-radius: 24px 24px 0 0; background: #fff; color: var(--encre); overflow: auto; animation: banque-monte .28s cubic-bezier(.3, .7, .2, 1); }
+.banque__panneau::before { content: ""; align-self: center; width: 40px; height: 4px; border-radius: 4px; background: #d9d5cd; }
+.banque__panneau::backdrop { background: rgba(22, 21, 20, .45); }
+@keyframes banque-monte { from { transform: translateY(40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .banque__panneau[open] { animation: none; } }
+.banque__panneau-tete { display: flex; align-items: center; justify-content: space-between; }
+.banque__panneau-tete h2 { margin: 0; font: 800 20px/1.2 var(--font-sans); letter-spacing: -.01em; }
+.banque__panneau-corps { display: flex; flex-direction: column; gap: 16px; }
+.banque__panneau .onglets-parties { width: 100%; }
+.banque__panneau .onglets-parties__onglet { flex: 1; justify-content: center; }
+.banque__voir { width: 100%; justify-content: center; min-height: 52px; margin-top: 4px; }
+
+/* listes de filtres */
+.banque__liste-tete { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.banque__lib { margin: 0; font: 800 11px/1 var(--font-sans); letter-spacing: .09em; text-transform: uppercase; color: var(--gris-chaud); }
+.banque__gerer { min-height: 28px; padding: 0 2px; border: 0; background: none; color: var(--vermillon); font: 700 13px/1 var(--font-sans); cursor: pointer; }
+.banque__gerer:hover { text-decoration: underline; }
+.banque__choix-liste { list-style: none; margin: 0; padding: 0; }
+.banque__liste--pastilles .banque__choix-liste { display: flex; flex-wrap: wrap; gap: 8px; }
+.banque__liste--pastilles .banque__choix { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: 1px solid #e2ded6; border-radius: 999px; background: #fff; color: var(--encre); font: 700 14px/1 var(--font-sans); cursor: pointer; }
+.banque__liste--pastilles .banque__choix[aria-pressed="true"] { background: var(--encre); border-color: var(--encre); color: #fff; }
+.banque__liste--pastilles .banque__compte { font-weight: 600; opacity: .7; }
+.banque__liste--pastilles .banque__plus { min-height: 40px; padding: 0 14px; border: 1px solid #e2ded6; border-radius: 999px; background: #fff; font: 700 14px/1 var(--font-sans); cursor: pointer; }
+.banque__archives { font-size: 15px; }
+.banque__gerer-autres { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--gris-chaud); font: 600 13px/1.4 var(--font-sans); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.banque__panneau .banque__gerer-autres { display: none; }
+
+@media (min-width: 640px) {
+  .banque__outils .banque__tri { display: block; }
+  .banque__grille { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .banque .espace-exo { flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; border-radius: 14px; }
+  .banque .espace-exo__photo, .banque .espace-exo .espace-photo--vide { width: 100%; height: auto; border-radius: 0; font-size: 13px; }
+  .banque__texte { padding: 10px 12px 12px; }
+  .banque__fleche { display: none; }
+  .banque .espace-exo__nom { font-size: 15px; line-height: 19px; }
+  .banque .espace-exo__muscles { font-size: 12px; line-height: 16px; }
+}
+@media (min-width: 1000px) {
+  .banque__corps { grid-template-columns: 236px minmax(0, 1fr); align-items: start; }
+  .banque__filtres { display: flex; flex-direction: column; gap: 22px; position: sticky; top: 88px; padding: 16px; border-radius: 18px; background: #fff; box-shadow: 0 1px 2px rgba(22, 21, 20, .04); }
+  .banque__filtres .onglets-parties { width: 100%; margin: 0; }
+  .banque__filtres .onglets-parties__onglet { flex: 1; justify-content: center; padding: 0 8px; font-size: 13px; min-height: 34px; }
+  .banque__bouton-filtres { display: none; }
+  .banque__liste--liste .banque__choix { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 34px; padding: 0 10px; border: 0; border-radius: 9px; background: none; color: var(--encre); font: 600 14px/1.2 var(--font-sans); text-align: left; cursor: pointer; transition: background .15s ease; }
+  .banque__liste--liste .banque__choix:hover { background: #f4f3ef; }
+  .banque__liste--liste .banque__choix[aria-pressed="true"] { background: var(--encre); color: #fff; }
+  .banque__liste--liste .banque__compte { font-size: 12px; font-weight: 600; color: var(--gris-chaud); }
+  .banque__liste--liste .banque__choix[aria-pressed="true"] .banque__compte { color: rgba(255, 255, 255, .75); }
+  .banque__liste--liste .banque__plus { min-height: 32px; padding: 0 10px; border: 0; background: none; color: var(--encre); font: 600 14px/1 var(--font-sans); cursor: pointer; }
+  .banque__liste--liste .banque__plus:hover { text-decoration: underline; }
+  .banque__actifs { margin: 14px 0 16px; }
+}
+@media (min-width: 1240px) { .banque__grille { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+
+/* fenêtre « Gérer » : nombre d'exercices par élément, avertissement avant de supprimer */
+.gestion-listes__nb { margin-left: 8px; font-size: 12px; font-weight: 600; color: var(--gris-chaud); }
+.gestion-listes__actions--confirmer { flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.gestion-listes__avertir { font-size: 13px; line-height: 1.35; color: var(--encre); }
+.gestion-listes__ligne:has(.gestion-listes__actions--confirmer) { flex-wrap: wrap; padding: 10px 12px; margin: 4px 0; border-radius: 12px; background: #fdf0ec; border-bottom: 0; }
