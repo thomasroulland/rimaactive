@@ -72,7 +72,8 @@ export default function EcransEspace() {
         <div className="ecrans__corps">
           <div className="ecrans__scene">
             <div className="ecrans__fenetre">
-              <span className="ecrans__barre" aria-hidden="true"><i /><i /><i /><span className="ecrans__adresse">rimaactive.fr/espace</span></span>
+              {/* plus d'adresse dans la barre de la fenêtre (Marie, 26 novembre 2026) */}
+              <span className="ecrans__barre" aria-hidden="true"><i /><i /><i /></span>
               <div className="ecrans__vues">
                 {ECRANS.map((ecran, i) => (
                   <img key={ecran.titre} className={`ecrans__vue${i === idx ? ' est-devant' : i === prec ? ' est-sortie' : ''}`} src={ecran.pc}
