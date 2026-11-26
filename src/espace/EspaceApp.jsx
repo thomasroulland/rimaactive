@@ -13,8 +13,8 @@ import { lireIndice } from './indiceSession.js'
 
 // Racine de l'espace (chargée à la demande) : garde selon la session et le rôle.
 export default function EspaceApp() {
-  useTitre('Mon espace')
   const { utilisateur, profil, role, chargement } = useSession()
+  useTitre(utilisateur ? 'Mon espace' : 'Connexion')
   const { pathname } = useLocation()
 
   // lien de l'e-mail d'invitation : la page de création du mot de passe, quelle que soit la session sur cet appareil

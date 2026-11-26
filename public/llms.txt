@@ -1,0 +1,15 @@
+# Rimaactive
+
+> Rimaactive est l'activité de Marie Sillas, coach sportive diplômée d'État basée à Houdan (78). Elle propose des séances de renforcement et de mobilité, avec une pratique fonctionnelle, pour les particuliers (à domicile ou en salle), en ligne, en duo ou en groupe, et en entreprise. Elle intervient dans les Yvelines (78), l'Eure-et-Loir (28) et l'Eure (27).
+
+## Pages
+
+- [Accueil](https://www.rimaactive.fr/) : présentation de Marie Sillas, de sa méthode et de ses services.
+- [Mes formules](https://www.rimaactive.fr/offres) : coaching individuel (à domicile ou en salle), en ligne, en groupe et en entreprise.
+- [Contact](https://www.rimaactive.fr/contact) : formulaire pour écrire à Marie Sillas.
+- [Mentions légales](https://www.rimaactive.fr/mentions-legales)
+
+## Contact
+
+- E-mail : marie.sillas.coaching@outlook.com
+- Instagram, Facebook et TikTok : @rimaactive
