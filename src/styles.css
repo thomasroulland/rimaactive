@@ -2286,12 +2286,13 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea { font-size: 16px !important; }
 }
 
-/* Qui suis-je sur téléphone (Marie, 26 novembre 2026) : la photo en haut de l'encadré, sur toute la largeur,
-   puis « Qui suis-je » et « Moi c'est Marie » dessous, alignés à gauche */
+/* Qui suis-je sur téléphone (Marie, 26 novembre 2026) : « Qui suis-je » à gauche, la photo à droite, en bas alignés,
+   au-dessus de « Moi c'est Marie » ; la photo garde une taille posée (42 % de la largeur, 4:5) */
 @media (max-width: 899px) {
-  .approche__entete { flex-direction: column-reverse; align-items: stretch; gap: 18px; flex: none; min-height: 0; max-height: none; height: auto; margin-bottom: 6px; }
-  .approche__photo--cadre { height: auto; width: 100%; }
-  .approche__photo--cadre img { width: 100%; height: auto; aspect-ratio: 5 / 4; object-position: 50% 38%; border-radius: 16px; }
+  .approche__entete { flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 16px; flex: none; min-height: 0; max-height: none; height: auto; margin-bottom: 14px; }
+  .approche__entete .surtitre { padding-bottom: 4px; }
+  .approche__photo--cadre { height: auto; width: 42%; max-width: 190px; }
+  .approche__photo--cadre img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-position: 50% 30%; border-radius: 16px; }
 }
 @media (max-width: 899px) {
   main > section.approche.section.ecran-plein { min-height: 0; height: auto; }
