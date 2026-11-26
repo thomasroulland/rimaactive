@@ -2178,6 +2178,7 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
   .ec-st-tl .ec-st-champ, .ec-st-serie .ec-st-tl .ec-st-champ { font-size: 16px !important; }
 }
 /* « par main » sous la case des kilos (26 novembre 2026) */
+/* « par main » à l'intérieur de la case, en petit sous le nombre (26 novembre 2026) */
 .ec-st-kg { position: relative; display: block; min-width: 0; }
-.ec-st-kg small { position: absolute; left: 0; right: 0; top: calc(100% + 3px); text-align: center; font: 700 11px/1 var(--font-sans); color: var(--ec-gris, #6b665f); }
-.ec-st-tl:has(.est-par-main) { padding-bottom: 14px; }
+.ec-st-kg small { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font: 700 8.5px/1 var(--font-sans); letter-spacing: .02em; color: var(--ec-gris, #6b665f); pointer-events: none; }
+.ec-st-kg.est-par-main .ec-st-champ { padding-bottom: 9px; }

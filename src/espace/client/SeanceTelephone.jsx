@@ -146,9 +146,12 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
       <div key={el.id} className={`ec-st-tl${sansCharge ? ' sans-charge' : ''}`} role="group" aria-label={`Série ${t + 1}, ${el.nom}`}>
         <span className={`ec-st-code${enCours && k === 0 ? ' est-actif' : ''}`}>{code}</span>
         <span className="ec-st-tl__nom">{el.nom}{texteRepos(el.repos) && <small>repos {texteRepos(el.repos)}</small>}</span>
-        <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
-          aria-label={`${el.nom}, série ${t + 1}, ${duree ? nomMesure(el).toLowerCase() : 'répétitions faites'}`} value={l[cle] ?? ''} placeholder={precedente?.[cle] || (duree ? (nomMesure(el) === 'Distance' ? 'm' : 's') : '')}
-          onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
+        <span className={`ec-st-kg${el.parCote ? ' est-par-main' : ''}`}>
+          <input id={`st-${el.id}-${t}`} className={`ec-st-champ${alerte === `${el.id}-${t}` ? ' est-a-remplir' : ''}`} type="text" inputMode={duree ? 'text' : 'numeric'} autoComplete="off"
+            aria-label={`${el.nom}, série ${t + 1}, ${duree ? nomMesure(el).toLowerCase() : 'répétitions faites'}${el.parCote ? ' par côté' : ''}`} value={l[cle] ?? ''} placeholder={precedente?.[cle] || (duree ? (nomMesure(el) === 'Distance' ? 'm' : 's') : '')}
+            onFocus={(ev) => ev.target.select()} onChange={(ev) => { setAlerte(''); actions.valeur(el, t, cle, ev.target.value) }} />
+          {el.parCote && <small aria-hidden="true">par côté</small>}
+        </span>
         {!sansCharge && (duree ? <span className="ec-st-champ est-neutre" aria-hidden="true">–</span> : (
           // « par main » sous la case des kilos, au moment de remplir (Marie, 26 novembre 2026)
           <span className={`ec-st-kg${chargeParMainEl(el) ? ' est-par-main' : ''}`}>

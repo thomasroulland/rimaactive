@@ -379,6 +379,13 @@ function LigneExo({ element: el, code, series, activite, verrou, rm, maj, retire
             </select>
           </label>
         )}
+        {/* exercice unilatéral (fentes, split squat…) : « par côté » dans la case des répétitions du coaché (Marie, 26 novembre 2026) */}
+        {!activite && (
+          <label className="es2-cote">
+            <input type="checkbox" checked={Boolean(el.parCote)} onChange={(e) => maj('parCote', e.target.checked)} />
+            <span>Par côté</span>
+          </label>
+        )}
         <label className="sr-only" htmlFor={id('commentaire')}>Commentaire pour cet exercice ({code} {el.nom})</label>
         <input id={id('commentaire')} className="es2-note" autoComplete="off" placeholder="Commentaire pour cet exercice" value={el.commentaire ?? ''} onChange={(e) => maj('commentaire', e.target.value)} />
       </div>

@@ -2294,3 +2294,5 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 .es2-mesure { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 4px 0 12px; border: 1px solid #e2ddd3; border-radius: 10px; background: #fff; font: 600 12px/1 var(--font-sans); color: var(--gris-chaud); }
 .es2-mesure select { height: 30px; border: 0; background: transparent; font: 700 13px/1 var(--font-sans); color: var(--encre); cursor: pointer; }
 @media (max-width: 720px) { .es2-ligne__note { flex-wrap: wrap; } .es2-mesure span { display: none; } }
+.es2-cote { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border: 1px solid #e2ddd3; border-radius: 10px; background: #fff; font: 700 12.5px/1 var(--font-sans); color: var(--encre); cursor: pointer; }
+.es2-cote input { width: 16px; height: 16px; accent-color: var(--encre); margin: 0; }
