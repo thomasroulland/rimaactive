@@ -2296,3 +2296,5 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 @media (max-width: 720px) { .es2-ligne__note { flex-wrap: wrap; } .es2-mesure span { display: none; } }
 .es2-cote { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border: 1px solid #e2ddd3; border-radius: 10px; background: #fff; font: 700 12.5px/1 var(--font-sans); color: var(--encre); cursor: pointer; }
 .es2-cote input { width: 16px; height: 16px; accent-color: var(--encre); margin: 0; }
+/* Banque : photos en 4:5 (26 novembre 2026) */
+.espace-exo__photo, .espace-exo .espace-photo--vide { aspect-ratio: 4 / 5 !important; }

@@ -10,17 +10,23 @@ import OngletsParties from './OngletsParties.jsx'
 import RangeeDefilante from './RangeeDefilante.jsx'
 import { partieDe } from '../donnees/reglages.js'
 
+const CLE_FILTRES = 'rima-banque-filtres'
 const simple = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
 // Banque d'exercices : recherche par nom ou par muscle, une carte par exercice
 export default function Exercices() {
   const [exercices, setExercices] = useState(null)
   const [erreur, setErreur] = useState('')
-  const [recherche, setRecherche] = useState('')
-  const [retires, setRetires] = useState(false)
-  const [partie, setPartie] = useState('Tout')
-  const [categorie, setCategorie] = useState('Toutes')
-  const [materiel, setMateriel] = useState('Tous')
+  // filtres gardés pendant la session : on les retrouve en revenant d'un exercice (Marie, 26 novembre 2026)
+  const garde = useMemo(() => { try { return JSON.parse(sessionStorage.getItem(CLE_FILTRES)) ?? {} } catch { return {} } }, [])
+  const [recherche, setRecherche] = useState(garde.recherche ?? '')
+  const [retires, setRetires] = useState(garde.retires ?? false)
+  const [partie, setPartie] = useState(garde.partie ?? 'Tout')
+  const [categorie, setCategorie] = useState(garde.categorie ?? 'Toutes')
+  const [materiel, setMateriel] = useState(garde.materiel ?? 'Tous')
+  useEffect(() => {
+    try { sessionStorage.setItem(CLE_FILTRES, JSON.stringify({ recherche, retires, partie, categorie, materiel })) } catch { /* rien */ }
+  }, [recherche, retires, partie, categorie, materiel])
   const [gerer, setGerer] = useState(false)
   const reglages = useReglages()
   const message = useLocation().state?.message ?? ''

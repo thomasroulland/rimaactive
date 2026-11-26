@@ -93,7 +93,7 @@ function Semaines({ bloc, nb, faites, seances }) {
   const avant = aujourdhuiIso() < bloc.programme.debut // programme pas commencé : aperçu au lieu d'ouvrir la séance
   const [apercu, setApercu] = useState(null)
   return (
-    <section className="ec-semgrille" aria-label="Mes semaines">
+    <section className="ec-semgrille" aria-label="Mes semaines" style={{ '--nb-sem': Math.min(Math.max(nb, 1), 4) }}>
       {Array.from({ length: nb }, (_, k) => k + 1).map((n) => {
         const lignes = seancesDeLaSemaine(bloc.programme, n, faites)
         return (

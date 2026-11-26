@@ -231,9 +231,8 @@ function Enchainement({ groupe, lignes, notes, noteId, fin, actions, voirConsign
       {actif && actuelle >= 0 && repos === 'fini' && <p className="ec-st-reparti" role="status">C’est reparti&nbsp;!</p>}
       {actif && actuelle >= 0 && (!repos || repos === 'fini') && (
         <section className="ec-st-carte ec-st-serie" aria-label={`Série ${actuelle + 1} sur ${nb}`}>
-          <p className="ec-st-serie__tete"><span>Série {actuelle + 1} sur {nb}</span></p>
-          {/* le repos une seule fois, sous le titre de la série (Marie, 26 novembre 2026) */}
-          {reposSerie && <p className="ec-st-serie__repos">Repos {reposSerie}</p>}
+          {/* « SÉRIE 1 SUR 3 · Repos 1 min » sur une ligne, même taille (Marie, 26 novembre 2026) */}
+          <p className="ec-st-serie__tete"><span>Série {actuelle + 1} sur {nb}{reposSerie && <span className="ec-st-serie__repos"> · Repos {reposSerie}</span>}</span></p>
           {entete}
           {lignesSerie(actuelle, true)}
           {alerte && <p className="ec-st-alerte" role="alert">Notez le nombre de répétitions faites.</p>}

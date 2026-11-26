@@ -2191,3 +2191,13 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 /* Mon programme : mêmes lignes que « Ma semaine » du tableau de bord (26 novembre 2026) */
 .ec-semc .ec-case-regul.cochee { width: 26px; height: 26px; border-radius: 50%; border: 1px solid #cfe8d7; background: #eef7f1 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232f9e5b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 14px no-repeat; box-shadow: none; }
 .ec-semc .ec-semaine__liste { margin: 0 -8px; }
+
+/* « SÉRIE 1 SUR 3 · Repos 1 min » : même ligne, même taille, repos en gris (26 novembre 2026) */
+.ec-st-serie__tete .ec-st-serie__repos { margin: 0; padding: 0; font: inherit; letter-spacing: inherit; text-transform: none; color: var(--ec-gris, #6b665f); }
+/* Mon programme sur ordinateur : les semaines prennent toute la largeur (26 novembre 2026) */
+@media (min-width: 900px) { .ec-semgrille { grid-template-columns: repeat(var(--nb-sem, 3), minmax(0, 1fr)); } }
+/* Photos des exercices en 4:5, jamais déformées (26 novembre 2026) */
+.ec-st-photo__img, .ec-st-photos--1 .ec-st-photo__img, .ec-st-photos--3 .ec-st-photo__img { height: auto !important; aspect-ratio: 4 / 5; }
+.ec-st-photo__img img { object-fit: cover; }
+.ec-st-photos--1 { grid-template-columns: minmax(0, 230px); justify-content: center; }
+@media (min-width: 900px) { .ec-seance--large .ec-st-photos--1 { grid-template-columns: minmax(0, 320px); } .ec-seance--large .ec-st-photo__img { height: auto !important; } }
