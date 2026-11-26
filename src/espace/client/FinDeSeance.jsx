@@ -9,7 +9,7 @@ const NOMS = { 5: 'Modéré', 6: 'Moyennement difficile', 7: 'Difficile', 8: 'Tr
 // Panneau « Fin de séance » (maquette) : effort global 5 à 10, ressenti, commentaire (« Mes sensations » en course),
 // « Enregistrer ma séance ». Séance terminée (`fait.statut === 'terminée'`) : même panneau en lecture seule.
 // `etat` : texte d'enregistrement (réseau) ; `envoyer(fin)` : { effort, ressenti, commentaire } (effort facultatif : null).
-export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientDeFinir, records = [] }) {
+export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientDeFinir, records = [], duree = null }) {
   const terminee = fait?.statut === 'terminée'
   const [fin, setFin] = useState({ effort: null, ressenti: '', commentaire: '' })
   const [envoye, setEnvoye] = useState(false) // un seul envoi, même après un double appui
@@ -28,7 +28,7 @@ export default function FinDeSeance({ course, fait, etat, envoyer, suite, vientD
 
   // Juste après « Enregistrer ma séance » : un écran de fin clair (13 novembre 2026), avec la suite du programme
   if (terminee && vientDeFinir && !revoir) {
-    return <Bravo fait={fait} suite={suite} records={records} revoir={() => setRevoir(true)} />
+    return <Bravo fait={fait} suite={suite} records={records} duree={duree} revoir={() => setRevoir(true)} />
   }
 
   // Même style que la séance sur téléphone (Marie, 23 novembre 2026) : titre en petites capitales, cartes blanches,
@@ -88,13 +88,15 @@ function Coche() {
 
 // Écran épuré (14 novembre 2026, demande de Thomas) : coche, titre, une phrase, le record s'il y en a un, un seul bouton.
 // La prochaine séance est sur le tableau de bord ; « Revoir ma séance » reste en petit lien.
-function Bravo({ records, revoir }) {
+function Bravo({ records, revoir, duree }) {
+  const min = duree ? Math.max(1, Math.round(duree / 60000)) : null
   return (
     <aside className="ec-fin ec-bravo" aria-labelledby="titre-bravo">
       <span className="ec-bravo__rond" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
       </span>
       <h2 id="titre-bravo" className="ec-bravo__titre">Séance enregistrée</h2>
+      {min && <p className="ec-bravo__duree">Durée : {min >= 60 ? `${Math.floor(min / 60)} h ${String(min % 60).padStart(2, '0')}` : `${min} min`}</p>}
       <p role="status" className="sr-only">Séance enregistrée.</p>
       {/* plus de « 5 séances sur 12, bravo ! » (Marie, 25 novembre 2026) */}
       {records.length > 0 && (

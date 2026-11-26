@@ -66,6 +66,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const minuterie = useRef(null)
   const enAttente = useRef(carteVide())
   const termine = useRef(false) // « Enregistrer ma séance » déjà envoyé depuis cet écran
+  const dureeFinie = useRef(null) // durée de la séance, montrée sur « Séance enregistrée »
   // séance guidée (15 novembre 2026) : bloc ouvert (le dernier + 1 = fin de séance)
   const [etape, setEtape] = useState(() => {
     const p = programmes.find((x) => x.id === programmeId)
@@ -85,6 +86,16 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   // avant la date de début : séance visible, mais on ne peut pas la commencer (Marie, 22 novembre 2026)
   const avantDebut = pasCommence(programme, aujourdhuiIso()) && !fait
   const verrou = (dejaFaite && !edition) || avantDebut
+  // Durée de la séance (Marie, 26 novembre 2026) : le chronomètre part à la première ouverture et se garde sur l'appareil
+  const cleDebut = `rima-debut-${programmeId}_${seanceId}`
+  const [debutSeance] = useState(() => {
+    if (dejaFaite || avantDebut) return null
+    try {
+      const v = Number(localStorage.getItem(cleDebut))
+      if (v > 0 && Date.now() - v < 6 * 3600 * 1000) return v
+      const n = Date.now(); localStorage.setItem(cleDebut, String(n)); return n
+    } catch { return Date.now() }
+  })
 
   const erreurEnvoi = (e) => {
     // refus tardif d'une écriture partie avant ou pendant l'enregistrement : la séance est bien enregistrée
@@ -241,6 +252,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
         }
       }
     }
+    if (debutSeance) { dureeFinie.current = Date.now() - debutSeance; try { localStorage.removeItem(cleDebut) } catch { /* rien */ } }
     terminerSeance(programmeId, seanceId, { ...fin, ...(course ? sortie : {}), series: toutes, notes, blocs }).catch(erreurEnvoi)
   }
 
@@ -283,7 +295,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
             {bloc ? (
               unExercice ? (
                 <BlocTelephone key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} resultats={blocs} actions={actions}
-                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} lecture={verrou} />
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} lecture={verrou} debut={debutSeance} />
               ) : (
                 <>
                   {!galerie && <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />}
@@ -315,7 +327,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
                 {avantDebut ? null : edition
                   ? <div className="ec-correction-fin"><h2 className="ec-h2">Correction terminée ?</h2><p className="ec-texte">Vos changements sont déjà enregistrés. Marie voit la séance corrigée.</p><button type="button" className="ec-s2-gros" onClick={finirCorrection}>J’ai fini ✓</button></div>
                   : <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={false} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
-                      suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />}
+                      suite={suiteDe(programme, seances)} vientDeFinir={termine.current} duree={dureeFinie.current} records={recordsDe(fait, programmes, seances)} />}
                 {nb > 0 && (
                   // retour au dernier bloc : un bouton pilule avec une flèche, comme « Plan » (Marie, 25 novembre 2026)
                   <button type="button" className="ec-retour-bloc" onClick={() => aller(nb - 1)} aria-label={`Revenir au bloc ${nomBloc(listeBlocs[nb - 1])}`}>
@@ -428,7 +440,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
 {avantDebut ? null : edition
           ? <div className="ec-correction-fin"><h2 className="ec-h2">Correction terminée ?</h2><p className="ec-texte">Vos changements sont déjà enregistrés. Marie voit la séance corrigée.</p><button type="button" className="ec-s2-gros" onClick={finirCorrection}>J’ai fini ✓</button></div>
           :         <FinDeSeance key={verrou ? 'terminee' : 'saisie'} course={course} fait={fait} etat={etatEnvoi(fait, enLigne)} envoyer={terminer}
-          suite={suiteDe(programme, seances)} vientDeFinir={termine.current} records={recordsDe(fait, programmes, seances)} />}
+          suite={suiteDe(programme, seances)} vientDeFinir={termine.current} duree={dureeFinie.current} records={recordsDe(fait, programmes, seances)} />}
       </div>
 
       <Consignes element={fiche} fermer={() => setFiche(null)} />

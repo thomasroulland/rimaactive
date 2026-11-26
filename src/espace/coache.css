@@ -2182,3 +2182,7 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-st-kg { position: relative; display: block; min-width: 0; }
 .ec-st-kg small { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font: 700 8.5px/1 var(--font-sans); letter-spacing: .02em; color: var(--ec-gris, #6b665f); pointer-events: none; }
 .ec-st-kg.est-par-main .ec-st-champ { padding-bottom: 9px; }
+/* Durée de la séance (26 novembre 2026) */
+.ec-st__ligne { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ec-st-duree { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; background: #fff; font: 800 13px/1 var(--font-sans); font-variant-numeric: tabular-nums; color: var(--ec-encre); }
+.ec-bravo__duree { margin: -4px 0 4px; font: 700 15px/1.3 var(--font-sans); color: var(--ec-gris, #6b665f); }
