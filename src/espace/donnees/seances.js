@@ -166,6 +166,8 @@ export function contenuFin(base, fin = {}) {
   }
   if (fin.fc != null) out.fc = texte(fin.fc).trim()
   if (fin.zones != null) out.zones = zonesPropres(fin.zones)
+  // durée de la séance en minutes (26 novembre 2026), vue par Marie dans son suivi
+  if (Number.isInteger(fin.duree) && fin.duree > 0 && fin.duree < 600) out.duree = fin.duree
   return ajouterCartes(out, fin)
 }
 

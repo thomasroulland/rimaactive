@@ -5,7 +5,7 @@ import { avancement } from '../donnees/progression.js'
 import { nomBloc } from '../donnees/programme.js'
 import { allureVitesse, estEnSeries, exercicesDe, premierBlocAFaire, progressionBlocs, resumeFormat, saisirSerie, serieTerminee } from '../donnees/seances.js'
 import { nouveauxRecords } from '../donnees/records.js'
-import { corrigerSeance, effacerMaSeance, noterSeance, terminerSeance } from '../depots.js'
+import { corrigerSeance, effacerMaSeance, noterDuree, noterSeance, terminerSeance } from '../depots.js'
 import Picto from '../../components/Picto.jsx'
 import { Cadenas } from './Statut.jsx'
 import BlocSeries, { TableauSeries } from './BlocSeries.jsx'
@@ -253,7 +253,9 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
       }
     }
     if (debutSeance) { dureeFinie.current = Date.now() - debutSeance; try { localStorage.removeItem(cleDebut) } catch { /* rien */ } }
-    terminerSeance(programmeId, seanceId, { ...fin, ...(course ? sortie : {}), series: toutes, notes, blocs }).catch(erreurEnvoi)
+    const duree = dureeFinie.current ? Math.max(1, Math.round(dureeFinie.current / 60000)) : null
+    // la durée part dans un second envoi, après la séance : si la règle n'est pas encore en ligne, seule la durée est perdue
+    terminerSeance(programmeId, seanceId, { ...fin, ...(course ? sortie : {}), series: toutes, notes, blocs }).then(() => { if (duree) noterDuree(programmeId, seanceId, duree).catch(() => {}) }).catch(erreurEnvoi)
   }
 
   const infos = [

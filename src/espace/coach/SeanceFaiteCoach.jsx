@@ -101,6 +101,8 @@ export default function SeanceFaiteCoach({ seance, sf, prenom, banque, rpeVise, 
             </div>
           )}
           {Number.isInteger(sf?.effort) && <div><dt>Effort ressenti</dt><dd>{sf.effort}<small> / 10</small></dd></div>}
+          {/* durée de la séance, depuis son ouverture par le coaché (26 novembre 2026) */}
+          {Number.isInteger(sf?.duree) && <div><dt>Durée</dt><dd>{sf.duree >= 60 ? `${Math.floor(sf.duree / 60)} h ${String(sf.duree % 60).padStart(2, '0')}` : `${sf.duree}`}<small>{sf.duree >= 60 ? '' : ' min'}</small></dd></div>}
         </dl>
         {(sf?.ressenti || sf?.commentaire) && (
           <div className="sf-bilan__mot">

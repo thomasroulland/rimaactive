@@ -143,7 +143,7 @@ service cloud.firestore {
 
     // Champs qu'un client peut écrire sur sa séance (jamais commentaireCoach ; client, programme, seance figés après création).
     function champsClient() {
-      return ['client', 'programme', 'seance', 'date', 'statut', 'series', 'notes', 'blocs', 'effort', 'ressenti', 'commentaire', 'distance', 'temps', 'fc', 'zones', 'majLe'];
+      return ['client', 'programme', 'seance', 'date', 'statut', 'series', 'notes', 'blocs', 'effort', 'ressenti', 'commentaire', 'distance', 'temps', 'fc', 'zones', 'duree', 'majLe'];
     }
 
     match /seancesFaites/{id} {
@@ -172,7 +172,7 @@ service cloud.firestore {
         || (estClient()
           && resource.data.client == request.auth.uid
           && resource.data.statut == 'terminée'
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['series', 'notes', 'blocs', 'distance', 'temps', 'fc', 'zones']))
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['series', 'notes', 'blocs', 'distance', 'temps', 'fc', 'zones', 'duree']))
         // Le coach commente la séance (en cours ou terminée), rien d'autre.
         || (estCoach()
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentaireCoach', 'majLe']));

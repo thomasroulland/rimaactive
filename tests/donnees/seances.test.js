@@ -333,3 +333,13 @@ describe('exercice mesuré en distance (25 novembre 2026)', () => {
     expect(lignesExercice(el, true).prescription).toContain('4 × 400 m')
   })
 })
+
+describe('durée de la séance (26 novembre 2026)', () => {
+  it('est gardée en minutes si elle est raisonnable', async () => {
+    const { contenuFin: cf } = await import('../../src/espace/donnees/seances.js')
+    const base = { client: 'c', programme: 'p', seance: 's', date: '2026-11-26', majLe: 1 }
+    expect(cf(base, { effort: 7, duree: 52 }).duree).toBe(52)
+    expect(cf(base, { effort: 7 })).not.toHaveProperty('duree')
+    expect(cf(base, { effort: 7, duree: 9999 })).not.toHaveProperty('duree')
+  })
+})

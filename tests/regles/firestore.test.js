@@ -144,6 +144,9 @@ describe('seancesFaites', () => {
   it('le client A met à jour une séance en cours', async () => {
     await assertSucceeds(updateDoc(doc(A, 'seancesFaites/P1_S1'), { statut: 'terminée', effort: 6, majLe: serverTimestamp() }))
   })
+  it('le client A note la durée de sa séance terminée (26 novembre 2026)', async () => {
+    await assertSucceeds(updateDoc(doc(A, 'seancesFaites/P1_S2'), { duree: 52 }))
+  })
   it('le client A ne modifie plus une séance terminée', async () => {
     await assertFails(updateDoc(doc(A, 'seancesFaites/P1_S2'), { effort: 3 }))
   })

@@ -392,6 +392,11 @@ export function terminerSeance(programmeId, seanceId, fin) {
   return setDoc(refSeance(programmeId, seanceId), contenuFin(baseSeance(programmeId, seanceId), fin), { merge: true })
 }
 
+// Durée de la séance en minutes, notée après l'enregistrement (26 novembre 2026)
+export function noterDuree(programmeId, seanceId, duree) {
+  return updateDoc(refSeance(programmeId, seanceId), { duree })
+}
+
 // Remet à zéro une séance commencée (pas terminée) : le coaché depuis sa séance, le coach depuis la fiche (22 novembre 2026)
 export function effacerSeanceEnCours(id) {
   return deleteDoc(doc(db, 'seancesFaites', id))
