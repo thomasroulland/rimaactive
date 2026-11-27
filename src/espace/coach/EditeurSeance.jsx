@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { estEnSeries, resumeFormat } from '../donnees/seances.js'
+import { enIntervalles, estEnSeries, resumeFormat } from '../donnees/seances.js'
 import { LETTRES, NOM_BLOC_MAX, nomBloc } from '../donnees/programme.js'
 import useReglages from './useReglages.js'
 import { formatsDuType, nomType } from '../donnees/reglages.js'
@@ -19,6 +19,7 @@ export const FORMATS = [
   ['emom', 'EMOM'],
   ['amrap', 'AMRAP'],
   ['tabata', 'TABATA'],
+  ['fractionne', 'Fractionné'],
   ['hiit', 'HIIT'],
   ['continu', 'Continu'],
   ['intervalles', 'Intervalles classiques'],
@@ -28,8 +29,9 @@ export const FORMATS = [
 const estActivite = (format) => format === 'continu' || format === 'intervalles'
 const ZONES = ['1', '2', '3', '4', '5']
 
-// réglages proposés quand on choisit TABATA ou HIIT (maquette de Marie) : travail, repos, tours
-const REGLAGES_FORMAT = { tabata: { travail: '20', repos: '10', tours: '8' }, hiit: { travail: '40', repos: '20', tours: '6' } }
+// réglages proposés quand on choisit TABATA, HIIT ou Fractionné (maquette de Marie) : travail, repos, tours
+// Fractionné (Marie, 27 novembre 2026) : effort et repos libres, par exemple 30 s / 30 s en 3 tours
+const REGLAGES_FORMAT = { tabata: { travail: '20', repos: '10', tours: '8' }, hiit: { travail: '40', repos: '20', tours: '6' }, fractionne: { travail: '30', repos: '30', tours: '3' } }
 
 // Zone cardiaque visée (1 à 5) pour les blocs Continu et Intervalles
 function ChoixZone({ id, valeur, changer }) {
@@ -210,16 +212,16 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                       <ChoixZone id={`bloc-${b.id}-zone`} valeur={b.zone} changer={(v) => majBloc(bi, 'zone', v)} />
                     </div>
                   )}
-                  {(b.format === 'emom' || b.format === 'amrap' || b.format === 'tabata' || b.format === 'hiit') && (
+                  {(b.format === 'emom' || b.format === 'amrap' || enIntervalles(b.format)) && (
                     <div className="espace-params espace-params--bloc es2-bloc__reglages">
                       {(b.format === 'emom' || b.format === 'amrap') && (
                         <Champ id={`bloc-${b.id}-duree`} label="Durée (min)" mode="numeric" valeur={b.duree} changer={(v) => majBloc(bi, 'duree', v)} />
                       )}
                       {/* repos avant d'enchaîner le bloc suivant (Marie, 25 novembre 2026), comme le repos des séries en Renforcement */}
                       <Champ id={`bloc-${b.id}-reposfin`} label="Repos après le bloc" valeur={b.reposFin} changer={(v) => majBloc(bi, 'reposFin', v)} indice="ex. 2 min" />
-                      {(b.format === 'tabata' || b.format === 'hiit') && (
+                      {enIntervalles(b.format) && (
                         <>
-                          <Champ id={`bloc-${b.id}-travail`} label="Travail (s)" mode="numeric" valeur={b.travail} changer={(v) => majBloc(bi, 'travail', v)} />
+                          <Champ id={`bloc-${b.id}-travail`} label={b.format === 'fractionne' ? 'Effort (s)' : 'Travail (s)'} mode="numeric" valeur={b.travail} changer={(v) => majBloc(bi, 'travail', v)} />
                           <Champ id={`bloc-${b.id}-repos`} label="Repos (s)" mode="numeric" valeur={b.repos} changer={(v) => majBloc(bi, 'repos', v)} />
                           <Champ id={`bloc-${b.id}-tours`} label="Tours" mode="numeric" valeur={b.tours} changer={(v) => majBloc(bi, 'tours', v)} />
                         </>

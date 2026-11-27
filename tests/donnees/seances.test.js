@@ -29,6 +29,8 @@ describe('prescription', () => {
     expect(resumeFormat({ format: 'hiit', tours: '6', travail: '40', repos: '20' })).toBe('HIIT 6 × 40 s / 20 s')
     expect(resumeFormat({ format: 'hiit', travail: '40' })).toBe('HIIT 40 s')
     expect(resumeFormat({ format: 'tabata' })).toBe('TABATA')
+    expect(resumeFormat({ format: 'fractionne', travail: '30', repos: '30', tours: '3' })).toBe('Fractionné 30 s / 30 s · 3 tours')
+    expect(resumeFormat({ format: 'fractionne' })).toBe('Fractionné')
   })
 })
 
@@ -149,6 +151,7 @@ describe('écran de la séance', () => {
     expect(champsResultat({ format: 'amrap', duree: '12' })).toEqual([
       { cle: 'resultat', label: 'Tours complets', aide: '' }])
     expect(champsResultat({ format: 'tabata', tours: '8' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: 'sur 8' }])
+    expect(champsResultat({ format: 'fractionne', tours: '3' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: 'sur 3' }])
     expect(champsResultat({ format: 'hiit' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: '' }])
     expect(champsResultat({ format: 'series' })).toEqual([])
   })

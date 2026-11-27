@@ -32,6 +32,8 @@ export function fr(v) {
 // 'Séries classiques', 'EMOM 12 min', 'TABATA 4 min, repos 10 s'
 // Bloc « en séries » : séries classiques ou superset (biset, triset : on enchaîne les exercices du bloc, tour par tour)
 export const estEnSeries = (format) => (format ?? 'series') === 'series' || format === 'superset'
+// TABATA, HIIT et Fractionné (27 novembre 2026) : effort et repos en secondes, un nombre de tours
+export const enIntervalles = (format) => format === 'tabata' || format === 'hiit' || format === 'fractionne'
 
 export function resumeFormat(bloc) {
   const f = bloc?.format
@@ -41,6 +43,12 @@ export function resumeFormat(bloc) {
   }
   if (f === 'emom' || f === 'amrap') return bloc.duree ? `${f.toUpperCase()} ${bloc.duree} min` : f.toUpperCase()
   // TABATA / HIIT (maquette de Marie) : « TABATA 8 × 20 s / 10 s » = tours × travail / repos
+  // Fractionné : « Fractionné 30 s / 30 s · 3 tours » (effort / repos, puis les tours)
+  if (f === 'fractionne') {
+    const cycle = [bloc.travail && `${bloc.travail} s`, bloc.repos && `${bloc.repos} s`].filter(Boolean).join(' / ')
+    const tours = bloc.tours && `${bloc.tours} tour${Number(bloc.tours) > 1 ? 's' : ''}`
+    return ['Fractionné', [cycle, tours].filter(Boolean).join(' · ')].filter(Boolean).join(' ')
+  }
   if (f === 'tabata' || f === 'hiit') {
     const effort = bloc.travail ? `${bloc.travail} s` : ''
     const cycle = [bloc.tours && effort ? `${bloc.tours} × ${effort}` : effort, bloc.repos && `${bloc.repos} s`].filter(Boolean).join(' / ')
@@ -293,7 +301,7 @@ export function champsResultat(bloc) {
   if (f === 'emom') return [{ cle: 'resultat', label: 'Minutes réussies', aide: rempli(bloc.duree) ? `sur ${String(bloc.duree).trim()}` : '' }]
   // AMRAP : seulement les tours complets, obligatoires (Marie, 25 novembre 2026 : plus de « reps en plus »)
   if (f === 'amrap') return [{ cle: 'resultat', label: 'Tours complets', aide: '' }]
-  if (f === 'tabata' || f === 'hiit') {
+  if (enIntervalles(f)) {
     return [{ cle: 'resultat', label: 'Tours faits', aide: rempli(bloc.tours) ? `sur ${String(bloc.tours).trim()}` : '' }]
   }
   // Continu et Intervalles (Marie, 23 novembre 2026) : le coaché note le bloc entier, une seule fois

@@ -429,7 +429,7 @@ function allureCalculee(bloc, r) {
 
 // ---------- EMOM, AMRAP, TABATA, HIIT, Continu, Intervalles ----------
 
-const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
+const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :', fractionne: 'Enchaînez :' }
 
 function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alerte, effacerAlerte }) {
   const els = bloc.elements ?? []

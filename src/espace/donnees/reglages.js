@@ -22,7 +22,7 @@ const ANCIENS_TYPES = { contraste: 'Contraste', course: 'Endurance fondamentale'
 // Formats de bloc proposés selon le type de séance (Marie, 23 novembre 2026). Un ancien type garde tous les formats.
 export const FORMATS_PAR_TYPE = {
   force: ['series', 'superset', 'emom'],
-  circuit: ['amrap', 'emom', 'tabata'],
+  circuit: ['amrap', 'emom', 'tabata', 'fractionne'],
   liss: ['continu'],
   tempo: ['continu'],
   echauffement: ['series', 'superset'],
@@ -31,7 +31,7 @@ export const FORMATS_PAR_TYPE = {
   seuil: ['intervalles'],
   liit: ['intervalles'],
 }
-export const TOUS_LES_FORMATS = ['series', 'superset', 'emom', 'amrap', 'tabata', 'hiit', 'continu', 'intervalles']
+export const TOUS_LES_FORMATS = ['series', 'superset', 'emom', 'amrap', 'tabata', 'fractionne', 'hiit', 'continu', 'intervalles']
 export const formatsDuType = (type) => FORMATS_PAR_TYPE[type] ?? TOUS_LES_FORMATS
 
 // Parties de la banque (15 novembre 2026) : chaque catégorie est rangée dans une partie (« Échauffement », « Séance »…).

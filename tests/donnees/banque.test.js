@@ -31,7 +31,7 @@ describe('réglages', () => {
   })
   it('propose les formats de bloc selon le type de séance', () => {
     expect(formatsDuType('force')).toEqual(['series', 'superset', 'emom'])
-    expect(formatsDuType('circuit')).toEqual(['amrap', 'emom', 'tabata'])
+    expect(formatsDuType('circuit')).toEqual(['amrap', 'emom', 'tabata', 'fractionne'])
     expect(formatsDuType('liss')).toEqual(['continu'])
     expect(formatsDuType('tempo')).toEqual(['continu'])
     expect(formatsDuType('echauffement')).toEqual(['series', 'superset'])
