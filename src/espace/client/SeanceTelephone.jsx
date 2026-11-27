@@ -371,19 +371,21 @@ function ChronoRepos({ avant, prevu, finir, titre, auto = false }) {
 
 // Minuteur d'un AMRAP (Marie, 25 novembre 2026) : « Démarrer » lance le compte à rebours de la durée du bloc ;
 // à la fin, un message, une vibration et un bip (application installée), puis on note ses tours complets.
-function MinuteurBloc({ secondes }) {
+function MinuteurBloc({ secondes, surFin }) {
   const [fin, setFin] = useState(null)
   const [fini, setFini] = useState(false)
+  const [pause, setPause] = useState(null) // secondes restantes pendant une pause (Marie, 27 novembre 2026)
+  const terminer = () => { setFin(null); setPause(null); setFini(true); surFin?.() }
   const [, battre] = useState(0)
   useEffect(() => {
     if (!fin) return undefined
     const id = setInterval(() => {
       battre((n) => n + 1)
-      if (Date.now() >= fin) { clearInterval(id); alerter(); setFin(null); setFini(true) }
+      if (Date.now() >= fin) { clearInterval(id); alerter(); terminer() }
     }, 250)
     return () => clearInterval(id)
   }, [fin])
-  const reste = fin ? (fin - Date.now()) / 1000 : secondes
+  const reste = pause ?? (fin ? (fin - Date.now()) / 1000 : secondes)
   const frac = Math.max(0, Math.min(1, reste / secondes))
   const R = 92, C = 110
   const ang = frac * 2 * Math.PI - Math.PI / 2
@@ -404,15 +406,22 @@ function MinuteurBloc({ secondes }) {
         </svg>
         <div className="ec-st-repos__temps" aria-live="off">
           <b>{fini ? '0:00' : mmss(reste)}</b>
-          <small>{fini ? 'terminé' : fin ? `sur ${mmss(secondes)}` : 'durée du bloc'}</small>
+          <small>{fini ? 'terminé' : pause !== null ? 'en pause' : fin ? `sur ${mmss(secondes)}` : 'durée du bloc'}</small>
         </div>
       </div>
       {fini
         ? <p className="ec-st-minuteur__fini" role="status"><b>Temps écoulé !</b> Notez vos tours complets.</p>
         : (
           <div className="ec-st-repos__boutons">
-            {fin
-              ? <button type="button" className="ec-st-pas" onClick={() => { setFin(null); setFini(true) }}>Arrêter</button>
+            {fin || pause !== null
+              ? (
+                <>
+                  {pause !== null
+                    ? <button type="button" className="ec-st-pas ec-st-demarrer" onClick={() => { setFin(Date.now() + pause * 1000); setPause(null) }}>Reprendre ▶</button>
+                    : <button type="button" className="ec-st-pas" onClick={() => { setPause(Math.max(0, (fin - Date.now()) / 1000)); setFin(null) }}>Pause</button>}
+                  <button type="button" className="ec-st-pas" onClick={terminer}>Arrêter</button>
+                </>
+              )
               : <button type="button" className="ec-st-pas ec-st-demarrer" onClick={() => { preparerSon(); setFin(Date.now() + secondes * 1000) }}>Démarrer ▶</button>}
           </div>
         )}
@@ -422,7 +431,7 @@ function MinuteurBloc({ secondes }) {
 
 // Chrono d'un bloc Fractionné (Marie, 27 novembre 2026), en cercle comme le repos entre les séries :
 // « Démarrer », puis effort et repos s'enchaînent tout seuls (exercice par exercice, tour par tour, repos entre les tours).
-// Un bip à chaque changement (application installée), Pause et Passer ; à la fin, le bloc est fait.
+// Un bip à chaque changement (application installée), Pause, Reprendre et Arrêter (pas de « Passer ») ; à la fin, le bloc est fait.
 function bip() {
   if (!installee()) return
   try { navigator.vibrate?.(150) } catch { /* rien */ }
@@ -498,7 +507,8 @@ function MinuteurFractionne({ bloc, surEtape, fini }) {
               {pause !== null
                 ? <button type="button" className="ec-st-pas ec-st-demarrer" onClick={() => { setFin(Date.now() + pause * 1000); setPause(null) }}>Reprendre ▶</button>
                 : <button type="button" className="ec-st-pas" onClick={() => { setPause(Math.max(0, (fin - Date.now()) / 1000)); setFin(null) }}>Pause</button>}
-              <button type="button" className="ec-st-pas" onClick={() => aller(indice + 1)}>Passer</button>
+              {/* pas de « Passer » une fois lancé (Marie, 27 novembre 2026) ; « Arrêter » remet le chrono au départ */}
+              <button type="button" className="ec-st-pas" onClick={() => { setFin(null); setPause(null); setIndice(-1); surEtape(null) }}>Arrêter</button>
             </>
           )}
       </div>
@@ -515,18 +525,26 @@ function allureCalculee(bloc, r) {
 
 // ---------- EMOM, AMRAP, TABATA, HIIT, Continu, Intervalles ----------
 
-const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :', fractionne: 'Enchaînez :' }
+const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
 
 function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alerte, effacerAlerte, blocFait }) {
   const els = bloc.elements ?? []
   const r = resultat ?? {}
   const [actif, setActif] = useState(null) // Fractionné : exercice en cours dans le chrono
   const minutes = parseFloat(String(bloc.duree ?? '').replace(',', '.'))
+  const [amrapFini, setAmrapFini] = useState(false)
+  const fract = bloc.format === 'fractionne'
+  // Fractionné : en gris sous le titre, le repos entre les tours, comme « Un maximum de tours : » de l'AMRAP (Marie, 27 novembre 2026)
+  const titre = fract ? resumeFormat({ ...bloc, reposTour: '' }) : resumeFormat(bloc)
+  const phrase = fract ? (texteRepos(bloc.reposTour) && `${texteRepos(bloc.reposTour)} de repos entre chaque tour`) : PHRASES[bloc.format]
+  // AMRAP avec un minuteur : « Tours complets » se note à la fin du chrono, pas pendant (Marie, 27 novembre 2026)
+  const avecMinuteur = !lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait
+  const voirResultat = !avecMinuteur || amrapFini || alerte || !vide(r.resultat)
   return (
     <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
       <div className="ec-st-noir">
-        <span>{resumeFormat(bloc)}</span>
-        {PHRASES[bloc.format] && <p>{PHRASES[bloc.format]}</p>}
+        <span>{titre}</span>
+        {phrase && <p>{phrase}</p>}
       </div>
       <ul className="ec-st-exos">
         {els.map((el, k) => (
@@ -542,11 +560,11 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
         ))}
       </ul>
       {/* le minuteur en bas, en cercle comme le chrono de repos (Marie, 25 novembre 2026) */}
-      {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
+      {avecMinuteur && <MinuteurBloc secondes={Math.round(minutes * 60)} surFin={() => setAmrapFini(true)} />}
       {/* Fractionné : le chrono enchaîne effort et repos, exercice par exercice, tour par tour (Marie, 27 novembre 2026) */}
       {!lecture && bloc.format === 'fractionne' && !r.fait && <MinuteurFractionne bloc={bloc} surEtape={setActif} fini={() => { setActif(null); blocFait() }} />}
       <div className="ec-st-resultat">
-        {champsResultat(bloc).map((c) => (
+        {voirResultat && champsResultat(bloc).map((c) => (
           <label key={c.cle}>
             <span>{c.label}</span>
             <input id={`res-${bloc.id}-${c.cle}`} className={`ec-st-champ${alerte && c.cle === 'resultat' ? ' est-a-remplir' : ''}`} type="text" inputMode={c.mode ?? 'numeric'} autoComplete="off" value={r[c.cle] ?? ''} readOnly={lecture}
