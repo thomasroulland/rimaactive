@@ -431,7 +431,7 @@ function MinuteurBloc({ secondes, surFin }) {
 
 // Chrono d'un bloc Fractionné (Marie, 27 novembre 2026), en cercle comme le repos entre les séries :
 // « Démarrer », puis effort et repos s'enchaînent tout seuls (exercice par exercice, tour par tour, repos entre les tours).
-// Un bip à chaque changement (application installée), Pause, Reprendre et Arrêter (pas de « Passer ») ; à la fin, le bloc est fait.
+// Un bip à chaque changement (application installée), Pause et Reprendre seulement ; à la fin, le bloc est fait.
 function bip() {
   if (!installee()) return
   try { navigator.vibrate?.(150) } catch { /* rien */ }
@@ -507,8 +507,7 @@ function MinuteurFractionne({ bloc, surEtape, fini }) {
               {pause !== null
                 ? <button type="button" className="ec-st-pas ec-st-demarrer" onClick={() => { setFin(Date.now() + pause * 1000); setPause(null) }}>Reprendre ▶</button>
                 : <button type="button" className="ec-st-pas" onClick={() => { setPause(Math.max(0, (fin - Date.now()) / 1000)); setFin(null) }}>Pause</button>}
-              {/* pas de « Passer » une fois lancé (Marie, 27 novembre 2026) ; « Arrêter » remet le chrono au départ */}
-              <button type="button" className="ec-st-pas" onClick={() => { setFin(null); setPause(null); setIndice(-1); surEtape(null) }}>Arrêter</button>
+              {/* une fois lancé : seulement Pause / Reprendre, ni « Passer » ni « Arrêter » (Marie, 27 novembre 2026) */}
             </>
           )}
       </div>

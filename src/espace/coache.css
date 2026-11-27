@@ -2239,3 +2239,5 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-st-repos__boutons .ec-st-pas.ec-st-demarrer { border: 0; border-radius: 16px; background: rgba(242, 194, 48, .25); color: var(--ec-encre); font-weight: 800; }
 .ec-st-repos__boutons .ec-st-pas.ec-st-demarrer:hover { background: rgba(242, 194, 48, .4); }
 .ec-st-fract__tour { margin-bottom: 4px; }
+/* Fractionné lancé : un seul bouton (Pause ou Reprendre), sur toute la largeur */
+.ec-st-fract .ec-st-repos__boutons > .ec-st-pas:only-child { flex: 1; }
