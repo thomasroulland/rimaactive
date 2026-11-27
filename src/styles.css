@@ -2298,3 +2298,42 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
   .approche__panneau, .approche__cadre { flex: none; }
   .approche__cadre { justify-content: flex-start !important; min-height: 0 !important; height: auto; }
 }
+
+/* ---------- Mentions légales, refaites le 27 novembre 2026 (demande de Marie) ----------
+   Même style que « M'écrire » : titre seul, puis sommaire et texte dans des cartes blanches arrondies. */
+.juridique-page { padding: clamp(28px, calc(4 * var(--vw)), 56px) var(--gouttiere) clamp(48px, calc(6 * var(--vw)), 88px); }
+.juridique-page .conteneur { max-width: 1160px; }
+.juridique-page__tete { margin-bottom: clamp(20px, calc(2.4 * var(--vw)), 32px); }
+.juridique-page__tete .surtitre { margin: 0 0 10px; }
+.juridique-page__tete .titre--page { margin: 0; }
+.juridique-page .juridique { grid-template-columns: minmax(0, 1fr); gap: 20px 28px; }
+.juridique-page .juridique__sommaire { position: static; }
+@media (min-width: 960px) { .juridique-page .juridique { grid-template-columns: 250px minmax(0, 1fr); } }
+@media (min-width: 960px) { .juridique-page .juridique__sommaire { position: sticky; top: 96px; } }
+.juridique-page .juridique__sommaire ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 8px; list-style: none; border: 0; border-radius: 20px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); }
+@media (min-width: 960px) { .juridique-page .juridique__sommaire ul { flex-direction: column; gap: 2px; } }
+.juridique-page .juridique__sommaire li { border: 0; }
+.juridique-page .juridique__sommaire a { display: flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 14px; color: var(--encre); font-size: 15px; font-weight: 700; text-decoration: none; transition: background-color .2s ease; }
+.juridique-page .juridique__sommaire a:hover { background: var(--craie); }
+.juridique-page .juridique__sommaire a:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.juridique-page .juridique__texte { max-width: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; min-width: 0; }
+.juridique-page .juridique__texte > section.juridique__carte { padding: clamp(22px, calc(2.8 * var(--vw)), 40px); border: 0; border-radius: 24px; background: var(--blanc); box-shadow: 0 1px 2px rgba(22, 21, 20, 0.04); scroll-margin-top: 96px; }
+.juridique-page .juridique__carte p, .juridique-page .juridique__carte ul { max-width: 74ch; }
+.juridique-page .juridique__titre { margin: 0 0 18px; font-size: clamp(24px, calc(14px + 1vw), 30px); line-height: 1.1; }
+.juridique-page .juridique__sous-partie { scroll-margin-top: 96px; }
+.juridique-page .juridique__sous-partie + .juridique__sous-partie { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--craie-fonce); }
+.juridique-page .juridique__sous-partie h3 { margin: 0 0 10px; font-size: 17px; }
+.juridique-page .juridique__texte p, .juridique-page .juridique__texte li, .juridique-page .juridique__texte dd, .juridique-page .juridique__texte td { font-size: 15px; line-height: 24px; }
+.juridique-page .coordonnees-legales { gap: 0; padding: 6px 18px; border-radius: 14px; background: var(--craie); }
+.juridique-page .coordonnees-legales dt { padding-right: 24px; }
+.juridique-page .coordonnees-legales dt, .juridique-page .coordonnees-legales dd { padding-block: 10px; border-bottom: 1px solid var(--craie-fonce); }
+.juridique-page .coordonnees-legales dt:nth-last-of-type(1), .juridique-page .coordonnees-legales dd:last-of-type { border-bottom: 0; }
+@media (max-width: 599px) {
+  .juridique-page .coordonnees-legales dt { padding: 10px 0 0; border-bottom: 0; }
+  .juridique-page .coordonnees-legales dd { padding: 2px 0 10px; margin: 0; }
+}
+.juridique-page .tableau-defilant { border-radius: 14px; border: 1px solid var(--craie-fonce); }
+.juridique-page .juridique__texte table { margin: 0; }
+.juridique-page .juridique__texte th, .juridique-page .juridique__texte td { padding: 12px 14px; }
+.juridique-page .juridique__texte thead th { background: var(--craie); }
+.juridique-page .juridique__texte tr:last-child td { border-bottom: 0; }

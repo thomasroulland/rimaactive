@@ -32,10 +32,8 @@ export default function InformationsLegales() {
   }, [hash])
   return (
     <PageJuridique
-      fil="Mentions légales"
       titre="Mentions légales"
       miseAJour="12 novembre 2026"
-      intro="Qui édite ce site, qui l’héberge, et ce que deviennent les informations que vous me confiez."
       sections={PARTIES}
     />
   )
