@@ -43,11 +43,12 @@ export function resumeFormat(bloc) {
   }
   if (f === 'emom' || f === 'amrap') return bloc.duree ? `${f.toUpperCase()} ${bloc.duree} min` : f.toUpperCase()
   // TABATA / HIIT (maquette de Marie) : « TABATA 8 × 20 s / 10 s » = tours × travail / repos
-  // Fractionné : « Fractionné 30 s / 30 s · 3 tours » (effort / repos, puis les tours)
+  // Fractionné : « Fractionné 30 s / 30 s · 3 tours · 1 min entre les tours » (effort / repos, les tours, le repos entre deux tours)
   if (f === 'fractionne') {
     const cycle = [bloc.travail && `${bloc.travail} s`, bloc.repos && `${bloc.repos} s`].filter(Boolean).join(' / ')
     const tours = bloc.tours && `${bloc.tours} tour${Number(bloc.tours) > 1 ? 's' : ''}`
-    return ['Fractionné', [cycle, tours].filter(Boolean).join(' · ')].filter(Boolean).join(' ')
+    const entre = texteRepos(bloc.reposTour) && `${texteRepos(bloc.reposTour)} entre les tours`
+    return ['Fractionné', [cycle, tours, entre].filter(Boolean).join(' · ')].filter(Boolean).join(' ')
   }
   if (f === 'tabata' || f === 'hiit') {
     const effort = bloc.travail ? `${bloc.travail} s` : ''
@@ -301,6 +302,8 @@ export function champsResultat(bloc) {
   if (f === 'emom') return [{ cle: 'resultat', label: 'Minutes réussies', aide: rempli(bloc.duree) ? `sur ${String(bloc.duree).trim()}` : '' }]
   // AMRAP : seulement les tours complets, obligatoires (Marie, 25 novembre 2026 : plus de « reps en plus »)
   if (f === 'amrap') return [{ cle: 'resultat', label: 'Tours complets', aide: '' }]
+  // Fractionné : le chrono compte les tours, rien à noter (Marie, 27 novembre 2026 : « ce n'est pas un AMRAP »)
+  if (f === 'fractionne') return []
   if (enIntervalles(f)) {
     return [{ cle: 'resultat', label: 'Tours faits', aide: rempli(bloc.tours) ? `sur ${String(bloc.tours).trim()}` : '' }]
   }
@@ -429,4 +432,27 @@ export function secondesRepos(repos) {
 export function minutesSecondes(s) {
   const n = Math.max(0, Math.ceil(s))
   return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`
+}
+
+// Étapes du chrono d'un bloc Fractionné (Marie, 27 novembre 2026) : pour chaque tour, chaque exercice en effort puis en repos ;
+// à la fin d'un tour, le repos entre les tours (s'il est prévu) remplace le repos ; rien après le dernier exercice du dernier tour.
+// [{ type: 'effort' | 'repos' | 'tour', secondes, tour (1…), exo (indice) }]
+export function etapesFractionne(bloc) {
+  const n = (bloc?.elements ?? []).length
+  const travail = parseInt(bloc?.travail, 10) || 0
+  const repos = parseInt(bloc?.repos, 10) || 0
+  const tours = Math.min(50, parseInt(bloc?.tours, 10) || 1)
+  const entre = secondesRepos(bloc?.reposTour) ?? 0
+  const etapes = []
+  if (!n || travail <= 0) return etapes
+  for (let t = 1; t <= tours; t++) {
+    for (let i = 0; i < n; i++) {
+      etapes.push({ type: 'effort', secondes: travail, tour: t, exo: i })
+      const finTour = i === n - 1
+      if (finTour && t === tours) continue
+      if (finTour && entre > 0) etapes.push({ type: 'tour', secondes: entre, tour: t, exo: 0 })
+      else if (repos > 0) etapes.push({ type: 'repos', secondes: repos, tour: finTour ? t + 1 : t, exo: finTour ? 0 : i + 1 })
+    }
+  }
+  return etapes
 }

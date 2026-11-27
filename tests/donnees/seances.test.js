@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { etapesFractionne } from '../../src/espace/donnees/seances.js'
 import {
   dateLongue, dateCourte, prescription, resumeFormat, contenuNotes, contenuFin, RESSENTIS, evolutionCharges, statutSeance,
   texteSerie, serieTerminee, detailSeance, exercicesDe, lignesExercice, champsResultat, avecChargeSeule, secondes, allureVitesse, saisirSerie,
@@ -151,7 +152,7 @@ describe('écran de la séance', () => {
     expect(champsResultat({ format: 'amrap', duree: '12' })).toEqual([
       { cle: 'resultat', label: 'Tours complets', aide: '' }])
     expect(champsResultat({ format: 'tabata', tours: '8' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: 'sur 8' }])
-    expect(champsResultat({ format: 'fractionne', tours: '3' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: 'sur 3' }])
+    expect(champsResultat({ format: 'fractionne', tours: '3' })).toEqual([])
     expect(champsResultat({ format: 'hiit' })).toEqual([{ cle: 'resultat', label: 'Tours faits', aide: '' }])
     expect(champsResultat({ format: 'series' })).toEqual([])
   })
@@ -344,5 +345,17 @@ describe('durée de la séance (26 novembre 2026)', () => {
     expect(cf(base, { effort: 7, duree: 52 }).duree).toBe(52)
     expect(cf(base, { effort: 7 })).not.toHaveProperty('duree')
     expect(cf(base, { effort: 7, duree: 9999 })).not.toHaveProperty('duree')
+  })
+})
+
+describe('chrono du Fractionné', () => {
+  const bloc = { format: 'fractionne', travail: '30', repos: '30', tours: '2', elements: [{ id: 'a' }, { id: 'b' }] }
+  it('effort et repos par exercice, rien après le dernier', () => {
+    expect(etapesFractionne(bloc).map((e) => `${e.type}${e.tour}-${e.exo}`)).toEqual(['effort1-0', 'repos1-1', 'effort1-1', 'repos2-0', 'effort2-0', 'repos2-1', 'effort2-1'])
+  })
+  it('le repos entre les tours remplace le repos à la fin d’un tour', () => {
+    const e = etapesFractionne({ ...bloc, reposTour: '1' })
+    expect(e[3]).toEqual({ type: 'tour', secondes: 60, tour: 1, exo: 0 })
+    expect(e).toHaveLength(7)
   })
 })

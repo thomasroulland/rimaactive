@@ -2227,3 +2227,11 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 .ec-fiche__muscles { display: flex; flex-wrap: wrap; gap: 6px; }
 .ec-fiche__muscles span { padding: 5px 10px; border-radius: 999px; background: #f4f3ef; font: 700 13px/1.2 var(--font-sans); }
 @media (min-width: 760px) { .ec-fenetre--fiche { border-radius: 24px; overflow: hidden auto; } .ec-fiche__img { max-height: 48vh; } }
+
+/* Chrono du Fractionné (27 novembre 2026) : tour, exercice en cours, cercle vermillon pendant l'effort, jaune pendant le repos */
+.ec-st-fract { gap: 6px; }
+.ec-st-fract__tour { margin: 0; font: 800 11px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ec-gris, #6b665f); }
+.ec-st-fract__nom { margin: 0; min-height: 22px; text-align: center; font: 800 17px/1.25 var(--font-sans); color: var(--ec-encre); }
+.ec-st-fract.est-effort .ec-st-repos__temps small { color: var(--ec-vermillon, #ff4a1c); }
+.ec-st-exos li.est-actif { background: rgba(255, 74, 28, .07); border-radius: 12px; }
+.ec-st-exos li.est-actif b { color: var(--ec-vermillon, #ff4a1c); }

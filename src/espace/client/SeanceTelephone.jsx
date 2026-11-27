@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { champsResultat, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
+import { champsResultat, etapesFractionne, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMainEl, libelleMateriel } from '../donnees/banque.js'
 import { installee } from '../../components/installation.js'
 
@@ -72,7 +72,7 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
         : enSeries
             ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture} />
             : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture}
-                alerte={alerteTours} effacerAlerte={() => setAlerteTours(false)} />}
+                alerte={alerteTours} effacerAlerte={() => setAlerteTours(false)} blocFait={blocFait} />}
 
       {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
           on change de bloc avec « Plan » ou les traits du haut, et la fenêtre de l'effort propose le bloc suivant */}
@@ -420,6 +420,91 @@ function MinuteurBloc({ secondes }) {
   )
 }
 
+// Chrono d'un bloc Fractionné (Marie, 27 novembre 2026), en cercle comme le repos entre les séries :
+// « Démarrer », puis effort et repos s'enchaînent tout seuls (exercice par exercice, tour par tour, repos entre les tours).
+// Un bip à chaque changement (application installée), Pause et Passer ; à la fin, le bloc est fait.
+function bip() {
+  if (!installee()) return
+  try { navigator.vibrate?.(150) } catch { /* rien */ }
+  try {
+    const ctx = sonRepos
+    if (!ctx) return
+    const o = ctx.createOscillator(), g = ctx.createGain(), d = ctx.currentTime
+    o.type = 'sine'; o.frequency.value = 660; o.connect(g); g.connect(ctx.destination)
+    g.gain.setValueAtTime(0.0001, d); g.gain.exponentialRampToValueAtTime(0.4, d + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, d + 0.2)
+    o.start(d); o.stop(d + 0.22)
+  } catch { /* rien */ }
+}
+
+function MinuteurFractionne({ bloc, surEtape, fini }) {
+  const etapes = etapesFractionne(bloc)
+  const els = bloc.elements ?? []
+  const tours = etapes.length ? etapes[etapes.length - 1].tour : 0
+  const [indice, setIndice] = useState(-1) // -1 : pas encore lancé
+  const [fin, setFin] = useState(null) // heure de fin de l'étape en cours
+  const [pause, setPause] = useState(null) // secondes restantes pendant une pause
+  const [, battre] = useState(0)
+  const etape = etapes[indice]
+  const aller = (i) => {
+    if (i >= etapes.length) { alerter(); setFin(null); setIndice(etapes.length); surEtape(null); fini(); return }
+    bip(); setIndice(i); setPause(null); setFin(Date.now() + etapes[i].secondes * 1000); surEtape(etapes[i].exo)
+  }
+  useEffect(() => {
+    if (!fin) return undefined
+    const id = setInterval(() => {
+      battre((n) => n + 1)
+      if (Date.now() >= fin) { clearInterval(id); aller(indice + 1) }
+    }, 250)
+    return () => clearInterval(id)
+  }, [fin, indice]) // eslint-disable-line react-hooks/exhaustive-deps
+  if (!etapes.length) return null
+  const total = etape ? etape.secondes : etapes[0].secondes
+  const reste = pause ?? (fin ? (fin - Date.now()) / 1000 : total)
+  const frac = Math.max(0, Math.min(1, reste / total))
+  const effort = etape?.type === 'effort'
+  const R = 92, C = 110
+  const ang = frac * 2 * Math.PI - Math.PI / 2
+  const px = C + R * Math.cos(ang), py = C + R * Math.sin(ang)
+  const arc = frac >= 0.9999
+    ? `M${C} ${C - R} A${R} ${R} 0 1 1 ${C - 0.01} ${C - R}`
+    : `M${C} ${C - R} A${R} ${R} 0 ${frac > 0.5 ? 1 : 0} 1 ${px.toFixed(1)} ${py.toFixed(1)}`
+  const nom = (i) => els[i]?.nom ?? ''
+  const libelle = !etape ? 'Effort' : effort ? 'Effort' : etape.type === 'tour' ? 'Repos entre les tours' : 'Repos'
+  const titre = !etape ? `Prêt ? ${nom(0)} pour commencer` : effort ? nom(etape.exo) : `Ensuite : ${nom(etape.exo)}`
+  return (
+    <div className={`ec-st-repos ec-st-minuteur ec-st-fract${effort ? ' est-effort' : etape ? ' est-repos' : ''}`}>
+      <p className="ec-st-fract__tour">{etape ? `Tour ${etape.tour} sur ${tours}` : `${tours} tour${tours > 1 ? 's' : ''} · ${els.length} exercice${els.length > 1 ? 's' : ''}`}</p>
+      <p className="ec-st-fract__nom" aria-live="polite">{titre}</p>
+      <div className="ec-st-repos__cadran">
+        <svg viewBox="0 0 220 220" aria-hidden="true">
+          {Array.from({ length: 60 }, (_, i) => {
+            const a = (i / 60) * 2 * Math.PI - Math.PI / 2, r2 = i % 5 ? 101 : 97
+            return <line key={i} x1={C + 105 * Math.cos(a)} y1={C + 105 * Math.sin(a)} x2={C + r2 * Math.cos(a)} y2={C + r2 * Math.sin(a)} stroke="#cfc9be" strokeWidth={i % 5 ? 1 : 2} />
+          })}
+          <circle cx={C} cy={C} r={R} fill="none" stroke="#efebe4" strokeWidth="14" />
+          {frac > 0 && <path d={arc} fill="none" stroke={effort ? 'var(--ec-vermillon, #ff4a1c)' : 'var(--ec-jaune, #f2c230)'} strokeWidth="14" strokeLinecap="round" />}
+        </svg>
+        <div className="ec-st-repos__temps" aria-live="off">
+          <b>{mmss(reste)}</b>
+          <small>{pause !== null ? 'en pause' : libelle}</small>
+        </div>
+      </div>
+      <div className="ec-st-repos__boutons">
+        {indice < 0
+          ? <button type="button" className="ec-st-pas est-jaune" onClick={() => { preparerSon(); aller(0) }}>Démarrer ▶</button>
+          : (
+            <>
+              {pause !== null
+                ? <button type="button" className="ec-st-pas est-jaune" onClick={() => { setFin(Date.now() + pause * 1000); setPause(null) }}>Reprendre ▶</button>
+                : <button type="button" className="ec-st-pas" onClick={() => { setPause(Math.max(0, (fin - Date.now()) / 1000)); setFin(null) }}>Pause</button>}
+              <button type="button" className="ec-st-pas" onClick={() => aller(indice + 1)}>Passer</button>
+            </>
+          )}
+      </div>
+    </div>
+  )
+}
+
 // Continu, Intervalles : sans allure notée, on garde celle calculée avec le temps et la distance (23 novembre 2026)
 function allureCalculee(bloc, r) {
   if ((bloc.format !== 'continu' && bloc.format !== 'intervalles') || !vide(r?.allure)) return {}
@@ -431,9 +516,10 @@ function allureCalculee(bloc, r) {
 
 const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :', fractionne: 'Enchaînez :' }
 
-function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alerte, effacerAlerte }) {
+function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alerte, effacerAlerte, blocFait }) {
   const els = bloc.elements ?? []
   const r = resultat ?? {}
+  const [actif, setActif] = useState(null) // Fractionné : exercice en cours dans le chrono
   const minutes = parseFloat(String(bloc.duree ?? '').replace(',', '.'))
   return (
     <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
@@ -443,7 +529,7 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
       </div>
       <ul className="ec-st-exos">
         {els.map((el, k) => (
-          <li key={el.id}>
+          <li key={el.id} className={actif === k ? 'est-actif' : ''}>
             <button type="button" onClick={() => voirConsignes(el)} aria-label={`${el.nom} : voir les photos et consignes`}>
               {(el.photos ?? []).filter(Boolean)[0]
                 ? <span className="ec-st-mini"><PhotoStockee chemin={el.photos.filter(Boolean)[0]} alt="" /></span>
@@ -456,6 +542,8 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
       </ul>
       {/* le minuteur en bas, en cercle comme le chrono de repos (Marie, 25 novembre 2026) */}
       {!lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait && <MinuteurBloc secondes={Math.round(minutes * 60)} />}
+      {/* Fractionné : le chrono enchaîne effort et repos, exercice par exercice, tour par tour (Marie, 27 novembre 2026) */}
+      {!lecture && bloc.format === 'fractionne' && !r.fait && <MinuteurFractionne bloc={bloc} surEtape={setActif} fini={() => { setActif(null); blocFait() }} />}
       <div className="ec-st-resultat">
         {champsResultat(bloc).map((c) => (
           <label key={c.cle}>

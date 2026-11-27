@@ -217,15 +217,19 @@ export default function EditeurSeance({ seance, numero, semaine, verrou, attente
                       {(b.format === 'emom' || b.format === 'amrap') && (
                         <Champ id={`bloc-${b.id}-duree`} label="Durée (min)" mode="numeric" valeur={b.duree} changer={(v) => majBloc(bi, 'duree', v)} />
                       )}
-                      {/* repos avant d'enchaîner le bloc suivant (Marie, 25 novembre 2026), comme le repos des séries en Renforcement */}
-                      <Champ id={`bloc-${b.id}-reposfin`} label="Repos après le bloc" valeur={b.reposFin} changer={(v) => majBloc(bi, 'reposFin', v)} indice="ex. 2 min" />
                       {enIntervalles(b.format) && (
                         <>
                           <Champ id={`bloc-${b.id}-travail`} label={b.format === 'fractionne' ? 'Effort (s)' : 'Travail (s)'} mode="numeric" valeur={b.travail} changer={(v) => majBloc(bi, 'travail', v)} />
                           <Champ id={`bloc-${b.id}-repos`} label="Repos (s)" mode="numeric" valeur={b.repos} changer={(v) => majBloc(bi, 'repos', v)} />
                           <Champ id={`bloc-${b.id}-tours`} label="Tours" mode="numeric" valeur={b.tours} changer={(v) => majBloc(bi, 'tours', v)} />
+                          {/* Fractionné : repos à la fin de chaque tour, en plus du repos après le bloc (Marie, 27 novembre 2026) */}
+                          {b.format === 'fractionne' && (
+                            <Champ id={`bloc-${b.id}-repostour`} label="Repos entre les tours" valeur={b.reposTour} changer={(v) => majBloc(bi, 'reposTour', v)} indice="ex. 1 min" />
+                          )}
                         </>
                       )}
+                      {/* repos avant d'enchaîner le bloc suivant (Marie, 25 novembre 2026), comme le repos des séries en Renforcement */}
+                      <Champ id={`bloc-${b.id}-reposfin`} label="Repos après le bloc" valeur={b.reposFin} changer={(v) => majBloc(bi, 'reposFin', v)} indice="ex. 2 min" />
                     </div>
                   )}
                   {(b.elements ?? []).length > 0 && (
