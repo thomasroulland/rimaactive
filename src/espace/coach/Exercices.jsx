@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ecouterExercices } from '../depots.js'
+import { ecouterExercices, supprimerExercicesArchives } from '../depots.js'
+import Confirmation from './Confirmation.jsx'
 import PhotoStockee from './PhotoStockee.jsx'
 import useReglages from './useReglages.js'
 import GestionListes from './GestionListes.jsx'
@@ -29,6 +30,8 @@ export default function Exercices() {
   }, [recherche, categorie, materiel, tri])
   const [gerer, setGerer] = useState(null) // null | 'categories' | 'materiels' | 'autres'
   const [panneau, setPanneau] = useState(false)
+  const [nettoyage, setNettoyage] = useState(false) // fenêtre « Supprimer les exercices archivés »
+  const [nettoye, setNettoye] = useState('')
   const reglages = useReglages()
   const message = useLocation().state?.message ?? ''
 
@@ -36,6 +39,7 @@ export default function Exercices() {
 
   // ni onglets de parties ni exercices archivés dans la banque (Marie, 26 novembre 2026)
   const visible = (e) => !e.retire
+  const archives = (exercices ?? []).filter((e) => e.retire)
   const liste = useMemo(() => {
     if (!exercices) return []
     const q = simple(recherche.trim())
@@ -78,8 +82,25 @@ export default function Exercices() {
           </Link>
         </header>
 
-        <p className="espace-message" role="status">{message}</p>
+        <p className="espace-message" role="status">{nettoye || message}</p>
         <p className="espace-message espace-message--erreur" role="alert">{erreur}</p>
+        {/* les exercices archivés ne se voient plus : Marie les supprime pour de bon, avec leurs photos (27 novembre 2026) */}
+        {archives.length > 0 && (
+          <div className="banque__archives-bandeau">
+            <span>{archives.length === 1 ? '1 ancien exercice archivé occupe encore de la place.' : `${archives.length} anciens exercices archivés occupent encore de la place.`}</span>
+            <button type="button" className="bouton bouton--secondaire bouton--compact" onClick={() => setNettoyage(true)}>Les supprimer</button>
+          </div>
+        )}
+        {nettoyage && (
+          <Confirmation titre={`Supprimer ${archives.length === 1 ? 'l’exercice archivé' : `les ${archives.length} exercices archivés`} ?`}
+            texte={`${archives.map((e) => e.nom).filter(Boolean).slice(0, 6).join(', ')}${archives.length > 6 ? '…' : ''}. Les fiches et leurs photos sont effacées pour de bon. Les séances qui les utilisent déjà les gardent telles quelles.`}
+            libelle="Supprimer" fermer={() => setNettoyage(false)}
+            action={async () => {
+              const n = archives.length
+              try { await supprimerExercicesArchives(archives); setNettoye(n === 1 ? '1 exercice archivé supprimé.' : `${n} exercices archivés supprimés.`) } catch { setErreur('La suppression n’a pas pu se faire. Vérifiez votre connexion et réessayez.') }
+              setNettoyage(false)
+            }} />
+        )}
 
         <div className="banque__corps">
           <aside className="banque__filtres" aria-label="Filtres">{filtres('liste')}</aside>
@@ -126,7 +147,6 @@ export default function Exercices() {
                           <MaterielPicto materiel={e.materiel} />
                         </span>
                         <span className="espace-exo__muscles">{[e.categorie, e.materiel].filter(Boolean).join(' · ') || (e.muscles ?? []).join(', ') || 'Catégorie à préciser'}</span>
-                        {e.retire && <span className="espace-statut">Archivé</span>}
                       </span>
                       <svg className="banque__fleche" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
                     </Link>

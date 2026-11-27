@@ -177,8 +177,33 @@ export async function enregistrerExercice(exercice, nouvellesPhotos = []) {
 
 // Supprimer définitivement une fiche. Ses photos restent dans Storage : les programmes qui utilisent
 // déjà l'exercice en gardent une copie (nom, consignes, chemins des photos) et ne changent pas.
-export function supprimerExercice(id) {
-  return deleteDoc(doc(db, 'exercices', id))
+// Photos d'exercices encore montrées par un programme ou un modèle (copiées dans leurs séances) : on ne les efface pas.
+async function photosUtilisees() {
+  const [p, m] = await Promise.all([getDocs(collection(db, 'programmes')), getDocs(collection(db, 'modeles'))])
+  const vues = new Set()
+  const fouiller = (v) => {
+    if (typeof v === 'string') { if (v.startsWith('exercices/')) vues.add(v) } else if (Array.isArray(v)) v.forEach(fouiller)
+    else if (v && typeof v === 'object') Object.values(v).forEach(fouiller)
+  }
+  for (const d of [...p.docs, ...m.docs]) fouiller(d.data())
+  return vues
+}
+
+// Supprime une fiche de la banque pour de bon, avec ses photos pour libérer de la place (27 novembre 2026),
+// sauf celles qu'un programme ou un modèle montre encore. `garder` : photos à garder, déjà calculées (suppression en série).
+export async function supprimerExercice(id, photos = [], garder = null) {
+  await deleteDoc(doc(db, 'exercices', id))
+  const vues = garder ?? (photos.length ? await photosUtilisees() : new Set())
+  for (const chemin of photos) {
+    if (vues.has(chemin)) continue
+    try { await deleteObject(ref(stockage, chemin)) } catch { /* déjà absente */ }
+  }
+}
+
+// Les exercices archivés (case retirée de la banque le 26 novembre 2026) : Marie les supprime tous d'un coup.
+export async function supprimerExercicesArchives(exercices) {
+  const garder = await photosUtilisees()
+  for (const e of exercices) await supprimerExercice(e.id, e.photos ?? [], garder)
 }
 
 // ---------- Réglages du coach (14 novembre 2026) ----------
@@ -233,9 +258,6 @@ export async function propagerExercice(exoId, champs) {
 }
 
 // « Retirer » : l'exercice sort de la banque, ses fichiers restent (les programmes gardent leur copie des chemins).
-export async function retirerExercice(id) {
-  await updateDoc(doc(db, 'exercices', id), { retire: true, majLe: serverTimestamp() })
-}
 
 // Adresse affichable d'une photo (mise en mémoire le temps de la session).
 // Hors ligne (19 novembre 2026) : les adresses déjà obtenues sont aussi gardées dans le téléphone ; sans réseau on reprend

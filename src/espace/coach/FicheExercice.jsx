@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase.js'
-import { enregistrerExercice, retirerExercice, nouvelIdExercice, supprimerExercice } from '../depots.js'
+import { enregistrerExercice, nouvelIdExercice, supprimerExercice } from '../depots.js'
 import Confirmation from './Confirmation.jsx'
 import { reduireImage } from '../donnees/photos.js'
 import { messageErreur } from '../erreurs.js'
@@ -114,26 +114,10 @@ export default function FicheExercice() {
     }
   }
 
-  async function changerRetrait() {
-    setEnvoi(true); setErreur('')
-    try {
-      if (fiche.retire) {
-        await enregistrerExercice({ ...fiche, id, retire: false }, nouvelles.map((n) => n.fichier))
-        navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim()} » est désarchivé : il revient dans la recherche des séances.` } })
-      } else {
-        await retirerExercice(id)
-        navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim()} » est archivé. Les séances qui l’utilisent déjà ne changent pas.` } })
-      }
-    } catch (e) {
-      setErreur(messageErreur(e.code ?? e.message))
-      setEnvoi(false)
-    }
-  }
-
   async function supprimer() {
     setEnvoi(true); setErreur('')
     try {
-      await supprimerExercice(id)
+      await supprimerExercice(id, fiche.photos ?? [])
       navigate('/espace/coach/exercices', { state: { message: `« ${fiche.nom.trim() || 'L’exercice'} » est supprimé. Les séances qui l’utilisent déjà ne changent pas.` } })
     } catch (e) {
       setErreur(messageErreur(e.code ?? e.message))
@@ -250,11 +234,6 @@ export default function FicheExercice() {
               <button type="submit" className="bouton bouton--principal" disabled={envoi}>{envoi ? 'Enregistrement…' : 'Enregistrer la fiche'}</button>
               <Link to="/espace/coach/exercices" className="bouton bouton--secondaire">Annuler</Link>
               {id && (
-                <button type="button" className="espace-lien" disabled={envoi} onClick={changerRetrait}>
-                  {fiche.retire ? 'Désarchiver l’exercice' : 'Archiver l’exercice'}
-                </button>
-              )}
-              {id && (
                 <button type="button" className="espace-lien espace-lien--danger" disabled={envoi} onClick={() => setConfirmer(true)}>
                   Supprimer l’exercice
                 </button>
@@ -265,7 +244,7 @@ export default function FicheExercice() {
       </div>
       {confirmer && (
         <Confirmation titre={`Supprimer « ${fiche.nom.trim() || 'cet exercice'} » ?`}
-          texte="La fiche est effacée de votre banque pour de bon. Les séances qui l’utilisent déjà le gardent tel quel. Pour simplement le cacher, archivez-le plutôt."
+          texte="La fiche et ses photos sont effacées pour de bon, pour libérer de la place. Les séances qui l’utilisent déjà le gardent tel quel."
           libelle="Supprimer l’exercice" action={supprimer} fermer={() => setConfirmer(false)} />
       )}
     </section>

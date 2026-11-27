@@ -2401,3 +2401,6 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 /* banque : titre seul (sans « Espace coach » ni nombre), un peu d'air sous la barre ; grille collée aux outils quand aucun filtre n'est actif */
 .banque .espace-coach__entete { padding-top: 16px; align-items: center; }
 .banque__outils + .banque__grille, .banque__outils + .espace-texte { margin-top: 16px; }
+
+/* banque : anciens exercices archivés à supprimer pour de bon (27 novembre 2026) */
+.banque__archives-bandeau { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 4px 0 8px; padding: 12px 16px; border-radius: 14px; background: #fff; border: 1px solid #ece9e3; font-size: 15px; font-weight: 600; }
