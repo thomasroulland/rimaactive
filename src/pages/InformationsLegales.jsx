@@ -33,7 +33,7 @@ export default function InformationsLegales() {
   return (
     <PageJuridique
       titre="Mentions légales"
-      miseAJour="12 novembre 2026"
+      ligne="Mis à jour le 27 novembre 2026"
       sections={PARTIES}
     />
   )

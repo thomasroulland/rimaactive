@@ -2337,3 +2337,8 @@ html:has(.ecran-plein) { scroll-snap-type: none !important; }
 .juridique-page .juridique__texte th, .juridique-page .juridique__texte td { padding: 12px 14px; }
 .juridique-page .juridique__texte thead th { background: var(--craie); }
 .juridique-page .juridique__texte tr:last-child td { border-bottom: 0; }
+/* CGV : articles numérotés dans une seule carte (27 novembre 2026) */
+.juridique-page .juridique__article { margin: 0 0 10px; font-size: 18px; line-height: 1.3; font-weight: 800; letter-spacing: -0.01em; color: var(--encre); }
+.juridique-page .juridique__sommaire a { min-height: 40px; padding-block: 8px; line-height: 1.25; }
+.juridique-page .juridique__sommaire ul { flex-direction: column; gap: 0; }
+@media (max-width: 959px) { .juridique-page .juridique__sommaire a { min-height: 38px; padding-block: 6px; } }

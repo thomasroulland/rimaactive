@@ -34,7 +34,7 @@ export default function App() {
           <Route path="entreprises" element={<Navigate to="/offres#entreprises" replace />} />
           <Route path="en-ligne" element={<Navigate to="/offres#en-ligne" replace />} />
           <Route path="contact" element={<Contact />} />
-          {/* mentions légales et confidentialité sur une page ; CGV à part (en cours de rédaction) */}
+          {/* mentions légales et confidentialité sur une page ; CGV à part (texte de Marie, 27 novembre 2026) */}
           <Route path="mentions-legales" element={<InformationsLegales />} />
           <Route path="cgv" element={<Cgv />} />
           <Route path="confidentialite" element={<Navigate to="/mentions-legales#confidentialite" replace />} />

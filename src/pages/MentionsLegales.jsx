@@ -1,4 +1,4 @@
-import { ACompleter } from '../components/PageJuridique.jsx'
+import { Mediation } from '../components/PageJuridique.jsx'
 import { CONTACT } from '../components/liens.js'
 
 export const SECTIONS_MENTIONS = [
@@ -41,8 +41,7 @@ export const SECTIONS_MENTIONS = [
           <dd>CQP Instructeur Fitness, option Musculation et Personal Training (certification de branche, RNCP 40595)</dd>
           <dt>Carte professionnelle</dt>
           <dd>En cours de délivrance par le SDJES des Yvelines</dd>
-          <dt>Assurance</dt>
-          <dd>Hiscox, responsabilité civile professionnelle, activité de coach sportif, France</dd>
+          {/* « Assurance » retirée pour l'instant (Marie, 27 novembre 2026) */}
         </dl>
       </>
     ),
@@ -104,10 +103,7 @@ export const SECTIONS_MENTIONS = [
           Le présent site et ses mentions sont soumis au droit français. En cas de litige, une solution amiable sera
           recherchée avant toute action en justice.
         </p>
-        <p>
-          Pour les particuliers, en cas de litige lié à une prestation, vous pouvez recourir gratuitement à un
-          médiateur de la consommation : <ACompleter>nom et coordonnées du médiateur choisi</ACompleter>.
-        </p>
+        <Mediation />
       </>
     ),
   },
