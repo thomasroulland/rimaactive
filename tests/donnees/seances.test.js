@@ -158,11 +158,14 @@ describe('écran de la séance', () => {
     expect(champsResultat({ format: 'series' })).toEqual([])
   })
 
-  it('charge seule : EMOM et AMRAP, sauf au poids du corps', () => {
+  it('charge seule : tous les circuits (EMOM, AMRAP, TABATA, Fractionné), sauf au poids du corps', () => {
     expect(avecChargeSeule({ format: 'emom' }, { charge: '20' })).toBe(true)
     expect(avecChargeSeule({ format: 'amrap' }, { charge: '' })).toBe(true)
     expect(avecChargeSeule({ format: 'emom' }, { charge: '0' })).toBe(false)
-    expect(avecChargeSeule({ format: 'tabata' }, { charge: '20' })).toBe(false)
+    expect(avecChargeSeule({ format: 'tabata' }, { charge: '20' })).toBe(true)
+    expect(avecChargeSeule({ format: 'fractionne' }, { charge: '' })).toBe(true)
+    expect(avecChargeSeule({ format: 'continu' }, { charge: '20' })).toBe(false)
+    expect(avecChargeSeule({ format: 'series' }, { charge: '20' })).toBe(false)
   })
 
   it('allure et vitesse d’une sortie', () => {

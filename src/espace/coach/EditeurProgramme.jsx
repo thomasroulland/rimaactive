@@ -306,7 +306,7 @@ export default function EditeurProgramme() {
   function deplacerLaSeance(de, a) {
     if (verrous === null || verrous.has(prog.semaines[de.s]?.seances[de.se]?.id)) { setErreur('Une séance déjà faite ne se déplace pas.'); return }
     setErreur('')
-    avecAnnulation(`Séance déplacée en semaine ${a.vers + 1}.`, (p) => deplacerSeance(p, de, a))
+    avecAnnulation(a.vers === de.s ? 'Séance déplacée.' : `Séance déplacée en semaine ${a.vers + 1}.`, (p) => deplacerSeance(p, de, a))
   }
   function dupliquerLaSeance(de, a) {
     setErreur('')

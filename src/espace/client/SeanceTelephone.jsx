@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PhotoStockee from '../coach/PhotoStockee.jsx'
 import { nomBloc } from '../donnees/programme.js'
-import { champsResultat, etapesFractionne, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
+import { avecChargeSeule, champsResultat, etapesFractionne, enDuree, nomMesure, estEnSeries, estFourchette, fr, lignesExercice, resumeFormat, allureVitesse, secondesRepos, texteDuree, texteRepos, texteReps } from '../donnees/seances.js'
 import { chargeParMainEl, libelleMateriel } from '../donnees/banque.js'
 import { installee } from '../../components/installation.js'
 
@@ -71,7 +71,7 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
         ? <p className="ec-texte">Ce bloc n’a pas encore d’exercice.</p>
         : enSeries
             ? <Series bloc={bloc} lignes={lignes} notes={notes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture} />
-            : <Chrono bloc={bloc} resultat={resultats[bloc.id]} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture}
+            : <Chrono bloc={bloc} resultat={resultats[bloc.id]} lignes={lignes} actions={actions} voirConsignes={voirConsignes} ouvrir={setFeuille} lecture={lecture}
                 alerte={alerteTours} effacerAlerte={() => setAlerteTours(false)} blocFait={blocFait} />}
 
       {/* bloc EMOM, AMRAP… pas encore fait : un seul gros bouton. Plus de « Bloc précédent / Bloc suivant » (Marie, 23 novembre 2026) :
@@ -526,9 +526,11 @@ function allureCalculee(bloc, r) {
 
 const PHRASES = { emom: 'Au début de chaque minute :', amrap: 'Un maximum de tours :', tabata: 'Enchaînez :', hiit: 'Enchaînez :' }
 
-function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alerte, effacerAlerte, blocFait }) {
+function Chrono({ bloc, resultat, lignes, actions, voirConsignes, ouvrir, lecture, alerte, effacerAlerte, blocFait }) {
   const els = bloc.elements ?? []
   const r = resultat ?? {}
+  const [fractFini, setFractFini] = useState(false)
+  const avecCharges = els.some((el) => avecChargeSeule(bloc, el))
   const [actif, setActif] = useState(null) // Fractionné : exercice en cours dans le chrono
   const minutes = parseFloat(String(bloc.duree ?? '').replace(',', '.'))
   const [amrapFini, setAmrapFini] = useState(false)
@@ -539,6 +541,8 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
   // AMRAP avec un minuteur : « Tours complets » se note à la fin du chrono, pas pendant (Marie, 27 novembre 2026)
   const avecMinuteur = !lecture && bloc.format === 'amrap' && minutes > 0 && !r.fait
   const voirResultat = !avecMinuteur || amrapFini || alerte || !vide(r.resultat)
+  // la charge de chaque exercice : à la fin du chrono (AMRAP, Fractionné), tout de suite sans chrono (EMOM, TABATA)
+  const voirCharges = lecture || r.fait || (bloc.format === 'amrap' ? voirResultat : fract ? fractFini : true)
   return (
     <section className={`ec-st-carte${bloc.format === 'continu' || bloc.format === 'intervalles' ? ' ec-st-carte--activite' : ''}`} aria-label={resumeFormat(bloc)}>
       <div className="ec-st-noir">
@@ -547,21 +551,32 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
       </div>
       <ul className="ec-st-exos">
         {els.map((el, k) => (
-          <li key={el.id} className={actif === k ? 'est-actif' : ''}>
+          <li key={el.id} className={`${actif === k ? 'est-actif' : ''}${voirCharges && avecChargeSeule(bloc, el) ? ' avec-charge' : ''}`}>
             <button type="button" onClick={() => voirConsignes(el)} aria-label={`${el.nom} : voir les photos et consignes`}>
               {(el.photos ?? []).filter(Boolean)[0]
                 ? <span className="ec-st-mini"><PhotoStockee chemin={el.photos.filter(Boolean)[0]} alt="" /></span>
                 : <span className="ec-st-code">{bloc.lettre}{k + 1}</span>}
-              <b>{el.nom}</b>
-              <em>{lignesExercice(el, false).prescription}</em>
+              {/* le matériel sous le nom, comme en Renforcement (Marie, 27 novembre 2026) */}
+              {voirCharges && avecChargeSeule(bloc, el)
+                // avec la case de charge à droite : ce qui est prévu passe sous le nom, avec le matériel
+                ? <span className="ec-st-exos__nom"><b>{el.nom}</b><small>{[materielDe(el), lignesExercice(el, false).prescription].filter(Boolean).join(' · ')}</small></span>
+                : <><span className="ec-st-exos__nom"><b>{el.nom}</b>{materielDe(el) && <small>{materielDe(el)}</small>}</span><em>{lignesExercice(el, false).prescription}</em></>}
             </button>
+            {voirCharges && avecChargeSeule(bloc, el) && (
+              <label className="ec-st-kg">
+                <input className="ec-st-champ" type="text" inputMode="decimal" autoComplete="off" aria-label={`${el.nom} : charge en kg`}
+                  value={lignes(el)[0]?.charge ?? ''} placeholder={lecture ? '' : fr(el.charge ?? '')} readOnly={lecture}
+                  onFocus={(ev) => ev.target.select()} onChange={(ev) => actions.chargeSeule(el.id, ev.target.value)} />
+                <span aria-hidden="true">kg</span>
+              </label>
+            )}
           </li>
         ))}
       </ul>
       {/* le minuteur en bas, en cercle comme le chrono de repos (Marie, 25 novembre 2026) */}
       {avecMinuteur && <MinuteurBloc secondes={Math.round(minutes * 60)} surFin={() => setAmrapFini(true)} />}
       {/* Fractionné : le chrono enchaîne effort et repos, exercice par exercice, tour par tour (Marie, 27 novembre 2026) */}
-      {!lecture && bloc.format === 'fractionne' && !r.fait && <MinuteurFractionne bloc={bloc} surEtape={setActif} fini={() => { setActif(null); blocFait() }} />}
+      {!lecture && bloc.format === 'fractionne' && !r.fait && !fractFini && <MinuteurFractionne bloc={bloc} surEtape={setActif} fini={() => { setActif(null); if (avecCharges) setFractFini(true); else blocFait() }} />}
       <div className="ec-st-resultat">
         {voirResultat && champsResultat(bloc).map((c) => (
           <label key={c.cle}>
@@ -573,6 +588,7 @@ function Chrono({ bloc, resultat, actions, voirConsignes, ouvrir, lecture, alert
         ))}
       </div>
       {alerte && <p className="ec-st-alerte" role="alert">Notez le nombre de tours complets.</p>}
+      {fractFini && avecCharges && !r.fait && <p className="ec-st-minuteur__fini" role="status"><b>Terminé !</b> Notez vos charges.</p>}
       {lecture && (r.rpe || r.note) && <p className="ec-st-relu">{r.rpe && <span>RPE {texteRpe(r.rpe)}</span>}{r.note && <span>{r.note}</span>}</p>}
       {!lecture && r.fait && (
         <div className="ec-st-pastilles">

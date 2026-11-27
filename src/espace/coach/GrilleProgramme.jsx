@@ -13,7 +13,7 @@ const TYPE_MODELE = 'application/x-rimaactive-modele-seance'
 
 const nbExos = (s) => (s.blocs ?? []).reduce((t, b) => t + (b.elements ?? []).length, 0)
 
-function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, supprimer, versModele }) {
+function MenuSeance({ nom, semaines, courante, faite, place, total, dupliquer, deplacer, supprimer, versModele }) {
   return (
     <MenuFlottant libelle={`Actions : ${nom}`} titre="Actions" bouton={<IconePoints />} aria={`Actions : ${nom}`}>
       {(fermer) => (
@@ -26,6 +26,9 @@ function MenuSeance({ nom, semaines, courante, faite, dupliquer, deplacer, suppr
           </div>
           {!faite && (
             <>
+              {/* changer l'ordre dans la semaine sans glisser (27 novembre 2026) */}
+              {place > 0 && <button type="button" onClick={() => { fermer(); deplacer(courante, place - 1) }}>Monter d’une place</button>}
+              {place < total - 1 && <button type="button" onClick={() => { fermer(); deplacer(courante, place + 2) }}>Descendre d’une place</button>}
               <p className="gp-menu__titre">Déplacer vers…</p>
               <div className="gp-menu__semaines">
                 {semaines.map((_, i) => i !== courante && <button key={i} type="button" onClick={() => { fermer(); deplacer(i) }}>S{i + 1}</button>)}
@@ -71,7 +74,7 @@ export default function GrilleProgramme({ prog, verrous, types, lien, actions, a
 
   // place de dépôt d'après la hauteur de la souris : avant la première carte dont le milieu est plus bas
   const indexDepuis = (ev, s) => {
-    const cartes = [...(colonnes.current[s]?.querySelectorAll(':scope > .gp-seance') ?? [])]
+    const cartes = [...(colonnes.current[s]?.querySelectorAll(':scope > .gp-item > .gp-seance') ?? [])]
     const i = cartes.findIndex((c) => { const r = c.getBoundingClientRect(); return ev.clientY < r.top + r.height / 2 })
     return i < 0 ? cartes.length : i
   }
@@ -171,9 +174,9 @@ export default function GrilleProgramme({ prog, verrous, types, lien, actions, a
                         {!attente && (
                           <div className="gp-seance__outils">
                             <button type="button" className="gp-dup" aria-label={`Dupliquer la séance ${i + 1} de la semaine ${s + 1}`} title="Dupliquer juste après" onClick={() => actions.dupliquer({ s, se: i }, { vers: s, index: i + 1 })}><IconeCopier /></button>
-                            <MenuSeance nom={`séance ${i + 1}, semaine ${s + 1}`} semaines={semaines} courante={s} faite={f}
+                            <MenuSeance nom={`séance ${i + 1}, semaine ${s + 1}`} semaines={semaines} courante={s} faite={f} place={i} total={w.seances.length}
                               dupliquer={(vers) => actions.dupliquer({ s, se: i }, vers === s ? { vers, index: i + 1 } : { vers })}
-                              deplacer={(vers) => actions.deplacer({ s, se: i }, { vers })}
+                              deplacer={(vers, index) => actions.deplacer({ s, se: i }, index === undefined ? { vers } : { vers, index })}
                               supprimer={() => actions.supprimer(s, i, x)} versModele={actions.versModele ? () => actions.versModele(s, i) : undefined} />
                           </div>
                         )}

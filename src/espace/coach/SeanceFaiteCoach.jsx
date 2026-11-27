@@ -62,7 +62,9 @@ function LigneSerie({ el, code, lignes, verdict, photo, mode }) {
   )
 }
 
-function LigneAutre({ bloc, ligne }) {
+function LigneAutre({ bloc, ligne, series }) {
+  // circuits : les charges notées par le coaché, exercice par exercice (Marie, 27 novembre 2026)
+  const charges = (bloc.elements ?? []).map((el) => [el.nom, String(series?.[el.id]?.[0]?.charge ?? '').trim()]).filter(([, c]) => c)
   return (
     <li className="sf-ligne">
       <div className="sf-ligne__principal sf-ligne__principal--autre">
@@ -70,6 +72,7 @@ function LigneAutre({ bloc, ligne }) {
         <span className="sf-case sf-case--neutre sf-case--large"><b>{ligne.fait || '—'}</b>{ligne.ecart && ligne.statut !== 'prevu' && <small>{ligne.ecart}</small>}</span>
         <Pastille statut={ligne.statut} />
       </div>
+      {charges.length > 0 && <p className="sf-ligne__charges">{charges.map(([n, c]) => `${n} : ${fr(c)} kg`).join(' · ')}</p>}
     </li>
   )
 }
@@ -142,7 +145,7 @@ export default function SeanceFaiteCoach({ seance, sf, prenom, banque, rpeVise, 
                   ? (b.elements ?? []).map((el, i) => (
                     <LigneSerie key={el.id} el={el} code={`${b.lettre}${i + 1}`} lignes={sf?.series?.[el.id] ?? []} verdict={parCle.get(el.id)?.statut ?? 'pas-fait'} photo={photoDe(el)} mode={mode} />
                   ))
-                  : parCle.get(b.id) && <LigneAutre bloc={b} ligne={parCle.get(b.id)} />}
+                  : parCle.get(b.id) && <LigneAutre bloc={b} ligne={parCle.get(b.id)} series={sf?.series} />}
               </ol>
             </section>
           )

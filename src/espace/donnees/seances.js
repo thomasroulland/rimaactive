@@ -320,8 +320,9 @@ export function champsResultat(bloc) {
 }
 
 // Un exercice d'un bloc EMOM ou AMRAP a un champ « Charge (kg) », sauf au poids du corps (maquette)
+// Circuits : la charge de chaque exercice se note une fois, à la fin du chrono (EMOM, AMRAP, TABATA, Fractionné : Marie, 27 novembre 2026)
 export function avecChargeSeule(bloc, element) {
-  return (bloc?.format === 'emom' || bloc?.format === 'amrap') && !estZero(element?.charge)
+  return ['emom', 'amrap', 'tabata', 'fractionne', 'hiit'].includes(bloc?.format) && !estZero(element?.charge)
 }
 
 // '0:30:00' → 1800 s ; '30:00' → 1800 s ; sinon null

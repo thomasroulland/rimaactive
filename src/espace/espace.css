@@ -2404,3 +2404,6 @@ p.es2-ajouter { justify-content: center; cursor: default; color: #9b958a; }
 
 /* banque : anciens exercices archivés à supprimer pour de bon (27 novembre 2026) */
 .banque__archives-bandeau { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 4px 0 8px; padding: 12px 16px; border-radius: 14px; background: #fff; border: 1px solid #ece9e3; font-size: 15px; font-weight: 600; }
+
+/* Séance faite, circuits : les charges notées par le coaché sous le résultat du bloc (27 novembre 2026) */
+.sf-ligne__charges { margin: 6px 0 0; font: 600 13px/1.4 var(--font-sans); color: var(--encre-douce, #4a4640); }
