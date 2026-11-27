@@ -17,7 +17,7 @@ const Coche = ({ taille = 20 }) => (
 const vide = (v) => !String(v ?? '').trim()
 const texteRpe = (v) => fr(String(v ?? '').replace('.', ','))
 
-export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes, resultats, actions, voirConsignes, aller, finir, retour, lecture = false, debut = null }) {
+export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes, resultats, actions, voirConsignes, aller, finir, retour, lecture = false }) {
   const [plan, setPlan] = useState(false)
   const [feuille, setFeuille] = useState(null) // { type: 'serie' | 'tour' | 'bloc' | 'note', ... }
   const nb = blocs.length
@@ -63,7 +63,6 @@ export default function BlocTelephone({ bloc, etape, blocs, prog, lignes, notes,
       {/* seulement le nom du bloc de Marie, sans « Biset », « Séries »… (23 novembre 2026) */}
       <div className="ec-st__ligne">
         <p className="ec-st__sur">{nomBloc(bloc)}{reposBloc ? ' · fait' : ''}</p>
-        {!lecture && debut && <DureeSeance debut={debut} />}
       </div>
       {/* repos après le bloc : la barre du haut reste, le chrono part tout seul (Marie, 25 novembre 2026) */}
       {reposBloc && <ChronoRepos titre="Repos avant le bloc suivant" prevu={reposApres} auto finir={() => { setReposBloc(false); suivant() }} />}
@@ -418,21 +417,6 @@ function MinuteurBloc({ secondes }) {
           </div>
         )}
     </div>
-  )
-}
-
-// Durée de la séance depuis son ouverture (Marie, 26 novembre 2026)
-function DureeSeance({ debut }) {
-  const [, battre] = useState(0)
-  useEffect(() => { const id = setInterval(() => battre((n) => n + 1), 1000); return () => clearInterval(id) }, [])
-  const s = Math.max(0, Math.floor((Date.now() - debut) / 1000))
-  const h = Math.floor(s / 3600)
-  const texte = h ? `${h}:${String(Math.floor((s % 3600) / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` : mmss(s)
-  return (
-    <span className="ec-st-duree" role="timer" aria-label={`Durée de la séance : ${texte}`}>
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2.5 2M9.5 2.5h5" /></svg>
-      {texte}
-    </span>
   )
 }
 

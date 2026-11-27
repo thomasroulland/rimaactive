@@ -86,16 +86,13 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   // avant la date de début : séance visible, mais on ne peut pas la commencer (Marie, 22 novembre 2026)
   const avantDebut = pasCommence(programme, aujourdhuiIso()) && !fait
   const verrou = (dejaFaite && !edition) || avantDebut
-  // Durée de la séance (Marie, 26 novembre 2026) : le chronomètre part à la première ouverture et se garde sur l'appareil
+  // Durée de la séance, vue par Marie dans le bilan (26 novembre 2026) : elle part à la première chose notée
+  // (pas à l'ouverture : regarder une séance sans la commencer ne compte pas), et se garde sur l'appareil.
+  // Plus de chronomètre affiché pendant la séance (Marie, 27 novembre 2026) ; le minuteur de repos reste.
   const cleDebut = `rima-debut-${programmeId}_${seanceId}`
-  const [debutSeance] = useState(() => {
-    if (dejaFaite || avantDebut) return null
-    try {
-      const v = Number(localStorage.getItem(cleDebut))
-      if (v > 0 && Date.now() - v < 6 * 3600 * 1000) return v
-      const n = Date.now(); localStorage.setItem(cleDebut, String(n)); return n
-    } catch { return Date.now() }
-  })
+  const lireDebut = () => { try { const v = Number(localStorage.getItem(cleDebut)); return v > 0 && Date.now() - v < 6 * 3600 * 1000 ? v : null } catch { return null } }
+  const marquerDebut = () => { if (dejaFaite || lireDebut()) return; try { localStorage.setItem(cleDebut, String(Date.now())) } catch { /* rien */ } }
+  const oublierDebut = () => { try { localStorage.removeItem(cleDebut) } catch { /* rien */ } }
 
   const erreurEnvoi = (e) => {
     // refus tardif d'une écriture partie avant ou pendant l'enregistrement : la séance est bien enregistrée
@@ -150,6 +147,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
   const remettre = async () => {
     clearTimeout(minuterie.current)
     enAttente.current = carteVide()
+    oublierDebut()
     setRefus('')
     const effacement = effacerMaSeance(programmeId, seanceId)
     effacement.catch(() => {})
@@ -199,6 +197,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     setRefus('')
     setModifs((m) => ({ ...m, [cle]: { ...m[cle], [id]: valeur } }))
     enAttente.current[cle][id] = valeur
+    marquerDebut()
     clearTimeout(minuterie.current)
     minuterie.current = setTimeout(envoyer, DELAI)
   }
@@ -232,6 +231,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
     setRefus('')
     setModifs((m) => ({ ...m, course: { ...m.course, [cle]: v } }))
     enAttente.current[cle] = v
+    marquerDebut()
     clearTimeout(minuterie.current)
     minuterie.current = setTimeout(envoyer, DELAI)
   }
@@ -252,7 +252,8 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
         }
       }
     }
-    if (debutSeance) { dureeFinie.current = Date.now() - debutSeance; try { localStorage.removeItem(cleDebut) } catch { /* rien */ } }
+    const debut = lireDebut()
+    if (debut) { dureeFinie.current = Date.now() - debut; oublierDebut() }
     const duree = dureeFinie.current ? Math.max(1, Math.round(dureeFinie.current / 60000)) : null
     // la durée part dans un second envoi, après la séance : si la règle n'est pas encore en ligne, seule la durée est perdue
     terminerSeance(programmeId, seanceId, { ...fin, ...(course ? sortie : {}), series: toutes, notes, blocs }).then(() => { if (duree) noterDuree(programmeId, seanceId, duree).catch(() => {}) }).catch(erreurEnvoi)
@@ -297,7 +298,7 @@ function EcranSeance({ programmeId, seanceId, programmes, seances }) {
             {bloc ? (
               unExercice ? (
                 <BlocTelephone key={bloc.id} bloc={bloc} etape={ici} blocs={listeBlocs} prog={prog} lignes={lignes} notes={notes} resultats={blocs} actions={actions}
-                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} lecture={verrou} debut={debutSeance} />
+                  voirConsignes={setFiche} aller={aller} finir={() => aller(nb)} retour={retourPetit} lecture={verrou} />
               ) : (
                 <>
                   {!galerie && <BandeauBloc surtitre={titre} bloc={bloc} prog={prog} etape={ici} blocs={listeBlocs} aller={aller} finir={() => aller(nb)} verrou={verrou} />}
