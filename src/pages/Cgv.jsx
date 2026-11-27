@@ -151,7 +151,7 @@ export default function Cgv() {
   return (
     <PageJuridique
       titre="Conditions générales de vente"
-      ligne="Mise à jour : novembre 2026"
+      ligne="Mis à jour le 27 novembre 2026"
       sommaire={ARTICLES}
       sections={[{
         id: 'cgv',
