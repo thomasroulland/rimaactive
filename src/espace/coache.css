@@ -2231,7 +2231,11 @@ button.ec-s2-quitter { padding: 0; cursor: pointer; font: inherit; }
 /* Chrono du Fractionné (27 novembre 2026) : tour, exercice en cours, cercle vermillon pendant l'effort, jaune pendant le repos */
 .ec-st-fract { gap: 6px; }
 .ec-st-fract__tour { margin: 0; font: 800 11px/1 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ec-gris, #6b665f); }
-.ec-st-fract__nom { margin: 0; min-height: 22px; text-align: center; font: 800 17px/1.25 var(--font-sans); color: var(--ec-encre); }
 .ec-st-fract.est-effort .ec-st-repos__temps small { color: var(--ec-vermillon, #ff4a1c); }
 .ec-st-exos li.est-actif { background: rgba(255, 74, 28, .07); border-radius: 12px; }
 .ec-st-exos li.est-actif b { color: var(--ec-vermillon, #ff4a1c); }
+/* « Démarrer » des chronos (AMRAP, Fractionné) : bulle jaune clair comme « Temps écoulé », pour ne pas se confondre
+   avec le gros bouton jaune « Bloc fait » (Marie, 27 novembre 2026) */
+.ec-st-repos__boutons .ec-st-pas.ec-st-demarrer { border: 0; border-radius: 16px; background: rgba(242, 194, 48, .25); color: var(--ec-encre); font-weight: 800; }
+.ec-st-repos__boutons .ec-st-pas.ec-st-demarrer:hover { background: rgba(242, 194, 48, .4); }
+.ec-st-fract__tour { margin-bottom: 4px; }

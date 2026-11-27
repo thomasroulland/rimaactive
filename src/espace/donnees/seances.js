@@ -43,12 +43,12 @@ export function resumeFormat(bloc) {
   }
   if (f === 'emom' || f === 'amrap') return bloc.duree ? `${f.toUpperCase()} ${bloc.duree} min` : f.toUpperCase()
   // TABATA / HIIT (maquette de Marie) : « TABATA 8 × 20 s / 10 s » = tours × travail / repos
-  // Fractionné : « Fractionné 30 s / 30 s · 3 tours · 1 min entre les tours » (effort / repos, les tours, le repos entre deux tours)
+  // Fractionné, texte de Marie (27 novembre 2026) : « 30 s effort / 30 s repos - 3 tours - 1 min de repos entre chaque tour »
   if (f === 'fractionne') {
-    const cycle = [bloc.travail && `${bloc.travail} s`, bloc.repos && `${bloc.repos} s`].filter(Boolean).join(' / ')
+    const cycle = [bloc.travail && `${bloc.travail} s effort`, bloc.repos && `${bloc.repos} s repos`].filter(Boolean).join(' / ')
     const tours = bloc.tours && `${bloc.tours} tour${Number(bloc.tours) > 1 ? 's' : ''}`
-    const entre = texteRepos(bloc.reposTour) && `${texteRepos(bloc.reposTour)} entre les tours`
-    return ['Fractionné', [cycle, tours, entre].filter(Boolean).join(' · ')].filter(Boolean).join(' ')
+    const entre = texteRepos(bloc.reposTour) && `${texteRepos(bloc.reposTour)} de repos entre chaque tour`
+    return [cycle, tours, entre].filter(Boolean).join(' - ') || 'Fractionné'
   }
   if (f === 'tabata' || f === 'hiit') {
     const effort = bloc.travail ? `${bloc.travail} s` : ''

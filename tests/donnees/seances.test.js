@@ -30,8 +30,9 @@ describe('prescription', () => {
     expect(resumeFormat({ format: 'hiit', tours: '6', travail: '40', repos: '20' })).toBe('HIIT 6 × 40 s / 20 s')
     expect(resumeFormat({ format: 'hiit', travail: '40' })).toBe('HIIT 40 s')
     expect(resumeFormat({ format: 'tabata' })).toBe('TABATA')
-    expect(resumeFormat({ format: 'fractionne', travail: '30', repos: '30', tours: '3' })).toBe('Fractionné 30 s / 30 s · 3 tours')
+    expect(resumeFormat({ format: 'fractionne', travail: '30', repos: '30', tours: '3' })).toBe('30 s effort / 30 s repos - 3 tours')
     expect(resumeFormat({ format: 'fractionne' })).toBe('Fractionné')
+    expect(resumeFormat({ format: 'fractionne', travail: '30', repos: '30', tours: '3', reposTour: '1' })).toBe('30 s effort / 30 s repos - 3 tours - 1 min de repos entre chaque tour')
   })
 })
 

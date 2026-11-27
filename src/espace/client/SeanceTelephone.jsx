@@ -413,7 +413,7 @@ function MinuteurBloc({ secondes }) {
           <div className="ec-st-repos__boutons">
             {fin
               ? <button type="button" className="ec-st-pas" onClick={() => { setFin(null); setFini(true) }}>Arrêter</button>
-              : <button type="button" className="ec-st-pas est-jaune" onClick={() => { preparerSon(); setFin(Date.now() + secondes * 1000) }}>Démarrer ▶</button>}
+              : <button type="button" className="ec-st-pas ec-st-demarrer" onClick={() => { preparerSon(); setFin(Date.now() + secondes * 1000) }}>Démarrer ▶</button>}
           </div>
         )}
     </div>
@@ -474,7 +474,8 @@ function MinuteurFractionne({ bloc, surEtape, fini }) {
   return (
     <div className={`ec-st-repos ec-st-minuteur ec-st-fract${effort ? ' est-effort' : etape ? ' est-repos' : ''}`}>
       <p className="ec-st-fract__tour">{etape ? `Tour ${etape.tour} sur ${tours}` : `${tours} tour${tours > 1 ? 's' : ''} · ${els.length} exercice${els.length > 1 ? 's' : ''}`}</p>
-      <p className="ec-st-fract__nom" aria-live="polite">{titre}</p>
+      {/* pas de phrase sous « Tour 1 sur 3 » (Marie, 27 novembre 2026) : l'exercice en cours est surligné dans la liste */}
+      <p className="sr-only" aria-live="polite">{titre}</p>
       <div className="ec-st-repos__cadran">
         <svg viewBox="0 0 220 220" aria-hidden="true">
           {Array.from({ length: 60 }, (_, i) => {
@@ -491,11 +492,11 @@ function MinuteurFractionne({ bloc, surEtape, fini }) {
       </div>
       <div className="ec-st-repos__boutons">
         {indice < 0
-          ? <button type="button" className="ec-st-pas est-jaune" onClick={() => { preparerSon(); aller(0) }}>Démarrer ▶</button>
+          ? <button type="button" className="ec-st-pas ec-st-demarrer" onClick={() => { preparerSon(); aller(0) }}>Démarrer ▶</button>
           : (
             <>
               {pause !== null
-                ? <button type="button" className="ec-st-pas est-jaune" onClick={() => { setFin(Date.now() + pause * 1000); setPause(null) }}>Reprendre ▶</button>
+                ? <button type="button" className="ec-st-pas ec-st-demarrer" onClick={() => { setFin(Date.now() + pause * 1000); setPause(null) }}>Reprendre ▶</button>
                 : <button type="button" className="ec-st-pas" onClick={() => { setPause(Math.max(0, (fin - Date.now()) / 1000)); setFin(null) }}>Pause</button>}
               <button type="button" className="ec-st-pas" onClick={() => aller(indice + 1)}>Passer</button>
             </>
